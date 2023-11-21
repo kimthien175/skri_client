@@ -15,4 +15,10 @@ For help getting started with Flutter development, view the
 [online documentation](https://docs.flutter.dev/), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
 
+DEBUG:
 For Debug with profiles on VSCode, please configure devices id to compatible with your platforms to run the project
+
+DEVELOPMENT: 
+Find comments including as below:
+ TODO: important to finish major features
+ NOTE: adding more features
