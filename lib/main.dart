@@ -1,23 +1,19 @@
 import 'package:cd_mobile/pages/landing/index.dart';
+import 'package:cd_mobile/utils/translations.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-void main() => runApp(const MyApp());
+void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  GameTranslations.inst.init();
+  runApp(GetMaterialApp(
+    // Locales
+    translations: GameTranslations.inst,
+    locale: Get.deviceLocale,
+    fallbackLocale: const Locale('en', 'US'),
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const GetMaterialApp(
-      // // Locales
-      // translations: GameTranslations.inst(),
-      // locale: Get.deviceLocale,
-      // fallbackLocale: ,
-
-      debugShowCheckedModeBanner: false,
-      title: 'Material App',
-      home: LandingPage(),
-    );
-  }
+    debugShowCheckedModeBanner: false,
+    title: 'Material App',
+    home: LandingPage.inst,
+  ));
 }
