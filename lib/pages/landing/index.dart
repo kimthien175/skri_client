@@ -26,7 +26,8 @@ class LandingPage extends StatelessWidget {
     return Scaffold(
         body: Container(
             decoration: const BoxDecoration(image: DecorationImage(
-              fit: BoxFit.cover,
+              scale: 1.2,
+              repeat: ImageRepeat.repeat,
               image: AssetImage('assets/background.png'))),
             child: Obx(() => controller.ready.isFalse
                 ? const Center(child: CircularProgressIndicator())
