@@ -69,6 +69,7 @@ flutter:
     - assets/gif/avatar/eyes.gif
     - assets/gif/avatar/mouth.gif
     - assets/gif/avatar/crown.gif
+    - assets/gif/avatar/special.gif
     - assets/gif/randomize.gif
     - assets/gif/arrow.gif
   #   - images/a_dot_burr.jpeg

@@ -1,12 +1,11 @@
-import 'package:cd_mobile/models/avatar.dart';
-import 'package:cd_mobile/models/gif_manager.dart';
+import 'package:cd_mobile/models/avatar_editor.dart';
 import 'package:cd_mobile/utils/translations.dart';
+import 'package:cd_mobile/widgets/landing_logo.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class LandingController extends GetxController {
   var locale = Get.deviceLocale.toString().obs; // update when translations loading finish
-  var avatar = Avatar(crown: true).obs;
   String name = "";
 }
 
@@ -29,11 +28,8 @@ class LandingPage extends StatelessWidget {
                 const BoxDecoration(image: DecorationImage(scale: 1.2, repeat: ImageRepeat.repeat, image: AssetImage('assets/background.png'))),
             child: Center(
                 child: Column(children: [
-                  GifManager.inst.misc('logo'),
-                  GifManager.inst.color(30),
-                  GifManager.inst.misc('randomize'),
-                  GifManager.inst.misc('left_arrow'),
-                  controller.avatar.value,
+                  LandingLogo(),      
+                  AvatarEditor(),
                   DropdownButton(
                       value: controller.locale.value,
                       items: GameTranslations.inst.keys.entries.map((entry) {

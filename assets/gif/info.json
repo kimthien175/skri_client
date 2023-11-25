@@ -6,7 +6,7 @@
             "width": 48,
             "height": 48
         },
-        "quantity": 31
+        "quantity": 26
     },
     "eyes":{
         "type": "byList",
@@ -25,6 +25,15 @@
             "height":48
         },
         "quantity": 51
+    },
+    "special":{
+        "type":"byList",
+        "source": "assets/gif/avatar/special.gif",
+        "spriteSize":{
+            "width": 80,
+            "height":80
+        },
+        "quantity": 20
     },
     "misc": {
         "type": "byName",
@@ -45,6 +54,36 @@
                     "top": 0,
                     "right": 17,
                     "bottom": 17
+                }
+            },
+            {
+                "name": "right_arrow",
+                "source": "assets/gif/arrow.gif",
+                "rect":{
+                    "left":0,
+                    "top":17,
+                    "right":17,
+                    "bottom":34
+                }
+            },
+            {
+                "name": "chosen_left_arrow",
+                "source": "assets/gif/arrow.gif",
+                "rect":{
+                    "left":34,
+                    "top":0,
+                    "right":34,
+                    "bottom":17
+                }
+            },
+            {
+                "name": "chosen_right_arrow",
+                "source": "assets/gif/arrow.gif",
+                "rect":{
+                    "left":17,
+                    "top":17,
+                    "right":34,
+                    "bottom":34
                 }
             },
             {

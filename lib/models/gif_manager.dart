@@ -24,6 +24,10 @@ class GifManager {
   ChildGif mouth(int index) => _mouth[index];
   int get mouthLength => _mouth.length;
 
+  final List<ChildGif> _special = [];
+  ChildGif special(int index) =>_special[index];
+  int get specialLength =>_special.length;
+
   final Map<String, Widget> _misc = {};
   Widget misc(String name) => _misc[name]!;
 
@@ -40,6 +44,8 @@ class GifManager {
         await loadByList(_eyes, info[key]);
       } else if (key =="mouth"){
         await loadByList(_mouth, info[key]);
+      } else if (key == "special"){
+        await loadByList(_special, info[key]);
       }
     }
   }
