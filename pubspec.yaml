@@ -63,9 +63,12 @@ flutter:
   assets:
     - assets/translations/translations.json
     - assets/background.png
-    - assets/landing_logo.gif
+    - assets/gif/logo.gif
     - assets/gif/info.json
     - assets/gif/avatar/color.gif
+    - assets/gif/avatar/eyes.gif
+    - assets/gif/avatar/mouth.gif
+    - assets/gif/avatar/crown.gif
     - assets/gif/randomize.gif
     - assets/gif/arrow.gif
   #   - images/a_dot_burr.jpeg

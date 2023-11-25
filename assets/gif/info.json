@@ -8,9 +8,31 @@
         },
         "quantity": 31
     },
+    "eyes":{
+        "type": "byList",
+        "source": "assets/gif/avatar/eyes.gif",
+        "spriteSize":{
+            "width": 48,
+            "height":48
+        },
+        "quantity": 57
+    },
+    "mouth":{
+        "type": "byList",
+        "source": "assets/gif/avatar/mouth.gif",
+        "spriteSize":{
+            "width": 48,
+            "height":48
+        },
+        "quantity": 51
+    },
     "misc": {
         "type": "byName",
         "content": [
+            {
+                "name":"logo",
+                "source": "assets/gif/logo.gif"
+            },
             {
                 "name": "randomize",
                 "source": "assets/gif/randomize.gif"
@@ -24,6 +46,10 @@
                     "right": 17,
                     "bottom": 17
                 }
+            },
+            {
+                "name":"crown",
+                "source": "assets/gif/avatar/crown.gif"
             }
         ]
     }

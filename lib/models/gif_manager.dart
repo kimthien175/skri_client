@@ -14,12 +14,15 @@ class GifManager {
 
   final List<ChildGif> _color = [];
   ChildGif color(int index) => _color[index];
+  int get colorLength =>_color.length;
 
-  final List<AssetImage> _eyes = [];
-  AssetImage eyes(int index) => _eyes[index];
+  final List<ChildGif> _eyes = [];
+  ChildGif eyes(int index) => _eyes[index];
+  int get eyesLength => _eyes.length;
 
-  final List<AssetImage> _mouth = [];
-  AssetImage mouth(int index) => _mouth[index];
+  final List<ChildGif> _mouth = [];
+  ChildGif mouth(int index) => _mouth[index];
+  int get mouthLength => _mouth.length;
 
   final Map<String, Widget> _misc = {};
   Widget misc(String name) => _misc[name]!;
@@ -33,6 +36,10 @@ class GifManager {
         await loadByList(_color, info[key]);
       } else if (key == "misc") {
         await loadByName(_misc, info[key]["content"]);
+      } else if (key == "eyes"){
+        await loadByList(_eyes, info[key]);
+      } else if (key =="mouth"){
+        await loadByList(_mouth, info[key]);
       }
     }
   }
@@ -99,7 +106,12 @@ class GifManager {
           frames
           );
       } else {
-        map[name] = Image.asset(element['source']);
+        // load width, height
+        ByteData data = await rootBundle.load(element['source']);
+        ui.Codec codec = await ui.instantiateImageCodec(data.buffer.asUint8List());
+        var img = (await codec.getNextFrame()).image;
+
+        map[name] = Image.asset(element['source'], height: img.height.toDouble(), width: img.width.toDouble());
       }
     }
   }

@@ -51,6 +51,7 @@ class ChildGifController extends GetxController {
   }
 }
 
+// ignore: must_be_immutable
 class ChildGif extends StatelessWidget {
   ChildGif(this.rect, List<ui.FrameInfo> frames, {super.key}) {
     controller = ChildGifController(frames);
@@ -58,6 +59,9 @@ class ChildGif extends StatelessWidget {
 
   final Rect rect;
   late ChildGifController controller;
+
+  double get width=>rect.right - rect.left;
+  double get height=>rect.bottom - rect.top;
 
   @override
   Widget build(BuildContext context) {
