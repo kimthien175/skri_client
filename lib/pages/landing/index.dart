@@ -28,6 +28,8 @@ class LandingPage extends StatelessWidget {
             child: Center(
                 child: Column(children: [
                   GifManager.inst.color(30),
+                  GifManager.inst.misc('randomize'),
+                  GifManager.inst.misc('left_arrow'),
                   DropdownButton(
                       value: controller.locale.value,
                       items: GameTranslations.inst.keys.entries.map((entry) {

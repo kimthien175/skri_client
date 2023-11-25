@@ -13,16 +13,16 @@
         "content": [
             {
                 "name": "randomize",
-                "source": "assets/randomize.gif"
+                "source": "assets/gif/randomize.gif"
             },
             {
                 "name": "left_arrow",
-                "source": "assets/arrow.gif",
+                "source": "assets/gif/arrow.gif",
                 "rect": {
                     "left": 0,
                     "top": 0,
-                    "right": 16,
-                    "bottom": 16
+                    "right": 17,
+                    "bottom": 17
                 }
             }
         ]
