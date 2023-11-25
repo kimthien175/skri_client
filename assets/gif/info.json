@@ -1,0 +1,30 @@
+{
+    "color": {
+        "type": "byList",
+        "source":"assets/gif/avatar/color.gif",
+        "spriteSize": {
+            "width": 48,
+            "height": 48
+        },
+        "quantity": 31
+    },
+    "misc": {
+        "type": "byName",
+        "content": [
+            {
+                "name": "randomize",
+                "source": "assets/randomize.gif"
+            },
+            {
+                "name": "left_arrow",
+                "source": "assets/arrow.gif",
+                "rect": {
+                    "left": 0,
+                    "top": 0,
+                    "right": 16,
+                    "bottom": 16
+                }
+            }
+        ]
+    }
+}

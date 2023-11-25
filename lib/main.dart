@@ -1,11 +1,12 @@
-import 'package:cd_mobile/pages/landing/index.dart';
+import 'package:cd_mobile/pages/loading.dart';
+import 'package:cd_mobile/utils/start_up.dart';
 import 'package:cd_mobile/utils/translations.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  GameTranslations.inst.init();
+  startUp();
   runApp(GetMaterialApp(
     // Locales
     translations: GameTranslations.inst,
@@ -14,6 +15,6 @@ void main() {
 
     debugShowCheckedModeBanner: false,
     title: 'Material App',
-    home: LandingPage.inst,
+    home: const Loading(),
   ));
 }

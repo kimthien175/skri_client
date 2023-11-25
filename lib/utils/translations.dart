@@ -1,4 +1,3 @@
-import 'package:cd_mobile/pages/landing/index.dart';
 import 'package:cd_mobile/utils/read_json.dart';
 import 'package:get/get.dart';
 
@@ -11,7 +10,7 @@ class GameTranslations extends Translations {
 
   // ignore: prefer_final_fields, prefer_collection_literals
   late Map<String, Map<String, String>> _keys = Map<String, Map<String, String>>();
-  init() async {
+  Future<void> init() async {
     Map raw = await readJSON('assets/translations/translations.json');
 
     raw.forEach((key, value) {
@@ -19,7 +18,6 @@ class GameTranslations extends Translations {
     });
 
     Get.addTranslations(_keys);
-    LandingPage.inst.controller.getReady();
   }
   
   @override
