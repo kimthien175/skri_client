@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'dart:ui' as ui;
 
 import 'package:get/get.dart';
@@ -51,17 +52,39 @@ class ChildGifController extends GetxController {
   }
 }
 
+class Gif extends StatelessWidget {
+  static Future<Gif> fromPath(String path) async {
+    // load width, height
+    ByteData data = await rootBundle.load(path);
+    ui.Codec codec = await ui.instantiateImageCodec(data.buffer.asUint8List());
+    var img = (await codec.getNextFrame()).image;
+
+    return Gif(path, img.width.toDouble(), img.height.toDouble());
+  }
+
+  const Gif(this._path, this._width, this._height, {super.key});
+  final String _path;
+
+  final double _width;
+  double get width=>_width;
+
+  final double _height;
+  double get height =>_height;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(width: _width, height: _height, child: Image.asset(_path));
+  }
+}
+
 // ignore: must_be_immutable
-class ChildGif extends StatelessWidget {
-  ChildGif(this.rect, List<ui.FrameInfo> frames, {super.key}) {
+class ChildGif extends Gif {
+  ChildGif(this.rect, List<ui.FrameInfo> frames, {super.key}) : super('', rect.width, rect.height) {
     controller = ChildGifController(frames);
   }
 
   final Rect rect;
   late ChildGifController controller;
-
-  double get width=>rect.right - rect.left;
-  double get height=>rect.bottom - rect.top;
 
   @override
   Widget build(BuildContext context) {

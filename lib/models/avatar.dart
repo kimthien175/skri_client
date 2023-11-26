@@ -1,6 +1,6 @@
 //import 'dart:math';
 
-import 'package:cd_mobile/models/child_gif.dart';
+import 'package:cd_mobile/models/gif.dart';
 import 'package:cd_mobile/models/gif_manager.dart';
 import 'package:flutter/widgets.dart';
 //import 'package:get/get.dart';
@@ -111,12 +111,15 @@ class Avatar extends StatelessWidget {
 
   final bool crown;
   // NOTE: HARD CODE, NEED SOMEWAY BETTER
-  final double crownTopOffset = -(GifManager.inst.misc('crown') as Image).height! / 2 + 2;
+  final double crownTopOffset = -GifManager.inst.misc('crown').height / 2 + 2;
   final double crownLeftOffset = -3;
 
   final bool beingEdited;
 
   final int? special;
+
+  double get width => colorWidget.width;
+  double get height =>colorWidget.height -(beingEdited?0: crownTopOffset);
 
   @override
   Widget build(BuildContext context) {

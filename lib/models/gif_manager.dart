@@ -1,5 +1,5 @@
 import 'dart:core';
-import 'package:cd_mobile/models/child_gif.dart';
+import 'package:cd_mobile/models/gif.dart';
 import 'package:cd_mobile/utils/read_json.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
@@ -28,8 +28,8 @@ class GifManager {
   ChildGif special(int index) =>_special[index];
   int get specialLength =>_special.length;
 
-  final Map<String, Widget> _misc = {};
-  Widget misc(String name) => _misc[name]!;
+  final Map<String, Gif> _misc = {};
+  Gif misc(String name) => _misc[name]!;
 
   Future<void> loadResources() async {
     Map info = await readJSON('assets/gif/info.json');
@@ -112,12 +112,7 @@ class GifManager {
           frames
           );
       } else {
-        // load width, height
-        ByteData data = await rootBundle.load(element['source']);
-        ui.Codec codec = await ui.instantiateImageCodec(data.buffer.asUint8List());
-        var img = (await codec.getNextFrame()).image;
-
-        map[name] = Image.asset(element['source'], height: img.height.toDouble(), width: img.width.toDouble());
+        map[name] = await Gif.fromPath(element['source']);
       }
     }
   }

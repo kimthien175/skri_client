@@ -35,20 +35,15 @@ class LandingLogo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return 
-    Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Transform.scale(
-      scale: 1,
-      child:GifManager.inst.misc('logo')),
-        Transform.scale(
-      scale: 1,
-      child:Row(
-          mainAxisSize: MainAxisSize.min,
-          children: avatars,
-        ))
-      ],
-    );
+    return LayoutBuilder(
+        builder: (BuildContext context, BoxConstraints constraints) => 
+          FittedBox( fit: BoxFit.scaleDown,
+            child: Column(mainAxisSize: MainAxisSize.min, 
+              children: [
+                FittedBox(fit: BoxFit.scaleDown,
+                  child: GifManager.inst.misc('logo')),
+                FittedBox(fit: BoxFit.scaleDown,
+                  child:Row(mainAxisSize: MainAxisSize.min, children: avatars))
+            ])));
   }
 }

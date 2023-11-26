@@ -1,5 +1,3 @@
-import 'package:cd_mobile/models/avatar_editor.dart';
-import 'package:cd_mobile/utils/translations.dart';
 import 'package:cd_mobile/widgets/landing_logo.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -29,19 +27,19 @@ class LandingPage extends StatelessWidget {
             child: Center(
                 child: Column(children: [
                   LandingLogo(),      
-                  AvatarEditor(),
-                  DropdownButton(
-                      value: controller.locale.value,
-                      items: GameTranslations.inst.keys.entries.map((entry) {
-                        return DropdownMenuItem<String>(value: entry.key, child: Text(entry.value['displayName']!));
-                      }).toList(),
-                      onChanged: (String? locale) {
-                        // switch locale
-                        List<String> lanRegion = locale!.split('_');
-                        controller.locale.value = locale;
-                        Get.updateLocale(Locale(lanRegion[0], lanRegion[1]));
-                      }),
-                  Text('displayName'.tr)
+                  //AvatarEditor(),
+                  // DropdownButton(
+                  //     value: controller.locale.value,
+                  //     items: GameTranslations.inst.keys.entries.map((entry) {
+                  //       return DropdownMenuItem<String>(value: entry.key, child: Text(entry.value['displayName']!));
+                  //     }).toList(),
+                  //     onChanged: (String? locale) {
+                  //       // switch locale
+                  //       List<String> lanRegion = locale!.split('_');
+                  //       controller.locale.value = locale;
+                  //       Get.updateLocale(Locale(lanRegion[0], lanRegion[1]));
+                  //     }),
+                  // Text('displayName'.tr)
             ]))));
   }
 }
