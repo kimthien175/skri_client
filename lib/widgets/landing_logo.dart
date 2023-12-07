@@ -4,9 +4,9 @@ import 'package:cd_mobile/models/avatar.dart';
 import 'package:cd_mobile/models/gif_manager.dart';
 import 'package:flutter/widgets.dart';
 
-// ignore: must_be_immutable
 class LandingLogo extends StatelessWidget {
   LandingLogo({super.key}) {
+    avatars = [];
     var rd = Random();
 
     int winnerId = -1;
@@ -31,7 +31,7 @@ class LandingLogo extends StatelessWidget {
     }
   }
 
-  late List<Avatar> avatars = [];
+  late final List<Avatar> avatars;
 
   @override
   Widget build(BuildContext context) {

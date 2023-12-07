@@ -5,10 +5,22 @@
                "version": "0.2.0",
                "configurations": [
                               {
+                                             "name": "auto",
+                                             "request": "launch",
+                                             "type": "dart",
+                              },
+                              {
                                              "name": "android",
                                              "request": "launch",
                                              "type": "dart",
                                              "deviceId": "emulator-5554"
+                              },
+                              {
+                                             "name": "ios",
+                                             "request": "launch",
+                                             "type": "dart",
+                                             "deviceId": "58E05199-7A4F-4C8D-85AB-1510B90CF9A7",
+                                             "args": ["--no-enable-impeller"]
                               },
                               {
                                              "name": "web",

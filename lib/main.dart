@@ -1,6 +1,7 @@
+import 'package:cd_mobile/generated/locales.g.dart';
+import 'package:cd_mobile/pages/home/home.dart';
 import 'package:cd_mobile/pages/loading.dart';
 import 'package:cd_mobile/utils/start_up.dart';
-import 'package:cd_mobile/utils/translations.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -9,12 +10,16 @@ void main() {
   startUp();
   runApp(GetMaterialApp(
     // Locales
-    translations: GameTranslations.inst,
+    translationsKeys: AppTranslation.translations,
     locale: Get.deviceLocale,
     fallbackLocale: const Locale('en', 'US'),
 
     debugShowCheckedModeBanner: false,
     title: 'Material App',
-    home: const Loading(),
+    initialRoute: '/loading',
+    getPages: [
+      GetPage(name: '/loading', page: ()=>const Loading()),
+      GetPage(name: '/', page: ()=>HomePage())
+    ],
   ));
 }
