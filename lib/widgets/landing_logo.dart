@@ -24,26 +24,30 @@ class LandingLogo extends StatelessWidget {
     }
 
     // first 8 avatars base on color
-    for (var i = 0; i < 8; i++) {
-      var eyes = rd.nextInt(GifManager.inst.eyesLength);
-      var mouth = rd.nextInt(GifManager.inst.mouthLength);
-      avatars.add(Avatar(i, eyes, mouth, crown: winnerId == i, special: (specialPlayerId == i) ? specialIndex : null));
-    }
+    // for (var i = 0; i < 8; i++) {
+    //   var eyes = rd.nextInt(GifManager.inst.eyesLength);
+    //   var mouth = rd.nextInt(GifManager.inst.mouthLength);
+    //   var avatar = Avatar(i, eyes, mouth, special: (specialPlayerId == i) ? specialIndex : null);
+
+    //   //avatar.withShadow();
+
+    //   if (winnerId == i) {
+    //     avatar.withCrown();
+    //   }
+      
+    //   avatars.add(avatar);
+    //}
   }
 
   late final List<Avatar> avatars;
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-        builder: (BuildContext context, BoxConstraints constraints) => 
-          FittedBox( fit: BoxFit.scaleDown,
-            child: Column(mainAxisSize: MainAxisSize.min, 
-              children: [
-                FittedBox(fit: BoxFit.scaleDown,
-                  child: GifManager.inst.misc('logo')),
-                FittedBox(fit: BoxFit.scaleDown,
-                  child:Row(mainAxisSize: MainAxisSize.min, children: avatars))
-            ])));
+    return GifManager.inst.misc('logo').withShadow();
+    FittedBox(
+        child: Column(mainAxisSize: MainAxisSize.min, children: [
+      FittedBox(child: GifManager.inst.misc('logo').withShadow()),
+      FittedBox(child: Row(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.end, children: avatars))
+    ]));
   }
 }

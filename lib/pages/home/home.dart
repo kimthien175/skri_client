@@ -2,9 +2,9 @@ import 'package:cd_mobile/widgets/landing_logo.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class HomeController extends SuperController{
-  var locale = Get.deviceLocale.toString().obs; // update when translations loading finish
-  String name = "";
+class HomeController extends SuperController {
+  // var locale = Get.deviceLocale.toString().obs; // update when translations loading finish
+  // String name = "";
   var isWebLayout = _isWebLayout.obs;
 
   static bool get _isWebLayout => Get.width >= Get.height;
@@ -14,25 +14,26 @@ class HomeController extends SuperController{
     isWebLayout.value = _isWebLayout;
     super.didChangeMetrics();
   }
-  
+
+  //#region Override to sastisfy SuperController, no need to get attention
   @override
   void onDetached() {}
-  
+
   @override
   void onHidden() {}
-  
+
   @override
   void onInactive() {}
-  
+
   @override
   void onPaused() {}
-  
+
   @override
   void onResumed() {}
+  //#endregion
 }
 
 class HomePage extends StatelessWidget {
-
   final HomeController controller = Get.put(HomeController());
 
   HomePage({super.key});
@@ -40,18 +41,19 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: SafeArea(
-                child: Container(
+        body: Container(
             decoration:
                 const BoxDecoration(image: DecorationImage(scale: 1.2, repeat: ImageRepeat.repeat, image: AssetImage('assets/background.png'))),
-            child: Column(
-                  children: [
-
-                  LandingLogo(),
-
-                ],)
+            child: SafeArea(
+                child: Center(
+                    child: Column(
+              children: [
+                LandingLogo(),
+                TextButton(
+                  child: const Text('next'),
+                  onPressed: () => Get.toNamed('/loading'),
                 )
-            ));
+              ],
+            )))));
   }
 }
-
