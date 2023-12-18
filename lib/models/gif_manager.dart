@@ -2,7 +2,6 @@ import 'dart:core';
 import 'package:cd_mobile/models/gif.dart';
 import 'package:cd_mobile/utils/read_json.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 import 'dart:ui' as ui;
 
 class GifManager {
@@ -12,24 +11,24 @@ class GifManager {
   static GifManager get inst => _inst;
   //#endregion
 
-  final List<ChildGif> _color = [];
-  ChildGif color(int index) => _color[index];
+  final List<ChildGifModel> _color = [];
+  ChildGifModel color(int index) => _color[index];
   int get colorLength =>_color.length;
 
-  final List<ChildGif> _eyes = [];
-  ChildGif eyes(int index) => _eyes[index];
+  final List<ChildGifModel> _eyes = [];
+  ChildGifModel eyes(int index) => _eyes[index];
   int get eyesLength => _eyes.length;
 
-  final List<ChildGif> _mouth = [];
-  ChildGif mouth(int index) => _mouth[index];
+  final List<ChildGifModel> _mouth = [];
+  ChildGifModel mouth(int index) => _mouth[index];
   int get mouthLength => _mouth.length;
 
-  final List<ChildGif> _special = [];
-  ChildGif special(int index) =>_special[index];
+  final List<ChildGifModel> _special = [];
+  ChildGifModel special(int index) =>_special[index];
   int get specialLength =>_special.length;
 
-  final Map<String, Gif> _misc = {};
-  Gif misc(String name) => _misc[name]!;
+  final Map<String, GifModel> _misc = {};
+  GifModel misc(String name) => _misc[name]!;
 
   Future<void> loadResources() async {
     Map info = await readJSON('assets/gif/info.json');
@@ -50,7 +49,7 @@ class GifManager {
     }
   }
 
-  Future<void> loadByList(List<ChildGif> list, Map info) async {
+  Future<void> loadByList(List<GifModel> list, Map info) async {
     ByteData data = await rootBundle.load(info['source']);
     ui.Codec codec = await ui.instantiateImageCodec(data.buffer.asUint8List());
 
@@ -78,7 +77,7 @@ class GifManager {
         int bottom = top + spriteHeight;
         Rect rect = Rect.fromLTRB(left.toDouble(), top.toDouble(), right.toDouble(), bottom.toDouble());
 
-        list.add(ChildGif(rect, frames));
+        list.add(ChildGifModel(rect, frames));
         spriteCount = spriteCount + 1;
 
         if (spriteCount == quantity) break rowLoop;
@@ -86,7 +85,7 @@ class GifManager {
     }
   }
 
-  loadByName(Map<String, Widget> map, List info) async {
+  loadByName(Map<String, GifModel> map, List info) async {
     for (Map element in info) {
       String name = element['name'];
       if (element.containsKey('rect')) {
@@ -104,7 +103,7 @@ class GifManager {
         var mapRect = element['rect'];
 
 
-        map[name] = ChildGif(Rect.fromLTRB(
+        map[name] = ChildGifModel(Rect.fromLTRB(
           mapRect['left'].toDouble(), 
           mapRect['top'].toDouble(), 
           mapRect['right'].toDouble(), 
@@ -112,7 +111,7 @@ class GifManager {
           frames
           );
       } else {
-        map[name] = await Gif.fromPath(element['source']);
+        map[name] = await GifModel.fromPath(element['source']);
       }
     }
   }

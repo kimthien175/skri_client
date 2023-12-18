@@ -8,44 +8,66 @@ import 'dart:ui' as ui;
 import 'package:get/get.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
-class Gif extends StatelessWidget {
-  static Future<Gif> fromPath(String path) async {
+class GifModel {
+  static Future<GifModel> fromPath(String path) async {
     // load width, height
     ByteData data = await rootBundle.load(path);
     ui.Codec codec = await ui.instantiateImageCodec(data.buffer.asUint8List());
     var img = (await codec.getNextFrame()).image;
 
-    return Gif(path, img.width.toDouble(), img.height.toDouble());
+    return GifModel(path, img.width.toDouble(), img.height.toDouble());
   }
 
-  const Gif(this._path, this._width, this._height, {super.key});
-
+  GifModel(this._path, this._width, this._height);
   final String _path;
-
   final double _width;
   double get width => _width;
 
   final double _height;
   double get height => _height;
 
+  double get ratio => _width / _height;
+
+  Gif widget() => Gif(this);
+
+  GifWithShadow widgetWithShadow({ShadowInfo info = const ShadowInfo()}) => GifWithShadow(this, info);
+}
+
+class ChildGifModel extends GifModel {
+  ChildGifModel(this._rect, this._frames)
+      : super('', _rect.width.toDouble(), _rect.height.toDouble());
+
+  final Rect _rect;
+  Rect get rect => _rect;
+
+  final List<ui.FrameInfo> _frames;
+  List<ui.FrameInfo> get frames => _frames;
+
+  @override
+  ChildGif widget() =>ChildGif(this);
+}
+
+class Gif<T extends GifModel> extends StatelessWidget {
+  const Gif(this.model, {super.key});
+
+  final T model;
+
   //#region Shadow
-  GifWithShadow withShadow({ShadowInfo info = const ShadowInfo()}) {
-    return GifWithShadow(_path, _width, _height, info);
-  }
 
   Widget getShadow() {
+    // TODO GIF GET SHADOW
     return Container();
   }
   //#endregion
 
   @override
   Widget build(BuildContext context) {
-    return Image.asset(_path);
+    return Image.asset(model._path);
   }
 }
 
 class GifWithShadow extends Gif {
-  const GifWithShadow(super._path, super._width, super._height, this.shadowInfo, {super.key});
+  const GifWithShadow(super.model, this.shadowInfo, {super.key});
 
   final ShadowInfo shadowInfo;
 
@@ -54,22 +76,22 @@ class GifWithShadow extends Gif {
     return Stack(clipBehavior: Clip.none, children: [
       Transform.translate(
           offset: Offset(shadowInfo.offsetLeft, shadowInfo.offsetTop),
-          child: Image.asset(_path, color: Color.fromRGBO(0, 0, 0, shadowInfo.opacity))),
-      Image.asset(_path)
+          child: Image.asset(model._path, color: Color.fromRGBO(0, 0, 0, shadowInfo.opacity))),
+      Image.asset(model._path)
     ]);
   }
 }
 
-class ChildGif extends Gif {
-  ChildGif(this.rect, List<ui.FrameInfo> frames, {super.key}) : super('', rect.width, rect.height) {
-    controller = ChildGifController(frames);
+class ChildGif<T extends ChildGifModel> extends Gif<T> {
+  ChildGif(T model, {super.key}) : super(model) {
+    controller = ChildGifController(model.frames.length, model.frames[0].duration);
   }
 
-  final Rect rect;
   late final ChildGifController controller;
 
   @override
   Widget build(BuildContext context) {
+    // TODO: is VisibilityDetector is a goodway?
     return VisibilityDetector(
         key: Key(hashCode.toString()),
         onVisibilityChanged: (visibilityInfo) {
@@ -80,31 +102,37 @@ class ChildGif extends Gif {
           }
         },
         child: Obx(() => CustomPaint(
-              painter: _CustomPainter(rect, controller.currentFrame),
-              child: SizedBox(width: rect.width, height: rect.height),
+              painter: _CustomPainter(
+                  model.rect, model.frames[controller.currentFrameIndex.value].image),
+              child: SizedBox(
+                  width: model.rect.width,
+                  height:
+                      model.rect.height), // to make gif animated, have to put SizedBox into this
             )));
   }
 }
 
 class ChildGifController extends GetxController {
-  ChildGifController(this.frames);
+  ChildGifController(this.frameCount, this.duration);
 
   RxInt currentFrameIndex = 0.obs;
-  final List<ui.FrameInfo> frames;
+
+  final int frameCount;
+  final Duration duration;
   late Timer timer;
 
   switchFrame() {
     currentFrameIndex++;
-    if (currentFrameIndex.value == frames.length) {
+    if (currentFrameIndex.value == frameCount) {
       currentFrameIndex.value = 0;
     }
-    timer = Timer(frames[currentFrameIndex.value].duration, switchFrame);
+    timer = Timer(duration, switchFrame);
   }
 
-  ui.Image get currentFrame => frames[currentFrameIndex.value].image;
+  //ui.Image get currentFrame => frame[currentFrameIndex.value].image;
 
   void startTimer() {
-    timer = Timer(frames[currentFrameIndex.value].duration, switchFrame);
+    timer = Timer(duration, switchFrame);
   }
 
   void pauseTimer() {
