@@ -30,7 +30,16 @@ class GifModel {
 
   Gif widget() => Gif(this);
 
-  GifWithShadow widgetWithShadow({ShadowInfo info = const ShadowInfo()}) => GifWithShadow(this, info);
+  GifWithShadow widgetWithShadow({ShadowInfo info = const ShadowInfo()}) =>
+      GifWithShadow(this, info);
+
+  // TODO: dummy getter, have to be updated for any new requiring features
+  List<ui.FrameInfo> get frames => [];
+  Rect get rect => Rect.zero;
+
+  CustomPainter getCustomPainter(int frameIndex, Paint paint) {
+    throw UnimplementedError('Default GifModel and Gif don\'t have CustomPainter');
+  }
 }
 
 class ChildGifModel extends GifModel {
@@ -38,13 +47,20 @@ class ChildGifModel extends GifModel {
       : super('', _rect.width.toDouble(), _rect.height.toDouble());
 
   final Rect _rect;
+  @override
   Rect get rect => _rect;
 
   final List<ui.FrameInfo> _frames;
+  @override
   List<ui.FrameInfo> get frames => _frames;
 
   @override
-  ChildGif widget() =>ChildGif(this);
+  ChildGif widget() => ChildGif(this);
+
+  @override
+  CustomPainter getCustomPainter(int frameIndex, Paint paint) {
+    return _CustomPainter(rect, frames[frameIndex].image, paint);
+  }
 }
 
 class Gif<T extends GifModel> extends StatelessWidget {
@@ -103,7 +119,7 @@ class ChildGif<T extends ChildGifModel> extends Gif<T> {
         },
         child: Obx(() => CustomPaint(
               painter: _CustomPainter(
-                  model.rect, model.frames[controller.currentFrameIndex.value].image),
+                  model.rect, model.frames[controller.currentFrameIndex.value].image, Paint()),
               child: SizedBox(
                   width: model.rect.width,
                   height:
@@ -141,10 +157,10 @@ class ChildGifController extends GetxController {
 }
 
 class _CustomPainter extends CustomPainter {
-  _CustomPainter(this.rect, this.img);
+  _CustomPainter(this.rect, this.img, this._paint);
   final Rect rect;
   final ui.Image img;
-  final Paint _paint = Paint();
+  final Paint _paint;
   @override
   void paint(Canvas canvas, Size size) {
     canvas.drawImageRect(img, rect, Rect.fromLTWH(0, 0, rect.width, rect.height), _paint);

@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:cd_mobile/models/gif_manager.dart';
 import 'package:cd_mobile/widgets/random_avatars.dart';
 import 'package:flutter/material.dart';
@@ -62,11 +64,11 @@ class _Web extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Container(
-            margin: const EdgeInsets.only(top: 25, bottom: 40),
-            child: GifManager.inst.misc('logo').widgetWithShadow()),
-        const SizedBox(height:10),
+        const SizedBox(height: 25),
+        GifManager.inst.misc('logo').widgetWithShadow(),
+        const SizedBox(height: 10),
         RandomAvatars(),
+        const SizedBox(height: 40)
       ],
     );
   }
@@ -79,17 +81,12 @@ class _Mobile extends StatelessWidget {
   Widget build(BuildContext context) {
     var logo = GifManager.inst.misc('logo').widgetWithShadow();
 
-    var maxWidth = 0.65*Get.height;
-    var width = 0.95*Get.width;
-    var finalWidth = width > maxWidth ? maxWidth : width;
-    var height = finalWidth*logo.model.ratio;
     return Column(
       children: [
-        Container(
-            margin: EdgeInsets.only(top: Get.height * 0.06, bottom: Get.height * 0.04),
-            width: finalWidth,
-            height: height,
-            child: FittedBox(child:logo)),
+        SizedBox(height: Get.height * 0.06),
+        SizedBox(
+          width: min(0.65*Get.height, 0.95*Get.width),
+            child: FittedBox(child:SizedBox(height: logo.model.height, child:logo))),
         const SizedBox(height: 10),
         RandomAvatars()
       ],

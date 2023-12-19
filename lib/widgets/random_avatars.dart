@@ -1,7 +1,5 @@
 import 'dart:math';
-
 import 'package:cd_mobile/models/avatar.dart';
-import 'package:cd_mobile/models/gif.dart';
 import 'package:cd_mobile/models/gif_manager.dart';
 
 import 'package:flutter/widgets.dart';
@@ -28,12 +26,21 @@ class RandomAvatars extends StatelessWidget {
     // }
 
     //first 8 avatars base on color
-    for (var i = 0; i < 8; i++) {
-      var eyes = rd.nextInt(GifManager.inst.eyesLength);
-      var mouth = rd.nextInt(GifManager.inst.mouthLength);
-      var avatar = GifManager.inst.color(i).widget();
+    var firstAvatar = AvatarWithShadow(
+      0,
+      rd.nextInt(GifManager.inst.eyesLength),
+      39,
+    );
+    // controller = firstAvatar.controller;
 
-      //avatar.withShadow();
+    avatars.add(firstAvatar);
+
+    for (var i = 1; i < 8; i++) {
+      var avatar = AvatarWithShadow(
+        i,
+        rd.nextInt(GifManager.inst.eyesLength),
+        rd.nextInt(GifManager.inst.mouthLength),
+      );
 
       // if (winnerId == i) {
       //   avatar.withCrown();
@@ -41,16 +48,30 @@ class RandomAvatars extends StatelessWidget {
 
       avatars.add(avatar);
     }
-
   }
 
-  late final List<ChildGif> avatars;
+  // late final AvatarController controller;
+
+  late final List<Avatar> avatars;
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-        mainAxisSize: MainAxisSize.min,
-        // crossAxisAlignment: CrossAxisAlignment.end,
-        children: avatars);
+    return
+        // VisibilityDetector(
+        //     key: Key(hashCode.toString()),
+        //     onVisibilityChanged: (visibilityInfo) {
+        //       if (visibilityInfo.visibleFraction == 0) {
+        //         controller.pauseTimer();
+        //       } else {
+        //         controller.startTimer();
+        //       }
+        //     },
+        //     child: Obx(() =>
+        Row(
+            mainAxisSize: MainAxisSize.min,
+            // crossAxisAlignment: CrossAxisAlignment.end,
+            children: avatars)
+        //));
+        ;
   }
 }

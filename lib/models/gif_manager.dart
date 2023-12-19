@@ -11,20 +11,20 @@ class GifManager {
   static GifManager get inst => _inst;
   //#endregion
 
-  final List<ChildGifModel> _color = [];
-  ChildGifModel color(int index) => _color[index];
+  final List<GifModel> _color = [];
+  GifModel color(int index) => _color[index];
   int get colorLength =>_color.length;
 
-  final List<ChildGifModel> _eyes = [];
-  ChildGifModel eyes(int index) => _eyes[index];
+  final List<GifModel> _eyes = [];
+  GifModel eyes(int index) => _eyes[index];
   int get eyesLength => _eyes.length;
 
-  final List<ChildGifModel> _mouth = [];
-  ChildGifModel mouth(int index) => _mouth[index];
+  final List<GifModel> _mouth = [];
+  GifModel mouth(int index) => _mouth[index];
   int get mouthLength => _mouth.length;
 
-  final List<ChildGifModel> _special = [];
-  ChildGifModel special(int index) =>_special[index];
+  final List<GifModel> _special = [];
+  GifModel special(int index) =>_special[index];
   int get specialLength =>_special.length;
 
   final Map<String, GifModel> _misc = {};
