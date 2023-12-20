@@ -1,6 +1,8 @@
 import 'dart:math';
 
 import 'package:cd_mobile/models/gif_manager.dart';
+import 'package:cd_mobile/pages/home/lang_selector.dart';
+import 'package:cd_mobile/utils/styles.dart';
 import 'package:cd_mobile/widgets/random_avatars.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -62,13 +64,27 @@ class _Web extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var styles = Styles.content;
     return Column(
       children: [
         const SizedBox(height: 25),
         GifManager.inst.misc('logo').widgetWithShadow(),
         const SizedBox(height: 10),
         RandomAvatars(),
-        const SizedBox(height: 40)
+
+        const SizedBox(height: 40),
+
+        Container(width: 400, 
+        decoration: BoxDecoration(
+          color: styles['__COLOR_PANEL_BG'],
+          borderRadius: const BorderRadius.all(Radius.circular(3))
+        ),
+        padding: const EdgeInsets.all(15),
+        child: const Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [ LangSelector()],)
+        ), 
+        Text('displayName'.tr)
       ],
     );
   }

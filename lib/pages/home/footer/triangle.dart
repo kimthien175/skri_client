@@ -1,4 +1,4 @@
-import 'package:cd_mobile/components/colors.dart';
+import 'package:cd_mobile/utils/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -6,7 +6,7 @@ class SvgTriangle extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = AssetColors.get('color-panel-bg')
+      ..color = Styles.content['color-panel-bg']
       ..style = PaintingStyle.fill;
 
     final path = Path()
