@@ -1,5 +1,7 @@
-import 'dart:async';
-import 'package:cd_mobile/models/gif.dart';
+import 'package:cd_mobile/models/avatar/controller.dart';
+import 'package:cd_mobile/models/avatar/custom_painter.dart';
+import 'package:cd_mobile/models/gif/custom_painter.dart';
+import 'package:cd_mobile/models/gif/gif.dart';
 import 'package:cd_mobile/models/gif_manager.dart';
 import 'package:cd_mobile/models/shadow_info.dart';
 import 'package:flutter/material.dart';
@@ -7,9 +9,11 @@ import 'package:get/get.dart';
 
 import 'package:visibility_detector/visibility_detector.dart';
 
+typedef GifCustomPainterBuilder = GifCustomPainter Function(int frameIndex, Paint paint);
+
 // ignore: must_be_immutable
 class Avatar extends StatelessWidget {
-  Avatar(int color, int eyes, int mouth, {super.key}) {
+  Avatar(int color, int eyes, int mouth, {super.key, this.winner = false}) {
     var gif = GifManager.inst;
     colorModel = gif.color(color);
     eyesModel = gif.eyes(eyes);
@@ -24,23 +28,13 @@ class Avatar extends StatelessWidget {
 
   late GifModel mouthModel;
 
-  //#region Crown
-  // Gif get crown => GifManager.inst.misc('crown');
-  // double get crownTopOffset => -crown.height / 2 + 2;
-  // static double _crownLeftOffset = -3;
-  // Avatar withCrown() {
-  //   widgets.add(Positioned(top: 0, left: crownLeftOffset, child: crown));
-  //   _height = _height - crownTopOffset;
-  //   return this;
-  // }
-  //#endregion
+  bool winner;
 
-  //#region Shadow
-  // Avatar withShadow({ShadowInfo info = const ShadowInfo()}) {
-  //   widgets.insert(0, AvatarShadow(this, info: info));
-  //   return this;
-  // }
-  //#endregion
+  static GifCustomPainterBuilder crownCustomPainter()  {
+    var crown = GifManager.inst.misc('crown');
+    return (int frameIndex, Paint paint) => GifCustomPainter(crown.frames[frameIndex].image, paint,
+        offset: const Offset(-3.5, -10.5 ));
+  }
 
   late final AvatarController controller;
   @override
@@ -55,72 +49,15 @@ class Avatar extends StatelessWidget {
           }
         },
         child: Obx(() => CustomPaint(
-            painter: _CustomPainter(this, controller.currentFrameIndex.value, Paint()),
+            painter: AvatarCustomPainter(this, controller.currentFrameIndex.value, Paint()),
             child: SizedBox(height: colorModel.height, width: colorModel.width))));
   }
-}
-
-class _CustomPainter extends CustomPainter {
-  _CustomPainter(this.avatar, this.frameIndex, this._paint);
-
-  final Avatar avatar;
-  final int frameIndex;
-
-  final Paint _paint;
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    avatar.colorModel.getCustomPainter(frameIndex, _paint).paint(canvas, size);
-    avatar.eyesModel.getCustomPainter(frameIndex, _paint).paint(canvas, size);
-    avatar.mouthModel.getCustomPainter(frameIndex, _paint).paint(canvas, size);
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) {
-    return true;
-  }
-}
-
-/// Assume color, eyes, mouth have the same frame time for each frame and frame count as well, for better performance
-class AvatarController extends GetxController {
-  AvatarController(this.frameCount, this.frameTime);
-
-  late Timer _timer;
-  RxInt currentFrameIndex = 0.obs;
-
-  late final int frameCount;
-  late final Duration frameTime;
-
-  void switchFrame() {
-    currentFrameIndex++;
-    if (currentFrameIndex.value == frameCount) {
-      currentFrameIndex.value = 0;
-    }
-    _timer = Timer(frameTime, switchFrame);
-  }
-
-  void startTimer() {
-    _timer = Timer(frameTime, switchFrame);
-  }
-
-  void pauseTimer() {
-    _timer.cancel();
-  }
-
-  void nextColor() {}
-  void previousColor() {}
-
-  void nextEyes() {}
-  void previousEyes() {}
-
-  void nextMouth() {}
-  void previousMouth() {}
 }
 
 // ignore: must_be_immutable
 class AvatarWithShadow extends Avatar {
   AvatarWithShadow(super.color, super.eyes, super.mouth,
-      {super.key, this.shadowInfo = const ShadowInfo()});
+      {super.key, this.shadowInfo = const ShadowInfo(), super.winner});
 
   final ShadowInfo shadowInfo;
 
@@ -141,7 +78,7 @@ class AvatarWithShadow extends Avatar {
                   child: Opacity(
                       opacity: shadowInfo.opacity,
                       child: CustomPaint(
-                          painter: _CustomPainter(
+                          painter: AvatarCustomPainter(
                               this,
                               controller.currentFrameIndex.value,
                               Paint()
@@ -149,7 +86,7 @@ class AvatarWithShadow extends Avatar {
                                     const ColorFilter.mode(Colors.black, BlendMode.srcATop)),
                           child: SizedBox(height: colorModel.height, width: colorModel.width)))),
               CustomPaint(
-                  painter: _CustomPainter(this, controller.currentFrameIndex.value, Paint()))
+                  painter: AvatarCustomPainter(this, controller.currentFrameIndex.value, Paint()))
             ])));
   }
 }

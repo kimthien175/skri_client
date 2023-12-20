@@ -1,56 +1,66 @@
-import 'dart:async';
-
+import 'package:cd_mobile/models/gif/controller.dart';
+import 'package:cd_mobile/models/gif/custom_painter.dart';
 import 'package:cd_mobile/models/shadow_info.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:ui' as ui;
-
 import 'package:get/get.dart';
 import 'package:visibility_detector/visibility_detector.dart';
+
 
 class GifModel {
   static Future<GifModel> fromPath(String path) async {
     // load width, height
     ByteData data = await rootBundle.load(path);
     ui.Codec codec = await ui.instantiateImageCodec(data.buffer.asUint8List());
-    var img = (await codec.getNextFrame()).image;
 
-    return GifModel(path, img.width.toDouble(), img.height.toDouble());
+    //#region load frames
+    List<ui.FrameInfo> frames = [];
+
+    var frameCount = codec.frameCount;
+    for (var i = 0; i < frameCount; i++) {
+      var frame = await codec.getNextFrame();
+      frames.add(frame);
+    }
+    //#endregion
+
+    return GifModel(path, frames, frames[0].image.width.toDouble(), frames[0].image.height.toDouble());
   }
 
-  GifModel(this._path, this._width, this._height);
+  GifModel(this._path, this._frames, this._width, this._height);
+
   final String _path;
-  final double _width;
+  late final double _width;
   double get width => _width;
 
-  final double _height;
+  late final double _height;
   double get height => _height;
 
-  double get ratio => _width / _height;
+  //double get ratio => _width / _height;
 
   Gif widget() => Gif(this);
 
   GifWithShadow widgetWithShadow({ShadowInfo info = const ShadowInfo()}) =>
       GifWithShadow(this, info);
 
-  // TODO: dummy getter, have to be updated for any new requiring features
-  List<ui.FrameInfo> get frames => [];
+
+  final List<ui.FrameInfo> _frames;
+  List<ui.FrameInfo> get frames => _frames;
   Rect get rect => Rect.zero;
 
-  CustomPainter getCustomPainter(int frameIndex, Paint paint) {
-    throw UnimplementedError('Default GifModel and Gif don\'t have CustomPainter');
+  CustomPainter getCustomPainter(int frameIndex, Paint paint, {Offset offset = Offset.zero}) {
+    return GifCustomPainter(_frames[frameIndex].image, paint, offset: offset);
   }
 }
 
 class ChildGifModel extends GifModel {
-  ChildGifModel(this._rect, this._frames)
-      : super('', _rect.width.toDouble(), _rect.height.toDouble());
+  ChildGifModel(this._rect, List<ui.FrameInfo> frames):super('', frames, _rect.width, _rect.height);
 
   final Rect _rect;
   @override
   Rect get rect => _rect;
 
-  final List<ui.FrameInfo> _frames;
+
   @override
   List<ui.FrameInfo> get frames => _frames;
 
@@ -58,23 +68,16 @@ class ChildGifModel extends GifModel {
   ChildGif widget() => ChildGif(this);
 
   @override
-  CustomPainter getCustomPainter(int frameIndex, Paint paint) {
-    return _CustomPainter(rect, frames[frameIndex].image, paint);
+  CustomPainter getCustomPainter(int frameIndex, Paint paint, {Offset offset = Offset.zero}) {
+    return ChildGifCustomPainter(rect, frames[frameIndex].image, paint);
   }
 }
+
 
 class Gif<T extends GifModel> extends StatelessWidget {
   const Gif(this.model, {super.key});
 
   final T model;
-
-  //#region Shadow
-
-  Widget getShadow() {
-    // TODO GIF GET SHADOW
-    return Container();
-  }
-  //#endregion
 
   @override
   Widget build(BuildContext context) {
@@ -118,7 +121,7 @@ class ChildGif<T extends ChildGifModel> extends Gif<T> {
           }
         },
         child: Obx(() => CustomPaint(
-              painter: _CustomPainter(
+              painter: ChildGifCustomPainter(
                   model.rect, model.frames[controller.currentFrameIndex.value].image, Paint()),
               child: SizedBox(
                   width: model.rect.width,
@@ -128,46 +131,5 @@ class ChildGif<T extends ChildGifModel> extends Gif<T> {
   }
 }
 
-class ChildGifController extends GetxController {
-  ChildGifController(this.frameCount, this.duration);
 
-  RxInt currentFrameIndex = 0.obs;
 
-  final int frameCount;
-  final Duration duration;
-  late Timer timer;
-
-  switchFrame() {
-    currentFrameIndex++;
-    if (currentFrameIndex.value == frameCount) {
-      currentFrameIndex.value = 0;
-    }
-    timer = Timer(duration, switchFrame);
-  }
-
-  //ui.Image get currentFrame => frame[currentFrameIndex.value].image;
-
-  void startTimer() {
-    timer = Timer(duration, switchFrame);
-  }
-
-  void pauseTimer() {
-    timer.cancel();
-  }
-}
-
-class _CustomPainter extends CustomPainter {
-  _CustomPainter(this.rect, this.img, this._paint);
-  final Rect rect;
-  final ui.Image img;
-  final Paint _paint;
-  @override
-  void paint(Canvas canvas, Size size) {
-    canvas.drawImageRect(img, rect, Rect.fromLTWH(0, 0, rect.width, rect.height), _paint);
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) {
-    return true;
-  }
-}

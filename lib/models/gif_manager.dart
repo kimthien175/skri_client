@@ -1,5 +1,5 @@
 import 'dart:core';
-import 'package:cd_mobile/models/gif.dart';
+import 'package:cd_mobile/models/gif/gif.dart';
 import 'package:cd_mobile/utils/read_json.dart';
 import 'package:flutter/services.dart';
 import 'dart:ui' as ui;
@@ -53,6 +53,7 @@ class GifManager {
     ByteData data = await rootBundle.load(info['source']);
     ui.Codec codec = await ui.instantiateImageCodec(data.buffer.asUint8List());
 
+    //#region load frames
     List<ui.FrameInfo> frames = [];
 
     var frameCount = codec.frameCount;
@@ -60,6 +61,7 @@ class GifManager {
       var frame = await codec.getNextFrame();
       frames.add(frame);
     }
+    //#endregion
 
     int columnCount = (frames[0].image.width / info['spriteSize']['width']).floor();
     int quantity = info['quantity'];

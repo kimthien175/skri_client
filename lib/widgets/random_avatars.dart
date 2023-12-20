@@ -1,5 +1,5 @@
 import 'dart:math';
-import 'package:cd_mobile/models/avatar.dart';
+import 'package:cd_mobile/models/avatar/avatar.dart';
 import 'package:cd_mobile/models/gif_manager.dart';
 
 import 'package:flutter/widgets.dart';
@@ -9,8 +9,8 @@ class RandomAvatars extends StatelessWidget {
     avatars = [];
     var rd = Random();
 
-    //int winnerId = -1;
-    // consider the group has winner or not
+    // int winnerId = -1;
+    // // consider the group has winner or not
     // if (rd.nextBool()) {
     //   winnerId = rd.nextInt(8);
     // }
@@ -28,10 +28,10 @@ class RandomAvatars extends StatelessWidget {
     //first 8 avatars base on color
     var firstAvatar = AvatarWithShadow(
       0,
-      rd.nextInt(GifManager.inst.eyesLength),
-      39,
+      56,
+      28,
+      winner: true
     );
-    // controller = firstAvatar.controller;
 
     avatars.add(firstAvatar);
 
@@ -42,15 +42,9 @@ class RandomAvatars extends StatelessWidget {
         rd.nextInt(GifManager.inst.mouthLength),
       );
 
-      // if (winnerId == i) {
-      //   avatar.withCrown();
-      // }
-
       avatars.add(avatar);
     }
   }
-
-  // late final AvatarController controller;
 
   late final List<Avatar> avatars;
 
