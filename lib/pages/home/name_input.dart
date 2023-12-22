@@ -1,6 +1,7 @@
 import 'package:cd_mobile/utils/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 
 class NameInput extends StatelessWidget {
   const NameInput({super.key});
@@ -15,10 +16,10 @@ class NameInput extends StatelessWidget {
             child: TextField(
               inputFormatters: [LengthLimitingTextInputFormatter(20)],
               style: const TextStyle(fontWeight: FontWeight.w800),
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                   border: InputBorder.none,
-                  hintText: 'Enter your name',
-                  hintStyle: TextStyle(fontWeight: FontWeight.w800, color: Colors.black38)),
+                  hintText: 'name_input_placeholder'.tr,
+                  hintStyle: const TextStyle(fontWeight: FontWeight.w800, color: Colors.black38)),
             )));
   }
 }

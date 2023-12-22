@@ -7,9 +7,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class AvatarEditor extends StatelessWidget {
-  AvatarEditor({super.key});
+  const AvatarEditor({super.key});
 
-  final AvatarEditorController controller = Get.put(AvatarEditorController());
+  static final AvatarEditorController controller = Get.put(AvatarEditorController());
 
   @override
   Widget build(BuildContext context) {

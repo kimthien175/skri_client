@@ -1,37 +1,37 @@
 {
     "color": {
         "type": "byList",
-        "source":"assets/gif/avatar/color.gif",
+        "source": "assets/gif/avatar/color.gif",
         "spriteSize": {
             "width": 48,
             "height": 48
         },
         "quantity": 26
     },
-    "eyes":{
+    "eyes": {
         "type": "byList",
         "source": "assets/gif/avatar/eyes.gif",
-        "spriteSize":{
+        "spriteSize": {
             "width": 48,
-            "height":48
+            "height": 48
         },
         "quantity": 57
     },
-    "mouth":{
+    "mouth": {
         "type": "byList",
         "source": "assets/gif/avatar/mouth.gif",
-        "spriteSize":{
+        "spriteSize": {
             "width": 48,
-            "height":48
+            "height": 48
         },
         "quantity": 51
     },
-    "special":{
-        "type":"byList",
+    "special": {
+        "type": "byList",
         "source": "assets/gif/avatar/special.gif",
-        "spriteSize":{
+        "spriteSize": {
             "width": 80,
-            "height":80
+            "height": 80
         },
         "quantity": 20
     },
@@ -39,7 +39,7 @@
         "type": "byName",
         "content": [
             {
-                "name":"logo",
+                "name": "logo",
                 "source": "assets/gif/logo.gif"
             },
             {
@@ -59,36 +59,48 @@
             {
                 "name": "right_arrow",
                 "source": "assets/gif/arrow.gif",
-                "rect":{
-                    "left":0,
-                    "top":17,
-                    "right":17,
-                    "bottom":34
+                "rect": {
+                    "left": 0,
+                    "top": 17,
+                    "right": 17,
+                    "bottom": 34
                 }
             },
             {
                 "name": "chosen_left_arrow",
                 "source": "assets/gif/arrow.gif",
-                "rect":{
-                    "left":34,
-                    "top":0,
-                    "right":34,
-                    "bottom":17
+                "rect": {
+                    "left": 34,
+                    "top": 0,
+                    "right": 34,
+                    "bottom": 17
                 }
             },
             {
                 "name": "chosen_right_arrow",
                 "source": "assets/gif/arrow.gif",
-                "rect":{
-                    "left":17,
-                    "top":17,
-                    "right":34,
-                    "bottom":34
+                "rect": {
+                    "left": 17,
+                    "top": 17,
+                    "right": 34,
+                    "bottom": 34
                 }
             },
             {
-                "name":"crown",
+                "name": "crown",
                 "source": "assets/gif/avatar/crown.gif"
+            },
+            {
+                "name": "about",
+                "source": "assets/gif/about.gif"
+            },
+            { 
+                "name": "news", 
+                "source": "assets/gif/news.gif" 
+            },
+            {
+                "name": "how",
+                "source": "assets/gif/how.gif"
             }
         ]
     }

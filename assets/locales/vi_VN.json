@@ -1,3 +1,16 @@
 {
-               "displayName": "Tiếng Việt"
+               "displayName": "Tiếng Việt",
+               "name_input_placeholder":"Nhập tên của bạn",
+               "play_button": "Chơi!",
+               "create_private_room_button":"Tạo phòng riêng",
+               "section_about": "Giới thiệu",
+               "section_about_content":"<b>skribbl.io</b><span> là trò chơi nhiều người vẽ và đoán hình miễn phí.</span><br><br><span>Một trò chơi thường sẽ có nhiều ván, mỗi ván một người chơi sẽ được chọn để vẽ theo một từ mà người đó có thể chọn và những người chơi khác sẽ phải đoán để đạt điểm!</span><br><br><span>Người chơi có số điểm cao nhất khi kết thúc trò chơi, sẽ được nhận một vương miện như là người chiến thắng!<span><br><span>Chúc may mắn!</span>",
+               "section_news":"Cập nhật",
+               "section_how_to_play":"Cách chơi",
+               "section_how_to_play_step1": "Khi đến lượt bạn, hãy chọn một từ để vẽ!",
+               "section_how_to_play_step2":"Hãy cố gắng mô tả từ của bạn bằng hình vẽ! Đừng nói ra!",
+               "section_how_to_play_step3":"Hãy để những người chơi khác đoán từ của bạn!",
+               "section_how_to_play_step4":"Khi không đến lượt bạn, cố gắng đoán từ của người khác đang vẽ!",
+               "section_how_to_play_step5":"Đạt số điểm cao nhất và bạn sẽ nhận được vương miện!"
+
 }

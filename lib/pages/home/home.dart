@@ -1,5 +1,8 @@
 import 'package:cd_mobile/models/avatar_editor/avatar_editor.dart';
 import 'package:cd_mobile/models/gif_manager.dart';
+import 'package:cd_mobile/pages/home/create_private_room_button.dart';
+import 'package:cd_mobile/pages/home/footer/footer.dart';
+import 'package:cd_mobile/pages/home/footer/triangle.dart';
 import 'package:cd_mobile/pages/home/lang_selector.dart';
 import 'package:cd_mobile/pages/home/name_input.dart';
 import 'package:cd_mobile/pages/home/play_button.dart';
@@ -63,9 +66,8 @@ class HomePage extends StatelessWidget {
                     width: Get.width -
                         MediaQuery.of(context).padding.left -
                         MediaQuery.of(context).padding.right,
-                    child:  Obx(() => controller.isWebLayout.value
-                                ? const _Web()
-                                : const _Mobile())))));
+                    child: Obx(
+                        () => controller.isWebLayout.value ? const _Web() : const _Mobile())))));
   }
 }
 
@@ -75,25 +77,31 @@ class _Web extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // TODO: WEB VIEW, scrollable when user resize or zoom in
-    return Center(child:  Column(
+    return Column(
+      children: [
+        const SizedBox(height: 25, width: double.infinity),
+        GifManager.inst.misc('logo').widgetWithShadow(),
+        const SizedBox(height: 10),
+        RandomAvatars(),
+        const SizedBox(height: 40),
+        Container(
+            padding: PanelStyles.padding,
+            decoration: PanelStyles.decoration,
+            width: 400,
+            child: const Column(
+              //mainAxisSize: MainAxisSize.min,
               children: [
-                const SizedBox(height: 25),
-                GifManager.inst.misc('logo').widgetWithShadow(),
-                const SizedBox(height: 10),
-                RandomAvatars(),
-                const SizedBox(height: 40),
-                Container(
-                    padding: PanelStyles.padding,
-                    decoration: PanelStyles.decoration,
-                    width: 400,
-
-                    child:Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [const Row(children: [NameInput(),LangSelector()]),  AvatarEditor(), PlayButton()],
-                    )),
-                //...items
+                Row(children: [NameInput(), LangSelector()]),
+                AvatarEditor(),
+                PlayButton(),
+                CreatePrivateRoomButton(),
               ],
-            ));
+            )),
+            const Spacer(),
+       const Triangle(),
+       const Footer(),
+      ],
+    );
   }
 }
 
