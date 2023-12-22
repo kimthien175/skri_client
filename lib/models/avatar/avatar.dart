@@ -7,8 +7,6 @@ import 'package:cd_mobile/models/shadow_info.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import 'package:visibility_detector/visibility_detector.dart';
-
 typedef GifCustomPainterBuilder = GifCustomPainter Function(int frameIndex, Paint paint);
 
 // ignore: must_be_immutable
@@ -19,7 +17,7 @@ class Avatar extends StatelessWidget {
     eyesModel = gif.eyes(eyes);
     mouthModel = gif.mouth(mouth);
 
-    controller = AvatarController(colorModel.frames.length, colorModel.frames[0].duration);
+    Avatar.controller ??= AvatarController(colorModel.frames.length, colorModel.frames[0].duration);
   }
 
   late GifModel colorModel;
@@ -30,27 +28,18 @@ class Avatar extends StatelessWidget {
 
   bool winner;
 
-  static GifCustomPainterBuilder crownCustomPainter()  {
+  static GifCustomPainterBuilder crownCustomPainter() {
     var crown = GifManager.inst.misc('crown');
-    return (int frameIndex, Paint paint) => GifCustomPainter(crown.frames[frameIndex].image, paint,
-        offset: const Offset(-3.5, -10.5 ));
+    return (int frameIndex, Paint paint) =>
+        GifCustomPainter(crown.frames[frameIndex].image, paint, offset: const Offset(-3.5, -10.5));
   }
 
-  late final AvatarController controller;
+  static AvatarController? controller;
   @override
   Widget build(BuildContext context) {
-    return VisibilityDetector(
-        key: Key(hashCode.toString()),
-        onVisibilityChanged: (visibilityInfo) {
-          if (visibilityInfo.visibleFraction == 0) {
-            controller.pauseTimer();
-          } else {
-            controller.startTimer();
-          }
-        },
-        child: Obx(() => CustomPaint(
-            painter: AvatarCustomPainter(this, controller.currentFrameIndex.value, Paint()),
-            child: SizedBox(height: colorModel.height, width: colorModel.width))));
+    return Obx(() => CustomPaint(
+        painter: AvatarCustomPainter(this, Avatar.controller!.currentFrameIndex.value, Paint()),
+        child: SizedBox(height: colorModel.height, width: colorModel.width)));
   }
 }
 
@@ -63,30 +52,22 @@ class AvatarWithShadow extends Avatar {
 
   @override
   Widget build(BuildContext context) {
-    return VisibilityDetector(
-        key: Key(hashCode.toString()),
-        onVisibilityChanged: (visibilityInfo) {
-          if (visibilityInfo.visibleFraction == 0) {
-            controller.pauseTimer();
-          } else {
-            controller.startTimer();
-          }
-        },
-        child: Obx(() => Stack(clipBehavior: Clip.none, children: [
-              Transform.translate(
-                  offset: Offset(shadowInfo.offsetLeft, shadowInfo.offsetTop),
-                  child: Opacity(
-                      opacity: shadowInfo.opacity,
-                      child: CustomPaint(
-                          painter: AvatarCustomPainter(
-                              this,
-                              controller.currentFrameIndex.value,
-                              Paint()
-                                ..colorFilter =
-                                    const ColorFilter.mode(Colors.black, BlendMode.srcATop)),
-                          child: SizedBox(height: colorModel.height, width: colorModel.width)))),
-              CustomPaint(
-                  painter: AvatarCustomPainter(this, controller.currentFrameIndex.value, Paint()))
-            ])));
+    return Obx(() => Stack(clipBehavior: Clip.none, children: [
+          Transform.translate(
+              offset: Offset(shadowInfo.offsetLeft, shadowInfo.offsetTop),
+              child: Opacity(
+                  opacity: shadowInfo.opacity,
+                  child: CustomPaint(
+                      painter: AvatarCustomPainter(
+                          this,
+                          Avatar.controller!.currentFrameIndex.value,
+                          Paint()
+                            ..colorFilter =
+                                const ColorFilter.mode(Colors.black, BlendMode.srcATop)),
+                      child: SizedBox(height: colorModel.height, width: colorModel.width)))),
+          CustomPaint(
+              painter:
+                  AvatarCustomPainter(this, Avatar.controller!.currentFrameIndex.value, Paint()))
+        ]));
   }
 }

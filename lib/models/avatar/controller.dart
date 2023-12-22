@@ -4,13 +4,15 @@ import 'package:get/get.dart';
 
 /// Assume color, eyes, mouth have the same frame time for each frame and frame count as well, for better performance
 class AvatarController extends GetxController {
-  AvatarController(this.frameCount, this.frameTime);
+  AvatarController(this.frameCount, this.frameTime) {
+    _timer = Timer(frameTime, switchFrame);
+  }
 
   late Timer _timer;
   RxInt currentFrameIndex = 0.obs;
 
-  late final int frameCount;
-  late final Duration frameTime;
+  final int frameCount;
+  final Duration frameTime;
 
   void switchFrame() {
     currentFrameIndex++;
@@ -27,13 +29,4 @@ class AvatarController extends GetxController {
   void pauseTimer() {
     _timer.cancel();
   }
-
-  void nextColor() {}
-  void previousColor() {}
-
-  void nextEyes() {}
-  void previousEyes() {}
-
-  void nextMouth() {}
-  void previousMouth() {}
 }

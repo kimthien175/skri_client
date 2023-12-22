@@ -6,7 +6,7 @@ class SvgTriangle extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = Styles.content['color-panel-bg']
+      ..color = PanelStyles.color
       ..style = PaintingStyle.fill;
 
     final path = Path()

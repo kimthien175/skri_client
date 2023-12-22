@@ -3,7 +3,9 @@ import 'dart:async';
 import 'package:get/get.dart';
 
 class ChildGifController extends GetxController {
-  ChildGifController(this.frameCount, this.duration);
+  ChildGifController(this.frameCount, this.duration){
+    timer = Timer(duration, switchFrame);
+  }
 
   RxInt currentFrameIndex = 0.obs;
 

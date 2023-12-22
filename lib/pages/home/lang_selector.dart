@@ -1,4 +1,5 @@
 import 'package:cd_mobile/generated/locales.g.dart';
+import 'package:cd_mobile/utils/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -9,15 +10,29 @@ class LangSelector extends StatelessWidget {
   Widget build(BuildContext context) {
     var translations = AppTranslation.translations;
     var items = translations.entries
-        .map((entry) =>
-            DropdownMenuItem(value: entry.key, child: Text(entry.value['displayName'] ?? '')))
+        .map((entry) => DropdownMenuItem(
+            value: entry.key,
+            child: Text(
+              entry.value['displayName'] ?? '',
+              style:
+                  const TextStyle(fontFamily: 'Nunito', fontWeight: FontWeight.w500, fontSize: 16),
+            )))
         .toList();
-    return DropdownButton(
-      value: Get.locale.toString(),
-        items: items,
-        onChanged: (String? strLocale) {
-          var list = strLocale!.split('_');
-          Get.updateLocale(Locale(list[0], list[1]));
-        });
+    return Container(
+        height: 34,
+        width: 120,
+        decoration: InputStyles.decoration,
+        margin: const EdgeInsets.only(left: 4),
+        child: DropdownButtonHideUnderline(
+            child: DropdownButton(
+                icon: Icon(Icons.keyboard_arrow_down_rounded, color: InputStyles.color),
+                padding: const EdgeInsets.only(left: 7),
+                isExpanded: true,
+                value: Get.locale.toString(),
+                items: items,
+                onChanged: (String? strLocale) {
+                  var list = strLocale!.split('_');
+                  Get.updateLocale(Locale(list[0], list[1]));
+                })));
   }
 }

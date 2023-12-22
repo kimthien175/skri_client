@@ -9,17 +9,19 @@ void main() {
   WidgetsFlutterBinding.ensureInitialized();
   startUp();
   runApp(GetMaterialApp(
-    // Locales
-    translationsKeys: AppTranslation.translations,
-    locale: Get.deviceLocale,
-    fallbackLocale: const Locale('en', 'US'),
+      theme: ThemeData(fontFamily: 'Nunito'),
+      // Locales
+      translationsKeys: AppTranslation.translations,
+      locale: Get.deviceLocale,
+      fallbackLocale: const Locale('en', 'US'),
 
-    debugShowCheckedModeBanner: false,
-    title: 'Material App',
-    initialRoute: '/loading',
-    getPages: [
-      GetPage(name: '/loading', page: ()=>const Loading()),
-      GetPage(name: '/', page: ()=>HomePage())
-    ],
-  ));
+      debugShowCheckedModeBanner: false,
+      title: 'Material App',
+      initialRoute: '/loading',
+      getPages: [
+        GetPage(name: '/loading', page: () => const Loading()),
+        GetPage(name: '/', page: () => HomePage())
+      ],
+      // home: const Scaffold(body: Center(child: Text('English')),)
+    ));
 }

@@ -36,7 +36,6 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
   get: ^4.6.6
-  visibility_detector: ^0.4.0+2
 
 dev_dependencies:
   flutter_test:
@@ -47,7 +46,7 @@ dev_dependencies:
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
-  flutter_lints: ^2.0.0
+  flutter_lints: ^3.0.1
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -86,7 +85,68 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
-  # fonts:
+  fonts:
+    - family: Nunito
+      fonts:
+        - asset: fonts/Nunito-ExtraLight.ttf
+          weight: 200
+        - asset: fonts/Nunito-ExtraLightItalic.ttf
+          weight: 200
+          style: italic
+
+        - asset: fonts/Nunito-Light.ttf
+          weight: 300
+        - asset: fonts/Nunito-LightItalic.ttf
+          weight: 300
+          style: italic
+
+        - asset: fonts/Nunito-Regular.ttf
+          weight: 400
+        - asset: fonts/Nunito-Italic.ttf
+          weight: 400
+          style: italic
+
+        - asset: fonts/Nunito-Medium.ttf
+          weight: 500
+        - asset: fonts/Nunito-Mediumitalic.ttf
+          weight: 500
+          style: italic
+
+        - asset: fonts/Nunito-SemiBold.ttf
+          weight: 600
+        - asset: fonts/Nunito-SemiBoldItalic.ttf
+          weight: 600
+          style: italic
+
+        - asset: fonts/Nunito-Bold.ttf
+          weight: 700
+        - asset: fonts/Nunito-BoldItalic.ttf
+          weight: 700
+          style: italic
+
+        - asset: fonts/Nunito-ExtraBold.ttf
+          weight: 800
+        - asset: fonts/Nunito-ExtraBoldItalic.ttf
+          weight: 800
+          style: italic
+
+        - asset: fonts/Nunito-Black.ttf
+          weight: 900
+        - asset: fonts/Nunito-BlackItalic.ttf
+          weight: 900
+          style: italic
+
+
+
+
+
+
+
+
+
+
+
+
   #   - family: Schyler
   #     fonts:
   #       - asset: fonts/Schyler-Regular.ttf

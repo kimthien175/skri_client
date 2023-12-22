@@ -1,7 +1,8 @@
-import 'dart:math';
-
+import 'package:cd_mobile/models/avatar_editor/avatar_editor.dart';
 import 'package:cd_mobile/models/gif_manager.dart';
 import 'package:cd_mobile/pages/home/lang_selector.dart';
+import 'package:cd_mobile/pages/home/name_input.dart';
+import 'package:cd_mobile/pages/home/play_button.dart';
 import 'package:cd_mobile/utils/styles.dart';
 import 'package:cd_mobile/widgets/random_avatars.dart';
 import 'package:flutter/material.dart';
@@ -53,9 +54,18 @@ class HomePage extends StatelessWidget {
                     repeat: ImageRepeat.repeat,
                     image: AssetImage('assets/background.png'))),
             child: SafeArea(
-                child: Center(
-                    child: Obx(
-                        () => controller.isWebLayout.value ? const _Web() : const _Mobile())))));
+                child: SizedBox(
+                    height: Get.height -
+                        MediaQuery.of(context).padding.bottom -
+                        MediaQuery.of(context)
+                            .padding
+                            .top, // based on ChatGPT the SafeArea's size is screen's size subtracting paddings
+                    width: Get.width -
+                        MediaQuery.of(context).padding.left -
+                        MediaQuery.of(context).padding.right,
+                    child:  Obx(() => controller.isWebLayout.value
+                                ? const _Web()
+                                : const _Mobile())))));
   }
 }
 
@@ -64,29 +74,26 @@ class _Web extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var styles = Styles.content;
-    return Column(
-      children: [
-        const SizedBox(height: 25),
-        GifManager.inst.misc('logo').widgetWithShadow(),
-        const SizedBox(height: 10),
-        RandomAvatars(),
+    // TODO: WEB VIEW, scrollable when user resize or zoom in
+    return Center(child:  Column(
+              children: [
+                const SizedBox(height: 25),
+                GifManager.inst.misc('logo').widgetWithShadow(),
+                const SizedBox(height: 10),
+                RandomAvatars(),
+                const SizedBox(height: 40),
+                Container(
+                    padding: PanelStyles.padding,
+                    decoration: PanelStyles.decoration,
+                    width: 400,
 
-        const SizedBox(height: 40),
-
-        Container(width: 400, 
-        decoration: BoxDecoration(
-          color: styles['__COLOR_PANEL_BG'],
-          borderRadius: const BorderRadius.all(Radius.circular(3))
-        ),
-        padding: const EdgeInsets.all(15),
-        child: const Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [ LangSelector()],)
-        ), 
-        Text('displayName'.tr)
-      ],
-    );
+                    child:Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [const Row(children: [NameInput(),LangSelector()]),  AvatarEditor(), PlayButton()],
+                    )),
+                //...items
+              ],
+            ));
   }
 }
 
@@ -95,16 +102,16 @@ class _Mobile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var logo = GifManager.inst.misc('logo').widgetWithShadow();
+    //var logo = GifManager.inst.misc('logo').widgetWithShadow();
 
     return Column(
       children: [
         SizedBox(height: Get.height * 0.06),
-        SizedBox(
-          width: min(0.65*Get.height, 0.95*Get.width),
-            child: FittedBox(child:SizedBox(height: logo.model.height, child:logo))),
+        // SizedBox(
+        //     width: min(0.65 * Get.height, 0.95 * Get.width),
+        //     child: FittedBox(child: SizedBox(height: logo.model.height, child: logo))),
         const SizedBox(height: 10),
-        RandomAvatars()
+        //RandomAvatars()
       ],
     );
   }
