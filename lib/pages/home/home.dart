@@ -97,9 +97,9 @@ class _Web extends StatelessWidget {
                 CreatePrivateRoomButton(),
               ],
             )),
-            const Spacer(),
-       const Triangle(),
-       const Footer(),
+        const Spacer(),
+        const Triangle(),
+        const Footer(),
       ],
     );
   }

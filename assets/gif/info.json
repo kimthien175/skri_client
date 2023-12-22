@@ -101,6 +101,26 @@
             {
                 "name": "how",
                 "source": "assets/gif/how.gif"
+            },
+            {
+                "name":"tutorial_1",
+                "source": "assets/gif/tutorial/step1.gif"
+            },
+            {
+                "name":"tutorial_2",
+                "source": "assets/gif/tutorial/step2.gif"
+            },
+            {
+                "name":"tutorial_3",
+                "source": "assets/gif/tutorial/step3.gif"
+            },
+            {
+                "name":"tutorial_4",
+                "source": "assets/gif/tutorial/step4.gif"
+            },
+            {
+                "name":"tutorial_5",
+                "source": "assets/gif/tutorial/step5.gif"
             }
         ]
     }

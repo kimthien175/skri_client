@@ -77,6 +77,11 @@ flutter:
     - assets/gif/about.gif
     - assets/gif/news.gif
     - assets/gif/how.gif
+    - assets/gif/tutorial/step1.gif
+    - assets/gif/tutorial/step2.gif
+    - assets/gif/tutorial/step3.gif
+    - assets/gif/tutorial/step4.gif
+    - assets/gif/tutorial/step5.gif
 
 
   # An image asset can refer to one or more resolution-specific "variants", see
