@@ -1,4 +1,5 @@
 import 'package:cd_mobile/generated/locales.g.dart';
+import 'package:cd_mobile/pages/credits/credits.dart';
 import 'package:cd_mobile/pages/home/home.dart';
 import 'package:cd_mobile/pages/loading.dart';
 import 'package:cd_mobile/pages/terms/terms.dart';
@@ -21,8 +22,9 @@ void main() {
       initialRoute: '/loading',
       getPages: [
         GetPage(name: '/loading', page: () => const Loading()),
-        GetPage(name: '/', page: () => const HomePage()),
-        GetPage(name: '/terms', page: ()=>const TermsPage())
+        GetPage(name: '/', page: () => HomePage()),
+        GetPage(name: '/terms', page: ()=>const TermsPage()),
+        GetPage(name: '/credits', page: ()=>const CreditsPage())
       ],
       // home: const Scaffold(body: Center(child: Text('English')),)
     ));

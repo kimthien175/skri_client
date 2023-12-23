@@ -107,7 +107,6 @@ class ChildGif<T extends ChildGifModel> extends Gif<T> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: is VisibilityDetector is a goodway? => remove VisibilityDetector, run timer when init for now
     return Obx(() => CustomPaint(
           painter: ChildGifCustomPainter(
               model.rect, model.frames[controller!.currentFrameIndex.value].image, Paint()),

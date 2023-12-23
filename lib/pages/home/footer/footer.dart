@@ -72,7 +72,8 @@ class _ContactLink extends StatelessWidget {
       final Uri params = Uri(
           scheme: 'mailto',
           path: 'contact@skribbl.io',
-          queryParameters: {'subject': 'Default Subject', 'body': 'Default body'});
+          //queryParameters: {'subject': 'Default Subject', 'body': 'Default body'}
+          );
 
       if (await canLaunchUrl(params)) {
         await launchUrl(params);
@@ -97,6 +98,8 @@ class _CreditsLink extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _linkBuilder('link_credits'.tr, () {});
+    return _linkBuilder('link_credits'.tr, () {
+      Get.toNamed('/credits');
+    });
   }
 }

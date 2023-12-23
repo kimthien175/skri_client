@@ -7,6 +7,7 @@ import 'package:cd_mobile/pages/home/widgets/lang_selector.dart';
 import 'package:cd_mobile/pages/home/widgets/name_input.dart';
 import 'package:cd_mobile/pages/home/widgets/play_button.dart';
 import 'package:cd_mobile/utils/styles.dart';
+import 'package:cd_mobile/widgets/logo.dart';
 import 'package:cd_mobile/widgets/random_avatars.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -43,9 +44,9 @@ class HomeController extends SuperController {
 }
 
 class HomePage extends StatelessWidget {
-  static final HomeController controller = Get.put(HomeController());
+  final HomeController controller = Get.put(HomeController());
 
-  const HomePage({super.key});
+  HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -80,7 +81,7 @@ class _Web extends StatelessWidget {
     return Column(
       children: [
         const SizedBox(height: 25, width: double.infinity),
-        GifManager.inst.misc('logo').widgetWithShadow(),
+        const Logo(),
         const SizedBox(height: 10),
         RandomAvatars(),
         const SizedBox(height: 40),

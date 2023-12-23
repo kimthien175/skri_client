@@ -18,10 +18,6 @@ samples, guidance on mobile development, and a full API reference.
 DEBUG:
 For Debuging with profiles on VSCode, please configure device ids to compatible with your platforms to run the project
 
-DEVELOPMENT: 
-Find comments including as below:
- TODO: important to finish major features
- NOTE: adding more features
 
 TRANSLATIONS:
  en_US: which is Locale('en','US') in code, is the default locale in this project
