@@ -1,11 +1,11 @@
 import 'package:cd_mobile/models/avatar_editor/avatar_editor.dart';
 import 'package:cd_mobile/models/gif_manager.dart';
-import 'package:cd_mobile/pages/home/create_private_room_button.dart';
+import 'package:cd_mobile/pages/home/widgets/create_private_room_button.dart';
 import 'package:cd_mobile/pages/home/footer/footer.dart';
 import 'package:cd_mobile/pages/home/footer/triangle.dart';
-import 'package:cd_mobile/pages/home/lang_selector.dart';
-import 'package:cd_mobile/pages/home/name_input.dart';
-import 'package:cd_mobile/pages/home/play_button.dart';
+import 'package:cd_mobile/pages/home/widgets/lang_selector.dart';
+import 'package:cd_mobile/pages/home/widgets/name_input.dart';
+import 'package:cd_mobile/pages/home/widgets/play_button.dart';
 import 'package:cd_mobile/utils/styles.dart';
 import 'package:cd_mobile/widgets/random_avatars.dart';
 import 'package:flutter/material.dart';
@@ -43,9 +43,9 @@ class HomeController extends SuperController {
 }
 
 class HomePage extends StatelessWidget {
-  final HomeController controller = Get.put(HomeController());
+  static final HomeController controller = Get.put(HomeController());
 
-  HomePage({super.key});
+  const HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {

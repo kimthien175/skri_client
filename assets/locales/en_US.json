@@ -11,5 +11,9 @@
                "section_how_to_play_step2":"Try to draw your choosen word! No spelling!",
                "section_how_to_play_step3":"Let other players try to guess your drawn word!",
                "section_how_to_play_step4":"When it's not your turn, try to guess what other players are drawing!",
-               "section_how_to_play_step5":"Score the most points and be crowned the winner at the end!"
+               "section_how_to_play_step5":"Score the most points and be crowned the winner at the end!",
+               "link_contact": "Contact",
+               "link_terms": "Terms of Service",
+               "link_credits": "Credits",
+               "footer_caution": "The owner of this site is not responsible for any user generated content (drawings, messages, usernames)"
 }

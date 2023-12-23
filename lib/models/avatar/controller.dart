@@ -15,9 +15,10 @@ class AvatarController extends GetxController {
   final Duration frameTime;
 
   void switchFrame() {
-    currentFrameIndex++;
-    if (currentFrameIndex.value == frameCount) {
+    if (currentFrameIndex.value == frameCount - 1) {
       currentFrameIndex.value = 0;
+    } else {
+      currentFrameIndex++;
     }
     _timer = Timer(frameTime, switchFrame);
   }

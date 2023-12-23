@@ -24,6 +24,10 @@ class LocaleKeys {
   static const section_how_to_play_step3 = 'section_how_to_play_step3';
   static const section_how_to_play_step4 = 'section_how_to_play_step4';
   static const section_how_to_play_step5 = 'section_how_to_play_step5';
+  static const link_contact = 'link_contact';
+  static const link_terms = 'link_terms';
+  static const link_credits = 'link_credits';
+  static const footer_caution = 'footer_caution';
 }
 
 class Locales {
@@ -46,6 +50,11 @@ class Locales {
         'When it\'s not your turn, try to guess what other players are drawing!',
     'section_how_to_play_step5':
         'Score the most points and be crowned the winner at the end!',
+    'link_contact': 'Contact',
+    'link_terms': 'Terms of Service',
+    'link_credits': 'Credits',
+    'footer_caution':
+        'The owner of this site is not responsible for any user generated content (drawings, messages, usernames)',
   };
   static const vi_VN = {
     'displayName': 'Tiếng Việt',
@@ -66,5 +75,10 @@ class Locales {
         'Khi không đến lượt bạn, cố gắng đoán từ của người khác đang vẽ!',
     'section_how_to_play_step5':
         'Đạt số điểm cao nhất và bạn sẽ nhận được vương miện!',
+    'link_contact': 'Liên Hệ',
+    'link_terms': 'Điều Khoản Dịch Vụ',
+    'link_credits': 'Đóng Góp',
+    'footer_caution':
+        'Người đại diện trang mạng này không chịu trách nhiệm cho bất cứ nội dung nào được tạo ra bởi người dùng (hình vẽ, tin nhắn, tên người dùng)',
   };
 }

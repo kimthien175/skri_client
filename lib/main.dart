@@ -1,6 +1,7 @@
 import 'package:cd_mobile/generated/locales.g.dart';
 import 'package:cd_mobile/pages/home/home.dart';
 import 'package:cd_mobile/pages/loading.dart';
+import 'package:cd_mobile/pages/terms/terms.dart';
 import 'package:cd_mobile/utils/start_up.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -20,7 +21,8 @@ void main() {
       initialRoute: '/loading',
       getPages: [
         GetPage(name: '/loading', page: () => const Loading()),
-        GetPage(name: '/', page: () => HomePage())
+        GetPage(name: '/', page: () => const HomePage()),
+        GetPage(name: '/terms', page: ()=>const TermsPage())
       ],
       // home: const Scaffold(body: Center(child: Text('English')),)
     ));
