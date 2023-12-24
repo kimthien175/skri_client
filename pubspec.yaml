@@ -38,6 +38,7 @@ dependencies:
   get: ^4.6.6
   flutter_widget_from_html_core: ^0.14.9
   url_launcher: ^6.2.2
+  url_strategy: ^0.2.0
 
 dev_dependencies:
   flutter_test:

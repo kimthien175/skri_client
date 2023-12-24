@@ -17,7 +17,7 @@ class Avatar extends StatelessWidget {
     eyesModel = gif.eyes(eyes);
     mouthModel = gif.mouth(mouth);
 
-    Avatar.controller ??= AvatarController(colorModel.frames.length, colorModel.frames[0].duration);
+    Avatar.controller ??= Get.put(AvatarController(colorModel.frames.length, colorModel.frames[0].duration));
   }
 
   late GifModel colorModel;

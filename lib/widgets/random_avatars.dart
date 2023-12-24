@@ -9,11 +9,11 @@ class RandomAvatars extends StatelessWidget {
     avatars = [];
     var rd = Random();
 
-    // int winnerId = -1;
-    // // consider the group has winner or not
-    // if (rd.nextBool()) {
-    //   winnerId = rd.nextInt(8);
-    // }
+    int winnerId = -1;
+    // consider the group has winner or not
+    if (rd.nextBool()) {
+      winnerId = rd.nextInt(8);
+    }
 
     // TODO: special avatar for random avatars
 
@@ -26,20 +26,13 @@ class RandomAvatars extends StatelessWidget {
     // }
 
     //first 8 avatars base on color
-    var firstAvatar = AvatarWithShadow(
-      0,
-      56,
-      28,
-      winner: true
-    );
 
-    avatars.add(firstAvatar);
-
-    for (var i = 1; i < 8; i++) {
+    for (var i = 0; i < 8; i++) {
       var avatar = AvatarWithShadow(
         i,
         rd.nextInt(GifManager.inst.eyesLength),
         rd.nextInt(GifManager.inst.mouthLength),
+        winner: winnerId == i
       );
 
       avatars.add(avatar);

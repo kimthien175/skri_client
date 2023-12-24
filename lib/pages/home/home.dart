@@ -1,5 +1,4 @@
 import 'package:cd_mobile/models/avatar_editor/avatar_editor.dart';
-import 'package:cd_mobile/models/gif_manager.dart';
 import 'package:cd_mobile/pages/home/widgets/create_private_room_button.dart';
 import 'package:cd_mobile/pages/home/footer/footer.dart';
 import 'package:cd_mobile/pages/home/footer/triangle.dart';
@@ -14,7 +13,7 @@ import 'package:get/get.dart';
 
 class HomeController extends SuperController {
   // var locale = Get.deviceLocale.toString().obs; // update when translations loading finish
-  // String name = "";
+  String name = "";
   var isWebLayout = _isWebLayout.obs;
 
   static bool get _isWebLayout => Get.width >= Get.height;
@@ -58,17 +57,8 @@ class HomePage extends StatelessWidget {
                     repeat: ImageRepeat.repeat,
                     image: AssetImage('assets/background.png'))),
             child: SafeArea(
-                child: SizedBox(
-                    height: Get.height -
-                        MediaQuery.of(context).padding.bottom -
-                        MediaQuery.of(context)
-                            .padding
-                            .top, // based on ChatGPT the SafeArea's size is screen's size subtracting paddings
-                    width: Get.width -
-                        MediaQuery.of(context).padding.left -
-                        MediaQuery.of(context).padding.right,
-                    child: Obx(
-                        () => controller.isWebLayout.value ? const _Web() : const _Mobile())))));
+                child: Obx(
+                        () => controller.isWebLayout.value ? const _Web() : const _Mobile()))));
   }
 }
 
@@ -81,7 +71,7 @@ class _Web extends StatelessWidget {
     return Column(
       children: [
         const SizedBox(height: 25, width: double.infinity),
-        const Logo(),
+        Logo(()=>Get.offNamed('/')),
         const SizedBox(height: 10),
         RandomAvatars(),
         const SizedBox(height: 40),
@@ -89,13 +79,13 @@ class _Web extends StatelessWidget {
             padding: PanelStyles.padding,
             decoration: PanelStyles.decoration,
             width: 400,
-            child: const Column(
+            child: Column(
               //mainAxisSize: MainAxisSize.min,
               children: [
-                Row(children: [NameInput(), LangSelector()]),
+                const Row(children: [NameInput(), LangSelector()]),
                 AvatarEditor(),
-                PlayButton(),
-                CreatePrivateRoomButton(),
+                const PlayButton(),
+                const CreatePrivateRoomButton(),
               ],
             )),
         const Spacer(),
@@ -115,12 +105,12 @@ class _Mobile extends StatelessWidget {
 
     return Column(
       children: [
-        SizedBox(height: Get.height * 0.06),
+        SizedBox(height: Get.height * 0.06, width: double.infinity),
         // SizedBox(
         //     width: min(0.65 * Get.height, 0.95 * Get.width),
         //     child: FittedBox(child: SizedBox(height: logo.model.height, child: logo))),
         const SizedBox(height: 10),
-        //RandomAvatars()
+
       ],
     );
   }
