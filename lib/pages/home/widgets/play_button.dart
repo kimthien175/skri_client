@@ -3,14 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class PlayButton extends StatelessWidget {
-  const PlayButton({super.key}) ;
-
+  const PlayButton({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-        height: 54,
-        width: double.infinity,
+    return Container(
+        constraints: const BoxConstraints.expand(height: 54),
         child: TextButton(
             style: ButtonStyle(
                 backgroundColor: const MaterialStatePropertyAll(Color(0xff53e237)),

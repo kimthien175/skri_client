@@ -1,5 +1,6 @@
 import 'package:cd_mobile/utils/styles.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class SvgTriangle extends CustomPainter {
   @override
@@ -18,7 +19,7 @@ class SvgTriangle extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(SvgTriangle oldDelegate) => false;
+  bool shouldRepaint(SvgTriangle oldDelegate) => true;
 }
 
 class Triangle extends StatelessWidget {
@@ -28,7 +29,7 @@ class Triangle extends StatelessWidget {
   Widget build(BuildContext context) {
     return CustomPaint(
       painter: SvgTriangle(),
-      size: const Size(double.infinity, 40),
+      size: Size(context.width, 40),
     );
   }
 }

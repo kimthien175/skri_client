@@ -1,26 +1,38 @@
-import 'package:cd_mobile/models/avatar_editor/avatar_editor.dart';
-import 'package:cd_mobile/pages/home/widgets/create_private_room_button.dart';
-import 'package:cd_mobile/pages/home/footer/footer.dart';
-import 'package:cd_mobile/pages/home/footer/triangle.dart';
-import 'package:cd_mobile/pages/home/widgets/lang_selector.dart';
-import 'package:cd_mobile/pages/home/widgets/name_input.dart';
-import 'package:cd_mobile/pages/home/widgets/play_button.dart';
-import 'package:cd_mobile/utils/styles.dart';
-import 'package:cd_mobile/widgets/logo.dart';
-import 'package:cd_mobile/widgets/random_avatars.dart';
+import 'package:cd_mobile/pages/home/web/controller.dart';
+import 'package:cd_mobile/pages/home/web/web.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class HomeController extends SuperController {
-  // var locale = Get.deviceLocale.toString().obs; // update when translations loading finish
+  HomeController() {
+    isWebLayout = _isWebLayout.obs;
+  }
   String name = "";
-  var isWebLayout = _isWebLayout.obs;
+  late RxBool isWebLayout;
 
   static bool get _isWebLayout => Get.width >= Get.height;
 
+  final contentKey = GlobalKey();
+
   @override
   void didChangeMetrics() {
-    isWebLayout.value = _isWebLayout;
+    // won't triggered on first run, only triggered when resize
+
+    if (isWebLayout.value) {
+      if (_isWebLayout) {
+        // constantly on web
+        Get.find<WebController>().processLayout();
+      } else {
+        // from web to mobile
+        isWebLayout.trigger(false);
+      }
+    } else {
+      if (_isWebLayout) {
+        // from mobile to web
+        isWebLayout.trigger(true);
+      }
+    }
+
     super.didChangeMetrics();
   }
 
@@ -51,48 +63,14 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         body: Container(
+            constraints: const BoxConstraints.expand(),
             decoration: const BoxDecoration(
                 image: DecorationImage(
                     scale: 1.2,
                     repeat: ImageRepeat.repeat,
                     image: AssetImage('assets/background.png'))),
             child: SafeArea(
-                child: Obx(
-                        () => controller.isWebLayout.value ? const _Web() : const _Mobile()))));
-  }
-}
-
-class _Web extends StatelessWidget {
-  const _Web();
-
-  @override
-  Widget build(BuildContext context) {
-    // TODO: WEB VIEW, scrollable when user resize or zoom in
-    return Column(
-      children: [
-        const SizedBox(height: 25, width: double.infinity),
-        Logo(()=>Get.offNamed('/')),
-        const SizedBox(height: 10),
-        RandomAvatars(),
-        const SizedBox(height: 40),
-        Container(
-            padding: PanelStyles.padding,
-            decoration: PanelStyles.decoration,
-            width: 400,
-            child: Column(
-              //mainAxisSize: MainAxisSize.min,
-              children: [
-                const Row(children: [NameInput(), LangSelector()]),
-                AvatarEditor(),
-                const PlayButton(),
-                const CreatePrivateRoomButton(),
-              ],
-            )),
-        const Spacer(),
-        const Triangle(),
-        const Footer(),
-      ],
-    );
+                child: Obx(() => controller.isWebLayout.value ? Web() : const _Mobile()))));
   }
 }
 
@@ -110,7 +88,6 @@ class _Mobile extends StatelessWidget {
         //     width: min(0.65 * Get.height, 0.95 * Get.width),
         //     child: FittedBox(child: SizedBox(height: logo.model.height, child: logo))),
         const SizedBox(height: 10),
-
       ],
     );
   }

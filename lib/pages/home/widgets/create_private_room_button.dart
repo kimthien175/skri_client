@@ -8,8 +8,7 @@ class CreatePrivateRoomButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        height: 40,
-        width: double.infinity,
+        constraints: const BoxConstraints.expand(height: 40),
         margin: const EdgeInsets.only(top: 10),
         child: TextButton(
             style: ButtonStyle(

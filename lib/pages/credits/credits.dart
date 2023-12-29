@@ -32,7 +32,7 @@ class CreditsPage extends StatelessWidget {
                             MediaQuery.of(context).padding.left -
                             MediaQuery.of(context).padding.right,
                         child: Column(children: [
-                          const SizedBox(height: 25, width: double.infinity),
+                          SizedBox(height: 25, width: Get.width),
                           Logo(() => Get.offAllNamed('/')),
                           const SizedBox(height: 50),
                           Container(
