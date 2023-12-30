@@ -23,13 +23,15 @@ class SvgTriangle extends CustomPainter {
 }
 
 class Triangle extends StatelessWidget {
-  const Triangle({super.key});
+  const Triangle({this.height = 40, super.key});
+
+ final  double height;
 
   @override
   Widget build(BuildContext context) {
     return CustomPaint(
       painter: SvgTriangle(),
-      size: Size(context.width, 40),
+      size: Size(context.width, height),
     );
   }
 }

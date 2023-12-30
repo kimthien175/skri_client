@@ -1,12 +1,18 @@
+import 'package:cd_mobile/pages/home/mobile/mobile.dart';
 import 'package:cd_mobile/pages/home/web/controller.dart';
 import 'package:cd_mobile/pages/home/web/web.dart';
+import 'package:cd_mobile/pages/home/widgets/random_avatars.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class HomeController extends SuperController {
   HomeController() {
     isWebLayout = _isWebLayout.obs;
+    Get.put(RandomAvatarsController());
+    originalSize = Get.size;
   }
+
+  late Size originalSize;
   String name = "";
   late RxBool isWebLayout;
 
@@ -69,26 +75,7 @@ class HomePage extends StatelessWidget {
                     scale: 1.2,
                     repeat: ImageRepeat.repeat,
                     image: AssetImage('assets/background.png'))),
-            child: SafeArea(
-                child: Obx(() => controller.isWebLayout.value ? Web() : const _Mobile()))));
-  }
-}
-
-class _Mobile extends StatelessWidget {
-  const _Mobile();
-
-  @override
-  Widget build(BuildContext context) {
-    //var logo = GifManager.inst.misc('logo').widgetWithShadow();
-
-    return Column(
-      children: [
-        SizedBox(height: Get.height * 0.06, width: double.infinity),
-        // SizedBox(
-        //     width: min(0.65 * Get.height, 0.95 * Get.width),
-        //     child: FittedBox(child: SizedBox(height: logo.model.height, child: logo))),
-        const SizedBox(height: 10),
-      ],
-    );
+            child:
+                SafeArea(child: Obx(() => controller.isWebLayout.value ? Web() : const Mobile()))));
   }
 }

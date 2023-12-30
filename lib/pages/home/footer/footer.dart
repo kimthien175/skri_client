@@ -1,6 +1,7 @@
 import 'package:cd_mobile/pages/home/footer/about.dart';
 import 'package:cd_mobile/pages/home/footer/section.dart';
 import 'package:cd_mobile/pages/home/footer/tutorial.dart';
+import 'package:cd_mobile/pages/home/home.dart';
 import 'package:cd_mobile/utils/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -11,20 +12,20 @@ class Footer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(builder: (context, contrants) {
-      var width = context.width;
+    var sections = [
+      Section('about', 'section_about'.tr, const AboutContent()),
+      Section('news', 'section_news'.tr, Container()),
+      Section('how', 'section_how_to_play'.tr, const HowToPlayContent()),
+    ];
+    var isWeb = Get.find<HomeController>().isWebLayout.value;
 
+    if (isWeb) {
       return Container(
-          width: width,
           color: PanelStyles.color,
           padding: const EdgeInsets.only(top: 10, bottom: 10),
           child: Column(children: [
             Wrap(
-              children: [
-                Section('about', 'section_about'.tr, const AboutContent()),
-                Section('news', 'section_news'.tr, Container()),
-                Section('how', 'section_how_to_play'.tr, const HowToPlayContent())
-              ],
+              children: sections,
             ),
             const Row(
               mainAxisSize: MainAxisSize.min,
@@ -38,13 +39,39 @@ class Footer extends StatelessWidget {
               ],
             ),
             Text('footer_caution'.tr,
+                textAlign: TextAlign.center,
                 style: const TextStyle(
                     fontSize: 12.8,
                     fontWeight: FontWeight.w600,
                     fontFamily: 'Nunito',
                     color: Color.fromRGBO(103, 122, 249, 1)))
           ]));
-    });
+    } else {
+      return Container(
+          color: PanelStyles.color,
+          padding: const EdgeInsets.only(top: 10, bottom: 10),
+          child: Column(children: [
+            Column(mainAxisSize: MainAxisSize.min, children: sections),
+            const Row(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                _ContactLink(),
+                SizedBox(width: 8),
+                _TermsLink(),
+                SizedBox(width: 8),
+                _CreditsLink()
+              ],
+            ),
+            Text('footer_caution'.tr,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                    fontSize: 12.8,
+                    fontWeight: FontWeight.w600,
+                    fontFamily: 'Nunito',
+                    color: Color.fromRGBO(103, 122, 249, 1)))
+          ]));
+    }
   }
 }
 

@@ -3,9 +3,10 @@ import 'package:cd_mobile/models/avatar/avatar.dart';
 import 'package:cd_mobile/models/gif_manager.dart';
 
 import 'package:flutter/widgets.dart';
+import 'package:get/get.dart';
 
-class RandomAvatars extends StatelessWidget {
-  RandomAvatars({super.key}) {
+class RandomAvatarsController extends GetxController {
+  RandomAvatarsController() {
     avatars = [];
     var rd = Random();
 
@@ -29,36 +30,23 @@ class RandomAvatars extends StatelessWidget {
 
     for (var i = 0; i < 8; i++) {
       var avatar = AvatarWithShadow(
-        i,
-        rd.nextInt(GifManager.inst.eyesLength),
-        rd.nextInt(GifManager.inst.mouthLength),
-        winner: winnerId == i
-      );
+          i, rd.nextInt(GifManager.inst.eyesLength), rd.nextInt(GifManager.inst.mouthLength),
+          winner: winnerId == i);
 
       avatars.add(avatar);
     }
   }
 
   late final List<Avatar> avatars;
+}
+
+class RandomAvatars extends StatelessWidget {
+  const RandomAvatars({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return
-        // VisibilityDetector(
-        //     key: Key(hashCode.toString()),
-        //     onVisibilityChanged: (visibilityInfo) {
-        //       if (visibilityInfo.visibleFraction == 0) {
-        //         controller.pauseTimer();
-        //       } else {
-        //         controller.startTimer();
-        //       }
-        //     },
-        //     child: Obx(() =>
-        Row(
-            mainAxisSize: MainAxisSize.min,
-            // crossAxisAlignment: CrossAxisAlignment.end,
-            children: avatars)
-        //));
-        ;
+    var avatars = Get.find<RandomAvatarsController>().avatars;
+    return SizedBox(
+        height: avatars[0].height, child: Row(mainAxisSize: MainAxisSize.min, children: avatars));
   }
 }

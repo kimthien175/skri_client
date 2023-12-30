@@ -28,6 +28,8 @@ class Avatar extends StatelessWidget {
 
   bool winner;
 
+  double get height => colorModel.height;
+
   static GifCustomPainterBuilder crownCustomPainter() {
     var crown = GifManager.inst.misc('crown');
     return (int frameIndex, Paint paint) =>

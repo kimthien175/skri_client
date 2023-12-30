@@ -27,9 +27,9 @@ class AvatarEditor extends StatelessWidget {
             children: [
               Column(
                 children: [
-                  _SwitchButton('left_arrow', controller.onPreviousEyes),
-                  _SwitchButton('left_arrow', controller.onPreviousMouth),
-                  _SwitchButton('left_arrow', controller.onPreviousColor),
+                  _SwitchButton('left_arrow', 'chosen_left_arrow', controller.onPreviousEyes),
+                  _SwitchButton('left_arrow', 'chosen_left_arrow', controller.onPreviousMouth),
+                  _SwitchButton('left_arrow', 'chosen_left_arrow', controller.onPreviousColor),
                 ],
               ),
               SizedBox(
@@ -43,9 +43,9 @@ class AvatarEditor extends StatelessWidget {
                           )))),
               Column(
                 children: [
-                  _SwitchButton('right_arrow', controller.onNextEyes),
-                  _SwitchButton('right_arrow', controller.onNextMouth),
-                  _SwitchButton('right_arrow', controller.onNextColor),
+                  _SwitchButton('right_arrow', 'chosen_right_arrow', controller.onNextEyes),
+                  _SwitchButton('right_arrow', 'chosen_right_arrow', controller.onNextMouth),
+                  _SwitchButton('right_arrow', 'chosen_right_arrow', controller.onNextColor),
                 ],
               ),
             ],
@@ -56,18 +56,38 @@ class AvatarEditor extends StatelessWidget {
 }
 
 class _SwitchButton extends StatelessWidget {
-  _SwitchButton(String path, this.callback) {
+  _SwitchButton(String path, String onHoverPath, this.callback) {
     child = GifManager.inst.misc(path).widget();
+    onHoverChild = GifManager.inst.misc(onHoverPath).widget();
   }
 
   late final Gif child;
+  late final Gif onHoverChild;
   final Function() callback;
+
+  final controller = _SwitchButtonController();
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-        onTap: callback, child: SizedBox(height: 34, width: 34, child: FittedBox(child: child)));
+    return MouseRegion(
+        onEnter: (event) {
+          controller.isHover.value = true;
+        },
+        onExit: (event) {
+          controller.isHover.value = false;
+        },
+        child: GestureDetector(
+            onTap: callback,
+            child: SizedBox(
+                height: 34,
+                width: 34,
+                child:
+                    FittedBox(child: Obx(() => controller.isHover.value ? onHoverChild : child)))));
   }
+}
+
+class _SwitchButtonController extends GetxController {
+  var isHover = false.obs;
 }
 
 class _RandomButton extends StatelessWidget {

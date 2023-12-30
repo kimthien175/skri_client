@@ -1,4 +1,8 @@
+import 'dart:math';
+
+import 'package:cd_mobile/pages/home/home.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 //class _Styles {
  // static Map<String, dynamic> content = {
@@ -172,11 +176,15 @@ import 'package:flutter/material.dart';
 class PanelStyles {
   static Color textColor = const Color(0xfff0f0f0);
   static EdgeInsetsGeometry padding = const EdgeInsets.all(15);
-  static BoxDecoration decoration =
+  static BoxDecoration webDecoration =
    BoxDecoration(
         color: PanelStyles.color,
         borderRadius: GlobalStyles.borderRadius);
+  static BoxDecoration mobileDecoration =    BoxDecoration(
+        color: PanelStyles.color,
+        borderRadius: const BorderRadius.all(Radius.circular(10)));
   static Color color = const Color.fromRGBO(12, 44, 150, 0.75);
+  static double get widthOnMobile => min(0.95 * Get.width, 0.55 * Get.height);
 }
 
 class InputStyles {

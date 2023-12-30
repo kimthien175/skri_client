@@ -7,13 +7,14 @@ import 'package:cd_mobile/pages/home/widgets/name_input.dart';
 import 'package:cd_mobile/pages/home/widgets/play_button.dart';
 import 'package:cd_mobile/utils/styles.dart';
 import 'package:cd_mobile/widgets/logo.dart';
-import 'package:cd_mobile/widgets/random_avatars.dart';
+import 'package:cd_mobile/pages/home/widgets/random_avatars.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:measure_size/measure_size.dart';
 
 import 'controller.dart';
 
+// TODO: WHEN USER ZOOM IN OR RESIZE TO SMALLER WIDTH, MAKE FOOTER SECTIONS JUMP DOWN LIKE TRUE MEANING OF WRAP
 class Web extends StatelessWidget {
   Web({super.key});
 
@@ -21,16 +22,16 @@ class Web extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var mainContent = Center(
+    var mainContent = IntrinsicWidth(
         child: Column(key: controller.mainContentKey, mainAxisSize: MainAxisSize.min, children: [
       const SizedBox(height: 25),
       Logo(() => Get.offNamed('/')),
       const SizedBox(height: 10),
-      RandomAvatars(),
+      const RandomAvatars(),
       const SizedBox(height: 40),
       Container(
           padding: PanelStyles.padding,
-          decoration: PanelStyles.decoration,
+          decoration: PanelStyles.webDecoration,
           width: 400,
           child: Column(
             //mainAxisSize: MainAxisSize.min,
@@ -41,11 +42,14 @@ class Web extends StatelessWidget {
               const CreatePrivateRoomButton(),
             ],
           )),
+      const SizedBox(height: 10)
     ]));
-    var footer = Column(
-        key: controller.footerKey,
-        mainAxisSize: MainAxisSize.min,
-        children: const [Triangle(), Footer()]);
+    var footer = IntrinsicWidth(
+        child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            key: controller.footerKey,
+            mainAxisSize: MainAxisSize.min,
+            children: const [Triangle(), Footer()]));
 
     // return Column(
     //   children: [
@@ -61,42 +65,69 @@ class Web extends StatelessWidget {
     //     ...footer
     //   ],
     // );
-
+    var horizontalScrollController = ScrollController();
     return Obx(() {
-      print(controller.isMinimumSize.value);
-      // if (controller.firstRun.value) {
-      return MeasureSize(
-          onChange: (size) {
-            controller.processLayout();
-            controller.firstRun.value = false;
-          },
-          child: Scrollbar(
-              child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: SingleChildScrollView(
-                    primary: true,
-                      child: Column(
-                          mainAxisSize: MainAxisSize.min, children: [mainContent, footer])))));
-      // } else {
-      //   if (controller.isMinimumSize.value) {
-      //     return Stack(
-      //       children: [
-      //         SingleChildScrollView(
-      //           child: mainContent,
-      //         ),
-      //         Container(
-      //           constraints: const BoxConstraints.expand(),
-      //           alignment: Alignment.bottomCenter,
-      //           child: footer,
-      //         )
-      //       ],
-      //     );
-      //   } else {
-      //     return SingleChildScrollView(
-      //       child: Column(mainAxisSize: MainAxisSize.min, children: [mainContent, footer]),
-      //     );
-      //   }
-      // }
+      if (controller.firstRun.value) {
+        var verticalScrollController = ScrollController();
+        return MeasureSize(
+            onChange: (size) {
+              controller.processLayout();
+              controller.firstRun.value = false;
+            },
+            child:
+                // SingleChildScrollView(
+                //     scrollDirection: Axis.horizontal,
+                //     child: Container(
+                //             constraints: BoxConstraints.loose(Get.find<HomeController>().originalSize),
+                //             child: ListView(shrinkWrap: true, children: [mainContent, footer])))
+
+                // vertical scroll bar show at the end of the right
+                // TODO: vertical scrollbar has to stay in right of the screen, not the right of the widget
+                Scrollbar(
+                    thumbVisibility: true,
+                    trackVisibility: true,
+                    scrollbarOrientation: ScrollbarOrientation.right,
+                    controller: verticalScrollController,
+                    child: Scrollbar(
+                        thumbVisibility: true,
+                        trackVisibility: true,
+                        controller: horizontalScrollController,
+                        child: SingleChildScrollView(
+                            controller: horizontalScrollController,
+                            scrollDirection: Axis.horizontal,
+                            child: SingleChildScrollView(
+                                controller: verticalScrollController,
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [mainContent, footer],
+                                ))))));
+      } else if (controller.isMinimumSize.value) {
+        return Scrollbar(
+            controller: horizontalScrollController,
+            thumbVisibility: true,
+            trackVisibility: true,
+            child: SingleChildScrollView(
+                controller: horizontalScrollController,
+                scrollDirection: Axis.horizontal,
+                child: Column(
+                  children: [mainContent, const Spacer(), footer],
+                )));
+      } else {
+        var verticalScrollController = ScrollController();
+        return Scrollbar(
+            thumbVisibility: true,
+            trackVisibility: true,
+            controller: horizontalScrollController,
+            child: SingleChildScrollView(
+                controller: horizontalScrollController,
+                scrollDirection: Axis.horizontal,
+                child: SingleChildScrollView(
+                    controller: verticalScrollController,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [mainContent, footer],
+                    ))));
+      }
     });
   }
 }

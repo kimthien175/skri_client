@@ -18,6 +18,7 @@ class CreatePrivateRoomButton extends StatelessWidget {
                 ))),
             onPressed: () {},
             child: Text('create_private_room_button'.tr,
+            textAlign: TextAlign.center,
                 style: TextStyle(
                     color: PanelStyles.textColor,
                     fontSize: 19.2,
