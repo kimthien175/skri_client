@@ -47,50 +47,59 @@ class Footer extends StatelessWidget {
                     color: Color.fromRGBO(103, 122, 249, 1)))
           ]));
     } else {
+      var mobilePanelWidth = PanelStyles.widthOnMobile;
       return Container(
           color: PanelStyles.color,
-          padding: const EdgeInsets.only(top: 10, bottom: 10),
-          child: Column(children: [
-            Column(mainAxisSize: MainAxisSize.min, children: sections),
-            const Row(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.end,
+          child: Column(
+              //crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                _ContactLink(),
-                SizedBox(width: 8),
-                _TermsLink(),
-                SizedBox(width: 8),
-                _CreditsLink()
-              ],
-            ),
-            Text('footer_caution'.tr,
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                    fontSize: 12.8,
-                    fontWeight: FontWeight.w600,
-                    fontFamily: 'Nunito',
-                    color: Color.fromRGBO(103, 122, 249, 1)))
-          ]));
+               SizedBox(height: mobilePanelWidth*0.05),
+                Column(mainAxisSize: MainAxisSize.min, children: sections),
+                Center(
+                    child: SizedBox(
+                        width: mobilePanelWidth*0.6,
+                        child: const FittedBox(
+                            child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            _ContactLink(),
+                            SizedBox(width: 8),
+                            _TermsLink(),
+                            SizedBox(width: 8),
+                            _CreditsLink()
+                          ],
+                        )))),
+                Text('footer_caution'.tr,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        fontSize: mobilePanelWidth* 0.03,
+                        fontWeight: FontWeight.w600,
+                        fontFamily: 'Nunito',
+                        color: const Color.fromRGBO(103, 122, 249, 1))),
+                        SizedBox(height: mobilePanelWidth*0.03)
+              ]));
     }
   }
 }
 
 Widget _linkBuilder(String text, Function() onPressed) {
+  var isWeb = Get.find<HomeController>().isWebLayout.value;
   return MouseRegion(
       cursor: SystemMouseCursors.click,
       child: GestureDetector(
           onTap: onPressed,
           child: Text(text,
-              style: const TextStyle(
+              style: TextStyle(
                   fontFamily: 'Nunito',
                   inherit: false,
-                  fontWeight: FontWeight.w500,
-                  fontSize: 16,
-                  color: Color.fromRGBO(180, 186, 255, 1),
+                  fontWeight: FontWeight.w600,
+                  fontSize: 16 ,
+                  color: const Color.fromRGBO(180, 186, 255, 1),
                   decoration: TextDecoration.underline,
-                  decorationColor: Color.fromRGBO(180, 186, 255, 1),
+                  decorationColor: const Color.fromRGBO(180, 186, 255, 1),
                   decorationStyle: TextDecorationStyle.solid,
-                  decorationThickness: 2))));
+                  decorationThickness: isWeb ? 2 : 4))));
 }
 
 class _ContactLink extends StatelessWidget {

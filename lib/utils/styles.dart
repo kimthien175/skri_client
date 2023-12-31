@@ -1,6 +1,4 @@
 import 'dart:math';
-
-import 'package:cd_mobile/pages/home/home.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 

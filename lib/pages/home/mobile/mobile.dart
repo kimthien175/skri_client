@@ -18,16 +18,13 @@ class Mobile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //var logo = GifManager.inst.misc('logo').widgetWithShadow();
-
     var w = context.width;
     var h = context.height;
 
-    var panelWidth = min(0.95 * w, 0.55 * h);
     return SingleChildScrollView(
         child: Column(
       children: [
-        SizedBox(height: h * 0.06),
+        SizedBox(height: PanelStyles.widthOnMobile * 0.06),
         SizedBox(
             width: min(0.95 * w, 0.65 * h),
             child: FittedBox(
@@ -40,11 +37,11 @@ class Mobile extends StatelessWidget {
               ],
             ))),
         SizedBox(height: 0.04 * w),
-        Container(
-            decoration: PanelStyles.mobileDecoration,
-            width: panelWidth,
+        SizedBox(
+            width: PanelStyles.widthOnMobile,
             child: FittedBox(
                 child: Container(
+                    decoration: PanelStyles.mobileDecoration,
                     padding: PanelStyles.padding,
                     width: 400,
                     child: Column(
@@ -58,6 +55,7 @@ class Mobile extends StatelessWidget {
                     )))),
         SizedBox(height: 0.05 * h),
         Triangle(height: 0.02 * h),
+        // ignore: prefer_const_constructors
         Footer(),
       ],
     ));

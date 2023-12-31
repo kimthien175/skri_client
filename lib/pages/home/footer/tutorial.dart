@@ -11,12 +11,13 @@ class HowToPlayContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       mainAxisSize: MainAxisSize.min,
       children: [
-        SizedBox(
-            height: 232,
-            child:
-                Obx(() => GifManager.inst.misc('tutorial_${controller.step}').widgetWithShadow())),
+        FittedBox(child: Obx(() {
+          var widget = GifManager.inst.misc('tutorial_${controller.step}').widgetWithShadow();
+          return SizedBox(height: widget.model.height, width: widget.model.width, child: widget);
+        })),
         SizedBox(
             height: 48,
             child: Obx(() => Text('section_how_to_play_step${controller.step}'.tr,
@@ -24,7 +25,7 @@ class HowToPlayContent extends StatelessWidget {
                 style: TextStyle(
                     color: PanelStyles.textColor, fontSize: 16, fontWeight: FontWeight.w500)))),
         const Row(
-          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             _StepButton(1),
             _StepButton(2),
