@@ -3,6 +3,7 @@ import 'package:cd_mobile/pages/credits/credits.dart';
 import 'package:cd_mobile/pages/home/home.dart';
 import 'package:cd_mobile/pages/loading.dart';
 import 'package:cd_mobile/pages/terms/terms.dart';
+import 'package:cd_mobile/utils/socket_io.dart';
 import 'package:cd_mobile/utils/start_up.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -12,6 +13,7 @@ void main() {
   WidgetsFlutterBinding.ensureInitialized();
   startUp();
   setPathUrlStrategy();
+  SocketIO.inst.connect();
   runApp(GetMaterialApp(
     theme: ThemeData(fontFamily: 'Nunito'),
     // Locales
