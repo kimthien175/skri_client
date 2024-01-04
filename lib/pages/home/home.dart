@@ -1,3 +1,4 @@
+import 'package:cd_mobile/pages/home/footer/news.dart';
 import 'package:cd_mobile/pages/home/mobile/mobile.dart';
 import 'package:cd_mobile/pages/home/web/controller.dart';
 import 'package:cd_mobile/pages/home/web/web.dart';
@@ -9,10 +10,11 @@ class HomeController extends SuperController {
   HomeController() {
     isWebLayout = _isWebLayout.obs;
     Get.put(RandomAvatarsController());
-    originalSize = Get.size;
+    Get.put(NewsContentController());
+    //originalSize = Get.size;
   }
 
-  late Size originalSize;
+  //late Size originalSize;
   String name = "";
   late RxBool isWebLayout;
 
