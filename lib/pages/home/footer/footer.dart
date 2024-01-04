@@ -1,4 +1,5 @@
 import 'package:cd_mobile/pages/home/footer/about.dart';
+import 'package:cd_mobile/pages/home/footer/news.dart';
 import 'package:cd_mobile/pages/home/footer/section.dart';
 import 'package:cd_mobile/pages/home/footer/tutorial.dart';
 import 'package:cd_mobile/pages/home/home.dart';
@@ -14,7 +15,7 @@ class Footer extends StatelessWidget {
   Widget build(BuildContext context) {
     var sections = [
       Section('about', 'section_about'.tr, const AboutContent()),
-      Section('news', 'section_news'.tr, Container()),
+      Section('news', 'section_news'.tr, const NewsContent()),
       Section('how', 'section_how_to_play'.tr, const HowToPlayContent()),
     ];
     var isWeb = Get.find<HomeController>().isWebLayout.value;
@@ -53,11 +54,11 @@ class Footer extends StatelessWidget {
           child: Column(
               //crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-               SizedBox(height: mobilePanelWidth*0.05),
+                SizedBox(height: mobilePanelWidth * 0.05),
                 Column(mainAxisSize: MainAxisSize.min, children: sections),
                 Center(
                     child: SizedBox(
-                        width: mobilePanelWidth*0.6,
+                        width: mobilePanelWidth * 0.6,
                         child: const FittedBox(
                             child: Row(
                           mainAxisSize: MainAxisSize.min,
@@ -73,11 +74,11 @@ class Footer extends StatelessWidget {
                 Text('footer_caution'.tr,
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                        fontSize: mobilePanelWidth* 0.03,
+                        fontSize: mobilePanelWidth * 0.03,
                         fontWeight: FontWeight.w600,
                         fontFamily: 'Nunito',
                         color: const Color.fromRGBO(103, 122, 249, 1))),
-                        SizedBox(height: mobilePanelWidth*0.03)
+                SizedBox(height: mobilePanelWidth * 0.03)
               ]));
     }
   }
@@ -94,7 +95,7 @@ Widget _linkBuilder(String text, Function() onPressed) {
                   fontFamily: 'Nunito',
                   inherit: false,
                   fontWeight: FontWeight.w600,
-                  fontSize: 16 ,
+                  fontSize: 16,
                   color: const Color.fromRGBO(180, 186, 255, 1),
                   decoration: TextDecoration.underline,
                   decorationColor: const Color.fromRGBO(180, 186, 255, 1),

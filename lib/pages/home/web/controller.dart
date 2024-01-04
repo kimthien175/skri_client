@@ -17,6 +17,8 @@ class WebController extends GetxController {
     var footerHeight = footerKey.currentContext?.size?.height;
     if (mainHeight != null && footerHeight != null) {
       isMinimumSize.value = mainHeight + footerHeight <= Get.height;
+    } else {
+      isMinimumSize.value = false;
     }
   }
 }

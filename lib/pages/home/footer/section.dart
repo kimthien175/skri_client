@@ -22,6 +22,7 @@ class Section extends StatelessWidget {
             decoration: PanelStyles.webDecoration,
             child: Column(
               mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Center(
                     child: Text(title,

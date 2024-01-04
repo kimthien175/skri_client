@@ -28,7 +28,7 @@ import 'package:get/get.dart';
     //   --COLOR_PANEL_HI:#1640c9;
     //   --COLOR_PANEL_FOCUS:#ee9631;
     //   --COLOR_PANEL_BORDER:#040a33;
-    //   --COLOR_PANEL_BORDER_FOCUS:#56b2fd;
+    //   
     //   --COLOR_PANEL_TEXT:#f0f0f0;
     //   --COLOR_PANEL_TEXT_FOCUS:white;
     //   --COLOR_PANEL_TEXT_PLACEHOLDER:#9b9b9b;
@@ -183,6 +183,7 @@ class PanelStyles {
         borderRadius: const BorderRadius.all(Radius.circular(10)));
   static Color color = const Color.fromRGBO(12, 44, 150, 0.75);
   static double get widthOnMobile => min(0.95 * Get.width, 0.55 * Get.height);
+  static Color borderFocusColor = const Color(0xff56b2fd);
 }
 
 class InputStyles {
