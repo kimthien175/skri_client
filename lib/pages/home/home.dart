@@ -16,7 +16,16 @@ class HomeController extends SuperController {
   }
 
   //late Size originalSize;
-  String name = "";
+  String _name = "";
+  String get name {
+    _name = _name.trim();
+    // TODO: RANDOM NAME
+    if (_name.isEmpty) return 'random name';
+    return _name;
+  }
+
+  set name(String value) => _name = value;
+
   late RxBool isWebLayout;
 
   static bool get _isWebLayout => Get.width >= Get.height;

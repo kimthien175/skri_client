@@ -16,15 +16,35 @@ class NameInput extends StatelessWidget {
             decoration: InputStyles.decoration,
             height: 34,
             child: TextField(
-              onChanged: (String text) {
-                homeController.name = text;
-              },
-              inputFormatters: [LengthLimitingTextInputFormatter(20)],
+              onChanged: (String text) => homeController.name = text,
+              inputFormatters: [LengthLimitingTextInputFormatter(20), _NoLeadingSpaceFormatter(), _NoMultipleSpacesFormatter()],
               style: const TextStyle(fontWeight: FontWeight.w800),
               decoration: InputDecoration(
                   border: InputBorder.none,
                   hintText: 'name_input_placeholder'.tr,
                   hintStyle: const TextStyle(fontWeight: FontWeight.w800, color: Colors.black38)),
             )));
+  }
+}
+
+class _NoLeadingSpaceFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
+    if (newValue.text.startsWith(' ')) {
+      return oldValue;
+    } else {
+      return newValue;
+    }
+  }
+}
+
+class _NoMultipleSpacesFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
+    final modifiedText = newValue.text.replaceAll(RegExp(r'\s\s+'), ' ');
+    return TextEditingValue(
+      text: modifiedText,
+      selection: TextSelection.collapsed(offset: modifiedText.length)
+    );
   }
 }
