@@ -12,7 +12,9 @@ class SocketIO {
 
     _socket.onConnect((data) {
       print('connect');
-      _socket.emit('msg', 'test');
+      _socket.emitWithAck('msg', 'test', ack:(data){
+        print(data);
+      });
     });
 
     _socket.on('event', (data) => print(data));

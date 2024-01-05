@@ -15,7 +15,9 @@ class NewsContent extends StatelessWidget {
     return Obx(() {
       if (controller.content.isNotEmpty) {
         // ignore: invalid_use_of_protected_member
-        var htmlString = utf8.decode(base64Decode(controller.content.value[Get.locale.toString()]!));
+        var htmlString =
+            // ignore: invalid_use_of_protected_member
+            utf8.decode(base64Decode(controller.content.value[Get.locale.toString()]!));
 
         return HtmlWidget(
           htmlString,
@@ -86,10 +88,11 @@ class NewsContentController extends GetxController {
   var content = <String, dynamic>{}.obs;
 
   void getLastestNews() async {
-    final res = await API.inst.get('news');
-
-    if (res.statusCode == 200) {
-      content.value = jsonDecode(res.body);
-    }
+    API.inst.get('news').then((res) {
+      if (res.statusCode == 200) {
+        content.value = jsonDecode(res.body);
+      }
+      // ignore: avoid_print, invalid_return_type_for_catch_error
+    }).catchError((e) => print(e));
   }
 }
