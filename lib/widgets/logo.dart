@@ -11,6 +11,6 @@ class Logo extends StatelessWidget {
         cursor: SystemMouseCursors.click,
         child: GestureDetector(
             onTap: onPressed,
-            child: GifManager.inst.misc('logo').widgetWithShadow()));
+            child: GifManager.inst.misc('logo').builder.withShadow()));
   }
 }

@@ -1,7 +1,8 @@
 import 'package:cd_mobile/generated/locales.g.dart';
 import 'package:cd_mobile/pages/credits/credits.dart';
+import 'package:cd_mobile/pages/gameplay/gameplay.dart';
 import 'package:cd_mobile/pages/home/home.dart';
-import 'package:cd_mobile/pages/loading.dart';
+import 'package:cd_mobile/pages/loading/loading.dart';
 import 'package:cd_mobile/pages/terms/terms.dart';
 import 'package:cd_mobile/utils/start_up.dart';
 import 'package:flutter/material.dart';
@@ -25,7 +26,8 @@ void main() {
       GetPage(name: '/loading', page: () => const LoadingPage()),
       GetPage(name: '/', page: () => HomePage()),
       GetPage(name: '/terms', page: () => const TermsPage()),
-      GetPage(name: '/credits', page: () => const CreditsPage())
+      GetPage(name: '/credits', page: () => const CreditsPage()),
+      GetPage(name:'/gameplay', page: ()=>GameplayPage())
     ],
   ));
 }

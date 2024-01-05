@@ -1,6 +1,6 @@
 import 'package:cd_mobile/models/avatar/avatar.dart';
 import 'package:cd_mobile/models/avatar_editor/controller.dart';
-import 'package:cd_mobile/models/gif/gif.dart';
+import 'package:cd_mobile/models/gif/builder.dart';
 import 'package:cd_mobile/models/gif_manager.dart';
 import 'package:cd_mobile/utils/styles.dart';
 import 'package:flutter/material.dart';
@@ -57,12 +57,12 @@ class AvatarEditor extends StatelessWidget {
 
 class _SwitchButton extends StatelessWidget {
   _SwitchButton(String path, String onHoverPath, this.callback) {
-    child = GifManager.inst.misc(path).widget();
-    onHoverChild = GifManager.inst.misc(onHoverPath).widget();
+    child = GifManager.inst.misc(path).builder;
+    onHoverChild = GifManager.inst.misc(onHoverPath).builder;
   }
 
-  late final Gif child;
-  late final Gif onHoverChild;
+  late final GifBuilder child;
+  late final GifBuilder onHoverChild;
   final Function() callback;
 
   final controller = _SwitchButtonController();
@@ -96,6 +96,6 @@ class _RandomButton extends StatelessWidget {
   Widget build(BuildContext context) {
     var controller = Get.find<AvatarEditorController>();
     return GestureDetector(
-        onTap: controller.randomize, child: GifManager.inst.misc('randomize').widget());
+        onTap: controller.randomize, child: GifManager.inst.misc('randomize').builder);
   }
 }

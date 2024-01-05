@@ -1,7 +1,7 @@
 import 'package:cd_mobile/models/avatar/controller.dart';
 import 'package:cd_mobile/models/avatar/custom_painter.dart';
 import 'package:cd_mobile/models/gif/custom_painter.dart';
-import 'package:cd_mobile/models/gif/gif.dart';
+import 'package:cd_mobile/models/gif/model.dart';
 import 'package:cd_mobile/models/gif_manager.dart';
 import 'package:cd_mobile/models/shadow_info.dart';
 import 'package:flutter/material.dart';

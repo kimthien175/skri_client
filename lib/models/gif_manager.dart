@@ -1,5 +1,6 @@
 import 'dart:core';
-import 'package:cd_mobile/models/gif/gif.dart';
+import 'package:cd_mobile/models/gif/child_gif/model.dart';
+import 'package:cd_mobile/models/gif/model.dart';
 import 'package:cd_mobile/utils/read_json.dart';
 import 'package:flutter/services.dart';
 import 'dart:ui' as ui;

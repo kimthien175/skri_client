@@ -3,16 +3,15 @@ import 'package:cd_mobile/pages/home/mobile/mobile.dart';
 import 'package:cd_mobile/pages/home/web/controller.dart';
 import 'package:cd_mobile/pages/home/web/web.dart';
 import 'package:cd_mobile/pages/home/widgets/random_avatars.dart';
+import 'package:cd_mobile/pages/page_controller/responsive_page_controller.dart';
 import 'package:cd_mobile/widgets/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class HomeController extends SuperController {
-  HomeController() {
-    isWebLayout = _isWebLayout.obs;
+class HomeController extends ResponsivePageController {
+  HomeController() : super() {
     Get.put(RandomAvatarsController());
     Get.put(NewsContentController());
-    //originalSize = Get.size;
   }
 
   //late Size originalSize;
@@ -26,10 +25,6 @@ class HomeController extends SuperController {
 
   set name(String value) => _name = value;
 
-  late RxBool isWebLayout;
-
-  static bool get _isWebLayout => Get.width >= Get.height;
-
   final contentKey = GlobalKey();
 
   var isLoading = false.obs;
@@ -39,7 +34,7 @@ class HomeController extends SuperController {
     // won't triggered on first run, only triggered when resize
 
     if (isWebLayout.value) {
-      if (_isWebLayout) {
+      if (webLayoutStatus) {
         // constantly on web
         Get.find<WebController>().processLayout();
       } else {
@@ -47,7 +42,7 @@ class HomeController extends SuperController {
         isWebLayout.trigger(false);
       }
     } else {
-      if (_isWebLayout) {
+      if (webLayoutStatus) {
         // from mobile to web
         isWebLayout.trigger(true);
       }
@@ -55,23 +50,6 @@ class HomeController extends SuperController {
 
     super.didChangeMetrics();
   }
-
-  //#region Override to sastisfy SuperController, no need to get attention
-  @override
-  void onDetached() {}
-
-  @override
-  void onHidden() {}
-
-  @override
-  void onInactive() {}
-
-  @override
-  void onPaused() {}
-
-  @override
-  void onResumed() {}
-  //#endregion
 }
 
 class HomePage extends StatelessWidget {

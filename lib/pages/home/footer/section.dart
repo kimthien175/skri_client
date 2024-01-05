@@ -40,7 +40,7 @@ class Section extends StatelessWidget {
             child: SizedBox(
                 width: 32,
                 height: 32,
-                child: FittedBox(child: GifManager.inst.misc(icon).widgetWithShadow())))
+                child: FittedBox(child: GifManager.inst.misc(icon).builder.withShadow())))
       ]);
     }
     return SizedBox(
@@ -71,7 +71,7 @@ class Section extends StatelessWidget {
               child: SizedBox(
                   width: 30,
                   height: 30,
-                  child: FittedBox(child: GifManager.inst.misc(icon).widgetWithShadow())))
+                  child: FittedBox(child: GifManager.inst.misc(icon).builder.withShadow())))
         ])));
   }
 }

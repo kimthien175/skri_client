@@ -15,7 +15,7 @@ class HowToPlayContent extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         FittedBox(child: Obx(() {
-          var widget = GifManager.inst.misc('tutorial_${controller.step}').widgetWithShadow();
+          var widget = GifManager.inst.misc('tutorial_${controller.step}').builder.withShadow();
           return SizedBox(height: widget.model.height, width: widget.model.width, child: widget);
         })),
         SizedBox(
