@@ -27,7 +27,7 @@ void main() {
       GetPage(name: '/', page: () => HomePage()),
       GetPage(name: '/terms', page: () => const TermsPage()),
       GetPage(name: '/credits', page: () => const CreditsPage()),
-      GetPage(name:'/gameplay', page: ()=>GameplayPage())
+      GetPage(name: '/gameplay', page: () => GameplayPage())
     ],
   ));
 }

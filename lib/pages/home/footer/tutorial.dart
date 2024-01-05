@@ -14,10 +14,12 @@ class HowToPlayContent extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       mainAxisSize: MainAxisSize.min,
       children: [
-        FittedBox(child: Obx(() {
-          var widget = GifManager.inst.misc('tutorial_${controller.step}').builder.withShadow();
-          return SizedBox(height: widget.model.height, width: widget.model.width, child: widget);
-        })),
+        FittedBox(
+            child: Obx(() => GifManager.inst
+                .misc('tutorial_${controller.step}')
+                .builder
+                .withShadow()
+                .withFixedSize())),
         SizedBox(
             height: 48,
             child: Obx(() => Text('section_how_to_play_step${controller.step}'.tr,

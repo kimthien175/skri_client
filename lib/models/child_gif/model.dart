@@ -1,6 +1,6 @@
 import 'package:cd_mobile/models/gif/builder.dart';
-import 'package:cd_mobile/models/gif/child_gif/builder.dart';
-import 'package:cd_mobile/models/gif/child_gif/custom_painter.dart';
+import 'package:cd_mobile/models/child_gif/builder.dart';
+import 'package:cd_mobile/models/child_gif/custom_painter.dart';
 import 'package:cd_mobile/models/gif/model.dart';
 import 'dart:ui' as ui;
 

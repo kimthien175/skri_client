@@ -37,16 +37,14 @@ class GifModel {
 
   //Widget get getWidget => Gif(this);
 
-  
-
-  List<ui.FrameInfo>  frames;
+  List<ui.FrameInfo> frames;
   Rect get rect => Rect.zero;
 
   CustomPainter getCustomPainter(int frameIndex, Paint paint, {Offset offset = Offset.zero}) {
     return GifCustomPainter(frames[frameIndex].image, paint, offset: offset);
   }
 
-  GifBuilder get builder =>GifBuilder(this);
+  GifBuilder get builder => GifBuilder(this);
 }
 
 
