@@ -7,11 +7,23 @@ class Web extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
         SizedBox(
-            height: 200,
-            width: 200,
-            child: FittedBox(child: GifManager.inst.misc('logo').builder.withFixedSize()))
+            width: 320,
+            child: FittedBox(child: GifManager.inst.misc('logo').builder.withShadow().withFixedSize())),
+        // Row(
+        //   mainAxisSize: MainAxisSize.min,
+        //   children: [
+        //     Container(
+        //         width: 200,
+        //         decoration: BoxDecoration(
+        //             borderRadius: GlobalStyles.borderRadius, color: GlobalStyles.colorPlayerBGBase),
+        //         child: Row(
+        //           children: [],
+        //         ))
+        //   ],
+        // )
       ],
     );
   }

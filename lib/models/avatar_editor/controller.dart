@@ -1,72 +1,83 @@
 import 'dart:math';
 
+import 'package:cd_mobile/models/gif/avatar/builder.dart';
+import 'package:cd_mobile/models/gif/avatar/model.dart';
 import 'package:cd_mobile/models/gif_manager.dart';
 import 'package:get/get.dart';
 
 class AvatarEditorController extends GetxController {
   AvatarEditorController() {
     var rd = Random();
-    color = rd.nextInt(GifManager.inst.colorLength).obs;
-    eyes = rd.nextInt(GifManager.inst.eyesLength).obs;
-    mouth = rd.nextInt(GifManager.inst.mouthLength).obs;
+    color = rd.nextInt(GifManager.inst.colorLength);
+    eyes = rd.nextInt(GifManager.inst.eyesLength);
+    mouth = rd.nextInt(GifManager.inst.mouthLength);
+    avatar = AvatarModel.init(color, eyes, mouth).builder.asOrigin() as AvatarBuilder;
   }
 
-  late RxInt color;
-  late RxInt eyes;
-  late RxInt mouth;
+  late int color;
+  late int eyes;
+  late int mouth;
+ late  AvatarBuilder avatar;
 
   void onPreviousEyes() {
-    if (eyes.value == 0) {
-      eyes.value = GifManager.inst.eyesLength - 1;
+    if (eyes == 0) {
+      eyes = GifManager.inst.eyesLength - 1;
     } else {
-      eyes.value = eyes.value - 1;
+      eyes = eyes - 1;
     }
+    avatar.model.eyes = GifManager.inst.eyes(eyes);
   }
 
   void onNextEyes() {
-    if (eyes.value == GifManager.inst.eyesLength - 1) {
-      eyes.value = 0;
+    if (eyes == GifManager.inst.eyesLength - 1) {
+      eyes = 0;
     } else {
       eyes++;
     }
+    avatar.model.eyes = GifManager.inst.eyes(eyes);
   }
 
   void onPreviousMouth() {
-    if (mouth.value == 0) {
-      mouth.value = GifManager.inst.mouthLength - 1;
+    if (mouth == 0) {
+      mouth = GifManager.inst.mouthLength - 1;
     } else {
-      mouth.value = mouth.value - 1;
+      mouth = mouth - 1;
     }
+    avatar.model.mouth = GifManager.inst.mouth(mouth);
   }
 
   void onNextMouth() {
-    if (mouth.value == GifManager.inst.mouthLength - 1) {
-      mouth.value = 0;
+    if (mouth == GifManager.inst.mouthLength - 1) {
+      mouth = 0;
     } else {
       mouth++;
     }
+    avatar.model.mouth = GifManager.inst.mouth(mouth);
   }
 
   void onPreviousColor() {
-    if (color.value == 0) {
-      color.value = GifManager.inst.colorLength - 1;
+    if (color == 0) {
+      color = GifManager.inst.colorLength - 1;
     } else {
-      color.value = color.value - 1;
+      color = color - 1;
     }
+    avatar.model.color = GifManager.inst.color(color);
   }
 
   void onNextColor() {
-    if (color.value == GifManager.inst.colorLength - 1) {
-      color.value = 0;
+    if (color == GifManager.inst.colorLength - 1) {
+      color = 0;
     } else {
       color++;
     }
+    avatar.model.color = GifManager.inst.color(color);
   }
 
   void randomize() {
     var rd = Random();
-    color.value = rd.nextInt(GifManager.inst.colorLength);
-    eyes.value = rd.nextInt(GifManager.inst.eyesLength);
-    mouth.value = rd.nextInt(GifManager.inst.mouthLength);
+    color = rd.nextInt(GifManager.inst.colorLength);
+    eyes = rd.nextInt(GifManager.inst.eyesLength);
+    mouth = rd.nextInt(GifManager.inst.mouthLength);
+    avatar.model = AvatarModel.init(color, eyes, mouth);
   }
 }

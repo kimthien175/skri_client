@@ -1,6 +1,8 @@
 import 'dart:core';
-import 'package:cd_mobile/models/child_gif/model.dart';
-import 'package:cd_mobile/models/gif/model.dart';
+import 'package:cd_mobile/models/gif/gif.dart';
+import 'package:cd_mobile/models/gif/single_gif/child_gif/child_gif.dart';
+import 'package:cd_mobile/models/gif/single_gif/full_gif/full_gif.dart';
+import 'package:cd_mobile/models/gif/single_gif/single_gif.dart';
 import 'package:cd_mobile/utils/read_json.dart';
 import 'package:flutter/services.dart';
 import 'dart:ui' as ui;
@@ -12,24 +14,24 @@ class GifManager {
   static GifManager get inst => _inst;
   //#endregion
 
-  final List<GifModel> _color = [];
-  GifModel color(int index) => _color[index];
-  int get colorLength =>_color.length;
+  final List<SingleGifModel> _color = [];
+  SingleGifModel color(int index) => _color[index];
+  int get colorLength => _color.length;
 
-  final List<GifModel> _eyes = [];
-  GifModel eyes(int index) => _eyes[index];
+  final List<SingleGifModel> _eyes = [];
+  SingleGifModel eyes(int index) => _eyes[index];
   int get eyesLength => _eyes.length;
 
-  final List<GifModel> _mouth = [];
-  GifModel mouth(int index) => _mouth[index];
+  final List<SingleGifModel> _mouth = [];
+  SingleGifModel mouth(int index) => _mouth[index];
   int get mouthLength => _mouth.length;
 
-  final List<GifModel> _special = [];
-  GifModel special(int index) =>_special[index];
-  int get specialLength =>_special.length;
+  final List<SingleGifModel> _special = [];
+  SingleGifModel special(int index) => _special[index];
+  int get specialLength => _special.length;
 
-  final Map<String, GifModel> _misc = {};
-  GifModel misc(String name) => _misc[name]!;
+  final Map<String, SingleGifModel> _misc = {};
+  SingleGifModel misc(String name) => _misc[name]!;
 
   Future<void> loadResources() async {
     Map info = await readJSON('assets/gif/info.json');
@@ -40,11 +42,11 @@ class GifManager {
         await loadByList(_color, info[key]);
       } else if (key == "misc") {
         await loadByName(_misc, info[key]["content"]);
-      } else if (key == "eyes"){
+      } else if (key == "eyes") {
         await loadByList(_eyes, info[key]);
-      } else if (key =="mouth"){
+      } else if (key == "mouth") {
         await loadByList(_mouth, info[key]);
-      } else if (key == "special"){
+      } else if (key == "special") {
         await loadByList(_special, info[key]);
       }
     }
@@ -78,7 +80,8 @@ class GifManager {
         int right = left + spriteWidth;
         int top = (spriteCount / columnCount).floor() * spriteHeight;
         int bottom = top + spriteHeight;
-        Rect rect = Rect.fromLTRB(left.toDouble(), top.toDouble(), right.toDouble(), bottom.toDouble());
+        Rect rect =
+            Rect.fromLTRB(left.toDouble(), top.toDouble(), right.toDouble(), bottom.toDouble());
 
         list.add(ChildGifModel(rect, frames));
         spriteCount = spriteCount + 1;
@@ -105,16 +108,12 @@ class GifManager {
 
         var mapRect = element['rect'];
 
-
-        map[name] = ChildGifModel(Rect.fromLTRB(
-          mapRect['left'].toDouble(), 
-          mapRect['top'].toDouble(), 
-          mapRect['right'].toDouble(), 
-          mapRect['bottom'].toDouble()),
-          frames
-          );
+        map[name] = ChildGifModel(
+            Rect.fromLTRB(mapRect['left'].toDouble(), mapRect['top'].toDouble(),
+                mapRect['right'].toDouble(), mapRect['bottom'].toDouble()),
+            frames);
       } else {
-        map[name] = await GifModel.fromPath(element['source']);
+        map[name] = await FullGifModel.fromPath(element['source']);
       }
     }
   }
