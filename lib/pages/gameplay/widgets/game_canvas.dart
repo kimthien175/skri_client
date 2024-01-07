@@ -5,6 +5,6 @@ class GameCanvas extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Container(color: Colors.white, height: 600, width: 800);
   }
 }

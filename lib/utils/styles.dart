@@ -169,8 +169,6 @@ import 'package:get/get.dart';
 //#game-wrapper{height:70%}html[data-mobile-keyboard-open] #game-players .players-footer{display:none}}
 //};
 //}
-
-// TODO: STYLES, MAKE A RESEARCH IF WE CAN USE THEME INSTEAD?
 class PanelStyles {
   static Color textColor = const Color(0xfff0f0f0);
   static EdgeInsetsGeometry padding = const EdgeInsets.all(15);
@@ -195,4 +193,8 @@ class GlobalStyles {
   static BorderRadius borderRadius = const BorderRadius.all(Radius.circular(3));
   static Shadow textShadow = const Shadow(color: Color(0x2b000000), offset: Offset(2, 2));
   static Color colorPlayerBGBase = Colors.white;
+}
+
+class GameplayStyles{
+  static SizedBox layoutGap = const SizedBox(height: 6, width: 6);
 }

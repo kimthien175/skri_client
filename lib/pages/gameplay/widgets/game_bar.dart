@@ -5,28 +5,35 @@ import 'package:flutter/material.dart';
 
 class GameBar extends StatelessWidget {
   const GameBar({super.key});
-
   @override
   Widget build(BuildContext context) {
     var namedGifs = GifManager.inst.misc;
     return Container(
-        constraints: const BoxConstraints.expand(height: 48),
+        height: 48,
+        width: 1312,
+        // constraints:  BoxConstraints.expand(height:_height),
         decoration: BoxDecoration(
             color: GlobalStyles.colorPlayerBGBase, borderRadius: GlobalStyles.borderRadius),
         child: Row(
           children: [
-            Stack(alignment: Alignment.topLeft, clipBehavior: Clip.none, children: [
-              Container(width: 200),
-              const Positioned(top: -10, left: -8, child: GameClock())
+            const Stack(alignment: Alignment.centerLeft, clipBehavior: Clip.none, children: [
+              SizedBox(width: 200, height: 48),
+              Positioned(top: -10, left: -8, child: GameClock()),
+              Positioned(
+                  left: 60,
+                  top: 13,
+                  child: Text('Round 1 of 3',
+                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800)))
             ]),
-            const Flexible(child: Center(child: Text('waiting'))),
+            const Flexible(child: Center(child: Text('WAITING', style: TextStyle(fontFamily: 'Inconsolata', fontWeight: FontWeight.w700, fontSize: 16),))),
             Container(
                 width: 300,
                 alignment: Alignment.centerRight,
-                child: ScalingButton(child: namedGifs('settings')
-                    .builder
-                    .initShadowedOrigin()
-                    .doFitSize(height: 48, width: 48)))
+                child: ScalingButton(
+                    child: namedGifs('settings')
+                        .builder
+                        .initShadowedOrigin()
+                        .doFitSize(height: 48, width: 48)))
           ],
         ));
   }
@@ -37,12 +44,21 @@ class GameClock extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      alignment: Alignment.center,
-      children: [
-        GifManager.inst.misc('clock').builder.init().doFitSize(width: 64, height: 64),
-        const Text('0')
-      ],
-    );
+    return SizedBox(
+        height: 64,
+        width: 64,
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            GifManager.inst
+                .misc('clock')
+                .builder
+                .initShadowedOrigin()
+                .doFitSize(width: 64, height: 64),
+            const Positioned(
+                top: 20,
+                child: Text('0', style: TextStyle(fontSize: 22, fontWeight: FontWeight.w900)))
+          ],
+        ));
   }
 }

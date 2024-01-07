@@ -14,7 +14,7 @@ class ScalingButton extends StatefulWidget {
 /// [TickerProviderStateMixin].
 class _ScaleTransitionExampleState extends State<ScalingButton> with TickerProviderStateMixin {
   late final AnimationController _controller = AnimationController(
-      duration: const Duration(milliseconds: 300), vsync: this, lowerBound: 0.9, upperBound: 1);
+      duration: const Duration(milliseconds: 200), vsync: this, lowerBound: 0.9, upperBound: 1);
   late final Animation<double> _animation = CurvedAnimation(
     parent: _controller,
     curve: Curves.linear,
