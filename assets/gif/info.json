@@ -94,33 +94,41 @@
                 "name": "about",
                 "source": "assets/gif/about.gif"
             },
-            { 
-                "name": "news", 
-                "source": "assets/gif/news.gif" 
+            {
+                "name": "news",
+                "source": "assets/gif/news.gif"
             },
             {
                 "name": "how",
                 "source": "assets/gif/how.gif"
             },
             {
-                "name":"tutorial_1",
+                "name": "tutorial_1",
                 "source": "assets/gif/tutorial/step1.gif"
             },
             {
-                "name":"tutorial_2",
+                "name": "tutorial_2",
                 "source": "assets/gif/tutorial/step2.gif"
             },
             {
-                "name":"tutorial_3",
+                "name": "tutorial_3",
                 "source": "assets/gif/tutorial/step3.gif"
             },
             {
-                "name":"tutorial_4",
+                "name": "tutorial_4",
                 "source": "assets/gif/tutorial/step4.gif"
             },
             {
-                "name":"tutorial_5",
+                "name": "tutorial_5",
                 "source": "assets/gif/tutorial/step5.gif"
+            },
+            {
+                "name": "clock",
+                "source": "assets/gif/clock.gif"
+            },
+            { 
+                "name": "settings", 
+                "source": "assets/gif/settings.gif" 
             }
         ]
     }

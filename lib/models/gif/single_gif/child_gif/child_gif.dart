@@ -8,17 +8,18 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class ChildGifModel extends SingleGifModel {
+class ChildGifModel extends SingleGifModel<ChildGifModel> {
   ChildGifModel(this._rect, List<ui.FrameInfo> frames) : super(frames, _rect.width, _rect.height);
 
   final Rect _rect;
   Rect get rect => _rect;
 
   @override
-  ChildGifBuilder get builder => ChildGifBuilder(this);
-  
+  CustomPainter getCustomPainter(int frameIndex, ui.Paint paint, {Offset offset = Offset.zero}) =>
+      ChildGifCustomPainter(rect, frames[frameIndex].image, paint);
+
   @override
-  CustomPainter getCustomPainter(int frameIndex, ui.Paint paint, {Offset offset = Offset.zero}) =>ChildGifCustomPainter(rect, frames[frameIndex].image, paint);
+  ChildGifBuilder get builder => ChildGifBuilder(this);
 }
 
 // ignore: must_be_immutable
@@ -30,13 +31,26 @@ class ChildGifBuilder extends GifBuilder<ChildGifModel> {
   static ChildGifController? controller;
 
   @override
-  ChildGifBuilder withFixedSize() => throw UnimplementedError('ChildGif have fixed size already');
+  GifBuilder<GifModel> doFitSize({double? height, double? width}) {
+    widget = SizedBox(height: height, width: width, child: FittedBox(child: widget));
+    return this;
+  }
 
   @override
-  ChildGifBuilder withShadow({ShadowInfo info = const ShadowInfo()}) {
-    // TODO: OPT LATE WITH COMPLETE CUSTOM PAINTER, ONLY IF DRAW WITH OPACITY POSSIBLY
-    Widget prevBuilder = builder;
-    builder = Obx(() => Stack(
+  GifBuilder<GifModel> doScale(double ratio) {
+    widget = Transform.scale(scale: ratio, child: widget);
+    return this;
+  }
+
+  @override
+  GifBuilder<GifModel> init() {
+    widget = _origin;
+    return this;
+  }
+
+  @override
+  GifBuilder<GifModel> initShadowedOrigin({ShadowInfo info = const ShadowInfo()}) {
+    widget = Obx(() => Stack(
           clipBehavior: Clip.none,
           children: [
             Transform.translate(
@@ -50,30 +64,22 @@ class ChildGifBuilder extends GifBuilder<ChildGifModel> {
                             ..colorFilter = const ColorFilter.mode(Colors.black, BlendMode.srcATop),
                         ),
                         size: Size(model.width, model.height)))),
-            prevBuilder
+            _origin
           ],
         ));
     return this;
   }
 
-  // @override
-  // ChildGifBuilder buildAsOrigin() {
-  //   builder = Obx(() => CustomPaint(
-  //         painter: ChildGifCustomPainter(
-  //             model.rect, model.frames[controller!.currentFrameIndex.value].image, Paint()),
-  //         child: SizedBox(
-  //             width: model.rect.width,
-  //             height: model.rect.height), // to make gif animated, have to put SizedBox into this
-  //       ));
-  //   return this;
-  // }
+  Widget get _origin => CustomPaint(
+        painter: ChildGifCustomPainter(
+            model.rect, model.frames[controller!.currentFrameIndex.value].image, Paint()),
+        child: SizedBox(
+            width: model.rect.width,
+            height: model.rect.height), // to make gif animated, have to put SizedBox into this
+      );
 
   @override
-  Widget get origin => Obx(() => CustomPaint(
-          painter: ChildGifCustomPainter(
-              model.rect, model.frames[controller!.currentFrameIndex.value].image, Paint()),
-          child: SizedBox(
-              width: model.rect.width,
-              height: model.rect.height), // to make gif animated, have to put SizedBox into this
-        ));
+  GifBuilder<GifModel> doFreezeSize() {
+    return this;
+  }
 }

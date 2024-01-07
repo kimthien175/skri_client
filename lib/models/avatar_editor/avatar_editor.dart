@@ -9,11 +9,9 @@ import 'package:get/get.dart';
 class AvatarEditor extends StatelessWidget {
   AvatarEditor({super.key}) {
     controller = Get.put(AvatarEditorController());
-    // avatarBuilder = AvatarModel.init(controller.color.value, controller.eyes.value, controller.mouth.value).builder.buildAsOrigin();
   }
 
   late final AvatarEditorController controller;
-  //late GifBuilder avatarBuilder;
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +32,7 @@ class AvatarEditor extends StatelessWidget {
                   _SwitchButton('left_arrow', 'chosen_left_arrow', controller.onPreviousColor),
                 ],
               ),
-              SizedBox(height: 96, width: 96, child: FittedBox(child:controller.avatar)),
+              SizedBox(height: 96, width: 96, child: FittedBox(child: controller.avatar)),
               Column(
                 children: [
                   _SwitchButton('right_arrow', 'chosen_right_arrow', controller.onNextEyes),
@@ -44,15 +42,15 @@ class AvatarEditor extends StatelessWidget {
               ),
             ],
           ),
-         const Positioned(right: 0, child: _RandomButton())
+          const Positioned(right: 0, child: _RandomButton())
         ]));
   }
 }
 
 class _SwitchButton extends StatelessWidget {
   _SwitchButton(String path, String onHoverPath, this.callback) {
-    child = GifManager.inst.misc(path).builder.asOrigin();
-    onHoverChild = GifManager.inst.misc(onHoverPath).builder.asOrigin();
+    child = GifManager.inst.misc(path).builder.init();
+    onHoverChild = GifManager.inst.misc(onHoverPath).builder.init();
   }
 
   late final GifBuilder child;
@@ -90,6 +88,6 @@ class _RandomButton extends StatelessWidget {
   Widget build(BuildContext context) {
     var controller = Get.find<AvatarEditorController>();
     return GestureDetector(
-        onTap: controller.randomize, child: GifManager.inst.misc('randomize').builder.asOrigin());
+        onTap: controller.randomize, child: GifManager.inst.misc('randomize').builder.init());
   }
 }

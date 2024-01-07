@@ -4,13 +4,13 @@ import 'package:flutter/material.dart';
 class Logo extends StatelessWidget {
   const Logo(this.onPressed, {super.key});
   final Function() onPressed;
-
   @override
   Widget build(BuildContext context) {
     return MouseRegion(
         cursor: SystemMouseCursors.click,
         child: GestureDetector(
             onTap: onPressed,
-            child: GifManager.inst.misc('logo').builder.withShadow()));
+            child:
+                GifManager.inst.misc('logo').builder.initShadowedOrigin().doFreezeSize()));
   }
 }

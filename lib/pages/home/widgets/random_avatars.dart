@@ -1,6 +1,6 @@
 import 'dart:math';
-import 'package:cd_mobile/models/gif/avatar/builder.dart';
 import 'package:cd_mobile/models/gif/avatar/model.dart';
+import 'package:cd_mobile/models/gif/gif.dart';
 import 'package:cd_mobile/models/gif_manager.dart';
 
 import 'package:flutter/widgets.dart';
@@ -11,11 +11,11 @@ class RandomAvatarsController extends GetxController {
     avatars = [];
     var rd = Random();
 
-    // int winnerId = -1;
-    // // consider the group has winner or not
-    // if (rd.nextBool()) {
-    //   winnerId = rd.nextInt(8);
-    // }
+    int winnerId = -1;
+    // consider the group has winner or not
+    if (rd.nextBool()) {
+      winnerId = rd.nextInt(8);
+    }
 
     // TODO: special avatar for random avatars
 
@@ -31,15 +31,16 @@ class RandomAvatarsController extends GetxController {
 
     for (var i = 0; i < 8; i++) {
       var avatar = AvatarModel.init(
-          i, rd.nextInt(GifManager.inst.eyesLength), rd.nextInt(GifManager.inst.mouthLength),
-          //winner: winnerId == i
-          ).builder.withShadow();
+              i, rd.nextInt(GifManager.inst.eyesLength), rd.nextInt(GifManager.inst.mouthLength),
+              winner: winnerId == i)
+          .builder
+          .initShadowedOrigin();
 
       avatars.add(avatar);
     }
   }
 
-  late final List<AvatarBuilder> avatars;
+  late final List<GifBuilder> avatars;
 }
 
 class RandomAvatars extends StatelessWidget {
@@ -49,6 +50,7 @@ class RandomAvatars extends StatelessWidget {
   Widget build(BuildContext context) {
     var avatars = Get.find<RandomAvatarsController>().avatars;
     return SizedBox(
-        height: avatars[0].model.height, child: Row(mainAxisSize: MainAxisSize.min, children: avatars));
+        height: avatars[0].model.height,
+        child: Row(mainAxisSize: MainAxisSize.min, children: avatars));
   }
 }

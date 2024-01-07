@@ -18,8 +18,8 @@ class HowToPlayContent extends StatelessWidget {
             child: Obx(() => GifManager.inst
                 .misc('tutorial_${controller.step}')
                 .builder
-                .withShadow()
-                .withFixedSize())),
+                .initShadowedOrigin()
+                .doFreezeSize())),
         SizedBox(
             height: 48,
             child: Obx(() => Text('section_how_to_play_step${controller.step}'.tr,

@@ -15,10 +15,9 @@ class AvatarCustomPainter extends CustomPainter {
     avatar.eyes.getCustomPainter(frameIndex, _paint).paint(canvas, size);
     avatar.mouth.getCustomPainter(frameIndex, _paint).paint(canvas, size);
 
-// TODO: AVATAR CROWN
-    // if (avatar.winner){
-    //   Avatar.crownCustomPainter()(frameIndex, _paint).paint(canvas, size);
-    // }
+    if (avatar.winner){
+      AvatarModel.crownCustomPainter(frameIndex, _paint).paint(canvas, size);
+    }
   }
 
   @override

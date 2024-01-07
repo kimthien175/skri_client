@@ -4,5 +4,5 @@ import 'package:get/get.dart';
 Future<void> startUp() async {
   await Future.wait([GifManager.inst.loadResources()]);
 
-  Get.offAndToNamed('/');
+  Get.offAndToNamed('/gameplay');
 }

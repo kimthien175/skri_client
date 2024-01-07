@@ -1,7 +1,7 @@
 import 'package:cd_mobile/models/shadow_info.dart';
 import 'package:flutter/material.dart';
 
-abstract class GifModel {
+abstract class GifModel<MODEL_TYPE extends GifModel<MODEL_TYPE>> {
   GifModel(this._width, this._height);
 
   final double _width;
@@ -11,28 +11,30 @@ abstract class GifModel {
   double get height => _height;
 
   /// IF NONE OF BUILDER METHODS BEHIND THIS, THE WIDGET WOULD BE NULL
-  GifBuilder get builder;
+  GifBuilder<MODEL_TYPE> get builder;
 
   CustomPainter getCustomPainter(int frameIndex, Paint paint, {Offset offset = Offset.zero});
 }
 
 // ignore: must_be_immutable
-abstract class GifBuilder<MODEL_TYPE extends GifModel> extends StatelessWidget {
+abstract class GifBuilder<MODEL_TYPE extends GifModel<MODEL_TYPE>> extends StatelessWidget {
   GifBuilder(this.model, {super.key});
-  late Widget builder;
   MODEL_TYPE model;
+  Widget? widget;
 
-  GifBuilder withFixedSize();
-  GifBuilder withShadow({ShadowInfo info = const ShadowInfo()});
+  GifBuilder initShadowedOrigin({ShadowInfo info = const ShadowInfo()});
+  GifBuilder init();
 
-  /// this will return widget without model attached
-  Widget get origin;
-
-  GifBuilder asOrigin(){
-    builder = origin;
-    return this;
-  }
+  GifBuilder doScale(double ratio);
+  GifBuilder doFitSize({double? height, double? width});
+  GifBuilder doFreezeSize();
 
   @override
-  Widget build(BuildContext context) => builder;
+  Widget build(BuildContext context) {
+    // TODO: ON PRODUCTION, REMOVE THIS IF BLOCK
+    if (widget == null) {
+      throw Exception("${model.runtimeType}'s builder widget is null!");
+    }
+    return widget!;
+  }
 }

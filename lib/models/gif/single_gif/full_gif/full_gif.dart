@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:ui' as ui;
 
-class FullGifModel extends SingleGifModel {
+class FullGifModel extends SingleGifModel<FullGifModel> {
   static Future<FullGifModel> fromPath(String path) async {
     // load width, height
     ByteData data = await rootBundle.load(path);
@@ -37,41 +37,49 @@ class FullGifModel extends SingleGifModel {
 
   @override
   FullGifBuilder get builder => FullGifBuilder(this);
+
+  // @override
+  // FullGifBuilder get builder => FullGifBuilder(this);
 }
 
 // ignore: must_be_immutable
 class FullGifBuilder extends GifBuilder<FullGifModel> {
   FullGifBuilder(super.model, {super.key});
-  // @override
-  // FullGifBuilder withFixedSize() {
-  //   var preBuilder = builder;
-  //   builder = SizedBox(height: model.height, width: model.width, child: preBuilder);
-  //   return this;
-  // }
 
   @override
-  FullGifBuilder withShadow({ShadowInfo info = const ShadowInfo()}) {
-    builder = Stack(clipBehavior: Clip.none, children: [
+  GifBuilder<GifModel> init() {
+    widget = _origin;
+    return this;
+  }
+
+  @override
+  GifBuilder<GifModel> initShadowedOrigin({ShadowInfo info = const ShadowInfo()}) {
+    widget = Stack(clipBehavior: Clip.none, children: [
       Transform.translate(
           offset: Offset(info.offsetLeft, info.offsetTop),
-          child: Image.asset(model.path, color: Color.fromRGBO(0, 0, 0, info.opacity))),
-      origin
+          child: Image.asset(model.path, color: Colors.black.withOpacity(info.opacity))),
+      _origin
     ]);
     return this;
   }
 
-  // @override
-  // FullGifBuilder buildAsOrigin() {
-  //   builder = origin;
-  //   return this;
-  // }
-
   @override
-  FullGifBuilder withFixedSize() {
-    builder = SizedBox(height: model.height, width: model.width, child: builder);
+  GifBuilder<GifModel> doFitSize({double? height, double? width}) {
+    widget = SizedBox(height: height, width: width, child: FittedBox(child: widget));
     return this;
   }
 
   @override
-  Widget get origin => Image.asset(model.path);
+  GifBuilder<GifModel> doScale(double ratio) {
+    widget = Transform.scale(scale: ratio, child: widget);
+    return this;
+  }
+
+  Widget get _origin => Image.asset(model.path);
+  
+  @override
+  GifBuilder<GifModel> doFreezeSize() {
+    widget = SizedBox(height: model.height, width: model.width, child: widget);
+    return this;
+  }
 }

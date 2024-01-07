@@ -1,5 +1,7 @@
-import 'package:cd_mobile/models/gif_manager.dart';
+import 'package:cd_mobile/pages/gameplay/widgets/game_bar.dart';
+import 'package:cd_mobile/widgets/logo.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class Web extends StatelessWidget {
   const Web({super.key});
@@ -7,24 +9,27 @@ class Web extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      mainAxisSize: MainAxisSize.min,
       children: [
         SizedBox(
             width: 320,
-            child: FittedBox(child: GifManager.inst.misc('logo').builder.withShadow().withFixedSize())),
-        // Row(
-        //   mainAxisSize: MainAxisSize.min,
-        //   children: [
-        //     Container(
-        //         width: 200,
-        //         decoration: BoxDecoration(
-        //             borderRadius: GlobalStyles.borderRadius, color: GlobalStyles.colorPlayerBGBase),
-        //         child: Row(
-        //           children: [],
-        //         ))
-        //   ],
-        // )
+            child: FittedBox(child: Logo(() {
+              // TODO: disconnect and get to homepage
+              Get.toNamed('/');
+            }))),
+
+       const GameBar(),
       ],
     );
+    // return GridView.count(
+    //   crossAxisCount: 3, // 3 cells on x direction
+    //   mainAxisSpacing: 10,
+    //   crossAxisSpacing: 10,
+    //   children: [
+    //     GameBar(),
+    //     GamePlayers(),
+    //     GameCanvas(),
+    //     GameChat(),
+    //   ],
+    // );
   }
 }

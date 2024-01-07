@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -42,9 +43,12 @@ class LoadingOverlay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double size = min(Get.width, Get.height) * 0.2;
-    return Container(
-        color: Colors.black.withOpacity(0.3),
-        child: Center(
-            child: SizedBox(height: size, width: size, child: const FittedBox(child: Loading()))));
+    return Stack(children: [
+      Positioned.fill(
+          child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 4, sigmaY: 4),
+              child: Container(color: Colors.black.withOpacity(0)))),
+      Center(child: SizedBox(height: size, width: size, child: const FittedBox(child: Loading())))
+    ]);
   }
 }

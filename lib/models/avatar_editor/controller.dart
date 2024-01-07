@@ -11,13 +11,13 @@ class AvatarEditorController extends GetxController {
     color = rd.nextInt(GifManager.inst.colorLength);
     eyes = rd.nextInt(GifManager.inst.eyesLength);
     mouth = rd.nextInt(GifManager.inst.mouthLength);
-    avatar = AvatarModel.init(color, eyes, mouth).builder.asOrigin() as AvatarBuilder;
+    avatar = AvatarModel.init(color, eyes, mouth).builder.init() as AvatarBuilder;
   }
 
   late int color;
   late int eyes;
   late int mouth;
- late  AvatarBuilder avatar;
+  late AvatarBuilder avatar;
 
   void onPreviousEyes() {
     if (eyes == 0) {

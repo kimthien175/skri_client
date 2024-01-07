@@ -9,7 +9,7 @@ import 'package:get/get.dart';
 
 // ignore: must_be_immutable
 class AvatarBuilder extends GifBuilder<AvatarModel> {
-  AvatarBuilder(super.model, {super.key}){
+  AvatarBuilder(super.model, {super.key}) {
     var standardFrames = model.color.frames;
     controller ??= Get.put(AvatarController(standardFrames.length, standardFrames[0].duration));
   }
@@ -17,18 +17,28 @@ class AvatarBuilder extends GifBuilder<AvatarModel> {
   static AvatarController? controller;
 
   @override
-  Widget get origin => Obx(() => CustomPaint(
-      painter: AvatarCustomPainter(model, controller!.currentFrameIndex.value, Paint()),
-      child: SizedBox(height: model.height, width: model.width)));
-
-  @override
-  AvatarBuilder withFixedSize() {
-    throw UnimplementedError('AvatarBuilder have fixed size already!');
+  GifBuilder<GifModel> doFitSize({double? height, double? width}) {
+    widget = SizedBox(height: height, width: width, child: FittedBox(child: widget));
+    return this;
   }
 
   @override
-  AvatarBuilder withShadow({ShadowInfo info = const ShadowInfo()}) {
-    builder = Obx(() => Stack(clipBehavior: Clip.none, children: [
+  GifBuilder<GifModel> doScale(double ratio) {
+    widget = Transform.scale(scale: ratio, child: widget);
+    return this;
+  }
+
+  @override
+  GifBuilder<GifModel> init() {
+    widget = Obx(() => CustomPaint(
+        painter: AvatarCustomPainter(model, controller!.currentFrameIndex.value, Paint()),
+        child: SizedBox(height: model.height, width: model.width)));
+    return this;
+  }
+
+  @override
+  GifBuilder<GifModel> initShadowedOrigin({ShadowInfo info = const ShadowInfo()}) {
+    widget = Obx(() => Stack(clipBehavior: Clip.none, children: [
           Transform.translate(
               offset: Offset(info.offsetLeft, info.offsetTop),
               child: Opacity(
@@ -44,6 +54,11 @@ class AvatarBuilder extends GifBuilder<AvatarModel> {
           CustomPaint(
               painter: AvatarCustomPainter(model, controller!.currentFrameIndex.value, Paint()))
         ]));
+    return this;
+  }
+
+  @override
+  GifBuilder<GifModel> doFreezeSize() {
     return this;
   }
 }

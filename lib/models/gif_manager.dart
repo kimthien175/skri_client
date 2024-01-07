@@ -1,5 +1,4 @@
 import 'dart:core';
-import 'package:cd_mobile/models/gif/gif.dart';
 import 'package:cd_mobile/models/gif/single_gif/child_gif/child_gif.dart';
 import 'package:cd_mobile/models/gif/single_gif/full_gif/full_gif.dart';
 import 'package:cd_mobile/models/gif/single_gif/single_gif.dart';
@@ -52,7 +51,7 @@ class GifManager {
     }
   }
 
-  Future<void> loadByList(List<GifModel> list, Map info) async {
+  Future<void> loadByList(List<SingleGifModel> list, Map info) async {
     ByteData data = await rootBundle.load(info['source']);
     ui.Codec codec = await ui.instantiateImageCodec(data.buffer.asUint8List());
 
@@ -91,7 +90,7 @@ class GifManager {
     }
   }
 
-  loadByName(Map<String, GifModel> map, List info) async {
+  loadByName(Map<String, SingleGifModel> map, List info) async {
     for (Map element in info) {
       String name = element['name'];
       if (element.containsKey('rect')) {
