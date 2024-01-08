@@ -1,3 +1,6 @@
+import 'package:cd_mobile/models/game_play/player.dart';
+import 'package:cd_mobile/pages/home/home.dart';
+import 'package:cd_mobile/pages/home/widgets/avatar_editor/controller.dart';
 import 'package:cd_mobile/utils/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -15,7 +18,13 @@ class PlayButton extends StatelessWidget {
                 shape: MaterialStatePropertyAll(RoundedRectangleBorder(
                   borderRadius: GlobalStyles.borderRadius,
                 ))),
-            onPressed: () => Get.toNamed('/gameplay'),
+            onPressed: () {
+              Get.toNamed('/gameplay',
+                  arguments: Player(
+                      name: Get.find<HomeController>().name,
+                      avatar: Get.find<AvatarEditorController>().avatar,
+                      isOwner: true));
+            },
             child: Text('play_button'.tr,
                 style: TextStyle(
                     fontSize: 32,

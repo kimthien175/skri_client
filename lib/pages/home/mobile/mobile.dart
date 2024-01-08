@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:cd_mobile/models/avatar_editor/avatar_editor.dart';
+import 'package:cd_mobile/pages/home/widgets/avatar_editor/avatar_editor.dart';
 import 'package:cd_mobile/pages/home/footer/footer.dart';
 import 'package:cd_mobile/pages/home/footer/triangle.dart';
 import 'package:cd_mobile/pages/home/widgets/create_private_room_button.dart';

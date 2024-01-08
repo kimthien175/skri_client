@@ -91,6 +91,7 @@ flutter:
     - assets/gif/load.gif
     - assets/gif/clock.gif
     - assets/gif/settings.gif
+    - assets/gif/owner.gif
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

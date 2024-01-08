@@ -53,9 +53,8 @@ class HomeController extends ResponsivePageController {
 }
 
 class HomePage extends StatelessWidget {
-  final HomeController controller = Get.put(HomeController());
-
   HomePage({super.key});
+  final HomeController controller = Get.put(HomeController());
 
   @override
   Widget build(BuildContext context) {

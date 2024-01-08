@@ -1,6 +1,6 @@
 import 'package:cd_mobile/models/gif_manager.dart';
 import 'package:cd_mobile/utils/styles.dart';
-import 'package:cd_mobile/widgets/scaling_button.dart';
+import 'package:cd_mobile/widgets/animated_button.dart';
 import 'package:flutter/material.dart';
 
 class GameBar extends StatelessWidget {
@@ -13,7 +13,7 @@ class GameBar extends StatelessWidget {
         width: 1312,
         // constraints:  BoxConstraints.expand(height:_height),
         decoration: BoxDecoration(
-            color: GlobalStyles.colorPlayerBGBase, borderRadius: GlobalStyles.borderRadius),
+            color: GameplayStyles.colorPlayerBGBase, borderRadius: GlobalStyles.borderRadius),
         child: Row(
           children: [
             const Stack(alignment: Alignment.centerLeft, clipBehavior: Clip.none, children: [
@@ -25,11 +25,18 @@ class GameBar extends StatelessWidget {
                   child: Text('Round 1 of 3',
                       style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800)))
             ]),
-            const Flexible(child: Center(child: Text('WAITING', style: TextStyle(fontFamily: 'Inconsolata', fontWeight: FontWeight.w700, fontSize: 16),))),
+            const Flexible(
+                child: Center(
+                    child: Text(
+              'WAITING',
+              style:
+                  TextStyle(fontFamily: 'Inconsolata', fontWeight: FontWeight.w700, fontSize: 16),
+            ))),
             Container(
                 width: 300,
                 alignment: Alignment.centerRight,
-                child: ScalingButton(
+                child: AnimatedButton(
+                    minOpacity: 0.85,
                     child: namedGifs('settings')
                         .builder
                         .initShadowedOrigin()

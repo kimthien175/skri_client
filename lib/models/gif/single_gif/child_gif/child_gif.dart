@@ -70,13 +70,13 @@ class ChildGifBuilder extends GifBuilder<ChildGifModel> {
     return this;
   }
 
-  Widget get _origin => CustomPaint(
+  Widget get _origin => Obx(()=>CustomPaint(
         painter: ChildGifCustomPainter(
             model.rect, model.frames[controller!.currentFrameIndex.value].image, Paint()),
         child: SizedBox(
             width: model.rect.width,
             height: model.rect.height), // to make gif animated, have to put SizedBox into this
-      );
+      ));
 
   @override
   GifBuilder<GifModel> doFreezeSize() {

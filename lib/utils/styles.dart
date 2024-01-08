@@ -192,9 +192,12 @@ class InputStyles {
 class GlobalStyles {
   static BorderRadius borderRadius = const BorderRadius.all(Radius.circular(3));
   static Shadow textShadow = const Shadow(color: Color(0x2b000000), offset: Offset(2, 2));
-  static Color colorPlayerBGBase = Colors.white;
+
 }
 
 class GameplayStyles{
   static SizedBox layoutGap = const SizedBox(height: 6, width: 6);
+  static Color colorPlayerBGBase = Colors.white;
+  static Color colorPlayerBGBase_2 = const Color(0xffececec);
+  static Color colorPlayerMe = const Color(0xff4998ff);
 }

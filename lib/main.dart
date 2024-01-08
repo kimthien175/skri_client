@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:url_strategy/url_strategy.dart';
 
-// TODO: TRANSITION EFFECTS
+// TODO: TRANSITION EFFECTS ON NAVIGATING
 // TODO: DOES IT NECESSARY? RELOAD RESOURCES FOR EACH WHEN LOOSE DATA,  OR IT JUST FLUTTER HOT RELOADING/RESTARTING FAULT?
 void main() {
   WidgetsFlutterBinding.ensureInitialized();

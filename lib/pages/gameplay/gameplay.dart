@@ -1,6 +1,18 @@
+import 'package:cd_mobile/pages/gameplay/mobile/mobile.dart';
 import 'package:cd_mobile/pages/gameplay/web/web.dart';
+import 'package:cd_mobile/pages/page_controller/responsive_page_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
+class GameplayController extends ResponsivePageController {
+  GameplayController() : super();
+
+  @override
+  void didChangeMetrics() {
+    isWebLayout.value = webLayoutStatus;
+    super.didChangeMetrics();
+  }
+}
 
 class GameplayPage extends StatelessWidget {
   GameplayPage({super.key});
@@ -17,8 +29,7 @@ class GameplayPage extends StatelessWidget {
                     scale: 1.2,
                     repeat: ImageRepeat.repeat,
                     image: AssetImage('assets/background.png'))),
-            child: const SafeArea(child: Web())));
+            child: SafeArea(
+                child: Obx(() => controller.isWebLayout.value ? const Web() : const Mobile()))));
   }
 }
-
-class GameplayController extends GetxController {}

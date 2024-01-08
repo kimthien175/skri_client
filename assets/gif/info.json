@@ -129,6 +129,10 @@
             { 
                 "name": "settings", 
                 "source": "assets/gif/settings.gif" 
+            },
+            {
+                "name":"owner",
+                "source":"assets/gif/owner.gif"
             }
         ]
     }
