@@ -1,4 +1,5 @@
 import 'package:cd_mobile/models/gif/avatar/builder.dart';
+import 'package:word_generator/word_generator.dart';
 
 class Player {
   Player({required this.name, required this.avatar, this.isOwner = false, this.points = 0});
@@ -21,9 +22,7 @@ class MePlayer extends Player {
   @override
   String get nameForCard => '$name (You)';
 
-  String randomName() {
-    return 'RANDOM NAME';
-  }
+  String randomName() => WordGenerator().randomNoun();
 
   void processName() {
     name = name.trim();

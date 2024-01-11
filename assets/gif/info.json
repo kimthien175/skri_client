@@ -126,13 +126,41 @@
                 "name": "clock",
                 "source": "assets/gif/clock.gif"
             },
-            { 
-                "name": "settings", 
-                "source": "assets/gif/settings.gif" 
+            {
+                "name": "settings",
+                "source": "assets/gif/settings.gif"
             },
             {
-                "name":"owner",
-                "source":"assets/gif/owner.gif"
+                "name": "owner",
+                "source": "assets/gif/owner.gif"
+            },
+            {
+                "name": "setting_0",
+                "source": "assets/gif/setting/setting_0.gif"
+            },
+            {
+                "name": "setting_1",
+                "source": "assets/gif/setting/setting_1.gif"
+            },
+            {
+                "name": "setting_2",
+                "source": "assets/gif/setting/setting_2.gif"
+            },
+            {
+                "name": "setting_3",
+                "source": "assets/gif/setting/setting_3.gif"
+            },
+            {
+                "name": "setting_4",
+                "source": "assets/gif/setting/setting_4.gif"
+            },
+            {
+                "name": "setting_5",
+                "source": "assets/gif/setting/setting_5.gif"
+            },
+            {
+                "name": "setting_6",
+                "source": "assets/gif/setting/setting_6.gif"
             }
         ]
     }

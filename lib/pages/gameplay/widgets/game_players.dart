@@ -1,3 +1,4 @@
+import 'package:cd_mobile/models/game_play/game.dart';
 import 'package:cd_mobile/models/game_play/player.dart';
 import 'package:cd_mobile/models/gif_manager.dart';
 import 'package:cd_mobile/utils/styles.dart';
@@ -10,9 +11,7 @@ class GamePlayers extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Player smt = MePlayer.inst;
-
-    var players = [smt, smt, smt, smt, smt];
+    var players = Game.inst.players;
     List<PlayerCard> list = [];
 
     if (players.length > 1) {

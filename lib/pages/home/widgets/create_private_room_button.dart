@@ -1,4 +1,4 @@
-import 'package:cd_mobile/models/game_play/player.dart';
+import 'package:cd_mobile/models/game_play/game.dart';
 import 'package:cd_mobile/utils/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -12,9 +12,8 @@ class CreatePrivateRoomButton extends StatelessWidget {
         cursor: SystemMouseCursors.click,
         child: GestureDetector(
             onTap: () {
+              Game.initPrivateRoom();
               Get.toNamed('/gameplay');
-              MePlayer.inst.isOwner = true;
-              MePlayer.inst.processName();
             },
             child: Container(
               alignment: Alignment.center,
