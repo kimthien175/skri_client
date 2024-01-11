@@ -19,13 +19,27 @@ class GameSettings extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            _SettingsItem(gif: 'setting_1', settingKey: 'players'),
-            _SettingsItem(gif: 'setting_0', settingKey: 'language'),
-            _SettingsItem(gif: 'setting_2', settingKey: 'drawtime'),
-            _SettingsItem(gif: 'setting_3', settingKey: 'rounds'),
-            _SettingsItem(gif: 'setting_6', settingKey: 'word_mode'),
-            _SettingsItem(gif: 'setting_4', settingKey: 'word_count'),
-            _SettingsItem(gif: 'setting_5', settingKey: 'hints'),
+            Expanded(
+                flex: 52,
+                child: Column(
+                    //mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      _SettingsItem(gif: 'setting_1', settingKey: 'players'),
+                      const SizedBox(height: 3.5),
+                      _SettingsItem(gif: 'setting_0', settingKey: 'language'),
+                      const SizedBox(height: 3.5),
+                      _SettingsItem(gif: 'setting_2', settingKey: 'drawtime'),
+                      const SizedBox(height: 3.5),
+                      _SettingsItem(gif: 'setting_3', settingKey: 'rounds'),
+                      const SizedBox(height: 3.5),
+                      _SettingsItem(gif: 'setting_6', settingKey: 'word_mode'),
+                      const SizedBox(height: 3.5),
+                      _SettingsItem(gif: 'setting_4', settingKey: 'word_count'),
+                      const SizedBox(height: 3.5),
+                      _SettingsItem(gif: 'setting_5', settingKey: 'hints'),
+                    ])),
+            Expanded(flex: 38, child: Container(color: Colors.white)),
+            Expanded(flex: 10, child: Container(color: Colors.green))
           ],
         ));
   }
@@ -40,6 +54,8 @@ class _SettingsItem extends StatelessWidget {
   final String gif;
   final String settingKey;
 
+  DropdownMenuItem _menuItem(dynamic value) => DropdownMenuItem(
+      value: value, child: Text(value.toString(), style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700)));
   @override
   Widget build(BuildContext context) {
     List<DropdownMenuItem> items = [];
@@ -49,27 +65,43 @@ class _SettingsItem extends StatelessWidget {
       int min = settings['min'];
 
       for (int i = min; i <= max; i++) {
-        items.add(DropdownMenuItem(value: i, child: Text(i.toString())));
+        items.add(_menuItem(i));
       }
     } else {
       for (dynamic e in settings['list']) {
-        items.add(DropdownMenuItem(value: e, child: Text(e.toString())));
+        items.add(_menuItem(e));
       }
     }
-    return Row(
+    return Expanded(
+        child: Row(
       children: [
-        GifManager.inst.misc(gif).builder.initShadowedOrigin(),
-        Text(settingKey.tr),
-        const Spacer(),
-        DropdownButtonHideUnderline(
-            child: DropdownButton(
-                icon: Icon(Icons.keyboard_arrow_down_rounded, color: InputStyles.color),
-                // padding: const EdgeInsets.only(left: 7),
-                // isExpanded: true,
-                value: settings['default'],
-                items: items,
-                onChanged: (dynamic newOption) {}))
+        Expanded(
+            flex: 55,
+            child: Row(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+              FittedBox(
+                  child: GifManager.inst.misc(gif).builder.initShadowedOrigin().doFreezeSize()),
+              const SizedBox(width: 7),
+              Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(settingKey.tr,
+                      style: const TextStyle(
+                          color: Color.fromRGBO(240, 240, 240, 1),
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500)))
+            ])),
+        Expanded(
+            flex: 45,
+            child: Container(
+                decoration: InputStyles.decoration,
+                child: DropdownButtonHideUnderline(
+                    child: DropdownButton(
+                        icon: Icon(Icons.keyboard_arrow_down_rounded, color: InputStyles.color),
+                        padding: const EdgeInsets.only(left: 7),
+                        // isExpanded: true,
+                        value: settings['default'],
+                        items: items,
+                        onChanged: (dynamic newOption) {}))))
       ],
-    );
+    ));
   }
 }
