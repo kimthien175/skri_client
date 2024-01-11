@@ -17,19 +17,19 @@ class AvatarBuilder extends GifBuilder<AvatarModel> {
   static AvatarController? controller;
 
   @override
-  GifBuilder<GifModel> doFitSize({double? height, double? width}) {
+  AvatarBuilder doFitSize({double? height, double? width}) {
     widget = SizedBox(height: height, width: width, child: FittedBox(child: widget));
     return this;
   }
 
   @override
-  GifBuilder<GifModel> doScale(double ratio) {
+  AvatarBuilder doScale(double ratio) {
     widget = Transform.scale(scale: ratio, child: widget);
     return this;
   }
 
   @override
-  GifBuilder<GifModel> init() {
+  AvatarBuilder init() {
     widget = Obx(() => CustomPaint(
         painter: AvatarCustomPainter(model, controller!.currentFrameIndex.value, Paint()),
         child: SizedBox(height: model.height, width: model.width)));
@@ -37,7 +37,7 @@ class AvatarBuilder extends GifBuilder<AvatarModel> {
   }
 
   @override
-  GifBuilder<GifModel> initShadowedOrigin({ShadowInfo info = const ShadowInfo()}) {
+  AvatarBuilder initShadowedOrigin({ShadowInfo info = const ShadowInfo()}) {
     widget = Obx(() => Stack(clipBehavior: Clip.none, children: [
           Transform.translate(
               offset: Offset(info.offsetLeft, info.offsetTop),
@@ -58,7 +58,7 @@ class AvatarBuilder extends GifBuilder<AvatarModel> {
   }
 
   @override
-  GifBuilder<GifModel> doFreezeSize() {
+  AvatarBuilder doFreezeSize() {
     return this;
   }
 }

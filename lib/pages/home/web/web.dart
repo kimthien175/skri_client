@@ -39,6 +39,7 @@ class Web extends StatelessWidget {
               const Row(children: [NameInput(), LangSelector()]),
               AvatarEditor(),
               const PlayButton(),
+              const SizedBox(height: 10),
               const CreatePrivateRoomButton(),
             ],
           )),

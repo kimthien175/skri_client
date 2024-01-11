@@ -8,29 +8,28 @@ class CreatePrivateRoomButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-        padding: const EdgeInsets.only(top: 10),
-        child: MouseRegion(
-            cursor: SystemMouseCursors.click,
-            child: GestureDetector(
-                onTap: () {
-                  Get.toNamed('/gameplay');
-                  MePlayer.inst.isOwner = true;
-                },
-                child: Container(
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    color: const Color(0xff2c8de7),
-                    borderRadius: GlobalStyles.borderRadius,
-                  ),
-                  constraints: const BoxConstraints.expand(height: 40),
-                  child: Text('create_private_room_button'.tr,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          color: PanelStyles.textColor,
-                          fontSize: 19.2,
-                          fontWeight: FontWeight.w700,
-                          shadows: [GlobalStyles.textShadow])),
-                ))));
+    return MouseRegion(
+        cursor: SystemMouseCursors.click,
+        child: GestureDetector(
+            onTap: () {
+              Get.toNamed('/gameplay');
+              MePlayer.inst.isOwner = true;
+              MePlayer.inst.processName();
+            },
+            child: Container(
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: const Color(0xff2c8de7),
+                borderRadius: GlobalStyles.borderRadius,
+              ),
+              constraints: const BoxConstraints.expand(height: 40),
+              child: Text('create_private_room_button'.tr,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      color: PanelStyles.textColor,
+                      fontSize: 19.2,
+                      fontWeight: FontWeight.w700,
+                      shadows: [GlobalStyles.textShadow])),
+            )));
   }
 }

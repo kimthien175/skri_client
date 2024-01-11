@@ -24,7 +24,7 @@ class Web extends StatelessWidget {
                     width: 320,
                     child: FittedBox(child: Logo(() {
                       // TODO: disconnect and get to homepage
-                      Get.toNamed('/');
+                      Get.back();
                     }))))),
         GameplayStyles.layoutGap,
         const GameBar(),
@@ -42,16 +42,5 @@ class Web extends StatelessWidget {
         )
       ],
     );
-    // return GridView.count(
-    //   crossAxisCount: 3, // 3 cells on x direction
-    //   mainAxisSpacing: 10,
-    //   crossAxisSpacing: 10,
-    //   children: [
-    //     GameBar(),
-    //     GamePlayers(),
-    //     GameCanvas(),
-    //     GameChat(),
-    //   ],
-    // );
   }
 }

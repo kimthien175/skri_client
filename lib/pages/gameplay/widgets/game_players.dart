@@ -3,7 +3,6 @@ import 'package:cd_mobile/models/gif_manager.dart';
 import 'package:cd_mobile/utils/styles.dart';
 import 'package:cd_mobile/widgets/animated_button.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 // TODO: LOAD PLAYERS INFO FROM GAME.INST
 class GamePlayers extends StatelessWidget {
@@ -11,10 +10,9 @@ class GamePlayers extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Player smt = Get.arguments;
-    smt.avatar.model.winner = true;
+    Player smt = MePlayer.inst;
 
-    var players = [smt,smt, smt, smt, smt];
+    var players = [smt, smt, smt, smt, smt];
     List<PlayerCard> list = [];
 
     if (players.length > 1) {
@@ -54,7 +52,10 @@ class PlayerCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-        onTap: () {},
+        onTap: () => showDialog(
+            context: context,
+            builder: (ctx) =>
+                AlertDialog(title: Text(info.nameForCard), content: const Text('hello world'))),
         child: MouseRegion(
             cursor: SystemMouseCursors.click,
             child: Stack(clipBehavior: Clip.none, children: [
@@ -70,7 +71,7 @@ class PlayerCard extends StatelessWidget {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text('curry (You)',
+                      Text(info.nameForCard,
                           style: TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w800,
@@ -92,13 +93,12 @@ class PlayerCard extends StatelessWidget {
                     '#${index + 1}',
                     style: const TextStyle(fontSize: 15.4, fontWeight: FontWeight.w900),
                   )),
-              if (info.isOwner) ...[
+              if (info.isOwner)
                 Positioned(
                     bottom: 0,
                     left: 4,
                     child:
                         Opacity(opacity: 0.6, child: GifManager.inst.misc('owner').builder.init()))
-              ]
             ])));
   }
 }

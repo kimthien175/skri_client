@@ -14,19 +14,6 @@ class HomeController extends ResponsivePageController {
     Get.put(NewsContentController());
   }
 
-  //late Size originalSize;
-  String _name = "";
-  String get name {
-    _name = _name.trim();
-    // TODO: RANDOM NAME
-    if (_name.isEmpty) return 'random name';
-    return _name;
-  }
-
-  set name(String value) => _name = value;
-
-  final contentKey = GlobalKey();
-
   var isLoading = false.obs;
 
   @override

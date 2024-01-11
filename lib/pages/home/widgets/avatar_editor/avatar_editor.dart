@@ -1,3 +1,4 @@
+import 'package:cd_mobile/models/game_play/player.dart';
 import 'package:cd_mobile/pages/home/widgets/avatar_editor/controller.dart';
 import 'package:cd_mobile/models/gif/gif.dart';
 import 'package:cd_mobile/models/gif_manager.dart';
@@ -34,7 +35,7 @@ class AvatarEditor extends StatelessWidget {
                 _SwitchButton('left_arrow', 'chosen_left_arrow', controller.onPreviousColor),
               ],
             ),
-            SizedBox(height: 96, width: 96, child: FittedBox(child: controller.avatar)),
+            SizedBox(height: 96, width: 96, child: FittedBox(child: MePlayer.inst.avatar)),
             Column(
               children: [
                 _SwitchButton('right_arrow', 'chosen_right_arrow', controller.onNextEyes),
