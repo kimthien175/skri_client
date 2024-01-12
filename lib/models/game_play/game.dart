@@ -23,5 +23,5 @@ class PrivateGame extends Game<PrivateGame> {
     return PrivateGame([me]);
   }
 
-  dynamic settings = {};
+  Map<String,dynamic> settings = {};
 }

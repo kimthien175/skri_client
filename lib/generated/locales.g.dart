@@ -37,6 +37,12 @@ class LocaleKeys {
   static const word_mode = 'word_mode';
   static const word_count = 'word_count';
   static const hints = 'hints';
+  static const custom_words_input_placeholder =
+      'custom_words_input_placeholder';
+  static const start = 'start';
+  static const custom_words = 'custom_words';
+  static const use_custom_words_only = 'use_custom_words_only';
+  static const you = 'you';
 }
 
 class Locales {
@@ -75,6 +81,12 @@ class Locales {
     'word_mode': 'Word Mode',
     'word_count': 'Word Count',
     'hints': 'Hints',
+    'custom_words_input_placeholder':
+        'Minimum of @min_words words. @min_char_per_word-@max_char_per_word characters per word! @max_char characters maximum. Separated by a , (comma)',
+    'start': 'Start!',
+    'custom_words': 'Custom words',
+    'use_custom_words_only': 'Use custom words only',
+    'you': 'You',
   };
   static const vi_VN = {
     'displayName': 'Tiếng Việt',
@@ -111,5 +123,11 @@ class Locales {
     'word_mode': 'Chế độ từ',
     'word_count': 'Số từ',
     'hints': 'Gợi ý',
+    'custom_words_input_placeholder':
+        'Tối thiểu @min_words từ. @min_char_per_word-@max_char_per_word kí tự mỗi từ! Tối đa @max_char kí tự. Cách nhau bởi 1 dấu , (dấu phẩy)',
+    'start': 'Bắt đầu!',
+    'custom_words': 'Từ vựng tự chọn',
+    'use_custom_words_only': 'Chỉ sử dụng từ vựng tự chọn',
+    'you': 'Bạn',
   };
 }

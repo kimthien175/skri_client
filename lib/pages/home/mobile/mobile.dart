@@ -44,13 +44,12 @@ class Mobile extends StatelessWidget {
                     decoration: PanelStyles.mobileDecoration,
                     padding: PanelStyles.padding,
                     width: 400,
-                    child: Column(
-                      //mainAxisSize: MainAxisSize.min,
+                    child: const Column(
                       children: [
-                        const Row(children: [NameInput(), LangSelector()]),
+                        Row(children: [NameInput(), LangSelector()]),
                         AvatarEditor(),
-                        const PlayButton(),
-                        const CreatePrivateRoomButton(),
+                        PlayButton(),
+                        CreatePrivateRoomButton(),
                       ],
                     )))),
         SizedBox(height: 0.05 * h),

@@ -24,5 +24,10 @@
                "rounds": "Ván",
                "word_mode": "Chế độ từ",
                "word_count": "Số từ",
-               "hints": "Gợi ý"
+               "hints": "Gợi ý",
+               "custom_words_input_placeholder": "Tối thiểu @min_words từ. @min_char_per_word-@max_char_per_word kí tự mỗi từ! Tối đa @max_char kí tự. Cách nhau bởi 1 dấu , (dấu phẩy)",
+               "start":"Bắt đầu!",
+               "custom_words": "Từ vựng tự chọn",
+               "use_custom_words_only":"Chỉ sử dụng từ vựng tự chọn",
+               "you":"Bạn"
 }

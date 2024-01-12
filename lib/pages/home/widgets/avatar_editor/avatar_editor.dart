@@ -10,14 +10,11 @@ import 'package:get/get.dart';
 // TODO: small transition on translate when switching color, eyes, mouth
 // ignore: must_be_immutable
 class AvatarEditor extends StatelessWidget {
-  AvatarEditor({super.key}) {
-    controller = Get.put(AvatarEditorController());
-  }
-
-  late final AvatarEditorController controller;
+  const AvatarEditor({super.key});
 
   @override
   Widget build(BuildContext context) {
+    var controller = Get.find<AvatarEditorController>();
     return Stack(children: [
       Container(
         margin: const EdgeInsets.only(top: 10, bottom: 10),

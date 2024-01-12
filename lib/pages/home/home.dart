@@ -2,6 +2,7 @@ import 'package:cd_mobile/pages/home/footer/news.dart';
 import 'package:cd_mobile/pages/home/mobile/mobile.dart';
 import 'package:cd_mobile/pages/home/web/controller.dart';
 import 'package:cd_mobile/pages/home/web/web.dart';
+import 'package:cd_mobile/pages/home/widgets/avatar_editor/controller.dart';
 import 'package:cd_mobile/pages/home/widgets/random_avatars.dart';
 import 'package:cd_mobile/pages/page_controller/responsive_page_controller.dart';
 import 'package:cd_mobile/widgets/loading.dart';
@@ -12,6 +13,7 @@ class HomeController extends ResponsivePageController {
   HomeController() : super() {
     Get.put(RandomAvatarsController());
     Get.put(NewsContentController());
+    Get.put(AvatarEditorController());
   }
 
   var isLoading = false.obs;

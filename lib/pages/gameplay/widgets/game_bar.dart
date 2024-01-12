@@ -3,6 +3,7 @@ import 'package:cd_mobile/utils/styles.dart';
 import 'package:cd_mobile/widgets/animated_button.dart';
 import 'package:flutter/material.dart';
 
+// TODO: GAMEBAR FUNCTION
 class GameBar extends StatelessWidget {
   const GameBar({super.key});
   @override

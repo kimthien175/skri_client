@@ -33,14 +33,13 @@ class Web extends StatelessWidget {
           padding: PanelStyles.padding,
           decoration: PanelStyles.webDecoration,
           width: 400,
-          child: Column(
-            //mainAxisSize: MainAxisSize.min,
+          child: const Column(
             children: [
-              const Row(children: [NameInput(), LangSelector()]),
+              Row(children: [NameInput(), LangSelector()]),
               AvatarEditor(),
-              const PlayButton(),
-              const SizedBox(height: 10),
-              const CreatePrivateRoomButton(),
+              PlayButton(),
+              SizedBox(height: 10),
+              CreatePrivateRoomButton(),
             ],
           )),
       const SizedBox(height: 10)

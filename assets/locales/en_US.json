@@ -24,5 +24,10 @@
     "rounds": "Rounds",
     "word_mode": "Word Mode",
     "word_count": "Word Count",
-    "hints": "Hints"
+    "hints": "Hints",
+    "custom_words_input_placeholder": "Minimum of @min_words words. @min_char_per_word-@max_char_per_word characters per word! @max_char characters maximum. Separated by a , (comma)",
+    "start": "Start!",
+    "custom_words": "Custom words",
+    "use_custom_words_only":"Use custom words only",
+    "you":"You"
 }
