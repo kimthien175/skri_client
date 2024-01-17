@@ -7,8 +7,7 @@ import 'package:get/get.dart';
 class GameSettings extends StatelessWidget {
   const GameSettings({super.key});
 
-  static dynamic fetchedSettings;
-
+  static dynamic get fetchedSettings => (Game.inst as PrivateGame).requestedRoomInfo['settings'];
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -60,7 +59,7 @@ class GameSettings extends StatelessWidget {
                             _UseCustomWordsOnlyCheckbox()
                           ],
                         ),
-                        const Expanded(child: _CustomWordsInput())
+                        Expanded(child: _CustomWordsInput())
                       ],
                     ))),
             Expanded(
@@ -71,11 +70,24 @@ class GameSettings extends StatelessWidget {
                         onTap: () {
                           var privateGameSettings = (Game.inst as PrivateGame).settings;
                           if (privateGameSettings['use_custom_words_only']) {
-                            privateGameSettings['custom_words'] =
-                                _CustomWordsInput.contentIntoList();
-                            privateGameSettings.remove('language');
+                            // start game with custom words
+
+                            if (Get.find<GlobalKey<FormState>>().currentState!.validate()) {
+                              privateGameSettings['custom_words'] =
+                                  _CustomWordsInput.proceededWords;
+                              privateGameSettings.remove('language');
+
+                              // TODO: start game with custom words
+                              print(privateGameSettings);
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                  content: Text('custom_words_input_invalidation_message'.tr)));
+                            }
+                          } else {
+                            // start game without custom words
+                            //TODO: start game without custom words
+                            print(privateGameSettings);
                           }
-                          //TODO: private game get started
                         },
                         child: Container(
                           alignment: Alignment.center,
@@ -97,15 +109,56 @@ class GameSettings extends StatelessWidget {
 
 // TODO: CUSTOMIZE _CUSTOMWORDSINPUT: HIGHLIGHT WHEN FOCUS, text formater to follow rules
 class _CustomWordsInput extends StatelessWidget {
-  const _CustomWordsInput();
-  static String content = '';
-  static List<String> contentIntoList() {
-    // split by comma
-    var rawList = content.split(',');
-    // TODO: check each words
-
-    return rawList;
+  _CustomWordsInput() {
+    formKey = Get.put(GlobalKey<FormState>());
   }
+  static String content = '';
+  static List<String> proceededWords = [];
+
+  String? validator(String? value) {
+    content = value!;
+    var fetchedRules = GameSettings.fetchedSettings['custom_words_rules'];
+
+    var checkBoxName = 'use_custom_words_only'.tr;
+
+    // check empty content
+    if (value.isEmpty) {
+      return 'custom_words_input_validate_empty_content'.trParams({'checkBoxName': checkBoxName});
+    }
+
+    // check word count
+    var words = content.split(',');
+
+    var minWords = fetchedRules['min_words'];
+    if (words.length < minWords) {
+      return 'custom_words_input_validate_words_count'.trParams({'min_words': minWords.toString()});
+    }
+
+    // check length per word
+    var minCharPerWord = fetchedRules['min_char_per_word'];
+    var maxCharPerWord = fetchedRules['max_char_per_word'];
+    List<String> invalidWords = [];
+    for (int i = 0; i < words.length; i++) {
+      words[i] = words[i].trim();
+      var word = words[i];
+      if (word.length < minCharPerWord || word.length > maxCharPerWord) {
+        invalidWords.add(word);
+      }
+    }
+    if (invalidWords.isNotEmpty) {
+      return 'custom_words_input_validate_word_length'.trParams({
+        'invalidWords': invalidWords.toString(),
+        'min_char_per_word': minCharPerWord.toString(),
+        'max_char_per_word': maxCharPerWord.toString()
+      });
+    }
+
+    proceededWords = words;
+
+    return null;
+  }
+
+  late final GlobalKey<FormState> formKey;
 
   @override
   Widget build(BuildContext context) {
@@ -113,25 +166,28 @@ class _CustomWordsInput extends StatelessWidget {
     var maxLength = fetchedRules['max_char'];
     return Container(
         decoration: InputStyles.decoration,
-        child: TextField(
-          maxLength: maxLength,
-          onChanged: (value) => content = value,
-          decoration: InputDecoration(
-              isCollapsed: true,
-              contentPadding: const EdgeInsets.symmetric(vertical: 6, horizontal: 3),
-              border: InputBorder.none,
-              hintText: 'custom_words_input_placeholder'.trParams({
-                'min_words': fetchedRules['min_words'].toString(),
-                'min_char_per_word': fetchedRules['min_char_per_word'].toString(),
-                'max_char_per_word': fetchedRules['max_char_per_word'].toString(),
-                'max_char': maxLength.toString()
-              }),
-              hintStyle: const TextStyle(
-                  fontWeight: FontWeight.w700,
-                  color: Color.fromRGBO(0, 0, 0, 0.5),
-                  fontSize: 15.4)),
-          maxLines: null,
-        ));
+        child: Form(
+            key: formKey,
+            child: TextFormField(
+              validator: validator,
+              maxLength: maxLength,
+              onChanged: (value) => content = value,
+              decoration: InputDecoration(
+                  isCollapsed: true,
+                  contentPadding: const EdgeInsets.symmetric(vertical: 6, horizontal: 3),
+                  border: InputBorder.none,
+                  hintText: 'custom_words_input_placeholder'.trParams({
+                    'min_words': fetchedRules['min_words'].toString(),
+                    'min_char_per_word': fetchedRules['min_char_per_word'].toString(),
+                    'max_char_per_word': fetchedRules['max_char_per_word'].toString(),
+                    'max_char': maxLength.toString()
+                  }),
+                  hintStyle: const TextStyle(
+                      fontWeight: FontWeight.w700,
+                      color: Color.fromRGBO(0, 0, 0, 0.5),
+                      fontSize: 15.4)),
+              maxLines: null,
+            )));
   }
 }
 
@@ -149,7 +205,7 @@ class _SettingsItem extends StatelessWidget {
 
   DropdownMenuItem _menuItem(dynamic value) => DropdownMenuItem(
       value: value,
-      child: Text(value.toString(),
+      child: Text(value is String ? value.tr : value.toString(),
           style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700)));
 
   @override

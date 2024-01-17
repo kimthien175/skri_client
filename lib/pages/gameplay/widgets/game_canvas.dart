@@ -1,10 +1,8 @@
-import 'dart:convert';
-
 import 'package:cd_mobile/pages/gameplay/widgets/game_settings.dart';
-import 'package:cd_mobile/utils/api.dart';
 import 'package:cd_mobile/utils/styles.dart';
 import 'package:flutter/material.dart';
 
+// TODO: showing effects on child widget
 class GameCanvas extends StatelessWidget {
   const GameCanvas({super.key});
 
@@ -17,16 +15,6 @@ class GameCanvas extends StatelessWidget {
           color: Colors.white,
           borderRadius: GlobalStyles.borderRadius,
         ),
-        child: FutureBuilder(
-            future: API.inst.get('room_settings'),
-            builder: (ct, snapshots) {
-              if (snapshots.hasData) {
-                if (snapshots.data!.statusCode == 200) {
-                  GameSettings.fetchedSettings = jsonDecode(snapshots.data!.body);
-                  return const GameSettings();
-                }
-              }
-              return Container();
-            }));
+        child: const GameSettings());
   }
 }

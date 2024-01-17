@@ -1,3 +1,4 @@
+import 'package:cd_mobile/pages/gameplay/gameplay.dart';
 import 'package:cd_mobile/pages/gameplay/widgets/game_bar.dart';
 import 'package:cd_mobile/pages/gameplay/widgets/game_canvas.dart';
 import 'package:cd_mobile/pages/gameplay/widgets/game_chat.dart';
@@ -23,8 +24,8 @@ class Web extends StatelessWidget {
                 child: SizedBox(
                     width: 320,
                     child: FittedBox(child: Logo(() {
-                      // TODO: disconnect and get to homepage
                       Get.back();
+                      GameplayPage.onBack();
                     }))))),
         GameplayStyles.layoutGap,
         const GameBar(),

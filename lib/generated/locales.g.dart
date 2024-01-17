@@ -42,7 +42,22 @@ class LocaleKeys {
   static const start = 'start';
   static const custom_words = 'custom_words';
   static const use_custom_words_only = 'use_custom_words_only';
-  static const you = 'you';
+  static const invite_your_friends = 'invite_your_friends';
+  static const hover_over_me_to_see_the_invite_link =
+      'hover_over_me_to_see_the_invite_link';
+  static const custom_words_input_validate_empty_content =
+      'custom_words_input_validate_empty_content';
+  static const custom_words_input_validate_words_count =
+      'custom_words_input_validate_words_count';
+  static const custom_words_input_validate_word_length =
+      'custom_words_input_validate_word_length';
+  static const custom_words_input_invalidation_message =
+      'custom_words_input_invalidation_message';
+  static const You = 'You';
+  static const Normal = 'Normal';
+  static const Hidden = 'Hidden';
+  static const Combination = 'Combination';
+  static const Copy = 'Copy';
 }
 
 class Locales {
@@ -86,7 +101,17 @@ class Locales {
     'start': 'Start!',
     'custom_words': 'Custom words',
     'use_custom_words_only': 'Use custom words only',
-    'you': 'You',
+    'invite_your_friends': 'Invite your friends!',
+    'hover_over_me_to_see_the_invite_link':
+        'Hover over me to see the invite link!',
+    'custom_words_input_validate_empty_content':
+        'Please enter some text, or uncheck \'@checkBoxName\'',
+    'custom_words_input_validate_words_count':
+        'Please put in more words, at least @min_words in total',
+    'custom_words_input_validate_word_length':
+        'Invalid \'@invalidWords\'! must be @min_char_per_word-@max_char_per_word characters',
+    'custom_words_input_invalidation_message':
+        'Invalidation on custom words, please check again',
   };
   static const vi_VN = {
     'displayName': 'Tiếng Việt',
@@ -128,6 +153,20 @@ class Locales {
     'start': 'Bắt đầu!',
     'custom_words': 'Từ vựng tự chọn',
     'use_custom_words_only': 'Chỉ sử dụng từ vựng tự chọn',
-    'you': 'Bạn',
+    'invite_your_friends': 'Mời bạn bè cùng chơi!',
+    'hover_over_me_to_see_the_invite_link': 'Hãy rờ tôi để thấy link!',
+    'You': 'Bạn',
+    'Normal': 'Bình thường',
+    'Hidden': 'Ẩn',
+    'Combination': 'Kết hợp',
+    'Copy': 'Sao chép',
+    'custom_words_input_validate_empty_content':
+        'Nhập từ của bạn, hoặc bỏ chọn \'@checkBoxName\'',
+    'custom_words_input_validate_words_count':
+        'Hãy nhập thêm từ, tối thiểu tất cả @min_words',
+    'custom_words_input_validate_word_length':
+        '\'@invalidWords\' hơi sai! phải từ @min_char_per_word đến @max_char_per_word chữ mỗi từ!',
+    'custom_words_input_invalidation_message':
+        'Từ vựng tự chọn không hợp lệ má ui, kiểm tra lại ei',
   };
 }

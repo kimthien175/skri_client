@@ -29,5 +29,10 @@
     "start": "Start!",
     "custom_words": "Custom words",
     "use_custom_words_only":"Use custom words only",
-    "you":"You"
+    "invite_your_friends":"Invite your friends!",
+    "hover_over_me_to_see_the_invite_link":"Hover over me to see the invite link!",
+    "custom_words_input_validate_empty_content":"Please enter some text, or uncheck '@checkBoxName'",
+    "custom_words_input_validate_words_count":"Please put in more words, at least @min_words in total",
+    "custom_words_input_validate_word_length":"Invalid '@invalidWords'! must be @min_char_per_word-@max_char_per_word characters",
+    "custom_words_input_invalidation_message":"Invalidation on custom words, please check again"
 }
