@@ -2,9 +2,7 @@ import 'package:cd_mobile/generated/locales.g.dart';
 import 'package:cd_mobile/pages/credits/credits.dart';
 import 'package:cd_mobile/pages/gameplay/gameplay.dart';
 import 'package:cd_mobile/pages/home/home.dart';
-import 'package:cd_mobile/pages/loading/loading.dart';
 import 'package:cd_mobile/pages/terms/terms.dart';
-import 'package:cd_mobile/utils/start_up.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:url_strategy/url_strategy.dart';
@@ -12,7 +10,6 @@ import 'package:url_strategy/url_strategy.dart';
 // TODO: JOIN ROOM
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  startUp();
   setPathUrlStrategy();
   runApp(GetMaterialApp(
     theme: ThemeData(fontFamily: 'Nunito'),
@@ -22,13 +19,25 @@ void main() {
     fallbackLocale: const Locale('en', 'US'),
     debugShowCheckedModeBanner: false,
     title: 'Material App',
-    initialRoute: '/loading',
+    initialRoute: '/',
     getPages: [
-      GetPage(name: '/loading', page: () => const LoadingPage(), transition: Transition.noTransition),
       GetPage(name: '/', page: () => HomePage(), transition: Transition.noTransition),
       GetPage(name: '/terms', page: () => const TermsPage(), transition: Transition.noTransition),
       GetPage(name: '/credits', page: () => const CreditsPage(), transition: Transition.noTransition),
       GetPage(name: '/gameplay', page: () => GameplayPage(), transition: Transition.noTransition)
     ],
+    routingCallback: (routing) {
+      if (routing == null) return;
+      String url = routing.current;
+      // if (url.startsWith('/')){
+      //   // process parameters
+
+      //   return;
+      // }
+      // if (url != '/terms' && url!='/credits'){
+      //   routing.current = '/';
+      // }
+      routing.current = '/';
+    },
   ));
 }

@@ -1,8 +1,24 @@
 import 'package:cd_mobile/models/gif_manager.dart';
 import 'package:get/get.dart';
 
-Future<void> startUp() async {
-  await Future.wait([GifManager.inst.loadResources()]);
+class ResourcesController extends GetxController {
+  ResourcesController._internal() {
+    load();
+  }
 
-  Get.offAndToNamed('/');
+  static final ResourcesController _inst = ResourcesController._internal();
+  static ResourcesController get inst => _inst;
+
+  Future<void> load() async {
+    await Future.wait([GifManager.inst.loadResources()]);
+
+    for (int i = 0; i < onDone.length; i++) {
+      onDone[i]();
+    }
+    isLoaded.value = true;
+    onDone.clear();
+  }
+
+  var isLoaded = false.obs;
+  List<Function()> onDone = [];
 }
