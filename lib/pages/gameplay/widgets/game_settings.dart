@@ -7,7 +7,36 @@ import 'package:get/get.dart';
 class GameSettings extends StatelessWidget {
   const GameSettings({super.key});
 
-  static dynamic get fetchedSettings => (Game.inst as PrivateGame).requestedRoomInfo['settings'];
+  // DBRoomSettingsDocument
+  static Map<String, dynamic> get fetchedOptions =>
+      (Game.inst as PrivateGame).succeededCreatedRoomData['settings']['options'];
+
+  void startGame() {
+    var privateGameSettings = (Game.inst as PrivateGame).settings;
+
+    if (privateGameSettings['use_custom_words_only']) {
+      // start game with custom words
+
+      if (Get.find<GlobalKey<FormState>>().currentState!.validate()) {
+        privateGameSettings['custom_words'] = _CustomWordsInput.proceededWords;
+
+        // TODO: start game with custom words
+        var goingToBePushed = (Game.inst as PrivateGame).getDifferentSettingsFromDefault();
+        goingToBePushed['custom_words'] = _CustomWordsInput.proceededWords;
+        print(goingToBePushed);
+      } else {
+        ScaffoldMessenger.of(Get.context!)
+            .showSnackBar(SnackBar(content: Text('custom_words_input_invalidation_message'.tr)));
+      }
+    } else {
+      // start game without custom words
+      //TODO: start game without custom words
+
+      var goingToBePushed = (Game.inst as PrivateGame).getDifferentSettingsFromDefault();
+      print(goingToBePushed);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -19,21 +48,21 @@ class GameSettings extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Expanded(
+            const Expanded(
                 flex: 52,
                 child: Column(children: [
                   _SettingsItem(gif: 'setting_1', settingKey: 'players'),
-                  const SizedBox(height: 3.5),
+                  SizedBox(height: 3.5),
                   _SettingsItem(gif: 'setting_0', settingKey: 'language'),
-                  const SizedBox(height: 3.5),
+                  SizedBox(height: 3.5),
                   _SettingsItem(gif: 'setting_2', settingKey: 'drawtime'),
-                  const SizedBox(height: 3.5),
+                  SizedBox(height: 3.5),
                   _SettingsItem(gif: 'setting_3', settingKey: 'rounds'),
-                  const SizedBox(height: 3.5),
+                  SizedBox(height: 3.5),
                   _SettingsItem(gif: 'setting_6', settingKey: 'word_mode'),
-                  const SizedBox(height: 3.5),
+                  SizedBox(height: 3.5),
                   _SettingsItem(gif: 'setting_4', settingKey: 'word_count'),
-                  const SizedBox(height: 3.5),
+                  SizedBox(height: 3.5),
                   _SettingsItem(gif: 'setting_5', settingKey: 'hints'),
                 ])),
             Expanded(
@@ -56,7 +85,7 @@ class GameSettings extends StatelessWidget {
                                     fontSize: 13.44,
                                     fontWeight: FontWeight.w700,
                                     color: Color.fromRGBO(240, 240, 240, 1))),
-                            _UseCustomWordsOnlyCheckbox()
+                            const _UseCustomWordsOnlyCheckbox()
                           ],
                         ),
                         Expanded(child: _CustomWordsInput())
@@ -67,28 +96,7 @@ class GameSettings extends StatelessWidget {
                 child: MouseRegion(
                     cursor: SystemMouseCursors.click,
                     child: GestureDetector(
-                        onTap: () {
-                          var privateGameSettings = (Game.inst as PrivateGame).settings;
-                          if (privateGameSettings['use_custom_words_only']) {
-                            // start game with custom words
-
-                            if (Get.find<GlobalKey<FormState>>().currentState!.validate()) {
-                              privateGameSettings['custom_words'] =
-                                  _CustomWordsInput.proceededWords;
-                              privateGameSettings.remove('language');
-
-                              // TODO: start game with custom words
-                              print(privateGameSettings);
-                            } else {
-                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                  content: Text('custom_words_input_invalidation_message'.tr)));
-                            }
-                          } else {
-                            // start game without custom words
-                            //TODO: start game without custom words
-                            print(privateGameSettings);
-                          }
-                        },
+                        onTap: startGame,
                         child: Container(
                           alignment: Alignment.center,
                           decoration: BoxDecoration(
@@ -107,7 +115,7 @@ class GameSettings extends StatelessWidget {
   }
 }
 
-// TODO: CUSTOMIZE _CUSTOMWORDSINPUT: HIGHLIGHT WHEN FOCUS, text formater to follow rules
+// TODO: _CustomWordsInput: HIGHLIGHT WHEN FOCUS
 class _CustomWordsInput extends StatelessWidget {
   _CustomWordsInput() {
     formKey = Get.put(GlobalKey<FormState>());
@@ -117,7 +125,7 @@ class _CustomWordsInput extends StatelessWidget {
 
   String? validator(String? value) {
     content = value!;
-    var fetchedRules = GameSettings.fetchedSettings['custom_words_rules'];
+    var fetchedRules = GameSettings.fetchedOptions['custom_words_rules'];
 
     var checkBoxName = 'use_custom_words_only'.tr;
 
@@ -162,7 +170,7 @@ class _CustomWordsInput extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var fetchedRules = GameSettings.fetchedSettings['custom_words_rules'];
+    var fetchedRules = GameSettings.fetchedOptions['custom_words_rules'];
     var maxLength = fetchedRules['max_char'];
     return Container(
         decoration: InputStyles.decoration,
@@ -192,9 +200,7 @@ class _CustomWordsInput extends StatelessWidget {
 }
 
 class _SettingsItem extends StatelessWidget {
-  _SettingsItem({required this.gif, required this.settingKey}) {
-    changeSetting(GameSettings.fetchedSettings[settingKey]['default']);
-  }
+  const _SettingsItem({required this.gif, required this.settingKey});
 
   final String gif;
   final String settingKey;
@@ -211,7 +217,7 @@ class _SettingsItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     List<DropdownMenuItem> items = [];
-    var settings = GameSettings.fetchedSettings[settingKey];
+    var settings = GameSettings.fetchedOptions[settingKey];
     if (settings['list'] == null) {
       int max = settings['max'];
       int min = settings['min'];
@@ -262,11 +268,9 @@ class _SettingsItem extends StatelessWidget {
   }
 }
 
-// TODO: CUSTOMIZES CHECKBOX: HIGHLIGHT WHEN FOCUS, CUSTOMIZED CHECKED STATE DISPLAY
+// TODO: _UseCustomWordsOnlyCheckbox: HIGHLIGHT WHEN FOCUS, CUSTOMIZED CHECKED STATE DISPLAY
 class _UseCustomWordsOnlyCheckbox extends StatelessWidget {
-  _UseCustomWordsOnlyCheckbox() {
-    gameSettings()['use_custom_words_only'] = false;
-  }
+  const _UseCustomWordsOnlyCheckbox();
 
   dynamic gameSettings() => (Game.inst as PrivateGame).settings;
   @override

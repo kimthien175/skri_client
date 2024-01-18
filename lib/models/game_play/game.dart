@@ -3,6 +3,8 @@ import 'package:cd_mobile/pages/home/home.dart';
 import 'package:cd_mobile/utils/socket_io.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+// ignore: avoid_web_libraries_in_flutter
+import 'dart:html' as html;
 
 abstract class Game<GAME_TYPE extends Game<GAME_TYPE>> {
   Game(this.players);
@@ -31,9 +33,23 @@ class PrivateGame extends Game<PrivateGame> {
     return PrivateGame([me]).requestRoom();
   }
 
-  dynamic requestedRoomInfo= {};
+  /// SuccessCreateRoomData
+  Map<String, dynamic> succeededCreatedRoomData = {};
 
-  Map<String, dynamic> settings = {};
+  /// DBRoomSettings
+  late Map<String, dynamic> settings;
+  Map<String, dynamic> getDifferentSettingsFromDefault() {
+    Map<String, dynamic> result = {};
+    var defaultSettings = succeededCreatedRoomData['settings']['default'];
+    for (String key in settings.keys) {
+      if (settings[key] != defaultSettings[key]) result[key] = settings[key];
+    }
+    return result;
+  }
+
+  // init when the main page is showing -> get main url
+  String mainUrl = html.window.location.href;
+  String get inviteLink => '$mainUrl?${succeededCreatedRoomData['code']}';
 
   PrivateGame requestRoom() {
     var inst = SocketIO.inst;
@@ -48,12 +64,18 @@ class PrivateGame extends Game<PrivateGame> {
                   title: const Text('Can not create private room right now'),
                   content: Text(requestedRoomResult['error'].toString())));
         } else {
-          var result = requestedRoomResult['ok'];
+          var succeeded = requestedRoomResult['ok'];
+
+          succeededCreatedRoomData = succeeded;
+          succeededCreatedRoomData['settings']['default']['use_custom_words_only'] = false;
+
+          // set room owner name if empty
           if (MePlayer.inst.name.isEmpty) {
-            MePlayer.inst.name = result['ownerName'];
+            MePlayer.inst.name = succeeded['ownerName'];
           }
 
-          requestedRoomInfo = result;
+          // set default for PrivateGame settings
+          settings = Map.from(succeeded['settings']['default']);
 
           Get.toNamed('/gameplay');
 

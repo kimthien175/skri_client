@@ -9,8 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:url_strategy/url_strategy.dart';
 
-// TODO: TRANSITION EFFECTS ON NAVIGATING
-// TODO: DOES IT NECESSARY? RELOAD RESOURCES FOR EACH WHEN LOOSE DATA,  OR IT JUST FLUTTER HOT RELOADING/RESTARTING FAULT?
+// TODO: JOIN ROOM
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   startUp();
@@ -25,11 +24,11 @@ void main() {
     title: 'Material App',
     initialRoute: '/loading',
     getPages: [
-      GetPage(name: '/loading', page: () => const LoadingPage()),
-      GetPage(name: '/', page: () => HomePage()),
-      GetPage(name: '/terms', page: () => const TermsPage()),
-      GetPage(name: '/credits', page: () => const CreditsPage()),
-      GetPage(name: '/gameplay', page: () => GameplayPage())
+      GetPage(name: '/loading', page: () => const LoadingPage(), transition: Transition.noTransition),
+      GetPage(name: '/', page: () => HomePage(), transition: Transition.noTransition),
+      GetPage(name: '/terms', page: () => const TermsPage(), transition: Transition.noTransition),
+      GetPage(name: '/credits', page: () => const CreditsPage(), transition: Transition.noTransition),
+      GetPage(name: '/gameplay', page: () => GameplayPage(), transition: Transition.noTransition)
     ],
   ));
 }

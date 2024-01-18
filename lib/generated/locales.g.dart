@@ -53,6 +53,7 @@ class LocaleKeys {
       'custom_words_input_validate_word_length';
   static const custom_words_input_invalidation_message =
       'custom_words_input_invalidation_message';
+  static const message_link_coppied = 'message_link_coppied';
   static const You = 'You';
   static const Normal = 'Normal';
   static const Hidden = 'Hidden';
@@ -112,6 +113,7 @@ class Locales {
         'Invalid \'@invalidWords\'! must be @min_char_per_word-@max_char_per_word characters',
     'custom_words_input_invalidation_message':
         'Invalidation on custom words, please check again',
+    'message_link_coppied': 'Link coppied!',
   };
   static const vi_VN = {
     'displayName': 'Tiếng Việt',
@@ -168,5 +170,6 @@ class Locales {
         '\'@invalidWords\' hơi sai! phải từ @min_char_per_word đến @max_char_per_word chữ mỗi từ!',
     'custom_words_input_invalidation_message':
         'Từ vựng tự chọn không hợp lệ má ui, kiểm tra lại ei',
+    'message_link_coppied': 'Đã sao chép link!',
   };
 }

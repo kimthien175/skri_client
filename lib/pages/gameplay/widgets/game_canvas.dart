@@ -1,10 +1,10 @@
-import 'package:cd_mobile/pages/gameplay/widgets/game_settings.dart';
 import 'package:cd_mobile/utils/styles.dart';
 import 'package:flutter/material.dart';
 
-// TODO: showing effects on child widget
+
 class GameCanvas extends StatelessWidget {
-  const GameCanvas({super.key});
+ const GameCanvas({super.key});
+
 
   @override
   Widget build(BuildContext context) {
@@ -15,6 +15,8 @@ class GameCanvas extends StatelessWidget {
           color: Colors.white,
           borderRadius: GlobalStyles.borderRadius,
         ),
-        child: const GameSettings());
+        alignment: Alignment.center,
+        child: const Text('game cnvas')
+        );
   }
 }

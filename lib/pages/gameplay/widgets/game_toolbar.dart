@@ -1,5 +1,6 @@
 import 'package:cd_mobile/models/game_play/game.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 class GameToolbar extends StatelessWidget {
@@ -48,7 +49,7 @@ class _InviteLink extends StatelessWidget {
                     topLeft: Radius.circular(3), bottomLeft: Radius.circular(3))),
             alignment: Alignment.center,
             child: Obx(() => controller.isHover.value
-                ? Text((Game.inst as PrivateGame).requestedRoomInfo['code'].toString(),
+                ? Text((Game.inst as PrivateGame).inviteLink,
                     style: const TextStyle(
                         fontSize: 18.2,
                         color: Color.fromRGBO(44, 44, 44, 1),
@@ -74,7 +75,9 @@ class _CopyButton extends StatelessWidget {
         cursor: SystemMouseCursors.click,
         child: GestureDetector(
             onTap: () {
-              // TODO: COPY LINK
+              Clipboard.setData(ClipboardData(text: (Game.inst as PrivateGame).inviteLink)).then(
+                  (value) => ScaffoldMessenger.of(context)
+                      .showSnackBar(SnackBar(content: Text('message_link_coppied'.tr))));
             },
             child: Container(
                 decoration: const BoxDecoration(
@@ -87,6 +90,8 @@ class _CopyButton extends StatelessWidget {
                         color: Color.fromRGBO(240, 240, 240, 1),
                         fontSize: 14,
                         fontWeight: FontWeight.w800,
-                        shadows: [Shadow(offset: Offset(2, 2), color: Color.fromRGBO(0, 0, 0, 0.17))])))));
+                        shadows: [
+                          Shadow(offset: Offset(2, 2), color: Color.fromRGBO(0, 0, 0, 0.17))
+                        ])))));
   }
 }

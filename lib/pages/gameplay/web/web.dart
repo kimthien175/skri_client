@@ -1,9 +1,9 @@
 import 'package:cd_mobile/pages/gameplay/gameplay.dart';
 import 'package:cd_mobile/pages/gameplay/widgets/game_bar.dart';
-import 'package:cd_mobile/pages/gameplay/widgets/game_canvas.dart';
 import 'package:cd_mobile/pages/gameplay/widgets/game_chat.dart';
 import 'package:cd_mobile/pages/gameplay/widgets/game_players.dart';
 import 'package:cd_mobile/pages/gameplay/widgets/game_toolbar.dart';
+import 'package:cd_mobile/pages/gameplay/widgets/main_content/main_content.dart';
 import 'package:cd_mobile/utils/styles.dart';
 import 'package:cd_mobile/widgets/logo.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +11,6 @@ import 'package:get/get.dart';
 
 class Web extends StatelessWidget {
   const Web({super.key});
-
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -36,7 +35,7 @@ class Web extends StatelessWidget {
           children: [
             const GamePlayers(),
             GameplayStyles.layoutGap,
-            Column(children: [const GameCanvas(), GameplayStyles.layoutGap, const GameToolbar()]),
+            Column(children: [const MainContent(), GameplayStyles.layoutGap, const GameToolbar()]),
             GameplayStyles.layoutGap,
             const GameChat()
           ],

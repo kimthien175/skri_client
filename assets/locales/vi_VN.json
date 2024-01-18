@@ -39,5 +39,6 @@
     "custom_words_input_validate_empty_content":"Nhập từ của bạn, hoặc bỏ chọn '@checkBoxName'",
     "custom_words_input_validate_words_count":"Hãy nhập thêm từ, tối thiểu tất cả @min_words",
     "custom_words_input_validate_word_length":"'@invalidWords' hơi sai! phải từ @min_char_per_word đến @max_char_per_word chữ mỗi từ!",
-    "custom_words_input_invalidation_message":"Từ vựng tự chọn không hợp lệ má ui, kiểm tra lại ei"
+    "custom_words_input_invalidation_message":"Từ vựng tự chọn không hợp lệ má ui, kiểm tra lại ei",
+    "message_link_coppied":"Đã sao chép link!"
 }
