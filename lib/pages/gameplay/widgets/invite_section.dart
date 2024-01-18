@@ -3,15 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
-class GameToolbar extends StatelessWidget {
-  const GameToolbar({super.key});
+class InviteSection extends StatelessWidget{
+  const InviteSection({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        width: 800,
-        alignment: Alignment.center,
-        child: Column(
+    return Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
@@ -29,7 +26,7 @@ class GameToolbar extends StatelessWidget {
                   )
                 ]))
           ],
-        ));
+        );
   }
 }
 

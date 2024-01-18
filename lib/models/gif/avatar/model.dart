@@ -40,4 +40,12 @@ class AvatarModel extends GifModel<AvatarModel> {
 
   @override
   AvatarBuilder get builder => AvatarBuilder(this);
+
+  Map<String, dynamic> toJSON(){
+    return {
+      'color':color.index,
+      'eyes':eyes.index,
+      'mouth':mouth.index
+    };
+  }
 }

@@ -82,7 +82,8 @@ class GifManager {
         Rect rect =
             Rect.fromLTRB(left.toDouble(), top.toDouble(), right.toDouble(), bottom.toDouble());
 
-        list.add(ChildGifModel(rect, frames));
+        int index = list.length;
+        list.add(ChildGifModel(rect, frames, index: index));
         spriteCount = spriteCount + 1;
 
         if (spriteCount == quantity) break rowLoop;

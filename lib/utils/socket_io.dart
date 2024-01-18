@@ -6,216 +6,129 @@ class SocketIO {
     _socket =
         io(API.inst.uri, OptionBuilder().setTransports(['websocket']).disableAutoConnect().build());
 
-    // _socket.onConnect((data) {
-    //   print('connect');
-    //   _socket.emitWithAck('msg', 'test', ack:(data){
-    //     print(data);
-    //   });
-    // });
-
-    // _socket.on('event', (data) => print(data));
-    // _socket.onDisconnect((data) {
-    //   showDialog(
-    //       context: Get.context!,
-    //       builder: (ct) =>
-    //           AlertDialog(title: const Text("Disconnected"), content: Text(data.toString())));
-    // });
-
-    // _socket.on('fromServer', (data) => print(data));
     eventHandlers = SessionEventHandlers.initWithSocket(socket: socket);
   }
-  static SocketIO? _inst = _init();
+  static final SocketIO _inst = SocketIO._internal();
 
-  /// called only once
-  static SocketIO _init() {
-    _inst = SocketIO._internal();
-    _inst?.eventHandlers = SessionEventHandlers();
-
-    return SocketIO._inst!;
-  }
-
-  static SocketIO get inst => _inst!;
+  static SocketIO get inst => _inst;
 
   late final Socket _socket;
   Socket get socket => _socket;
 
-  late SessionEventHandlers eventHandlers;
+  late final SessionEventHandlers eventHandlers;
 }
 
 class SessionEventHandlers {
   SessionEventHandlers.initWithSocket({
     required Socket socket,
-    this.onConnect,
-    this.onConnectError,
-    this.onConnectTimeout,
-    this.onConnecting,
-    this.onDisconnect,
-    this.onError,
-    this.onReconnect,
-    this.onReconnectAttempt,
-    this.onReconnectFailed,
-    this.onReconnectError,
-    this.onReconnecting,
+    Function(dynamic)? onConnect,
+    Function(dynamic)? onConnectError,
+    Function(dynamic)? onConnectTimeout,
+    Function(dynamic)? onConnecting,
+    Function(dynamic)? onDisconnect,
+    Function(dynamic)? onError,
+    Function(dynamic)? onReconnect,
+    Function(dynamic)? onReconnectAttempt,
+    Function(dynamic)? onReconnectFailed,
+    Function(dynamic)? onReconnectError,
+    Function(dynamic)? onReconnecting,
   }) {
-    socket.onConnect((data) {
-      print('onConnect');
-      print(data);
-      if (onConnect != null) onConnect!();
-    });
+    this.onConnect = onConnect ??
+        (data) {
+          print('onConnect');
+          print(data);
+        };
+    socket.onConnect((data) => this.onConnect(data));
 
-    socket.onConnectError((data) {
-      print('onConnectionError');
-      print(data);
-      if (onConnectError != null) onConnectError!();
-    });
+    this.onConnectError = onConnectError ??
+        (data) {
+          print('onConnectionError');
+          print(data);
+        };
+    socket.onConnectError((data) => this.onConnectError(data));
 
-    socket.onConnectTimeout((data) {
-      print('onConnectTimeout');
-      print(data);
-      if (onConnectTimeout != null) onConnectTimeout!();
-    });
+    this.onConnectTimeout = onConnectTimeout ??
+        (data) {
+          print('onConnectTimeout');
+          print(data);
+        };
+    socket.onConnectTimeout((data) => this.onConnectTimeout(data));
 
-    socket.onConnecting((data) {
-      print('onConnecting');
-      print(data);
-      if (onConnecting != null) onConnecting!();
-    });
+    this.onConnecting = onConnecting ??
+        (data) {
+          print('onConnecting');
+          print(data);
+        };
 
-    socket.onDisconnect((data) {
-      print('onDisconnect');
-      print(data);
-      if (onDisconnect != null) onDisconnect!();
-    });
+    socket.onConnecting((data) => this.onConnecting(data));
 
-    socket.onError((data) {
-      print('onError');
-      print(data);
-      if (onError != null) onError!();
-    });
+    this.onDisconnect = onDisconnect ??
+        (data) {
+          print('onDisconnect');
+          print(data);
+        };
 
-    socket.onReconnect((data) {
-      print('onReconnect');
-      print(data);
-      if (onReconnect != null) onReconnect!();
-    });
+    socket.onDisconnect((data) => this.onDisconnect(data));
 
-    socket.onReconnectAttempt((data) {
-      print('onReconnectAttempt');
-      print(data);
-      if (onReconnectAttempt != null) onReconnectAttempt!();
-    });
+    this.onError = onError ??
+        (data) {
+          print('onError');
+          print(data);
+        };
 
-    socket.onReconnectFailed((data) {
-      print('onReconnectFailed');
-      print(data);
-      if (onReconnectFailed != null) onReconnectFailed!();
-    });
+    socket.onError((data) => this.onError(data));
 
-    socket.onReconnectError((data) {
-      print('onReconnectError');
-      print(data);
-      if (onReconnectError != null) onReconnectError!();
-    });
+    this.onReconnect = onReconnect ??
+        (data) {
+          print('onReconnect');
+          print(data);
+        };
 
-    socket.onReconnecting((data) {
-      print('onReconnecting');
-      print(data);
-      if (onReconnecting != null) onReconnecting!();
-    });
+    socket.onReconnect((data) => this.onReconnect(data));
+
+    this.onReconnectAttempt = onReconnectAttempt ??
+        (data) {
+          print('onReconnectAttempt');
+          print(data);
+        };
+
+    socket.onReconnectAttempt((data) => this.onReconnectAttempt(data));
+
+    this.onReconnectFailed = onReconnectFailed ??
+        (data) {
+          print('onReconnectFailed');
+          print(data);
+        };
+
+    socket.onReconnectFailed((data) => this.onReconnectFailed(data));
+
+    this.onReconnectError = onReconnectError ??
+        (data) {
+          print('onReconnectError');
+          print(data);
+        };
+
+    socket.onReconnectError((data) => this.onReconnectError(data));
+
+    this.onReconnecting = onReconnecting ??
+        (data) {
+          print('onReconnecting');
+          print(data);
+        };
+
+    socket.onReconnecting((data) => this.onReconnecting(data));
   }
-  SessionEventHandlers({
-    this.onConnect,
-    this.onConnectError,
-    this.onConnectTimeout,
-    this.onConnecting,
-    this.onDisconnect,
-    this.onError,
-    this.onReconnect,
-    this.onReconnectAttempt,
-    this.onReconnectFailed,
-    this.onReconnectError,
-    this.onReconnecting,
-    // this.onPing,
-    // this.onPong
-  }) {
-    socket.onConnect((data) {
-      print('onConnect');
-      print(data);
-      if (onConnect != null) onConnect!();
-    });
-
-    socket.onConnectError((data) {
-      print('onConnectionError');
-      print(data);
-      if (onConnectError != null) onConnectError!();
-    });
-
-    socket.onConnectTimeout((data) {
-      print('onConnectTimeout');
-      print(data);
-      if (onConnectTimeout != null) onConnectTimeout!();
-    });
-
-    socket.onConnecting((data) {
-      print('onConnecting');
-      print(data);
-      if (onConnecting != null) onConnecting!();
-    });
-
-    socket.onDisconnect((data) {
-      print('onDisconnect');
-      print(data);
-      if (onDisconnect != null) onDisconnect!();
-    });
-
-    socket.onError((data) {
-      print('onError');
-      print(data);
-      if (onError != null) onError!();
-    });
-
-    socket.onReconnect((data) {
-      print('onReconnect');
-      print(data);
-      if (onReconnect != null) onReconnect!();
-    });
-
-    socket.onReconnectAttempt((data) {
-      print('onReconnectAttempt');
-      print(data);
-      if (onReconnectAttempt != null) onReconnectAttempt!();
-    });
-
-    socket.onReconnectFailed((data) {
-      print('onReconnectFailed');
-      print(data);
-      if (onReconnectFailed != null) onReconnectFailed!();
-    });
-
-    socket.onReconnectError((data) {
-      print('onReconnectError');
-      print(data);
-      if (onReconnectError != null) onReconnectError!();
-    });
-
-    socket.onReconnecting((data) {
-      print('onReconnecting');
-      print(data);
-      if (onReconnecting != null) onReconnecting!();
-    });
-  }
-  Socket get socket => SocketIO.inst.socket;
-  void Function()? onConnect;
-  void Function()? onConnectError;
-  void Function()? onConnectTimeout;
-  void Function()? onConnecting;
-  void Function()? onDisconnect;
-  void Function()? onError;
-  void Function()? onReconnect;
-  void Function()? onReconnectAttempt;
-  void Function()? onReconnectFailed;
-  void Function()? onReconnectError;
-  void Function()? onReconnecting;
+  late void Function(dynamic) onConnect;
+  late void Function(dynamic) onConnectError;
+  late void Function(dynamic) onConnectTimeout;
+  late void Function(dynamic) onConnecting;
+  late void Function(dynamic) onDisconnect;
+  late void Function(dynamic) onError;
+  late void Function(dynamic) onReconnect;
+  late void Function(dynamic) onReconnectAttempt;
+  late void Function(dynamic) onReconnectFailed;
+  late void Function(dynamic) onReconnectError;
+  late void Function(dynamic) onReconnecting;
   // void Function()? onPing;
   // void Function()? onPong;
 }

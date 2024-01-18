@@ -1,6 +1,8 @@
 import 'package:cd_mobile/models/game_play/game.dart';
 import 'package:cd_mobile/pages/gameplay/mobile/mobile.dart';
 import 'package:cd_mobile/pages/gameplay/web/web.dart';
+import 'package:cd_mobile/pages/gameplay/widgets/footer.dart';
+import 'package:cd_mobile/pages/gameplay/widgets/invite_section.dart';
 import 'package:cd_mobile/pages/gameplay/widgets/main_content/main_content.dart';
 import 'package:cd_mobile/pages/page_controller/responsive_page_controller.dart';
 import 'package:cd_mobile/utils/socket_io.dart';
@@ -10,6 +12,7 @@ import 'package:get/get.dart';
 class GameplayController extends ResponsivePageController {
   GameplayController() : super() {
     Get.put(MainContentController());
+    Get.put(GameFooterController());
   }
   static Function()? setUp;
   @override
@@ -26,7 +29,8 @@ class GameplayController extends ResponsivePageController {
 
   static setUpPrivateGame() {
     setUp = () {
-      Get.find<MainContentController>().setUpPrivateGame();
+      Get.find<MainContentController>().showSettings();
+      Get.find<GameFooterController>().child.value = const InviteSection();
     };
   }
 }

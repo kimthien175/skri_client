@@ -33,4 +33,11 @@ class MePlayer extends Player {
   }
 
   static bool get isCreated => _inst != null;
+
+  Map<String, dynamic> toJSON(){
+    return {
+      'name':name,
+      'avatar':avatar.model.toJSON()
+    };
+  }
 }

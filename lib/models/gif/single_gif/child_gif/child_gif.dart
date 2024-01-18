@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class ChildGifModel extends SingleGifModel<ChildGifModel> {
-  ChildGifModel(this._rect, List<ui.FrameInfo> frames) : super(frames, _rect.width, _rect.height);
+  ChildGifModel(this._rect, List<ui.FrameInfo> frames, {int? index, String? name}) : super(frames, _rect.width, _rect.height, index: index, name: name);
 
   final Rect _rect;
   Rect get rect => _rect;

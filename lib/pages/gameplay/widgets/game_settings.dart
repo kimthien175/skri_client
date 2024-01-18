@@ -11,32 +11,6 @@ class GameSettings extends StatelessWidget {
   static Map<String, dynamic> get fetchedOptions =>
       (Game.inst as PrivateGame).succeededCreatedRoomData['settings']['options'];
 
-  void startGame() {
-    var privateGameSettings = (Game.inst as PrivateGame).settings;
-
-    if (privateGameSettings['use_custom_words_only']) {
-      // start game with custom words
-
-      if (Get.find<GlobalKey<FormState>>().currentState!.validate()) {
-        privateGameSettings['custom_words'] = _CustomWordsInput.proceededWords;
-
-        // TODO: start game with custom words
-        var goingToBePushed = (Game.inst as PrivateGame).getDifferentSettingsFromDefault();
-        goingToBePushed['custom_words'] = _CustomWordsInput.proceededWords;
-        print(goingToBePushed);
-      } else {
-        ScaffoldMessenger.of(Get.context!)
-            .showSnackBar(SnackBar(content: Text('custom_words_input_invalidation_message'.tr)));
-      }
-    } else {
-      // start game without custom words
-      //TODO: start game without custom words
-
-      var goingToBePushed = (Game.inst as PrivateGame).getDifferentSettingsFromDefault();
-      print(goingToBePushed);
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -84,7 +58,7 @@ class GameSettings extends StatelessWidget {
                             const _UseCustomWordsOnlyCheckbox()
                           ],
                         ),
-                        Expanded(child: _CustomWordsInput())
+                        Expanded(child: CustomWordsInput())
                       ],
                     ))),
             Expanded(
@@ -92,7 +66,7 @@ class GameSettings extends StatelessWidget {
                 child: MouseRegion(
                     cursor: SystemMouseCursors.click,
                     child: GestureDetector(
-                        onTap: startGame,
+                        onTap: (Game.inst as PrivateGame).startGame,
                         child: Container(
                           alignment: Alignment.center,
                           decoration: BoxDecoration(
@@ -112,8 +86,8 @@ class GameSettings extends StatelessWidget {
 }
 
 // TODO: _CustomWordsInput: HIGHLIGHT WHEN FOCUS
-class _CustomWordsInput extends StatelessWidget {
-  _CustomWordsInput() {
+class CustomWordsInput extends StatelessWidget {
+  CustomWordsInput({super.key}) {
     formKey = Get.put(GlobalKey<FormState>());
   }
   static String content = '';

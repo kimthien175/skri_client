@@ -1,5 +1,7 @@
 import 'package:cd_mobile/models/game_play/player.dart';
 import 'package:cd_mobile/pages/gameplay/gameplay.dart';
+import 'package:cd_mobile/pages/gameplay/widgets/game_settings.dart';
+import 'package:cd_mobile/pages/gameplay/widgets/main_content/main_content.dart';
 import 'package:cd_mobile/pages/home/home.dart';
 import 'package:cd_mobile/utils/socket_io.dart';
 import 'package:flutter/material.dart';
@@ -54,36 +56,56 @@ class PrivateGame extends Game<PrivateGame> {
 
   PrivateGame requestRoom() {
     var inst = SocketIO.inst;
+    inst.eventHandlers.onConnectError = (data) {
+      inst.socket.disconnect();
+      Get.find<HomeController>().isLoading.value = false;
+      showDialog(
+          context: Get.context!,
+          builder: (context) => AlertDialog(
+              title: const Text('Can not create private room right now'),
+              content: Text(data.toString())));
 
-    inst.eventHandlers.onConnect = () {
-      inst.socket.emitWithAck('init_room', MePlayer.inst.name, ack: (requestedRoomResult) {
-        if (requestedRoomResult['error'] != null) {
-          Get.find<HomeController>().isLoading.value = false;
-          showDialog(
-              context: Get.context!,
-              builder: (context) => AlertDialog(
-                  title: const Text('Can not create private room right now'),
-                  content: Text(requestedRoomResult['error'].toString())));
-        } else {
-          var succeeded = requestedRoomResult['ok'];
+      inst.eventHandlers.onConnectError = (data) {
+        print('onConnectError');
+        print('handled');
+        print(data);
+      };
+    };
 
-          succeededCreatedRoomData = succeeded;
+    inst.eventHandlers.onConnect = (data) {
+      inst.socket.emitWithAck('init_private_room', MePlayer.inst.toJSON(),
+          ack: (requestedRoomResult) {
+        if (requestedRoomResult['success']) {
+          var data = requestedRoomResult['data'];
+
+          succeededCreatedRoomData = data;
           succeededCreatedRoomData['settings']['default']['use_custom_words_only'] = false;
 
           // set room owner name if empty
           if (MePlayer.inst.name.isEmpty) {
-            MePlayer.inst.name = succeeded['ownerName'];
+            MePlayer.inst.name = data['ownerName'];
           }
 
           // set default for PrivateGame settings
-          settings = Map.from(succeeded['settings']['default']);
+          settings = Map.from(data['settings']['default']);
 
           GameplayController.setUpPrivateGame();
           Get.toNamed('/gameplay');
 
           Get.find<HomeController>().isLoading.value = false;
 
-          inst.eventHandlers.onConnect = () {};
+          inst.eventHandlers.onConnect = (data) {
+            print('onConnect');
+            print('handled');
+            print(data);
+          };
+        } else {
+          Get.find<HomeController>().isLoading.value = false;
+          showDialog(
+              context: Get.context!,
+              builder: (context) => AlertDialog(
+                  title: const Text('Can not create private room right now'),
+                  content: Text(requestedRoomResult['data'].toString())));
         }
       });
     };
@@ -91,5 +113,32 @@ class PrivateGame extends Game<PrivateGame> {
     inst.socket.connect();
 
     return this;
+  }
+
+  void startGame() {
+    var inst = SocketIO.inst;
+    var privateGameSettings = (Game.inst as PrivateGame).settings;
+
+    if (privateGameSettings['use_custom_words_only']) {
+      if (Get.find<GlobalKey<FormState>>().currentState!.validate()) {
+        privateGameSettings['custom_words'] = CustomWordsInput.proceededWords;
+
+        var goingToBePushed = (Game.inst as PrivateGame).getDifferentSettingsFromDefault();
+        goingToBePushed['custom_words'] = CustomWordsInput.proceededWords;
+        // start game with custom words
+        print(goingToBePushed);
+        //inst.socket.emit('start_private_game', goingToBePushed);
+      } else {
+        ScaffoldMessenger.of(Get.context!)
+            .showSnackBar(SnackBar(content: Text('custom_words_input_invalidation_message'.tr)));
+      }
+    } else {
+      // start game without custom words
+      var goingToBePushed = (Game.inst as PrivateGame).getDifferentSettingsFromDefault();
+      print(goingToBePushed);
+     // inst.socket.emit('start_private_game', goingToBePushed);
+    }
+
+    Get.find<MainContentController>().showCanvas();
   }
 }

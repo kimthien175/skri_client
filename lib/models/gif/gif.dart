@@ -31,10 +31,6 @@ abstract class GifBuilder<MODEL_TYPE extends GifModel<MODEL_TYPE>> extends State
 
   @override
   Widget build(BuildContext context) {
-    // TODO: ON PRODUCTION, REMOVE THIS IF BLOCK
-    if (widget == null) {
-      throw Exception("${model.runtimeType}'s builder widget is null!");
-    }
     return widget!;
   }
 }

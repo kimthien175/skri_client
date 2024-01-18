@@ -1,3 +1,4 @@
+import 'package:cd_mobile/pages/gameplay/widgets/footer.dart';
 import 'package:cd_mobile/pages/gameplay/widgets/game_canvas.dart';
 import 'package:cd_mobile/pages/gameplay/widgets/game_settings.dart';
 import 'package:cd_mobile/pages/gameplay/widgets/main_content/overlay.dart';
@@ -47,7 +48,12 @@ class MainContentController extends GetxController {
     );
   }
 
-  setUpPrivateGame() {
-    showSettings();
+  showCanvas() async {
+    // empty or show paint tools, that depends
+    Get.find<GameFooterController>().empty();
+
+    await Get.find<TopWidgetController>().controller.reverse();
+    await Get.find<CanvasOverlayController>().controller.reverse();
+    child.value = canvas;
   }
 }
