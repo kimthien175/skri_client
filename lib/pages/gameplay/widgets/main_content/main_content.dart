@@ -1,11 +1,17 @@
 import 'package:cd_mobile/pages/gameplay/widgets/game_canvas.dart';
 import 'package:cd_mobile/pages/gameplay/widgets/game_settings.dart';
 import 'package:cd_mobile/pages/gameplay/widgets/main_content/overlay.dart';
+import 'package:cd_mobile/pages/gameplay/widgets/main_content/top_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class MainContent extends StatelessWidget {
-  const MainContent({super.key});
+  MainContent({super.key}) {
+    Get.put(CanvasOverlayController());
+    Get.put(TopWidgetController());
+  }
+
+  static Duration animationDuration = const Duration(milliseconds: 800);
 
   @override
   Widget build(BuildContext context) {
@@ -19,20 +25,29 @@ class MainContentController extends GetxController {
     child = canvas.obs;
   }
   final Widget canvas = const GameCanvas();
-  final Widget settings = const GameSettings();
   late Rx<Widget> child;
   showSettings() {
     child.value = Stack(
       children: [
         canvas,
 
-        // animated overlay
-        const CanvasOverlay()
+        // animate overlay
+        const CanvasOverlay(),
         // animated settings
+
+        const TopWidget(child: GameSettings())
         // const GameSettings()
       ],
     );
+
+    Get.find<CanvasOverlayController>().controller.forward().then(
+      (value) {
+        Get.find<TopWidgetController>().controller.forward();
+      },
+    );
+  }
+
+  setUpPrivateGame() {
+    showSettings();
   }
 }
-
-

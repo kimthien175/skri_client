@@ -35,7 +35,7 @@ class Web extends StatelessWidget {
           children: [
             const GamePlayers(),
             GameplayStyles.layoutGap,
-            Column(children: [const MainContent(), GameplayStyles.layoutGap, const GameToolbar()]),
+            Column(children: [MainContent(), GameplayStyles.layoutGap, const GameToolbar()]),
             GameplayStyles.layoutGap,
             const GameChat()
           ],

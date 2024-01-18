@@ -8,19 +8,26 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class GameplayController extends ResponsivePageController {
-  GameplayController() : super(){
+  GameplayController() : super() {
     Get.put(MainContentController());
   }
-
+  static Function()? setUp;
   @override
   void didChangeMetrics() {
     isWebLayout.value = webLayoutStatus;
     super.didChangeMetrics();
   }
+
   @override
   void onReady() {
     super.onReady();
-    Get.find<MainContentController>().showSettings();
+    if (setUp != null) setUp!();
+  }
+
+  static setUpPrivateGame() {
+    setUp = () {
+      Get.find<MainContentController>().setUpPrivateGame();
+    };
   }
 }
 

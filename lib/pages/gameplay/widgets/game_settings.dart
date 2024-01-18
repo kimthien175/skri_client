@@ -41,10 +41,6 @@ class GameSettings extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
         padding: const EdgeInsets.all(6),
-        decoration: BoxDecoration(
-          color: const Color.fromRGBO(3, 8, 29, 0.8),
-          borderRadius: GlobalStyles.borderRadius,
-        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [

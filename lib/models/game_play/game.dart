@@ -1,4 +1,5 @@
 import 'package:cd_mobile/models/game_play/player.dart';
+import 'package:cd_mobile/pages/gameplay/gameplay.dart';
 import 'package:cd_mobile/pages/home/home.dart';
 import 'package:cd_mobile/utils/socket_io.dart';
 import 'package:flutter/material.dart';
@@ -77,6 +78,7 @@ class PrivateGame extends Game<PrivateGame> {
           // set default for PrivateGame settings
           settings = Map.from(succeeded['settings']['default']);
 
+          GameplayController.setUpPrivateGame();
           Get.toNamed('/gameplay');
 
           Get.find<HomeController>().isLoading.value = false;

@@ -1,43 +1,16 @@
+import 'package:cd_mobile/pages/gameplay/widgets/main_content/main_content.dart';
 import 'package:cd_mobile/utils/styles.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
-/// START FADING IN ON FIRST SHOWING
-class CanvasOverlay extends StatefulWidget {
+class CanvasOverlay extends StatelessWidget {
   const CanvasOverlay({super.key});
 
   @override
-  State<CanvasOverlay> createState() => _OverlayState();
-}
-
-/// [AnimationController]s can be created with `vsync: this` because of
-/// [TickerProviderStateMixin].
-class _OverlayState extends State<CanvasOverlay> with TickerProviderStateMixin {
-  late final AnimationController controller;
-  late final Animation<double> _animation;
-  @override
-  void initState() {
-    super.initState();
-
-    controller = AnimationController(
-      duration: const Duration(milliseconds: 800),
-      vsync: this,
-    );
-
-    _animation = Tween(begin: 0.0, end: 1.0).animate(controller);
-
-    controller.forward();
-  }
-
-  @override
-  void dispose() {
-    controller.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    var controller = Get.find<CanvasOverlayController>();
     return FadeTransition(
-        opacity: _animation,
+        opacity: controller._animation,
         child: Container(
           height: 600,
           width: 800,
@@ -47,4 +20,17 @@ class _OverlayState extends State<CanvasOverlay> with TickerProviderStateMixin {
           ),
         ));
   }
+}
+
+class CanvasOverlayController extends GetxController with GetSingleTickerProviderStateMixin {
+  CanvasOverlayController() {
+    controller = AnimationController(
+      duration: MainContent.animationDuration,
+      vsync: this,
+    );
+
+    _animation = Tween(begin: 0.0, end: 1.0).animate(controller);
+  }
+  late final AnimationController controller;
+  late final Animation<double> _animation;
 }
