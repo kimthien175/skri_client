@@ -7,16 +7,17 @@ import 'package:cd_mobile/pages/gameplay/widgets/invite_section.dart';
 import 'package:cd_mobile/pages/gameplay/widgets/main_content/main_content.dart';
 import 'package:cd_mobile/pages/page_controller/responsive_page_controller.dart';
 import 'package:cd_mobile/utils/socket_io.dart';
+import 'package:cd_mobile/widgets/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class GameplayBinding implements Bindings{
+class GameplayBinding implements Bindings {
   @override
   void dependencies() {
-  Get.lazyPut<GameplayController>(() => GameplayController());
+    Get.lazyPut<GameplayController>(() => GameplayController());
   }
-  
 }
+
 class GameplayController extends ResponsivePageController {
   GameplayController() : super() {
     Get.put(MainContentController());
@@ -41,12 +42,14 @@ class GameplayController extends ResponsivePageController {
       Get.find<GameFooterController>().child.value = const InviteSection();
     };
   }
+
+  var isLoading = false.obs;
 }
 
 class GameplayPage extends StatelessWidget {
   const GameplayPage({super.key});
 
- // final GameplayController controller = Get.put(GameplayController());
+  // final GameplayController controller = Get.put(GameplayController());
 
   static onBack() {
     SocketIO.inst.socket.disconnect();
@@ -72,8 +75,14 @@ class GameplayPage extends StatelessWidget {
                         scale: 1.2,
                         repeat: ImageRepeat.repeat,
                         image: AssetImage('assets/background.png'))),
-                child: SafeArea(
-                    child:
-                        Obx(() => controller.isWebLayout.value ? const Web() : const Mobile())))));
+                child: Obx(() {
+                  var content =
+                      SafeArea(child: controller.isWebLayout.value ? const Web() : const Mobile());
+                  return controller.isLoading.value
+                      ? Stack(
+                          children: [content, const LoadingOverlay()],
+                        )
+                      : content;
+                }))));
   }
 }

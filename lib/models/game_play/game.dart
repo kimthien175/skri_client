@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:cd_mobile/models/game_play/message.dart';
 import 'package:cd_mobile/models/game_play/player.dart';
+import 'package:cd_mobile/pages/gameplay/gameplay.dart';
 import 'package:cd_mobile/pages/home/home.dart';
 import 'package:cd_mobile/utils/socket_io.dart';
 import 'package:flutter/material.dart';
@@ -27,8 +28,10 @@ abstract class Game extends GetxController {
   RxInt currentRound;
   RxString word;
   RxList<Player> players;
+
   /// edit on this won't cause emiting to socketio
   RxList<Message> messages = List<Message>.empty().obs;
+
   /// add message only on client
   void addMessage(Map<String, dynamic> rawMessage) {
     switch (rawMessage['type']) {
@@ -98,16 +101,54 @@ abstract class Game extends GetxController {
 
   static bool get isEmpty => _inst == null;
 
+  static bool isDialogShown = false;
+
   static void registerRoomErrorHandler(String title) {
     var inst = SocketIO.inst;
     inst.eventHandlers.onConnectError = (data) {
+      // at GameplayPage, try to reconnect
+      if (Get.currentRoute != '/') {
+        if (isDialogShown) return;
+
+        var gameplayController = Get.find<GameplayController>();
+
+        // set loading
+        gameplayController.isLoading.value = true;
+
+        // stop loading when reconnect sucessfully
+        inst.eventHandlers.onReconnect = (_) {
+          gameplayController.isLoading.value = false;
+          if (isDialogShown) Get.back();
+
+          inst.eventHandlers.onReconnect = SessionEventHandlers.emptyOnReconnect;        
+        };
+
+        Get.defaultDialog(
+          content: const PopScope(
+              canPop: false,
+              child: Text(
+                  'If you want to keep trying to reconnect, please hold, or press No to disconnect')),
+          barrierDismissible: false,
+          title: 'Connection Error',
+          textCancel: 'No',
+          onCancel: () {
+            Get.back();
+            Get.back();
+            GameplayPage.onBack();
+          },
+        );
+        isDialogShown = true;
+
+        //inst.eventHandlers.onConnectError = SessionEventHandlers.emptyOnConnectError;
+        return;
+      }
+
+      // at homepage trying to create room
       inst.socket.disconnect();
       Get.find<HomeController>().isLoading.value = false;
       showDialog(
           context: Get.context!,
           builder: (context) => AlertDialog(title: Text(title), content: Text(data.toString())));
-
-      inst.eventHandlers.onConnectError = SessionEventHandlers.emptyOnConnectError;
     };
   }
 }

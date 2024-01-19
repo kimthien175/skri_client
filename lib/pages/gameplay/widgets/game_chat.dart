@@ -1,5 +1,4 @@
 import 'package:cd_mobile/models/game_play/game.dart';
-import 'package:cd_mobile/models/game_play/message.dart';
 import 'package:cd_mobile/models/game_play/player.dart';
 import 'package:cd_mobile/utils/socket_io.dart';
 import 'package:cd_mobile/utils/styles.dart';
@@ -101,9 +100,9 @@ class GuessInputController extends GetxController {
   var textController = TextEditingController(text: '');
   void submit(String text) {
     // submit
-    Game.inst.addMessage( {'type': 'guess', 'player_name': MePlayer.inst.name, 'guess':text});
+    Game.inst.addMessage({'type': 'guess', 'player_name': MePlayer.inst.name, 'guess': text});
     // emit to server
-    SocketIO.inst.socket.emit('guess',{'player':MePlayer.inst.toJSON(),'guess':text});
+    SocketIO.inst.socket.emit('guess', {'player': MePlayer.inst.toJSON(), 'guess': text});
 
     // clear the text
     this.text.value = '';
