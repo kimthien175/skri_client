@@ -10,6 +10,13 @@ import 'package:cd_mobile/utils/socket_io.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+class GameplayBinding implements Bindings{
+  @override
+  void dependencies() {
+  Get.lazyPut<GameplayController>(() => GameplayController());
+  }
+  
+}
 class GameplayController extends ResponsivePageController {
   GameplayController() : super() {
     Get.put(MainContentController());
@@ -37,9 +44,9 @@ class GameplayController extends ResponsivePageController {
 }
 
 class GameplayPage extends StatelessWidget {
-  GameplayPage({super.key});
+  const GameplayPage({super.key});
 
-  final GameplayController controller = Get.put(GameplayController());
+ // final GameplayController controller = Get.put(GameplayController());
 
   static onBack() {
     SocketIO.inst.socket.disconnect();
@@ -52,6 +59,7 @@ class GameplayPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var controller = Get.find<GameplayController>();
     return PopScope(
         onPopInvoked: (didPop) {
           if (didPop) onBack();

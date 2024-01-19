@@ -19,22 +19,23 @@ class GameBar extends StatelessWidget {
             color: GameplayStyles.colorPlayerBGBase, borderRadius: GlobalStyles.borderRadius),
         child: Row(
           children: [
-             Stack(alignment: Alignment.centerLeft, clipBehavior: Clip.none, children: [
-             const  SizedBox(width: 200, height: 48),
-           const    Positioned(top: -10, left: -8, child: GameClock()),
+            Stack(alignment: Alignment.centerLeft, clipBehavior: Clip.none, children: [
+              const SizedBox(width: 200, height: 48),
+              const Positioned(top: -10, left: -8, child: GameClock()),
               Positioned(
                   left: 60,
                   top: 13,
-                  child: Obx(()=>Text('Round ${Game.inst.currentRound.value} of ${Game.inst.rounds.value}',
+                  child: Obx(() => Text(
+                      'Round ${Game.inst.currentRound.value} of ${Game.inst.rounds.value}',
                       style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w800))))
             ]),
-            const Flexible(
+            Flexible(
                 child: Center(
-                    child: Text(
-              'WAITING',
-              style:
-                  TextStyle(fontFamily: 'Inconsolata', fontWeight: FontWeight.w700, fontSize: 16),
-            ))),
+                    child: Obx(() => Text(
+                          Game.inst.status.value,
+                          style: const TextStyle(
+                              fontFamily: 'Inconsolata', fontWeight: FontWeight.w700, fontSize: 16),
+                        )))),
             Container(
                 width: 300,
                 alignment: Alignment.centerRight,

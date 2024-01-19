@@ -1,3 +1,7 @@
+import 'package:cd_mobile/models/game_play/game.dart';
+import 'package:cd_mobile/models/game_play/message.dart';
+import 'package:cd_mobile/models/game_play/player.dart';
+import 'package:cd_mobile/utils/socket_io.dart';
 import 'package:cd_mobile/utils/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -7,25 +11,33 @@ class GameChat extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        width: 300,
-        height: 600,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: GlobalStyles.borderRadius,
-        ),
-        child: Column(
-          children: [const Expanded(child: Messages()), GuessInput()],
-        ));
+    return ClipRRect(
+        borderRadius: GlobalStyles.borderRadius,
+        child: Container(
+            width: 300,
+            height: 600,
+            color: Colors.white,
+            child: Column(
+              children: [Expanded(child: Center(child: Messages())), GuessInput()],
+            )));
   }
 }
 
 class Messages extends StatelessWidget {
-  const Messages({super.key});
-
+  Messages({super.key});
+  final ScrollController _scrollController = ScrollController();
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Obx(() {
+      if (_scrollController.hasClients) {
+        _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+      }
+      return ListView(
+        controller: _scrollController,
+        shrinkWrap: true,
+        children: Game.inst.messages,
+      );
+    });
   }
 }
 
@@ -38,19 +50,24 @@ class GuessInput extends StatelessWidget {
       Container(
           margin: const EdgeInsets.only(left: 2.8, right: 2.8, bottom: 2.8),
           child: TextField(
-            controller: TextEditingController(text: controller.text.value),
+            textInputAction: TextInputAction.send,
+            onSubmitted: controller.submit,
+            controller: controller.textController,
             onChanged: (text) => controller.text.value = text,
             maxLength: 100,
-            maxLines: null, // Allow for multiple lines
+            minLines: 1,
+            maxLines: 3, // Allow for multiple lines
             keyboardType: TextInputType.multiline, // Enable multiline input
-            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700), // Set text and hint text font size
+            style: const TextStyle(
+                fontSize: 14, fontWeight: FontWeight.w600), // Set text and hint text font size
             decoration: InputDecoration(
               counterText: '',
               border: InputBorder.none,
               isDense: true,
               contentPadding: const EdgeInsets.only(left: 10, top: 10, bottom: 10, right: 22),
               hintText: 'guess_input_placeholder'.tr, // Use the hint text from the image
-              hintStyle: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700), // Set hint text font size
+              hintStyle: const TextStyle(
+                  fontSize: 14, fontWeight: FontWeight.w700), // Set hint text font size
               focusedBorder: const OutlineInputBorder(
                 borderSide: BorderSide(
                   color: Colors.blueAccent, // Adjust color as desired
@@ -81,4 +98,15 @@ class GuessInput extends StatelessWidget {
 
 class GuessInputController extends GetxController {
   var text = ''.obs;
+  var textController = TextEditingController(text: '');
+  void submit(String text) {
+    // submit
+    Game.inst.addMessage( {'type': 'guess', 'player_name': MePlayer.inst.name, 'guess':text});
+    // emit to server
+    SocketIO.inst.socket.emit('guess',{'player':MePlayer.inst.toJSON(),'guess':text});
+
+    // clear the text
+    this.text.value = '';
+    textController.clear();
+  }
 }

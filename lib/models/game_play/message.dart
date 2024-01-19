@@ -1,13 +1,70 @@
-
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
-abstract class Message{
-  Widget get builder;
+class Message extends StatelessWidget {
+  const Message({this.backgroundColor = Colors.white, super.key});
+  final Color backgroundColor;
+
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    throw UnimplementedError();
+  }
 }
 
-class HostingMessage extends Message{
-  HostingMessage();
-  
+class HostingMessage extends Message {
+  const HostingMessage({super.key, required this.playerName, super.backgroundColor});
+  final String playerName;
+
   @override
-  Widget get builder => Container();
+  Widget build(BuildContext context) {
+    return Container(color: backgroundColor,alignment: Alignment.centerLeft,
+     child: Text('message_room_owner_statement'.trParams({
+      'room_owner': playerName
+    })));
+  }
+}
+
+class DrawingMessage extends Message {
+  final String playerName;
+
+  const DrawingMessage({required this.playerName, super.key, super.backgroundColor});
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    throw UnimplementedError();
+  }
+}
+
+class GuessMessage extends Message {
+  final String playerName;
+  final String guess;
+
+  const GuessMessage(
+      {required this.playerName, required this.guess, super.key, super.backgroundColor});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(color: backgroundColor, alignment: Alignment.centerLeft,child: Text(guess));
+  }
+}
+
+class CorrectGuessMessage extends Message {
+  const CorrectGuessMessage({required this.playerName, super.key, super.backgroundColor});
+  final String playerName;
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    throw UnimplementedError();
+  }
+}
+
+class SpamWarningMessage extends Message {
+  const SpamWarningMessage({super.key, super.backgroundColor});
+
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    throw UnimplementedError();
+  }
 }

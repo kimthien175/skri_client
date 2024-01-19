@@ -1,5 +1,4 @@
 import 'package:cd_mobile/models/game_play/game.dart';
-import 'package:cd_mobile/models/game_play/message.dart';
 import 'package:cd_mobile/models/game_play/player.dart';
 import 'package:cd_mobile/pages/gameplay/gameplay.dart';
 import 'package:cd_mobile/pages/home/home.dart';
@@ -43,13 +42,15 @@ class OwnedPrivateGame extends Game {
               currentRound: RxInt(1),
               rounds: RxInt(settings['rounds']),
               players: [me].obs,
-              messages: [HostingMessage()].obs,
               succeededCreatedRoomData: succeededCreatedRoomData,
               status: 'WAITING'.obs,
               word: ''.obs);
 
+          Game.inst.addMessage(data['message']);
+
           GameplayController.setUpOwnedPrivateGame();
-          Get.toNamed('/gameplay');
+          Get.to(const GameplayPage(),
+              binding: GameplayBinding(), transition: Transition.noTransition);
         } else {
           showDialog(
               context: Get.context!,
@@ -64,10 +65,6 @@ class OwnedPrivateGame extends Game {
     };
 
     inst.socket.connect();
-
-    // int rounds=0;
-    // Message msg = Message('');
-    // return OwnedPrivateGame._internal(timeRemaining: 0, currentRound: 1, rounds: rounds, players: [MePlayer.inst], messages: [msg]);
   }
 
   /// SuccessCreateRoomData
@@ -75,24 +72,23 @@ class OwnedPrivateGame extends Game {
 
   /// DBRoomSettings
   late Map<String, dynamic> settings;
-  void updateSettings(String key, dynamic value){
-    if (key =='rounds'){
+  void updateSettings(String key, dynamic value) {
+    if (key == 'rounds') {
       rounds.value = value;
     }
     settings[key] = value;
   }
 
-
-  OwnedPrivateGame._internal(
-      {required this.succeededCreatedRoomData,
-      required this.settings,
-      required super.status,
-      required super.word,
-      required super.remainingTime,
-      required super.currentRound,
-      required super.rounds,
-      required super.players,
-      required super.messages});
+  OwnedPrivateGame._internal({
+    required this.succeededCreatedRoomData,
+    required this.settings,
+    required super.status,
+    required super.word,
+    required super.remainingTime,
+    required super.currentRound,
+    required super.rounds,
+    required super.players,
+  });
   Map<String, dynamic> getDifferentSettingsFromDefault() {
     Map<String, dynamic> result = {};
     var defaultSettings = succeededCreatedRoomData['settings']['default'];
@@ -132,48 +128,5 @@ class OwnedPrivateGame extends Game {
   //   }
 
   //   Get.find<MainContentController>().showCanvas();
-  // }
-
-  // OwnedPrivateGame requestInitRoom() {
-  //   Game.registerRoomErrorHandler('Can not create private room right now');
-
-  //   var inst = SocketIO.inst;
-  //   inst.eventHandlers.onConnect = (_) {
-  //     inst.socket.emitWithAck('init_private_room', MePlayer.inst.toJSON(),
-  //         ack: (requestedRoomResult) {
-  //       if (requestedRoomResult['success']) {
-  //         var data = requestedRoomResult['data'];
-
-  //         succeededCreatedRoomData = data;
-  //         succeededCreatedRoomData['settings']['default']['use_custom_words_only'] = false;
-
-  //         // set room owner name if empty
-  //         if (MePlayer.inst.name.isEmpty) {
-  //           MePlayer.inst.name = data['ownerName'];
-  //         }
-
-  //         // set default for PrivateGame settings
-  //         settings = Map.from(data['settings']['default']);
-
-  //         GameplayController.setUpOwnedPrivateGame();
-  //         Get.toNamed('/gameplay');
-
-  //         Get.find<HomeController>().isLoading.value = false;
-
-  //         inst.eventHandlers.onConnect = SessionEventHandlers.emptyOnConnect;
-  //       } else {
-  //         Get.find<HomeController>().isLoading.value = false;
-  //         showDialog(
-  //             context: Get.context!,
-  //             builder: (context) => AlertDialog(
-  //                 title: const Text('Can not create private room right now'),
-  //                 content: Text(requestedRoomResult['data'].toString())));
-  //       }
-  //     });
-  //   };
-
-  //   inst.socket.connect();
-
-  //   return this;
   // }
 }

@@ -8,14 +8,14 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 abstract class Game extends GetxController {
-  Game(
-      {required int remainingTime,
-      required this.currentRound,
-      required this.rounds,
-      required this.status,
-      required this.word,
-      required this.players,
-      required this.messages}) {
+  Game({
+    required int remainingTime,
+    required this.currentRound,
+    required this.rounds,
+    required this.status,
+    required this.word,
+    required this.players,
+  }) {
     this.remainingTime = GameTimer(remainingTime);
   }
   static Game? _inst;
@@ -27,7 +27,42 @@ abstract class Game extends GetxController {
   RxInt currentRound;
   RxString word;
   RxList<Player> players;
-  RxList<Message> messages;
+  /// edit on this won't cause emiting to socketio
+  RxList<Message> messages = List<Message>.empty().obs;
+  /// add message only on client
+  void addMessage(Map<String, dynamic> rawMessage) {
+    switch (rawMessage['type']) {
+      case 'hosting':
+        messages.add(HostingMessage(
+            playerName: rawMessage['player_name'],
+            backgroundColor: messages.length % 2 == 0 ? Colors.red : Colors.blue));
+        break;
+
+      case 'drawing':
+        messages.add(DrawingMessage(
+            playerName: rawMessage['player_name'],
+            backgroundColor: messages.length % 2 == 0 ? Colors.red : Colors.blue));
+        break;
+
+      case 'guess':
+        messages.add(GuessMessage(
+            playerName: rawMessage['player_name'],
+            guess: rawMessage['guess'],
+            backgroundColor: messages.length % 2 == 0 ? Colors.red : Colors.blue));
+        break;
+
+      case 'correct_guess':
+        messages.add(CorrectGuessMessage(
+            playerName: rawMessage['player_name'],
+            backgroundColor: messages.length % 2 == 0 ? Colors.red : Colors.blue));
+        break;
+
+      default:
+        messages.add(Message(backgroundColor: messages.length % 2 == 0 ? Colors.red : Colors.blue));
+        break;
+    }
+  }
+
   Rx<String> status;
 
   // static void initPrivateRoomAsOwner() {
@@ -60,6 +95,8 @@ abstract class Game extends GetxController {
   static empty() {
     _inst = null;
   }
+
+  static bool get isEmpty => _inst == null;
 
   static void registerRoomErrorHandler(String title) {
     var inst = SocketIO.inst;

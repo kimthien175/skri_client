@@ -41,5 +41,6 @@
     "custom_words_input_validate_word_length":"'@invalidWords' hơi sai! phải từ @min_char_per_word đến @max_char_per_word chữ mỗi từ!",
     "custom_words_input_invalidation_message":"Từ vựng tự chọn không hợp lệ má ui, kiểm tra lại ei",
     "message_link_coppied":"Đã sao chép link!",
-    "guess_input_placeholder":"Nhập từ bạn đoán vô đây..."
+    "guess_input_placeholder":"Nhập từ bạn đoán vô đây...",
+    "message_room_owner_statement":"@room_owner được chọn làm chủ phòng!"
 }
