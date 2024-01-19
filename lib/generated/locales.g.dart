@@ -54,6 +54,7 @@ class LocaleKeys {
   static const custom_words_input_invalidation_message =
       'custom_words_input_invalidation_message';
   static const message_link_coppied = 'message_link_coppied';
+  static const guess_input_placeholder = 'guess_input_placeholder';
   static const You = 'You';
   static const Normal = 'Normal';
   static const Hidden = 'Hidden';
@@ -114,6 +115,7 @@ class Locales {
     'custom_words_input_invalidation_message':
         'Invalidation on custom words, please check again',
     'message_link_coppied': 'Link coppied!',
+    'guess_input_placeholder': 'Type your guess here...',
   };
   static const vi_VN = {
     'displayName': 'Tiếng Việt',
@@ -171,5 +173,6 @@ class Locales {
     'custom_words_input_invalidation_message':
         'Từ vựng tự chọn không hợp lệ má ui, kiểm tra lại ei',
     'message_link_coppied': 'Đã sao chép link!',
+    'guess_input_placeholder': 'Nhập từ bạn đoán vô đây...',
   };
 }

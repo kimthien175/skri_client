@@ -10,7 +10,7 @@ class GameSettings extends StatelessWidget {
 
   // DBRoomSettingsDocument
   static Map<String, dynamic> get fetchedOptions =>
-      (Game.inst as OwnedPrivateGame).succeededCreatedRoomData.value['settings']['options'];
+      (Game.inst as OwnedPrivateGame).succeededCreatedRoomData['settings']['options'];
 
   @override
   Widget build(BuildContext context) {
@@ -176,7 +176,7 @@ class _SettingsItem extends StatelessWidget {
   final String gif;
   final String settingKey;
 
-  void changeSetting(dynamic value) => (Game.inst as OwnedPrivateGame).settings[settingKey] = value;
+  void changeSetting(dynamic value) => (Game.inst as OwnedPrivateGame).updateSettings(settingKey, value);
 
   dynamic getSetting() => (Game.inst as OwnedPrivateGame).settings[settingKey];
 

@@ -19,14 +19,14 @@ class GameBar extends StatelessWidget {
             color: GameplayStyles.colorPlayerBGBase, borderRadius: GlobalStyles.borderRadius),
         child: Row(
           children: [
-            const Stack(alignment: Alignment.centerLeft, clipBehavior: Clip.none, children: [
-              SizedBox(width: 200, height: 48),
-              Positioned(top: -10, left: -8, child: GameClock()),
+             Stack(alignment: Alignment.centerLeft, clipBehavior: Clip.none, children: [
+             const  SizedBox(width: 200, height: 48),
+           const    Positioned(top: -10, left: -8, child: GameClock()),
               Positioned(
                   left: 60,
                   top: 13,
-                  child: Text('Round 1 of 3',
-                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800)))
+                  child: Obx(()=>Text('Round ${Game.inst.currentRound.value} of ${Game.inst.rounds.value}',
+                      style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w800))))
             ]),
             const Flexible(
                 child: Center(

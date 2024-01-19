@@ -11,11 +11,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class OwnedPrivateGame extends Game {
-  static Future<void> init()async{
+  static Future<void> init() async {
     // set up me player
     var me = MePlayer.inst;
     me.name = me.name.trim();
-
 
     Game.registerRoomErrorHandler('Can not create private room right now');
 
@@ -38,30 +37,33 @@ class OwnedPrivateGame extends Game {
           }
           me.isOwner = true;
 
-          Game.inst = OwnedPrivateGame._internal(settings: settings.obs, remainingTime:0, currentRound: RxInt(1), rounds: RxInt(settings['rounds']), players: [me].obs, messages: [HostingMessage()].obs, succeededCreatedRoomData: succeededCreatedRoomData.obs, status: 'WAITING'.obs, word: ''.obs);
+          Game.inst = OwnedPrivateGame._internal(
+              settings: settings,
+              remainingTime: 0,
+              currentRound: RxInt(1),
+              rounds: RxInt(settings['rounds']),
+              players: [me].obs,
+              messages: [HostingMessage()].obs,
+              succeededCreatedRoomData: succeededCreatedRoomData,
+              status: 'WAITING'.obs,
+              word: ''.obs);
 
           GameplayController.setUpOwnedPrivateGame();
           Get.toNamed('/gameplay');
-
-          Get.find<HomeController>().isLoading.value = false;
-
-          inst.eventHandlers.onConnect = SessionEventHandlers.emptyOnConnect;
         } else {
-          Get.find<HomeController>().isLoading.value = false;
           showDialog(
               context: Get.context!,
               builder: (context) => AlertDialog(
                   title: const Text('Can not create private room right now'),
                   content: Text(requestedRoomResult['data'].toString())));
         }
+
+        Get.find<HomeController>().isLoading.value = false;
+        inst.eventHandlers.onConnect = SessionEventHandlers.emptyOnConnect;
       });
     };
 
     inst.socket.connect();
-
-
-
-
 
     // int rounds=0;
     // Message msg = Message('');
@@ -69,15 +71,31 @@ class OwnedPrivateGame extends Game {
   }
 
   /// SuccessCreateRoomData
-  late RxMap<String, dynamic> succeededCreatedRoomData;
+  late Map<String, dynamic> succeededCreatedRoomData;
 
   /// DBRoomSettings
-  late RxMap<String, dynamic> settings;
+  late Map<String, dynamic> settings;
+  void updateSettings(String key, dynamic value){
+    if (key =='rounds'){
+      rounds.value = value;
+    }
+    settings[key] = value;
+  }
 
-  OwnedPrivateGame._internal({required this.succeededCreatedRoomData, required this.settings, required super.status, required super.word, required super.remainingTime, required super.currentRound, required super.rounds, required super.players, required super.messages});
+
+  OwnedPrivateGame._internal(
+      {required this.succeededCreatedRoomData,
+      required this.settings,
+      required super.status,
+      required super.word,
+      required super.remainingTime,
+      required super.currentRound,
+      required super.rounds,
+      required super.players,
+      required super.messages});
   Map<String, dynamic> getDifferentSettingsFromDefault() {
     Map<String, dynamic> result = {};
-    var defaultSettings = succeededCreatedRoomData.value['settings']['default'];
+    var defaultSettings = succeededCreatedRoomData['settings']['default'];
     for (String key in settings.keys) {
       if (settings[key] != defaultSettings[key]) result[key] = settings[key];
     }
@@ -86,7 +104,7 @@ class OwnedPrivateGame extends Game {
 
   // init when the main page is showing -> get main url
   String mainUrl = html.window.location.href;
-  String get inviteLink => '$mainUrl?${succeededCreatedRoomData.value['code']}';
+  String get inviteLink => '$mainUrl?${succeededCreatedRoomData['code']}';
 
   // TODO: START PRIVATE GAME
   // void startGame() {
@@ -115,10 +133,6 @@ class OwnedPrivateGame extends Game {
 
   //   Get.find<MainContentController>().showCanvas();
   // }
-
-
-
-
 
   // OwnedPrivateGame requestInitRoom() {
   //   Game.registerRoomErrorHandler('Can not create private room right now');

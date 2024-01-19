@@ -35,5 +35,6 @@
     "custom_words_input_validate_words_count":"Please put in more words, at least @min_words in total",
     "custom_words_input_validate_word_length":"Invalid '@invalidWords'! must be @min_char_per_word-@max_char_per_word characters",
     "custom_words_input_invalidation_message":"Invalidation on custom words, please check again",
-    "message_link_coppied":"Link coppied!"
+    "message_link_coppied":"Link coppied!",
+    "guess_input_placeholder":"Type your guess here..."
 }
