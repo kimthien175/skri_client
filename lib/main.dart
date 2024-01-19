@@ -26,18 +26,5 @@ void main() {
       GetPage(name: '/credits', page: () => const CreditsPage(), transition: Transition.noTransition),
       GetPage(name: '/gameplay', page: () => GameplayPage(), transition: Transition.noTransition)
     ],
-    routingCallback: (routing) {
-      if (routing == null) return;
-      String url = routing.current;
-      // if (url.startsWith('/')){
-      //   // process parameters
-
-      //   return;
-      // }
-      // if (url != '/terms' && url!='/credits'){
-      //   routing.current = '/';
-      // }
-      routing.current = '/';
-    },
   ));
 }

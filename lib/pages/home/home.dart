@@ -3,6 +3,7 @@ import 'package:cd_mobile/pages/home/mobile/mobile.dart';
 import 'package:cd_mobile/pages/home/web/controller.dart';
 import 'package:cd_mobile/pages/home/web/web.dart';
 import 'package:cd_mobile/pages/home/widgets/avatar_editor/controller.dart';
+import 'package:cd_mobile/pages/home/widgets/play_button.dart';
 import 'package:cd_mobile/pages/home/widgets/random_avatars.dart';
 import 'package:cd_mobile/pages/page_controller/responsive_page_controller.dart';
 import 'package:cd_mobile/utils/start_up.dart';
@@ -22,6 +23,16 @@ class HomeController extends ResponsivePageController {
         Get.put(NewsContentController());
         Get.put(AvatarEditorController());
       });
+    }
+
+    // check for room code
+    var keys = Get.parameters.keys.toList();
+    if (keys.isNotEmpty) {
+      var rawRoomCode = keys[0];
+      if (RegExp(r'^[a-zA-Z0-9]{4,}$').hasMatch(rawRoomCode)) {
+        // change Play btn function
+        PlayButton.roomCode = rawRoomCode.toLowerCase();
+      }
     }
   }
 

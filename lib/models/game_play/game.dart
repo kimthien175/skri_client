@@ -1,192 +1,94 @@
+import 'dart:async';
+
+import 'package:cd_mobile/models/game_play/message.dart';
 import 'package:cd_mobile/models/game_play/player.dart';
-import 'package:cd_mobile/pages/gameplay/gameplay.dart';
-import 'package:cd_mobile/pages/gameplay/widgets/game_settings.dart';
-import 'package:cd_mobile/pages/gameplay/widgets/main_content/main_content.dart';
 import 'package:cd_mobile/pages/home/home.dart';
 import 'package:cd_mobile/utils/socket_io.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-// ignore: avoid_web_libraries_in_flutter
-import 'dart:html' as html;
 
-abstract class Game<GAME_TYPE extends Game<GAME_TYPE>> {
-  Game(this.players);
+abstract class Game extends GetxController {
+  Game(
+      {required int remainingTime,
+      required this.currentRound,
+      required this.rounds,
+      required this.status,
+      required this.word,
+      required this.players,
+      required this.messages}) {
+    this.remainingTime = GameTimer(remainingTime);
+  }
   static Game? _inst;
   static Game get inst => _inst!;
+  static set inst(Game game) => _inst = game;
 
-  List<Player> players;
+  late GameTimer remainingTime;
+  RxInt rounds;
+  RxInt currentRound;
+  RxString word;
+  RxList<Player> players;
+  RxList<Message> messages;
+  Rx<String> status;
 
-  static void initPrivateRoom() {
-    _inst = PrivateGame.init();
-  }
+  // static void initPrivateRoomAsOwner() {
+  //   // set up MePlayer
+  //   var me = MePlayer.inst;
+  //   me.isOwner = true;
+  //   me.name = me.name.trim();
+
+  //   _inst = OwnedPrivateGame.init();//([me]).requestInitRoom();
+  // }
+
+  // static void joinPrivateRoomAsParticipant(String roomCode)async {
+  //   var me = MePlayer.inst;
+  //   me.name = me.name.trim();
+
+  //   _inst = await PrivateGame.joinRoom(roomCode);
+  // }
+
+  // static void joinPrivateGame(String roomCode) async {
+  //   var me = MePlayer.inst;
+  //   me.name = me.name.trim();
+
+  //   _inst = await PrivateGame.join(roomCode);
+  // }
+
+  // static void joinPublicGame(){
+  //   _inst = PublicGame.init();
+  // }
 
   static empty() {
     _inst = null;
   }
-}
 
-class PrivateGame extends Game<PrivateGame> {
-  PrivateGame(super.players);
-  static PrivateGame init() {
-    // set up MePlayer
-    var me = MePlayer.inst;
-    me.isOwner = true;
-    me.name = me.name.trim();
-
-    return PrivateGame([me]).requestRoom();
-  }
-
-  /// SuccessCreateRoomData
-  Map<String, dynamic> succeededCreatedRoomData = {};
-
-  /// DBRoomSettings
-  late Map<String, dynamic> settings;
-  Map<String, dynamic> getDifferentSettingsFromDefault() {
-    Map<String, dynamic> result = {};
-    var defaultSettings = succeededCreatedRoomData['settings']['default'];
-    for (String key in settings.keys) {
-      if (settings[key] != defaultSettings[key]) result[key] = settings[key];
-    }
-    return result;
-  }
-
-  // init when the main page is showing -> get main url
-  String mainUrl = html.window.location.href;
-  String get inviteLink => '$mainUrl?${succeededCreatedRoomData['code']}';
-
-  PrivateGame requestRoom() {
+  static void registerRoomErrorHandler(String title) {
     var inst = SocketIO.inst;
     inst.eventHandlers.onConnectError = (data) {
       inst.socket.disconnect();
       Get.find<HomeController>().isLoading.value = false;
       showDialog(
           context: Get.context!,
-          builder: (context) => AlertDialog(
-              title: const Text('Can not create private room right now'),
-              content: Text(data.toString())));
+          builder: (context) => AlertDialog(title: Text(title), content: Text(data.toString())));
 
       inst.eventHandlers.onConnectError = SessionEventHandlers.emptyOnConnectError;
     };
+  }
+}
 
-    inst.eventHandlers.onConnect = (data) {
-      inst.socket.emitWithAck('init_private_room', MePlayer.inst.toJSON(),
-          ack: (requestedRoomResult) {
-        if (requestedRoomResult['success']) {
-          var data = requestedRoomResult['data'];
-
-          succeededCreatedRoomData = data;
-          succeededCreatedRoomData['settings']['default']['use_custom_words_only'] = false;
-
-          // set room owner name if empty
-          if (MePlayer.inst.name.isEmpty) {
-            MePlayer.inst.name = data['ownerName'];
-          }
-
-          // set default for PrivateGame settings
-          settings = Map.from(data['settings']['default']);
-
-          GameplayController.setUpPrivateGame();
-          Get.toNamed('/gameplay');
-
-          Get.find<HomeController>().isLoading.value = false;
-
-          inst.eventHandlers.onConnect = SessionEventHandlers.emptyOnConnect;
+class GameTimer {
+  GameTimer(int remainingTime) {
+    seconds = remainingTime.obs;
+    if (seconds > 0) {
+      // start counting down
+      timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+        if (seconds.value > 0) {
+          seconds.value -= 1;
         } else {
-          Get.find<HomeController>().isLoading.value = false;
-          showDialog(
-              context: Get.context!,
-              builder: (context) => AlertDialog(
-                  title: const Text('Can not create private room right now'),
-                  content: Text(requestedRoomResult['data'].toString())));
+          timer.cancel();
         }
       });
-    };
-
-    inst.socket.connect();
-
-    return this;
-  }
-
-  // TODO: START GAME
-  void startGame() {
-   // var inst = SocketIO.inst;
-    var privateGameSettings = (Game.inst as PrivateGame).settings;
-
-    if (privateGameSettings['use_custom_words_only']) {
-      if (Get.find<GlobalKey<FormState>>().currentState!.validate()) {
-        privateGameSettings['custom_words'] = CustomWordsInput.proceededWords;
-
-        var goingToBePushed = (Game.inst as PrivateGame).getDifferentSettingsFromDefault();
-        goingToBePushed['custom_words'] = CustomWordsInput.proceededWords;
-        // start game with custom words
-        // TODO: START PRIVATE GAME
-        //inst.socket.emit('start_private_game', goingToBePushed);
-      } else {
-        ScaffoldMessenger.of(Get.context!)
-            .showSnackBar(SnackBar(content: Text('custom_words_input_invalidation_message'.tr)));
-      }
-    } else {
-      // start game without custom words
-      var goingToBePushed = (Game.inst as PrivateGame).getDifferentSettingsFromDefault();
-      // TODO: START PRIVATE GAME
-     // inst.socket.emit('start_private_game', goingToBePushed);
     }
-
-    Get.find<MainContentController>().showCanvas();
   }
-
-  void joinGame(){
-      var inst = SocketIO.inst;
-    inst.eventHandlers.onConnectError = (data) {
-      inst.socket.disconnect();
-      Get.find<HomeController>().isLoading.value = false;
-      showDialog(
-          context: Get.context!,
-          builder: (context) => AlertDialog(
-              title: const Text('Can not join private room right now'),
-              content: Text(data.toString())));
-
-      inst.eventHandlers.onConnectError = SessionEventHandlers.emptyOnConnectError;
-    };
-
-    inst.eventHandlers.onConnect = (data) {
-      inst.socket.emitWithAck('join_private_room', MePlayer.inst.toJSON(),
-          ack: (requestedRoomResult) {
-        if (requestedRoomResult['success']) {
-          var data = requestedRoomResult['data'];
-
-          succeededCreatedRoomData = data;
-          succeededCreatedRoomData['settings']['default']['use_custom_words_only'] = false;
-
-          // set room owner name if empty
-          if (MePlayer.inst.name.isEmpty) {
-            MePlayer.inst.name = data['ownerName'];
-          }
-
-          // set default for PrivateGame settings
-          settings = Map.from(data['settings']['default']);
-
-          GameplayController.setUpPrivateGame();
-          Get.toNamed('/gameplay');
-
-          Get.find<HomeController>().isLoading.value = false;
-
-          inst.eventHandlers.onConnect = (data) {
-            print('onConnect');
-            print('handled');
-            print(data);
-          };
-        } else {
-          Get.find<HomeController>().isLoading.value = false;
-          showDialog(
-              context: Get.context!,
-              builder: (context) => AlertDialog(
-                  title: const Text('Can not create private room right now'),
-                  content: Text(requestedRoomResult['data'].toString())));
-        }
-      });
-    };
-
-    inst.socket.connect();
-  }
+  late RxInt seconds;
+  late Timer? timer;
 }

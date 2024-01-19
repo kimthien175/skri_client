@@ -1,4 +1,5 @@
 import 'package:cd_mobile/models/game_play/game.dart';
+import 'package:cd_mobile/models/game_play/player.dart';
 import 'package:cd_mobile/pages/gameplay/mobile/mobile.dart';
 import 'package:cd_mobile/pages/gameplay/web/web.dart';
 import 'package:cd_mobile/pages/gameplay/widgets/footer.dart';
@@ -27,7 +28,7 @@ class GameplayController extends ResponsivePageController {
     if (setUp != null) setUp!();
   }
 
-  static setUpPrivateGame() {
+  static setUpOwnedPrivateGame() {
     setUp = () {
       Get.find<MainContentController>().showSettings();
       Get.find<GameFooterController>().child.value = const InviteSection();
@@ -43,6 +44,10 @@ class GameplayPage extends StatelessWidget {
   static onBack() {
     SocketIO.inst.socket.disconnect();
     Game.empty();
+    // reset meplayer as well
+    var me = MePlayer.inst;
+    me.isOwner = false;
+    me.points = 0;
   }
 
   @override

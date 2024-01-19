@@ -1,7 +1,9 @@
+import 'package:cd_mobile/models/game_play/game.dart';
 import 'package:cd_mobile/models/gif_manager.dart';
 import 'package:cd_mobile/utils/styles.dart';
 import 'package:cd_mobile/widgets/animated_button.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 // TODO: GAMEBAR FUNCTION
 class GameBar extends StatelessWidget {
@@ -63,9 +65,10 @@ class GameClock extends StatelessWidget {
                 .builder
                 .initShadowedOrigin()
                 .doFitSize(width: 64, height: 64),
-            const Positioned(
+            Positioned(
                 top: 20,
-                child: Text('0', style: TextStyle(fontSize: 22, fontWeight: FontWeight.w900)))
+                child: Obx(() => Text(Game.inst.remainingTime.seconds.value.toString(),
+                    style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w900))))
           ],
         ));
   }

@@ -1,4 +1,5 @@
 import 'package:cd_mobile/models/game_play/game.dart';
+import 'package:cd_mobile/models/game_play/owned_private_game.dart';
 import 'package:cd_mobile/models/gif_manager.dart';
 import 'package:cd_mobile/utils/styles.dart';
 import 'package:flutter/material.dart';
@@ -9,7 +10,7 @@ class GameSettings extends StatelessWidget {
 
   // DBRoomSettingsDocument
   static Map<String, dynamic> get fetchedOptions =>
-      (Game.inst as PrivateGame).succeededCreatedRoomData['settings']['options'];
+      (Game.inst as OwnedPrivateGame).succeededCreatedRoomData.value['settings']['options'];
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +67,7 @@ class GameSettings extends StatelessWidget {
                 child: MouseRegion(
                     cursor: SystemMouseCursors.click,
                     child: GestureDetector(
-                        onTap: (Game.inst as PrivateGame).startGame,
+                       // onTap: (Game.inst as OwnedPrivateGame).startGame,
                         child: Container(
                           alignment: Alignment.center,
                           decoration: BoxDecoration(
@@ -175,9 +176,9 @@ class _SettingsItem extends StatelessWidget {
   final String gif;
   final String settingKey;
 
-  void changeSetting(dynamic value) => (Game.inst as PrivateGame).settings[settingKey] = value;
+  void changeSetting(dynamic value) => (Game.inst as OwnedPrivateGame).settings[settingKey] = value;
 
-  dynamic getSetting() => (Game.inst as PrivateGame).settings[settingKey];
+  dynamic getSetting() => (Game.inst as OwnedPrivateGame).settings[settingKey];
 
   DropdownMenuItem _menuItem(dynamic value) => DropdownMenuItem(
       value: value,
@@ -242,7 +243,7 @@ class _SettingsItem extends StatelessWidget {
 class _UseCustomWordsOnlyCheckbox extends StatelessWidget {
   const _UseCustomWordsOnlyCheckbox();
 
-  dynamic gameSettings() => (Game.inst as PrivateGame).settings;
+  dynamic gameSettings() => (Game.inst as OwnedPrivateGame).settings;
   @override
   Widget build(BuildContext context) {
     return StatefulBuilder(builder: (ct, setState) {
