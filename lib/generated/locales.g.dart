@@ -60,6 +60,7 @@ class LocaleKeys {
       'gameplay_connection_error_message';
   static const connection_error = 'connection_error';
   static const message_new_player_joined = 'message_new_player_joined';
+  static const waiting = 'waiting';
   static const You = 'You';
   static const Normal = 'Normal';
   static const Hidden = 'Hidden';
@@ -127,6 +128,7 @@ class Locales {
         'If you want to keep trying to reconnect, please hold, or press No to disconnect',
     'connection_error': 'Connection Error!',
     'message_new_player_joined': '@player_name joined the room!',
+    'waiting': 'WAITING',
   };
   static const vi_VN = {
     'displayName': 'Tiếng Việt',
@@ -191,5 +193,6 @@ class Locales {
     'connection_error': 'Đứt dây cáp!',
     'No': 'Khum',
     'message_new_player_joined': '@player_name đã tham gia phòng!',
+    'waiting': 'ĐANG CHỜ',
   };
 }

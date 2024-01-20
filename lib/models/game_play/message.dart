@@ -101,7 +101,7 @@ class NewPlayerMessage extends Message {
         color: backgroundColor,
         alignment: Alignment.centerLeft,
         padding: EdgeInsets.only(left: paddingLeft),
-        child: Text("message_new_player_joined".trParams({'@player_name': playerName}),
+        child: Text("message_new_player_joined".trParams({'player_name': playerName}),
             style: const TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w700,

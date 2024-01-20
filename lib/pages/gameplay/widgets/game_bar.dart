@@ -32,7 +32,7 @@ class GameBar extends StatelessWidget {
             Flexible(
                 child: Center(
                     child: Obx(() => Text(
-                          Game.inst.status.value,
+                          Game.inst.status.value.tr,
                           style: const TextStyle(
                               fontFamily: 'Inconsolata', fontWeight: FontWeight.w700, fontSize: 16),
                         )))),

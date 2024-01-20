@@ -43,6 +43,14 @@ class GameplayController extends ResponsivePageController {
     };
   }
 
+  static setUpPrivateGameForGuest() {
+    if (Game.inst.status.value == 'waiting') {
+      setUp = () {
+        Get.find<MainContentController>().showOverlay();
+      };
+    }
+  }
+
   var isLoading = false.obs;
 }
 
@@ -80,7 +88,7 @@ class GameplayPage extends StatelessWidget {
                       SafeArea(child: controller.isWebLayout.value ? const Web() : const Mobile());
                   return controller.isLoading.value
                       ? Stack(
-                        alignment: Alignment.center,
+                          alignment: Alignment.center,
                           children: [content, const LoadingOverlay()],
                         )
                       : content;

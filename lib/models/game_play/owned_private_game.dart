@@ -45,7 +45,7 @@ class OwnedPrivateGame extends Game {
               rounds: RxInt(settings['rounds']),
               playersByList: [me].obs,
               succeededCreatedRoomData: succeededCreatedRoomData,
-              status: 'WAITING'.obs,
+              status: 'waiting'.obs,
               word: ''.obs);
 
           Game.inst.addMessage(data['message']);

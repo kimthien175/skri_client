@@ -48,6 +48,19 @@ class MainContentController extends GetxController {
     );
   }
 
+  showOverlay() {
+    child.value = Stack(
+      children: [
+        canvas,
+
+        // animate overlay
+        const CanvasOverlay(),
+        // animated settings
+      ],
+    );
+    Get.find<CanvasOverlayController>().controller.forward();
+  }
+
   showCanvas() async {
     // empty or show paint tools, that depends
     Get.find<GameFooterController>().empty();
