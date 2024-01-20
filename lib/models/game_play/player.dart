@@ -1,4 +1,5 @@
 import 'package:cd_mobile/models/gif/avatar/builder.dart';
+import 'package:cd_mobile/models/gif/avatar/model.dart';
 import 'package:get/get.dart';
 import 'package:word_generator/word_generator.dart';
 
@@ -16,6 +17,15 @@ class Player {
   bool isOwner;
   int points;
   String id;
+  static Player fromJSON(rawPlayer) {
+    var rawAvatar = rawPlayer['avatar'];
+    return Player(
+        id: rawPlayer['id'],
+        name: rawPlayer['name'],
+        avatar: AvatarModel.init(rawAvatar['color'], rawAvatar['eyes'], rawAvatar['mouth'])
+            .builder
+            .init());
+  }
 }
 
 class MePlayer extends Player {

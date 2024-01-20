@@ -1,4 +1,5 @@
 import 'package:cd_mobile/models/game_play/game.dart';
+import 'package:cd_mobile/models/game_play/player.dart';
 import 'package:cd_mobile/utils/api.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 
@@ -12,6 +13,15 @@ class SocketIO {
     _socket.on('message_from_server', (msg) {
       print(msg);
       Game.inst.addMessage(msg);
+    });
+
+    _socket.on('new_player_joined', (newPlayerEmit) {
+      var inst = Game.inst;
+      var newPlayer = Player.fromJSON(newPlayerEmit['player']);
+      inst.playersByList.add(newPlayer);
+      inst.playersByMap[newPlayer.id] = newPlayer;
+
+      inst.addMessage(newPlayerEmit['message']);
     });
   }
   static final SocketIO _inst = SocketIO._internal();

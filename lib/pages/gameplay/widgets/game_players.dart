@@ -12,36 +12,38 @@ class GamePlayers extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var players = Game.inst.playersByList;
-    List<PlayerCard> list = [];
+    return Obx(() {
+      var players = Game.inst.playersByList;
+      List<PlayerCard> list = [];
 
-    if (players.length > 1) {
-      list.add(PlayerCard(
-        index: 0,
-        info: players[0],
-        borderRadius:
-            const BorderRadius.only(topLeft: Radius.circular(3), topRight: Radius.circular(3)),
-      ));
+      if (players.length > 1) {
+        list.add(PlayerCard(
+          index: 0,
+          info: players[0],
+          borderRadius:
+              const BorderRadius.only(topLeft: Radius.circular(3), topRight: Radius.circular(3)),
+        ));
 
-      for (int i = 1; i < players.length - 1; i++) {
-        list.add(PlayerCard(index: i, info: players[i]));
+        for (int i = 1; i < players.length - 1; i++) {
+          list.add(PlayerCard(index: i, info: players[i]));
+        }
+
+        list.add(PlayerCard(
+          index: players.length - 1,
+          info: players[players.length - 1],
+          borderRadius: const BorderRadius.only(
+              bottomLeft: Radius.circular(3), bottomRight: Radius.circular(3)),
+        ));
+      } else {
+        list.add(PlayerCard(
+            borderRadius: const BorderRadius.all(Radius.circular(3)), index: 0, info: players[0]));
       }
 
-      list.add(PlayerCard(
-        index: players.length - 1,
-        info: players[players.length - 1],
-        borderRadius: const BorderRadius.only(
-            bottomLeft: Radius.circular(3), bottomRight: Radius.circular(3)),
-      ));
-    } else {
-      list.add(PlayerCard(
-          borderRadius: const BorderRadius.all(Radius.circular(3)), index: 0, info: players[0]));
-    }
-
-    return Container(
-        decoration: const BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(3))),
-        width: 200,
-        child: Column(children: list));
+      return Container(
+          decoration: const BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(3))),
+          width: 200,
+          child: Column(children: list));
+    });
   }
 }
 

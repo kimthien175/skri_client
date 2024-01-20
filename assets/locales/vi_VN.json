@@ -46,5 +46,6 @@
     "message_room_owner_statement":"@room_owner được chọn làm chủ phòng!",
     "gameplay_connection_error_message":"Đang kết nối lại, vui lòng chờ, hoặc bạn có thể thoát bằng nút Không",
     "connection_error":"Đứt dây cáp!",
-    "No":"Khum"
+    "No":"Khum",
+    "message_new_player_joined":"@player_name đã tham gia phòng!"
 }

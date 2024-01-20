@@ -91,3 +91,20 @@ class SpamWarningMessage extends Message {
     throw UnimplementedError();
   }
 }
+
+class NewPlayerMessage extends Message {
+  const NewPlayerMessage({required this.playerName,  super.key, super.backgroundColor});
+  final String playerName;
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        color: backgroundColor,
+        alignment: Alignment.centerLeft,
+        padding: EdgeInsets.only(left: paddingLeft),
+        child: Text("message_new_player_joined".trParams({'@player_name': playerName}),
+            style: const TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w700,
+                color: Color.fromRGBO(86, 206, 39, 1))));
+  }
+}
