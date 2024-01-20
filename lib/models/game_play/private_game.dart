@@ -104,6 +104,6 @@ class PrivateGame extends Game {
       required super.rounds,
       required super.status,
       required super.word,
-      required super.players,
+      required super.playersByList,
       required super.roomCode});
 }

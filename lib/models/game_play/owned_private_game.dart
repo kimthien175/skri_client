@@ -34,6 +34,7 @@ class OwnedPrivateGame extends Game {
           if (MePlayer.inst.name.isEmpty) {
             MePlayer.inst.name = data['ownerName'];
           }
+          MePlayer.inst.id = data['player_id'];
           me.isOwner = true;
 
           Game.inst = OwnedPrivateGame._internal(
@@ -42,7 +43,7 @@ class OwnedPrivateGame extends Game {
               remainingTime: 0,
               currentRound: RxInt(1),
               rounds: RxInt(settings['rounds']),
-              players: {me.index: me}.obs,
+              playersByList: [me].obs,
               succeededCreatedRoomData: succeededCreatedRoomData,
               status: 'WAITING'.obs,
               word: ''.obs);
@@ -88,7 +89,7 @@ class OwnedPrivateGame extends Game {
       required super.remainingTime,
       required super.currentRound,
       required super.rounds,
-      required super.players,
+      required super.playersByList,
       required super.roomCode});
   Map<String, dynamic> getDifferentSettingsFromDefault() {
     Map<String, dynamic> result = {};

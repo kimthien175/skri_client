@@ -4,6 +4,7 @@ import 'package:cd_mobile/models/gif_manager.dart';
 import 'package:cd_mobile/utils/styles.dart';
 import 'package:cd_mobile/widgets/animated_button.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 // TODO: LOAD PLAYERS INFO FROM GAME.INST
 class GamePlayers extends StatelessWidget {
@@ -11,7 +12,7 @@ class GamePlayers extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var players = Game.inst.players.values.toList();
+    var players = Game.inst.playersByList;
     List<PlayerCard> list = [];
 
     if (players.length > 1) {
@@ -21,9 +22,11 @@ class GamePlayers extends StatelessWidget {
         borderRadius:
             const BorderRadius.only(topLeft: Radius.circular(3), topRight: Radius.circular(3)),
       ));
+
       for (int i = 1; i < players.length - 1; i++) {
         list.add(PlayerCard(index: i, info: players[i]));
       }
+
       list.add(PlayerCard(
         index: players.length - 1,
         info: players[players.length - 1],

@@ -9,16 +9,19 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 abstract class Game extends GetxController {
-  Game({
-    required int remainingTime,
-    required this.currentRound,
-    required this.rounds,
-    required this.status,
-    required this.word,
-    required this.players,
-    required this.roomCode
-  }) {
+  Game(
+      {required int remainingTime,
+      required this.currentRound,
+      required this.rounds,
+      required this.status,
+      required this.word,
+      required this.playersByList,
+      required this.roomCode}) {
     this.remainingTime = GameTimer(remainingTime);
+    for (int i = 0; i < playersByList.length; i++) {
+      var rxPlayer = playersByList[i];
+      playersByMap[rxPlayer.id] = rxPlayer;
+    }
   }
   static Game? _inst;
   static Game get inst => _inst!;
@@ -28,7 +31,8 @@ abstract class Game extends GetxController {
   RxInt rounds;
   RxInt currentRound;
   RxString word;
-  RxMap<String, Player> players;
+  RxList<Player> playersByList;
+  Map<String, Player> playersByMap = {};
   String roomCode;
 
   /// edit on this won't cause emiting to socketio
@@ -38,31 +42,31 @@ abstract class Game extends GetxController {
   void addMessage(Map<String, dynamic> rawMessage) {
     switch (rawMessage['type']) {
       case 'hosting':
-      var playerName = Game.inst.players[rawMessage['player_index']]!.name;
+        var playerName = playersByMap[rawMessage['player_id']]!.name;
         messages.add(HostingMessage(
             playerName: playerName,
             backgroundColor: messages.length % 2 == 0 ? Colors.white : const Color(0xffececec)));
         break;
 
       case 'drawing':
-       var playerName = Game.inst.players[rawMessage['player_index']]!.name;
+        var playerName = playersByMap[rawMessage['player_id']]!.name;
         messages.add(DrawingMessage(
             playerName: playerName,
             backgroundColor: messages.length % 2 == 0 ? Colors.white : const Color(0xffececec)));
         break;
 
       case 'guess':
-        var playerName = Game.inst.players[rawMessage['player_index']]!.name;
+        var playerName = playersByMap[rawMessage['player_id']]!.name;
         messages.add(GuessMessage(
-            playerName:playerName,
+            playerName: playerName,
             guess: rawMessage['guess'],
             backgroundColor: messages.length % 2 == 0 ? Colors.white : const Color(0xffececec)));
         break;
 
       case 'correct_guess':
-       var playerName = Game.inst.players[rawMessage['player_index']]!.name;
+        var playerName = playersByMap[rawMessage['player_id']]!.name;
         messages.add(CorrectGuessMessage(
-            playerName:playerName,
+            playerName: playerName,
             backgroundColor: messages.length % 2 == 0 ? Colors.white : const Color(0xffececec)));
         break;
 
