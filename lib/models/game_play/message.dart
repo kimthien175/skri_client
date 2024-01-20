@@ -93,7 +93,7 @@ class SpamWarningMessage extends Message {
 }
 
 class NewPlayerMessage extends Message {
-  const NewPlayerMessage({required this.playerName,  super.key, super.backgroundColor});
+  const NewPlayerMessage({required this.playerName, super.key, super.backgroundColor});
   final String playerName;
   @override
   Widget build(BuildContext context) {
@@ -103,8 +103,21 @@ class NewPlayerMessage extends Message {
         padding: EdgeInsets.only(left: paddingLeft),
         child: Text("message_new_player_joined".trParams({'player_name': playerName}),
             style: const TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w700,
-                color: Color.fromRGBO(86, 206, 39, 1))));
+                fontSize: 14, fontWeight: FontWeight.w700, color: Color.fromRGBO(86, 206, 39, 1))));
+  }
+}
+
+class LeftPlayerMessage extends Message {
+  const LeftPlayerMessage({required this.playerName, super.key});
+  final String playerName;
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        color: backgroundColor,
+        alignment: Alignment.centerLeft,
+        padding: EdgeInsets.only(left: paddingLeft),
+        child: Text("message_new_player_joined".trParams({'player_name': playerName}),
+            style: const TextStyle(
+                color: Color.fromRGBO(206, 79, 10, 1), fontSize: 14, fontWeight: FontWeight.w700)));
   }
 }

@@ -48,5 +48,6 @@
     "connection_error":"Đứt dây cáp!",
     "No":"Khum",
     "message_new_player_joined":"@player_name đã tham gia phòng!",
-    "waiting":"ĐANG CHỜ"
+    "waiting":"ĐANG CHỜ",
+    "message_player_leave": "@player_name đã rời khỏi phòng!"
 }

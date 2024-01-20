@@ -43,7 +43,7 @@ class OwnedPrivateGame extends Game {
               remainingTime: 0,
               currentRound: RxInt(1),
               rounds: RxInt(settings['rounds']),
-              playersByList: [me].obs,
+              playersByList: [me as Player].obs,
               succeededCreatedRoomData: succeededCreatedRoomData,
               status: 'waiting'.obs,
               word: ''.obs);

@@ -1,4 +1,5 @@
 import 'package:cd_mobile/models/game_play/game.dart';
+import 'package:cd_mobile/models/game_play/message.dart';
 import 'package:cd_mobile/models/game_play/player.dart';
 import 'package:cd_mobile/utils/api.dart';
 import 'package:socket_io_client/socket_io_client.dart';
@@ -22,6 +23,20 @@ class SocketIO {
       inst.playersByMap[newPlayer.id] = newPlayer;
 
       inst.addMessage(newPlayerEmit['message']);
+    });
+
+    _socket.on('player_leave', (leftPlayerId) {
+      print('player leave');
+      // player list side
+      var inst = Game.inst;
+      inst.playersByList.removeWhere((element) => element.id == leftPlayerId);
+
+      // message side
+      inst.messages.add(LeftPlayerMessage(
+        playerName: inst.playersByMap[leftPlayerId]!.name,
+      ));
+
+      inst.playersByMap.removeWhere((key, value) => key == leftPlayerId);
     });
   }
   static final SocketIO _inst = SocketIO._internal();
