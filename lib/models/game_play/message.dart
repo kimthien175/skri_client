@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 class Message extends StatelessWidget {
   const Message({this.backgroundColor = Colors.white, super.key});
   final Color backgroundColor;
+  final double paddingLeft = 10;
 
   @override
   Widget build(BuildContext context) {
@@ -18,10 +19,15 @@ class HostingMessage extends Message {
 
   @override
   Widget build(BuildContext context) {
-    return Container(color: backgroundColor,alignment: Alignment.centerLeft,
-     child: Text('message_room_owner_statement'.trParams({
-      'room_owner': playerName
-    })));
+    return Container(
+        color: backgroundColor,
+        alignment: Alignment.centerLeft,
+        padding: EdgeInsets.only(left: paddingLeft),
+        child: Text('message_room_owner_statement'.trParams({'room_owner': playerName}),
+            style: const TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w700,
+                color: Color.fromRGBO(255, 168, 68, 1))));
   }
 }
 
@@ -45,7 +51,24 @@ class GuessMessage extends Message {
 
   @override
   Widget build(BuildContext context) {
-    return Container(color: backgroundColor, alignment: Alignment.centerLeft,child: Text(guess));
+    return Container(
+        color: backgroundColor,
+        alignment: Alignment.centerLeft,
+        padding: EdgeInsets.only(left: paddingLeft),
+        child: RichText(
+          text: TextSpan(
+            children: <TextSpan>[
+              TextSpan(
+                  text: '$playerName: ',
+                  style: const TextStyle(
+                      fontSize: 14, fontWeight: FontWeight.w700, fontFamily: 'Nunito')),
+              TextSpan(
+                  text: guess,
+                  style: const TextStyle(
+                      fontSize: 14, fontWeight: FontWeight.w500, fontFamily: 'Nunito')),
+            ],
+          ),
+        ));
   }
 }
 

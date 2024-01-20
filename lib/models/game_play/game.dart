@@ -16,6 +16,7 @@ abstract class Game extends GetxController {
     required this.status,
     required this.word,
     required this.players,
+    required this.roomCode
   }) {
     this.remainingTime = GameTimer(remainingTime);
   }
@@ -27,7 +28,8 @@ abstract class Game extends GetxController {
   RxInt rounds;
   RxInt currentRound;
   RxString word;
-  RxList<Player> players;
+  RxMap<String, Player> players;
+  String roomCode;
 
   /// edit on this won't cause emiting to socketio
   RxList<Message> messages = List<Message>.empty().obs;
@@ -36,32 +38,37 @@ abstract class Game extends GetxController {
   void addMessage(Map<String, dynamic> rawMessage) {
     switch (rawMessage['type']) {
       case 'hosting':
+      var playerName = Game.inst.players[rawMessage['player_index']]!.name;
         messages.add(HostingMessage(
-            playerName: rawMessage['player_name'],
-            backgroundColor: messages.length % 2 == 0 ? Colors.red : Colors.blue));
+            playerName: playerName,
+            backgroundColor: messages.length % 2 == 0 ? Colors.white : const Color(0xffececec)));
         break;
 
       case 'drawing':
+       var playerName = Game.inst.players[rawMessage['player_index']]!.name;
         messages.add(DrawingMessage(
-            playerName: rawMessage['player_name'],
-            backgroundColor: messages.length % 2 == 0 ? Colors.red : Colors.blue));
+            playerName: playerName,
+            backgroundColor: messages.length % 2 == 0 ? Colors.white : const Color(0xffececec)));
         break;
 
       case 'guess':
+        var playerName = Game.inst.players[rawMessage['player_index']]!.name;
         messages.add(GuessMessage(
-            playerName: rawMessage['player_name'],
+            playerName:playerName,
             guess: rawMessage['guess'],
-            backgroundColor: messages.length % 2 == 0 ? Colors.red : Colors.blue));
+            backgroundColor: messages.length % 2 == 0 ? Colors.white : const Color(0xffececec)));
         break;
 
       case 'correct_guess':
+       var playerName = Game.inst.players[rawMessage['player_index']]!.name;
         messages.add(CorrectGuessMessage(
-            playerName: rawMessage['player_name'],
-            backgroundColor: messages.length % 2 == 0 ? Colors.red : Colors.blue));
+            playerName:playerName,
+            backgroundColor: messages.length % 2 == 0 ? Colors.white : const Color(0xffececec)));
         break;
 
       default:
-        messages.add(Message(backgroundColor: messages.length % 2 == 0 ? Colors.red : Colors.blue));
+        messages.add(Message(
+            backgroundColor: messages.length % 2 == 0 ? Colors.red : const Color(0xffececec)));
         break;
     }
   }
@@ -118,19 +125,19 @@ abstract class Game extends GetxController {
         // stop loading when reconnect sucessfully
         inst.eventHandlers.onReconnect = (_) {
           gameplayController.isLoading.value = false;
-          if (isDialogShown) Get.back();
+          if (isDialogShown) {
+            Get.back();
+            isDialogShown = false;
+          }
 
-          inst.eventHandlers.onReconnect = SessionEventHandlers.emptyOnReconnect;        
+          inst.eventHandlers.onReconnect = SessionEventHandlers.emptyOnReconnect;
         };
 
         Get.defaultDialog(
-          content: const PopScope(
-              canPop: false,
-              child: Text(
-                  'If you want to keep trying to reconnect, please hold, or press No to disconnect')),
+          content: PopScope(canPop: false, child: Text('gameplay_connection_error_message'.tr)),
           barrierDismissible: false,
-          title: 'Connection Error',
-          textCancel: 'No',
+          title: 'connection_error'.tr,
+          textCancel: 'No'.tr,
           onCancel: () {
             Get.back();
             Get.back();
@@ -139,7 +146,6 @@ abstract class Game extends GetxController {
         );
         isDialogShown = true;
 
-        //inst.eventHandlers.onConnectError = SessionEventHandlers.emptyOnConnectError;
         return;
       }
 

@@ -1,3 +1,4 @@
+import 'package:cd_mobile/models/game_play/game.dart';
 import 'package:cd_mobile/utils/api.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 
@@ -7,6 +8,11 @@ class SocketIO {
         io(API.inst.uri, OptionBuilder().setTransports(['websocket']).disableAutoConnect().build());
 
     eventHandlers = SessionEventHandlers.initWithSocket(socket: socket);
+
+    _socket.on('message_from_server', (msg) {
+      print(msg);
+      Game.inst.addMessage(msg);
+    });
   }
   static final SocketIO _inst = SocketIO._internal();
 

@@ -56,11 +56,15 @@ class LocaleKeys {
   static const message_link_coppied = 'message_link_coppied';
   static const guess_input_placeholder = 'guess_input_placeholder';
   static const message_room_owner_statement = 'message_room_owner_statement';
+  static const gameplay_connection_error_message =
+      'gameplay_connection_error_message';
+  static const connection_error = 'connection_error';
   static const You = 'You';
   static const Normal = 'Normal';
   static const Hidden = 'Hidden';
   static const Combination = 'Combination';
   static const Copy = 'Copy';
+  static const No = 'No';
 }
 
 class Locales {
@@ -118,6 +122,9 @@ class Locales {
     'message_link_coppied': 'Link coppied!',
     'guess_input_placeholder': 'Type your guess here...',
     'message_room_owner_statement': '@room_owner is now the room owner!',
+    'gameplay_connection_error_message':
+        'If you want to keep trying to reconnect, please hold, or press No to disconnect',
+    'connection_error': 'Connection Error!',
   };
   static const vi_VN = {
     'displayName': 'Tiếng Việt',
@@ -177,5 +184,9 @@ class Locales {
     'message_link_coppied': 'Đã sao chép link!',
     'guess_input_placeholder': 'Nhập từ bạn đoán vô đây...',
     'message_room_owner_statement': '@room_owner được chọn làm chủ phòng!',
+    'gameplay_connection_error_message':
+        'Đang kết nối lại, vui lòng chờ, hoặc bạn có thể thoát bằng nút Không',
+    'connection_error': 'Đứt dây cáp!',
+    'No': 'Khum',
   };
 }

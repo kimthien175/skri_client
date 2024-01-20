@@ -102,7 +102,7 @@ class GuessInputController extends GetxController {
     // submit
     Game.inst.addMessage({'type': 'guess', 'player_name': MePlayer.inst.name, 'guess': text});
     // emit to server
-    SocketIO.inst.socket.emit('guess', {'player': MePlayer.inst.toJSON(), 'guess': text});
+    SocketIO.inst.socket.emit('chat', {'player': MePlayer.inst.toJSON(), 'guess': text, 'room': Game.inst.roomCode});
 
     // clear the text
     this.text.value = '';

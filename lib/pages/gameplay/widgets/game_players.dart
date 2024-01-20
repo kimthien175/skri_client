@@ -11,7 +11,7 @@ class GamePlayers extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var players = Game.inst.players;
+    var players = Game.inst.players.values.toList();
     List<PlayerCard> list = [];
 
     if (players.length > 1) {

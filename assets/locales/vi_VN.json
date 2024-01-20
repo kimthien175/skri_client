@@ -1,3 +1,4 @@
+
 {
     "displayName": "Tiếng Việt",
     "name_input_placeholder": "Nhập tên của bạn",
@@ -42,5 +43,8 @@
     "custom_words_input_invalidation_message":"Từ vựng tự chọn không hợp lệ má ui, kiểm tra lại ei",
     "message_link_coppied":"Đã sao chép link!",
     "guess_input_placeholder":"Nhập từ bạn đoán vô đây...",
-    "message_room_owner_statement":"@room_owner được chọn làm chủ phòng!"
+    "message_room_owner_statement":"@room_owner được chọn làm chủ phòng!",
+    "gameplay_connection_error_message":"Đang kết nối lại, vui lòng chờ, hoặc bạn có thể thoát bằng nút Không",
+    "connection_error":"Đứt dây cáp!",
+    "No":"Khum"
 }

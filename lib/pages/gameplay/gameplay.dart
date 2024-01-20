@@ -80,6 +80,7 @@ class GameplayPage extends StatelessWidget {
                       SafeArea(child: controller.isWebLayout.value ? const Web() : const Mobile());
                   return controller.isLoading.value
                       ? Stack(
+                        alignment: Alignment.center,
                           children: [content, const LoadingOverlay()],
                         )
                       : content;

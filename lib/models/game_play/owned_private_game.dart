@@ -37,11 +37,12 @@ class OwnedPrivateGame extends Game {
           me.isOwner = true;
 
           Game.inst = OwnedPrivateGame._internal(
+              roomCode: data['code'],
               settings: settings,
               remainingTime: 0,
               currentRound: RxInt(1),
               rounds: RxInt(settings['rounds']),
-              players: [me].obs,
+              players: {me.index: me}.obs,
               succeededCreatedRoomData: succeededCreatedRoomData,
               status: 'WAITING'.obs,
               word: ''.obs);
@@ -49,7 +50,7 @@ class OwnedPrivateGame extends Game {
           Game.inst.addMessage(data['message']);
 
           GameplayController.setUpOwnedPrivateGame();
-          Get.to(const GameplayPage(),
+          Get.to(()=>const GameplayPage(),
               binding: GameplayBinding(), transition: Transition.noTransition);
         } else {
           showDialog(
@@ -79,16 +80,16 @@ class OwnedPrivateGame extends Game {
     settings[key] = value;
   }
 
-  OwnedPrivateGame._internal({
-    required this.succeededCreatedRoomData,
-    required this.settings,
-    required super.status,
-    required super.word,
-    required super.remainingTime,
-    required super.currentRound,
-    required super.rounds,
-    required super.players,
-  });
+  OwnedPrivateGame._internal(
+      {required this.succeededCreatedRoomData,
+      required this.settings,
+      required super.status,
+      required super.word,
+      required super.remainingTime,
+      required super.currentRound,
+      required super.rounds,
+      required super.players,
+      required super.roomCode});
   Map<String, dynamic> getDifferentSettingsFromDefault() {
     Map<String, dynamic> result = {};
     var defaultSettings = succeededCreatedRoomData['settings']['default'];
