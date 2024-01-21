@@ -116,7 +116,7 @@ class LeftPlayerMessage extends Message {
         color: backgroundColor,
         alignment: Alignment.centerLeft,
         padding: EdgeInsets.only(left: paddingLeft),
-        child: Text("message_new_player_joined".trParams({'player_name': playerName}),
+        child: Text("message_player_leave".trParams({'player_name': playerName}),
             style: const TextStyle(
                 color: Color.fromRGBO(206, 79, 10, 1), fontSize: 14, fontWeight: FontWeight.w700)));
   }

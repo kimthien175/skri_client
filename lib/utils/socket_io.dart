@@ -16,7 +16,7 @@ class SocketIO {
       Game.inst.addMessage(msg);
     });
 
-    _socket.on('new_player_joined', (newPlayerEmit) {
+    _socket.on('player_joined', (newPlayerEmit) {
       var inst = Game.inst;
       var newPlayer = Player.fromJSON(newPlayerEmit['player']);
       inst.playersByList.add(newPlayer);

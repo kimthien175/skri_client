@@ -6,7 +6,6 @@ import 'package:cd_mobile/pages/gameplay/widgets/footer.dart';
 import 'package:cd_mobile/pages/gameplay/widgets/invite_section.dart';
 import 'package:cd_mobile/pages/gameplay/widgets/main_content/main_content.dart';
 import 'package:cd_mobile/pages/page_controller/responsive_page_controller.dart';
-import 'package:cd_mobile/utils/socket_io.dart';
 import 'package:cd_mobile/widgets/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -60,7 +59,6 @@ class GameplayPage extends StatelessWidget {
   // final GameplayController controller = Get.put(GameplayController());
 
   static onBack() {
-    SocketIO.inst.socket.disconnect();
     Game.empty();
     // reset meplayer as well
     var me = MePlayer.inst;

@@ -61,6 +61,7 @@ class LocaleKeys {
   static const connection_error = 'connection_error';
   static const message_new_player_joined = 'message_new_player_joined';
   static const waiting = 'waiting';
+  static const message_player_leave = 'message_player_leave';
   static const You = 'You';
   static const Normal = 'Normal';
   static const Hidden = 'Hidden';
@@ -129,6 +130,7 @@ class Locales {
     'connection_error': 'Connection Error!',
     'message_new_player_joined': '@player_name joined the room!',
     'waiting': 'WAITING',
+    'message_player_leave': '@player_name left the room!',
   };
   static const vi_VN = {
     'displayName': 'Tiếng Việt',
@@ -194,5 +196,6 @@ class Locales {
     'No': 'Khum',
     'message_new_player_joined': '@player_name đã tham gia phòng!',
     'waiting': 'ĐANG CHỜ',
+    'message_player_leave': '@player_name đã rời khỏi phòng!',
   };
 }

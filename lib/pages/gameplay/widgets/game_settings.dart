@@ -1,5 +1,5 @@
 import 'package:cd_mobile/models/game_play/game.dart';
-import 'package:cd_mobile/models/game_play/owned_private_game.dart';
+import 'package:cd_mobile/models/game_play/private_game/private_game.dart';
 import 'package:cd_mobile/models/gif_manager.dart';
 import 'package:cd_mobile/utils/styles.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +10,7 @@ class GameSettings extends StatelessWidget {
 
   // DBRoomSettingsDocument
   static Map<String, dynamic> get fetchedOptions =>
-      (Game.inst as OwnedPrivateGame).succeededCreatedRoomData['settings']['options'];
+      (Game.inst as PrivateGame).succeededCreatedRoomData['settings']['options'];
 
   @override
   Widget build(BuildContext context) {
@@ -176,9 +176,9 @@ class _SettingsItem extends StatelessWidget {
   final String gif;
   final String settingKey;
 
-  void changeSetting(dynamic value) => (Game.inst as OwnedPrivateGame).updateSettings(settingKey, value);
+  void changeSetting(dynamic value) => (Game.inst as PrivateGame).updateSettings(settingKey, value);
 
-  dynamic getSetting() => (Game.inst as OwnedPrivateGame).settings[settingKey];
+  dynamic getSetting() => (Game.inst as PrivateGame).settings[settingKey];
 
   DropdownMenuItem _menuItem(dynamic value) => DropdownMenuItem(
       value: value,
@@ -243,7 +243,7 @@ class _SettingsItem extends StatelessWidget {
 class _UseCustomWordsOnlyCheckbox extends StatelessWidget {
   const _UseCustomWordsOnlyCheckbox();
 
-  dynamic gameSettings() => (Game.inst as OwnedPrivateGame).settings;
+  dynamic gameSettings() => (Game.inst as PrivateGame).settings;
   @override
   Widget build(BuildContext context) {
     return StatefulBuilder(builder: (ct, setState) {

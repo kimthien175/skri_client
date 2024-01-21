@@ -1,5 +1,5 @@
 import 'package:cd_mobile/models/game_play/game.dart';
-import 'package:cd_mobile/models/game_play/owned_private_game.dart';
+import 'package:cd_mobile/models/game_play/private_game/private_game.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -47,7 +47,7 @@ class _InviteLink extends StatelessWidget {
                     topLeft: Radius.circular(3), bottomLeft: Radius.circular(3))),
             alignment: Alignment.center,
             child: Obx(() => controller.isHover.value
-                ? Text((Game.inst as OwnedPrivateGame).inviteLink,
+                ? Text((Game.inst as PrivateGame).inviteLink,
                     style: const TextStyle(
                         fontSize: 18.2,
                         color: Color.fromRGBO(44, 44, 44, 1),
@@ -73,7 +73,7 @@ class _CopyButton extends StatelessWidget {
         cursor: SystemMouseCursors.click,
         child: GestureDetector(
             onTap: () {
-              Clipboard.setData(ClipboardData(text: (Game.inst as OwnedPrivateGame).inviteLink)).then(
+              Clipboard.setData(ClipboardData(text: (Game.inst as PrivateGame).inviteLink)).then(
                   (value) => ScaffoldMessenger.of(context)
                       .showSnackBar(SnackBar(content: Text('message_link_coppied'.tr))));
             },

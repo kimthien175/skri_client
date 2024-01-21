@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:cd_mobile/models/game_play/message.dart';
 import 'package:cd_mobile/models/game_play/player.dart';
@@ -70,7 +71,7 @@ abstract class Game extends GetxController {
             backgroundColor: messages.length % 2 == 0 ? Colors.white : const Color(0xffececec)));
         break;
 
-      case 'new_player':
+      case 'player_joined':
         var playerName = playersByMap[rawMessage['player_id']]!.name;
         messages.add(NewPlayerMessage(
             playerName: playerName,
@@ -143,26 +144,17 @@ abstract class Game extends GetxController {
   }
 
   bool onLeaving = false;
-  void leave(){
-    // if meplayer are the only player on the list, mean meplayer is owner
-    if (playersByList.length ==1){
-      // emit to server to delete the room
-      SocketIO.inst.socket.emitWithAck('delete_room',roomCode);
-      GameplayPage.onBack();
-      return;
-    }
+  void leave() {
+    throw Exception('Unimplemented Error');
+  }
 
-    if (MePlayer.inst.isOwner){
-      // pass owner ship to the near player
-      // emit to pass owener ship
-      SocketIO.inst.socket.emitWithAck('pass_owner_ship', 'ok', ack:(_){
-        GameplayPage.onBack();
-      });
-      return;
-    }
-
-    // room still has players and meplayer is not room owner
-    GameplayPage.onBack();
+  String getRandomPlayerIdExceptMePlayer() {
+    var rand = Random();
+    int playerIndex;
+    do {
+      playerIndex = rand.nextInt(playersByList.length);
+    } while (playersByList[playerIndex].id == MePlayer.inst.id);
+    return playersByList[playerIndex].id;
   }
 }
 
