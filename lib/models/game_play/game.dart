@@ -147,9 +147,8 @@ abstract class Game extends GetxController {
     // if meplayer are the only player on the list, mean meplayer is owner
     if (playersByList.length ==1){
       // emit to server to delete the room
-      SocketIO.inst.socket.emitWithAck('delete_room',roomCode, ack: (_){
-        GameplayPage.onBack();
-      });
+      SocketIO.inst.socket.emitWithAck('delete_room',roomCode);
+      GameplayPage.onBack();
       return;
     }
 
