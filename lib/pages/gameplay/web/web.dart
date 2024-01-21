@@ -1,3 +1,4 @@
+import 'package:cd_mobile/models/game_play/game.dart';
 import 'package:cd_mobile/pages/gameplay/gameplay.dart';
 import 'package:cd_mobile/pages/gameplay/widgets/footer.dart';
 import 'package:cd_mobile/pages/gameplay/widgets/game_bar.dart';
@@ -23,8 +24,9 @@ class Web extends StatelessWidget {
                 child: SizedBox(
                     width: 320,
                     child: FittedBox(child: Logo(() {
-                      Get.back();
-                      GameplayPage.onBack();
+                                            Game.inst.leave();
+                      //Get.back();
+
                     }))))),
         GameplayStyles.layoutGap,
         const GameBar(),

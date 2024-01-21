@@ -86,33 +86,6 @@ abstract class Game extends GetxController {
 
   Rx<String> status;
 
-  // static void initPrivateRoomAsOwner() {
-  //   // set up MePlayer
-  //   var me = MePlayer.inst;
-  //   me.isOwner = true;
-  //   me.name = me.name.trim();
-
-  //   _inst = OwnedPrivateGame.init();//([me]).requestInitRoom();
-  // }
-
-  // static void joinPrivateRoomAsParticipant(String roomCode)async {
-  //   var me = MePlayer.inst;
-  //   me.name = me.name.trim();
-
-  //   _inst = await PrivateGame.joinRoom(roomCode);
-  // }
-
-  // static void joinPrivateGame(String roomCode) async {
-  //   var me = MePlayer.inst;
-  //   me.name = me.name.trim();
-
-  //   _inst = await PrivateGame.join(roomCode);
-  // }
-
-  // static void joinPublicGame(){
-  //   _inst = PublicGame.init();
-  // }
-
   static empty() {
     _inst = null;
   }
@@ -167,6 +140,30 @@ abstract class Game extends GetxController {
           context: Get.context!,
           builder: (context) => AlertDialog(title: Text(title), content: Text(data.toString())));
     };
+  }
+
+  bool onLeaving = false;
+  void leave(){
+    // if meplayer are the only player on the list, mean meplayer is owner
+    if (playersByList.length ==1){
+      // emit to server to delete the room
+      SocketIO.inst.socket.emitWithAck('delete_room',roomCode, ack: (_){
+        GameplayPage.onBack();
+      });
+      return;
+    }
+
+    if (MePlayer.inst.isOwner){
+      // pass owner ship to the near player
+      // emit to pass owener ship
+      SocketIO.inst.socket.emitWithAck('pass_owner_ship', 'ok', ack:(_){
+        GameplayPage.onBack();
+      });
+      return;
+    }
+
+    // room still has players and meplayer is not room owner
+    GameplayPage.onBack();
   }
 }
 

@@ -1,6 +1,8 @@
 import 'package:cd_mobile/models/game_play/game.dart';
 import 'package:cd_mobile/models/game_play/player.dart';
 import 'package:cd_mobile/pages/gameplay/gameplay.dart';
+import 'package:cd_mobile/pages/gameplay/widgets/game_settings.dart';
+import 'package:cd_mobile/pages/gameplay/widgets/main_content/main_content.dart';
 import 'package:cd_mobile/pages/home/home.dart';
 // ignore: avoid_web_libraries_in_flutter
 import 'dart:html' as html;
@@ -104,9 +106,19 @@ class OwnedPrivateGame extends Game {
   String mainUrl = html.window.location.href;
   String get inviteLink => '$mainUrl?${succeededCreatedRoomData['code']}';
 
-  // TODO: START PRIVATE GAME
   // void startGame() {
-  //   // var inst = SocketIO.inst;
+  //   // emit to server
+  //   var inst = SocketIO.inst;
+  //   inst.socket.emit('start_game', 
+  //   // game settings
+      
+  //   )
+
+
+
+
+
+
   //   var privateGameSettings = (Game.inst as OwnedPrivateGame).settings;
 
   //   if (privateGameSettings['use_custom_words_only']) {
