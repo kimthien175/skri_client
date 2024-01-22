@@ -15,13 +15,18 @@ class PlayButton extends StatelessWidget {
         cursor: SystemMouseCursors.click,
         child: GestureDetector(
             onTap: () {
-              Get.find<HomeController>().isLoading.value = true;
+              if (roomCode == null) return;
 
-              // if (roomCode == null) {
-              //   Game.joinPublicGame();
-              //   return;
-              // }
-              PrivateGame.join(roomCode!);
+              if (RegExp(r'^[a-z0-9]{4,}$').hasMatch(roomCode!)) {
+                Get.find<HomeController>().isLoading.value = true;
+                PrivateGame.join(roomCode!);
+              } else {
+                showDialog(
+                    context: Get.context!,
+                    builder: (context) => AlertDialog(
+                          title: Text('wrong_private_room_code'.tr),
+                        ));
+              }
             },
             child: Container(
               alignment: Alignment.center,

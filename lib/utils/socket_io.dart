@@ -1,4 +1,5 @@
 import 'package:cd_mobile/models/game/game.dart';
+import 'package:cd_mobile/models/game/message.dart';
 import 'package:cd_mobile/models/game/player.dart';
 import 'package:cd_mobile/utils/api.dart';
 import 'package:socket_io_client/socket_io_client.dart';
@@ -24,32 +25,17 @@ class SocketIO {
       inst.addMessage(newPlayerEmit['message']);
     });
 
-    // _socket.on('player_leave', (playerLeaveEmit) {
-    //   var leftPlayerId = playerLeaveEmit['player_id'];
-    //   // player list side
-    //   var inst = Game.inst;
-    //   inst.playersByList.removeWhere((element) => element.id == leftPlayerId);
+    _socket.on('player_leave', (playerLeaveEmit) {
+      var leftPlayerId = playerLeaveEmit['player_id'];
+      // player list side
+      var inst = Game.inst;
+      inst.playersByList.removeWhere((element) => element.id == leftPlayerId);
 
-    //   // message side
-    //   inst.messages.add(LeftPlayerMessage(
-    //     playerName: inst.playersByMap[leftPlayerId]!.name,
-    //   ));
+      // message side
+      inst.addMessage(playerLeaveEmit);
 
-    //   inst.playersByMap.removeWhere((key, value) => key == leftPlayerId);
-    // });
-
-    // _socket.on('host_leave', (hostLeaveEmit) {
-    //   var leftPlayerId = hostLeaveEmit['player_id'];
-    //   // player list side
-    //   var inst = Game.inst;
-    //   inst.playersByList.removeWhere((element) => element.id == leftPlayerId);
-
-    //   // message side
-    //   inst.messages.add(LeftPlayerMessage(
-    //     playerName: inst.playersByMap[leftPlayerId]!.name,
-    //   ));
-
-    //   inst.playersByMap.removeWhere((key, value) => key == leftPlayerId);
+      inst.playersByMap.removeWhere((key, value) => key == leftPlayerId);
+    });
 
     //   // set new owner
     //   var newHostId = hostLeaveEmit['new_host_id'];

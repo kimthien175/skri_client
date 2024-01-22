@@ -29,10 +29,8 @@ class HomeController extends ResponsivePageController {
     var keys = Get.parameters.keys.toList();
     if (keys.isNotEmpty) {
       var rawRoomCode = keys[0];
-      if (RegExp(r'^[a-zA-Z0-9]{4,}$').hasMatch(rawRoomCode)) {
-        // change Play btn function
-        PlayButton.roomCode = rawRoomCode.toLowerCase();
-      }
+      // change Play btn function
+      PlayButton.roomCode = rawRoomCode.toLowerCase();
     }
   }
 

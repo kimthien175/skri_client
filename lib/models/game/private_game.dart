@@ -10,7 +10,7 @@ import 'package:get/get.dart';
 import 'dart:html' as html;
 
 class PrivateGame extends Game {
-    /// SuccessCreateRoomData
+  /// SuccessCreateRoomData
   late Map<String, dynamic> succeededCreatedRoomData;
 
   /// DBRoomSettings
@@ -170,6 +170,7 @@ class PrivateGame extends Game {
 
           // set up gameplay
           GameplayController.setUpPrivateGameForGuest();
+          Get.find<HomeController>().isLoading.value = false;
 
           Get.to(() => const GameplayPage(),
               binding: GameplayBinding(), transition: Transition.noTransition);
@@ -178,6 +179,7 @@ class PrivateGame extends Game {
             Game.inst.addMessage(rawMessage);
           }
         } else {
+          Get.find<HomeController>().isLoading.value = false;
           showDialog(
               context: Get.context!,
               builder: (context) => AlertDialog(
@@ -185,7 +187,6 @@ class PrivateGame extends Game {
                   content: Text(requestedJoiningRoomResult['data'].toString())));
         }
 
-        Get.find<HomeController>().isLoading.value = false;
         inst.eventHandlers.onConnect = SessionEventHandlers.emptyOnConnect;
       });
     };
