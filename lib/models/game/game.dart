@@ -40,23 +40,20 @@ abstract class Game extends GetxController {
   void addMessage(Map<String, dynamic> rawMessage) {
     switch (rawMessage['type']) {
       case Message.newHost:
-        var playerName = playersByMap[rawMessage['player_id']]!.name;
         messages.add(NewHostMessage(
-            playerName: playerName,
+            playerName: rawMessage['player_name'],
             backgroundColor: messages.length % 2 == 0 ? Colors.white : const Color(0xffececec)));
         break;
 
       case Message.playerJoin:
-        var playerName = playersByMap[rawMessage['player_id']]!.name;
         messages.add(PlayerJoinMessage(
-            playerName: playerName,
+            playerName: rawMessage['player_name'],
             backgroundColor: messages.length % 2 == 0 ? Colors.white : const Color(0xffececec)));
         break;
 
       case Message.playerLeave:
-        var playerName = playersByMap[rawMessage['player_id']]!.name;
         inst.messages.add(PlayerLeaveMessage(
-            playerName: playerName,
+            playerName: rawMessage['player_name'],
             backgroundColor: messages.length % 2 == 0 ? Colors.white : const Color(0xffececec)));
         break;
 

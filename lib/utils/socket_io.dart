@@ -1,5 +1,4 @@
 import 'package:cd_mobile/models/game/game.dart';
-import 'package:cd_mobile/models/game/message.dart';
 import 'package:cd_mobile/models/game/player.dart';
 import 'package:cd_mobile/utils/api.dart';
 import 'package:socket_io_client/socket_io_client.dart';
@@ -11,11 +10,6 @@ class SocketIO {
 
     eventHandlers = SessionEventHandlers.initWithSocket(socket: socket);
 
-    // _socket.on('message_from_server', (msg) {
-    //   print(msg);
-    //   Game.inst.addMessage(msg);
-    // });
-
     _socket.on('player_join', (newPlayerEmit) {
       var inst = Game.inst;
       var newPlayer = Player.fromJSON(newPlayerEmit['player']);
@@ -25,23 +19,16 @@ class SocketIO {
       inst.addMessage(newPlayerEmit['message']);
     });
 
-    _socket.on('player_leave', (playerLeaveEmit) {
-      var leftPlayerId = playerLeaveEmit['player_id'];
-      // player list side
-      var inst = Game.inst;
-      inst.playersByList.removeWhere((element) => element.id == leftPlayerId);
+    _socket.on('player_leave', onPlayerLeave);
 
-      // message side
-      inst.addMessage(playerLeaveEmit);
+    _socket.on('new_host', onNewHost);
 
-      inst.playersByMap.removeWhere((key, value) => key == leftPlayerId);
+    _socket.on('host_leave', (hostLeaveEmit) {
+      onPlayerLeave(hostLeaveEmit[0]);
+      onNewHost(hostLeaveEmit[1]);
     });
 
-    //   // set new owner
-    //   var newHostId = hostLeaveEmit['new_host_id'];
-    //   inst.playersByMap[newHostId]!.isOwner = true;
-    //   inst.playersByList.refresh();
-    // });
+
   }
   static final SocketIO _inst = SocketIO._internal();
 
@@ -51,6 +38,32 @@ class SocketIO {
   Socket get socket => _socket;
 
   late final SessionEventHandlers eventHandlers;
+
+  onPlayerLeave(dynamic playerLeaveEmit) {
+    var leftPlayerId = playerLeaveEmit['player_id'];
+    // player list side
+    var inst = Game.inst;
+    inst.playersByList.removeWhere((element) => element.id == leftPlayerId);
+
+    // message side
+    inst.addMessage(playerLeaveEmit);
+
+    inst.playersByMap.removeWhere((key, value) => key == leftPlayerId);
+  }
+
+  onNewHost(dynamic newHostEmit){
+    var inst  = Game.inst;
+    var newHost = inst.playersByMap[newHostEmit['player_id']]!;
+    newHost.isOwner = true;
+    inst.playersByList.refresh();
+
+    inst.addMessage(newHostEmit);
+
+    if (MePlayer.inst.isOwner){
+      // i am new host
+      print('i am new host');
+    }
+  }
 }
 
 class SessionEventHandlers {

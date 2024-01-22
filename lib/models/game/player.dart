@@ -24,7 +24,8 @@ class Player {
         name: rawPlayer['name'],
         avatar: AvatarModel.init(rawAvatar['color'], rawAvatar['eyes'], rawAvatar['mouth'])
             .builder
-            .init());
+            .init(),
+        isOwner: rawPlayer['isOwner']);
   }
 }
 

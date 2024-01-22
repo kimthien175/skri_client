@@ -45,6 +45,7 @@ class GameplayController extends ResponsivePageController {
     if (Game.inst.status.value == 'waiting') {
       setUp = () {
         Get.find<MainContentController>().showOverlay();
+        Get.find<GameFooterController>().child.value = const InviteSection();
       };
     }
   }

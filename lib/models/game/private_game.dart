@@ -33,9 +33,7 @@ class PrivateGame extends Game {
       required super.playersByList,
       required super.roomCode});
 
-  // init when the main page is showing -> get main url
-  String mainUrl = html.window.location.href;
-  String get inviteLink => '$mainUrl?${succeededCreatedRoomData['code']}';
+  String get inviteLink => '${html.window.location.host}?$roomCode';
 
   static Future<void> host() async {
     // set up me player
