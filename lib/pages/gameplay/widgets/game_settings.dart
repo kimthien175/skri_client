@@ -166,30 +166,35 @@ class CustomWordsInput extends StatelessWidget {
   Widget build(BuildContext context) {
     var fetchedRules = GameSettings.fetchedOptions['custom_words_rules'];
     var maxLength = fetchedRules['max_char'];
-    return Container(
-        decoration: InputStyles.decoration,
-        child: Form(
-            key: formKey,
-            child: TextFormField(
-              validator: validator,
-              maxLength: maxLength,
-              onChanged: (value) => content = value,
-              decoration: InputDecoration(
-                  isCollapsed: true,
-                  contentPadding: const EdgeInsets.symmetric(vertical: 6, horizontal: 3),
-                  border: InputBorder.none,
-                  hintText: 'custom_words_input_placeholder'.trParams({
-                    'min_words': fetchedRules['min_words'].toString(),
-                    'min_char_per_word': fetchedRules['min_char_per_word'].toString(),
-                    'max_char_per_word': fetchedRules['max_char_per_word'].toString(),
-                    'max_char': maxLength.toString()
-                  }),
-                  hintStyle: const TextStyle(
-                      fontWeight: FontWeight.w700,
-                      color: Color.fromRGBO(0, 0, 0, 0.5),
-                      fontSize: 15.4)),
-              maxLines: null,
-            )));
+    return Obx(() {
+      if (Get.find<GameSettingsController>().isCovered.value) {
+        return Container(decoration: InputStyles.decoration);
+      }
+      return Container(
+          decoration: InputStyles.decoration,
+          child: Form(
+              key: formKey,
+              child: TextFormField(
+                validator: validator,
+                maxLength: maxLength,
+                onChanged: (value) => content = value,
+                decoration: InputDecoration(
+                    isCollapsed: true,
+                    contentPadding: const EdgeInsets.symmetric(vertical: 6, horizontal: 3),
+                    border: InputBorder.none,
+                    hintText: 'custom_words_input_placeholder'.trParams({
+                      'min_words': fetchedRules['min_words'].toString(),
+                      'min_char_per_word': fetchedRules['min_char_per_word'].toString(),
+                      'max_char_per_word': fetchedRules['max_char_per_word'].toString(),
+                      'max_char': maxLength.toString()
+                    }),
+                    hintStyle: const TextStyle(
+                        fontWeight: FontWeight.w700,
+                        color: Color.fromRGBO(0, 0, 0, 0.5),
+                        fontSize: 15.4)),
+                maxLines: null,
+              )));
+    });
   }
 }
 
