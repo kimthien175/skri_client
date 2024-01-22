@@ -33,7 +33,7 @@ class PrivateGame extends Game {
       required super.playersByList,
       required super.roomCode});
 
-  String get inviteLink => '${html.window.location.host}?$roomCode';
+  String get inviteLink => '${html.window.location.host}/?$roomCode';
 
   static Future<void> host() async {
     // set up me player
@@ -192,25 +192,49 @@ class PrivateGame extends Game {
     inst.socket.connect();
   }
 
+  static int dialogOpenCount = 0;
   static void handleOnConnectError(String title) {
     var inst = SocketIO.inst;
     inst.eventHandlers.onConnectError = (error) {
-      // keep loading on home page
-      Get.defaultDialog(
-          title: title,
-          middleText: '${"create_private_room_error_content".tr}\n${error.toString()}',
-          onCancel: () {
-            // close dialog
-            Get.back();
+      if (Get.currentRoute == '/') {
+        // at home page
+        if (dialogOpenCount == 0) {
+          dialogOpenCount++;
 
-            Get.find<HomeController>().isLoading.value = false;
+          Get.defaultDialog(
+              title: title,
+              middleText: '${"create_private_room_error_content".tr}\n${error.toString()}',
+              onCancel: () {
+                Get.find<HomeController>().isLoading.value = false;
 
-            SocketIO.inst.socket.disconnect();
-          },
-          barrierDismissible: false);
+                SocketIO.inst.socket.disconnect();
+                dialogOpenCount=0;
+              },
+              barrierDismissible: false);
+        }
+      } else {
+        // at gameplay page
+        if (!Get.find<GameplayController>().isLoading.value) {
+          Get.find<GameplayController>().isLoading.value = true;
+        }
 
-      inst.eventHandlers.onConnectError = SessionEventHandlers.emptyOnConnectError;
+        if (dialogOpenCount == 0) {
+          dialogOpenCount++;
+          Get.defaultDialog(
+              title: '${'gameplay_connection_error'.tr}\n',
+              middleText: error.toString(),
+              onCancel: () {
+                Game.inst.leave();
+              },
+              onConfirm: () {
+              Get.back();
+              },
+              barrierDismissible: false);
+        }
+      }
     };
+
+    inst.eventHandlers.onReconnect = (_) => dialogOpenCount = 0;
   }
 
   Map<String, dynamic> getDifferentSettingsFromDefault() {

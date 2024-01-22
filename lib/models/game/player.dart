@@ -8,13 +8,13 @@ class Player {
       {required this.id,
       required this.name,
       required this.avatar,
-      this.isOwner = false,
+      this.isOwner,
       this.points = 0});
   final AvatarBuilder avatar;
   String name;
   String get nameForCard => name;
 
-  bool isOwner;
+  bool? isOwner;
   int points;
   String id;
   static Player fromJSON(rawPlayer) {

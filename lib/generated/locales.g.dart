@@ -65,8 +65,7 @@ class LocaleKeys {
       'create_private_room_error_content';
   static const join_private_room_error_title = 'join_private_room_error_title';
   static const wrong_private_room_code = 'wrong_private_room_code';
-  static const gameplay_connection_error_message =
-      'gameplay_connection_error_message';
+  static const gameplay_connection_error = 'gameplay_connection_error';
   static const You = 'You';
   static const Normal = 'Normal';
   static const Hidden = 'Hidden';
@@ -141,8 +140,8 @@ class Locales {
         'Connection Error: can\'t join private room right now',
     'wrong_private_room_code':
         'Can\'t connect to room, pls check the link again',
-    'gameplay_connection_error_message':
-        'If you want to keep trying to reconnect, please hold, or press No to disconnect',
+    'gameplay_connection_error':
+        'If you want to keep trying to reconnect, please hold, or press Cancel to disconnect',
   };
   static const vi_VN = {
     'displayName': 'Tiếng Việt',
@@ -210,7 +209,7 @@ class Locales {
     'create_private_room_error_content': 'Nhấn Cancel để ngắt kết nối',
     'join_private_room_error_title': 'Đứt dây cáp! Hãy kiểm tra lại kết nối!',
     'wrong_private_room_code': 'Không thể thể vào phòng, hãy kiểm tra lại link',
-    'gameplay_connection_error_message':
-        'Đang kết nối lại, vui lòng chờ, hoặc bạn có thể thoát bằng nút Không',
+    'gameplay_connection_error':
+        'Nếu bạn muốn kết nối lại, xin vui lòng kiểm tra kết nối, hoặc nhấn Cancel để thoát',
   };
 }

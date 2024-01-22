@@ -57,6 +57,13 @@ abstract class Game extends GetxController {
             backgroundColor: messages.length % 2 == 0 ? Colors.white : const Color(0xffececec)));
         break;
 
+      case Message.playerGuess:
+        inst.messages.add(PlayerGuessMessage(
+            playerName: rawMessage['player_name'],
+            guess: rawMessage['guess'],
+            backgroundColor: messages.length % 2 == 0 ? Colors.white : const Color(0xffececec)));
+        break;
+
       // case Message.drawing:
       //   var playerName = playersByMap[rawMessage['player_id']]!.name;
       //   messages.add(DrawingMessage(
@@ -64,13 +71,7 @@ abstract class Game extends GetxController {
       //       backgroundColor: messages.length % 2 == 0 ? Colors.white : const Color(0xffececec)));
       //   break;
 
-      // case Message.guess:
-      //   var playerName = playersByMap[rawMessage['player_id']]!.name;
-      //   messages.add(GuessMessage(
-      //       playerName: playerName,
-      //       guess: rawMessage['guess'],
-      //       backgroundColor: messages.length % 2 == 0 ? Colors.white : const Color(0xffececec)));
-      //   break;
+
 
       // case Message.correctGuess:
       //   var playerName = playersByMap[rawMessage['player_id']]!.name;
@@ -79,12 +80,7 @@ abstract class Game extends GetxController {
       //       backgroundColor: messages.length % 2 == 0 ? Colors.white : const Color(0xffececec)));
       //   break;
 
-      // case Message.playerLeave:
-      //   var playerName = playersByMap[rawMessage['player_id']]!.name;
-      //   messages.add(NewPlayerMessage(
-      //       playerName: playerName,
-      //       backgroundColor: messages.length % 2 == 0 ? Colors.white : const Color(0xffececec)));
-      //   break;
+
 
       default:
         messages.add(Message(

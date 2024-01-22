@@ -56,28 +56,32 @@ class GameplayController extends ResponsivePageController {
 class GameplayPage extends StatelessWidget {
   const GameplayPage({super.key});
 
-  // final GameplayController controller = Get.put(GameplayController());
-
   @override
   Widget build(BuildContext context) {
     var controller = Get.find<GameplayController>();
-    return Scaffold(
-        body: Container(
-            constraints: const BoxConstraints.expand(),
-            decoration: const BoxDecoration(
-                image: DecorationImage(
-                    scale: 1.2,
-                    repeat: ImageRepeat.repeat,
-                    image: AssetImage('assets/background.png'))),
-            child: Obx(() {
-              var content =
-                  SafeArea(child: controller.isWebLayout.value ? const Web() : const Mobile());
-              return controller.isLoading.value
-                  ? Stack(
-                      alignment: Alignment.center,
-                      children: [content, const LoadingOverlay()],
-                    )
-                  : content;
-            })));
+    return PopScope(
+        canPop: false,
+        onPopInvoked: (didPop) async {
+          if (didPop) return;
+          Game.inst.leave();
+        },
+        child: Scaffold(
+            body: Container(
+                constraints: const BoxConstraints.expand(),
+                decoration: const BoxDecoration(
+                    image: DecorationImage(
+                        scale: 1.2,
+                        repeat: ImageRepeat.repeat,
+                        image: AssetImage('assets/background.png'))),
+                child: Obx(() {
+                  var content =
+                      SafeArea(child: controller.isWebLayout.value ? const Web() : const Mobile());
+                  return controller.isLoading.value
+                      ? Stack(
+                          alignment: Alignment.center,
+                          children: [content, const LoadingOverlay()],
+                        )
+                      : content;
+                }))));
   }
 }

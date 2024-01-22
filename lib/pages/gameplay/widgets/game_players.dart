@@ -97,7 +97,7 @@ class PlayerCard extends StatelessWidget {
                     '#${index + 1}',
                     style: const TextStyle(fontSize: 15.4, fontWeight: FontWeight.w900),
                   )),
-              if (info.isOwner)
+              if (info.isOwner == true)
                 Positioned(
                     bottom: 0,
                     left: 4,

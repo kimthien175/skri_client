@@ -28,6 +28,10 @@ class SocketIO {
       onNewHost(hostLeaveEmit[1]);
     });
 
+    _socket.on('player_guess', (guessMsg){
+      Game.inst.addMessage(guessMsg);
+      // TODO: DISPLAY TOOLTIP BESIDE PLAYER CARD 
+    });
 
   }
   static final SocketIO _inst = SocketIO._internal();
@@ -59,8 +63,8 @@ class SocketIO {
 
     inst.addMessage(newHostEmit);
 
-    if (MePlayer.inst.isOwner){
-      // i am new host
+    if (MePlayer.inst.isOwner == true){
+      // TODO: do stuff for new host
       print('i am new host');
     }
   }

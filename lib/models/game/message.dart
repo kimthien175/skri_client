@@ -9,8 +9,9 @@ class Message extends StatelessWidget {
   static const String newHost = 'new_host';
   static const String playerJoin = 'player_join';
   static const String playerLeave = 'player_leave';
+  static const String playerGuess = 'player_guess';
   //static const String drawing = 'drawing';
-  //static const String guess = 'guess';
+
   //static const String correctGuess = 'correct_guess';
 
 
@@ -40,22 +41,22 @@ class NewHostMessage extends Message {
   }
 }
 
-class DrawingMessage extends Message {
-  final String playerName;
+// class DrawingMessage extends Message {
+//   final String playerName;
 
-  const DrawingMessage({required this.playerName, super.key, super.backgroundColor});
-  @override
-  Widget build(BuildContext context) {
-    // TODO: implement build
-    throw UnimplementedError();
-  }
-}
+//   const DrawingMessage({required this.playerName, super.key, super.backgroundColor});
+//   @override
+//   Widget build(BuildContext context) {
+//     // TODO: implement build
+//     throw UnimplementedError();
+//   }
+// }
 
-class GuessMessage extends Message {
+class PlayerGuessMessage extends Message {
   final String playerName;
   final String guess;
 
-  const GuessMessage(
+  const PlayerGuessMessage(
       {required this.playerName, required this.guess, super.key, super.backgroundColor});
 
   @override
@@ -81,25 +82,25 @@ class GuessMessage extends Message {
   }
 }
 
-class CorrectGuessMessage extends Message {
-  const CorrectGuessMessage({required this.playerName, super.key, super.backgroundColor});
-  final String playerName;
-  @override
-  Widget build(BuildContext context) {
-    // TODO: implement build
-    throw UnimplementedError();
-  }
-}
+// class CorrectGuessMessage extends Message {
+//   const CorrectGuessMessage({required this.playerName, super.key, super.backgroundColor});
+//   final String playerName;
+//   @override
+//   Widget build(BuildContext context) {
+//     // TODO: implement build
+//     throw UnimplementedError();
+//   }
+// }
 
-class SpamWarningMessage extends Message {
-  const SpamWarningMessage({super.key, super.backgroundColor});
+// class SpamWarningMessage extends Message {
+//   const SpamWarningMessage({super.key, super.backgroundColor});
 
-  @override
-  Widget build(BuildContext context) {
-    // TODO: implement build
-    throw UnimplementedError();
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     // TODO: implement build
+//     throw UnimplementedError();
+//   }
+// }
 
 class PlayerJoinMessage extends Message {
   const PlayerJoinMessage({required this.playerName, super.key, super.backgroundColor});

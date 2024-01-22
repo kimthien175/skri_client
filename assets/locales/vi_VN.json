@@ -57,5 +57,5 @@
     "join_private_room_error_title":"Đứt dây cáp! Hãy kiểm tra lại kết nối!",
     "wrong_private_room_code":"Không thể thể vào phòng, hãy kiểm tra lại link",
 
-    "gameplay_connection_error_message":"Đang kết nối lại, vui lòng chờ, hoặc bạn có thể thoát bằng nút Không"
+    "gameplay_connection_error":"Nếu bạn muốn kết nối lại, xin vui lòng kiểm tra kết nối, hoặc nhấn Cancel để thoát"
 }
