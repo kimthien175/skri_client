@@ -5,7 +5,6 @@ import 'package:cd_mobile/widgets/animated_button.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-// TODO: GAMEBAR FUNCTION
 class GameBar extends StatelessWidget {
   const GameBar({super.key});
   @override
@@ -40,6 +39,9 @@ class GameBar extends StatelessWidget {
                 width: 300,
                 alignment: Alignment.centerRight,
                 child: AnimatedButton(
+                  onTap: () {
+                    // TODO: SETTINGS BUTTON
+                  },
                     minOpacity: 0.85,
                     child: namedGifs('settings')
                         .builder

@@ -36,7 +36,7 @@ class MainContentController extends GetxController {
         const CanvasOverlay(),
         // animated settings
 
-        const TopWidget(child: GameSettings())
+        TopWidget(child: GameSettings())
         // const GameSettings()
       ],
     );
@@ -48,7 +48,7 @@ class MainContentController extends GetxController {
     );
   }
 
-  showOverlay() {
+  showSettingsWithGuest() {
     child.value = Stack(
       children: [
         canvas,
@@ -56,9 +56,18 @@ class MainContentController extends GetxController {
         // animate overlay
         const CanvasOverlay(),
         // animated settings
+
+        TopWidget(child: GameSettings())
+        // const GameSettings()
       ],
     );
-    Get.find<CanvasOverlayController>().controller.forward();
+
+    Get.find<GameSettingsController>().isCovered.value = true;
+    Get.find<CanvasOverlayController>().controller.forward().then(
+      (value) {
+        Get.find<TopWidgetController>().controller.forward();
+      },
+    );
   }
 
   showCanvas() async {

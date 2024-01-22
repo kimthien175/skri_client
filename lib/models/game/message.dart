@@ -18,7 +18,6 @@ class Message extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     throw UnimplementedError();
   }
 }
@@ -47,7 +46,6 @@ class NewHostMessage extends Message {
 //   const DrawingMessage({required this.playerName, super.key, super.backgroundColor});
 //   @override
 //   Widget build(BuildContext context) {
-//     // TODO: implement build
 //     throw UnimplementedError();
 //   }
 // }
@@ -87,17 +85,16 @@ class PlayerGuessMessage extends Message {
 //   final String playerName;
 //   @override
 //   Widget build(BuildContext context) {
-//     // TODO: implement build
 //     throw UnimplementedError();
 //   }
 // }
 
+// TODO: SPAM DETECT
 // class SpamWarningMessage extends Message {
 //   const SpamWarningMessage({super.key, super.backgroundColor});
 
 //   @override
 //   Widget build(BuildContext context) {
-//     // TODO: implement build
 //     throw UnimplementedError();
 //   }
 // }

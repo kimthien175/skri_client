@@ -5,84 +5,107 @@ import 'package:cd_mobile/utils/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+class GameSettingsController extends GetxController {
+  RxBool isCovered = false.obs;
+}
+
 class GameSettings extends StatelessWidget {
-  const GameSettings({super.key});
+  GameSettings({super.key});
+
+  final controller = Get.put(GameSettingsController());
 
   // DBRoomSettingsDocument
-  static Map<String, dynamic> get fetchedOptions =>
-      (Game.inst as PrivateGame).succeededCreatedRoomData['settings']['options'];
+  static Map<String, dynamic> get fetchedOptions => (Game.inst as PrivateGame).options;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        padding: const EdgeInsets.all(6),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            const Expanded(
-                flex: 52,
-                child: Column(children: [
-                  _SettingsItem(gif: 'setting_1', settingKey: 'players'),
-                  SizedBox(height: 3.5),
-                  _SettingsItem(gif: 'setting_0', settingKey: 'language'),
-                  SizedBox(height: 3.5),
-                  _SettingsItem(gif: 'setting_2', settingKey: 'drawtime'),
-                  SizedBox(height: 3.5),
-                  _SettingsItem(gif: 'setting_3', settingKey: 'rounds'),
-                  SizedBox(height: 3.5),
-                  _SettingsItem(gif: 'setting_6', settingKey: 'word_mode'),
-                  SizedBox(height: 3.5),
-                  _SettingsItem(gif: 'setting_4', settingKey: 'word_count'),
-                  SizedBox(height: 3.5),
-                  _SettingsItem(gif: 'setting_5', settingKey: 'hints'),
-                ])),
-            Expanded(
-                flex: 38,
-                child: Container(
-                    margin: const EdgeInsets.symmetric(vertical: 6),
-                    child: Column(
-                      children: [
-                        Row(
-                          children: [
-                            Text('custom_words'.tr,
-                                style: const TextStyle(
-                                  fontSize: 16.8,
-                                  fontWeight: FontWeight.w700,
-                                  color: Color.fromRGBO(240, 240, 240, 1),
-                                )),
-                            const Spacer(),
-                            Text('use_custom_words_only'.tr,
-                                style: const TextStyle(
-                                    fontSize: 13.44,
+    return Obx(() {
+      var content = Container(
+          padding: const EdgeInsets.all(6),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              const Expanded(
+                  flex: 52,
+                  child: Column(children: [
+                    _SettingsItem(gif: 'setting_1', settingKey: 'players'),
+                    SizedBox(height: 3.5),
+                    _SettingsItem(gif: 'setting_0', settingKey: 'language'),
+                    SizedBox(height: 3.5),
+                    _SettingsItem(gif: 'setting_2', settingKey: 'drawtime'),
+                    SizedBox(height: 3.5),
+                    _SettingsItem(gif: 'setting_3', settingKey: 'rounds'),
+                    SizedBox(height: 3.5),
+                    _SettingsItem(gif: 'setting_6', settingKey: 'word_mode'),
+                    SizedBox(height: 3.5),
+                    _SettingsItem(gif: 'setting_4', settingKey: 'word_count'),
+                    SizedBox(height: 3.5),
+                    _SettingsItem(gif: 'setting_5', settingKey: 'hints'),
+                  ])),
+              Expanded(
+                  flex: 38,
+                  child: Container(
+                      margin: const EdgeInsets.symmetric(vertical: 6),
+                      child: Column(
+                        children: [
+                          Row(
+                            children: [
+                              Text('custom_words'.tr,
+                                  style: const TextStyle(
+                                    fontSize: 16.8,
                                     fontWeight: FontWeight.w700,
-                                    color: Color.fromRGBO(240, 240, 240, 1))),
-                            const _UseCustomWordsOnlyCheckbox()
-                          ],
-                        ),
-                        Expanded(child: CustomWordsInput())
-                      ],
-                    ))),
-            Expanded(
-                flex: 10,
-                child: MouseRegion(
-                    cursor: SystemMouseCursors.click,
-                    child: GestureDetector(
-                       // onTap: (Game.inst as OwnedPrivateGame).startGame,
-                        child: Container(
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                            color: const Color(0xff53e237),
-                            borderRadius: GlobalStyles.borderRadius,
+                                    color: Color.fromRGBO(240, 240, 240, 1),
+                                  )),
+                              const Spacer(),
+                              Text('use_custom_words_only'.tr,
+                                  style: const TextStyle(
+                                      fontSize: 13.44,
+                                      fontWeight: FontWeight.w700,
+                                      color: Color.fromRGBO(240, 240, 240, 1))),
+                              const _UseCustomWordsOnlyCheckbox()
+                            ],
                           ),
-                          child: Text('start'.tr,
-                              style: TextStyle(
-                                  fontSize: 32,
-                                  color: PanelStyles.textColor,
-                                  fontWeight: FontWeight.w800,
-                                  shadows: [GlobalStyles.textShadow])),
-                        ))))
-          ],
-        ));
+                          Expanded(child: CustomWordsInput())
+                        ],
+                      ))),
+              Expanded(
+                  flex: 10,
+                  child: MouseRegion(
+                      cursor: SystemMouseCursors.click,
+                      child: GestureDetector(
+                          // onTap: (Game.inst as OwnedPrivateGame).startGame,
+                          child: Container(
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          color: const Color(0xff53e237),
+                          borderRadius: GlobalStyles.borderRadius,
+                        ),
+                        child: Text('start'.tr,
+                            style: TextStyle(
+                                fontSize: 32,
+                                color: PanelStyles.textColor,
+                                fontWeight: FontWeight.w800,
+                                shadows: [GlobalStyles.textShadow])),
+                      ))))
+            ],
+          ));
+
+      return controller.isCovered.value
+          ? Stack(
+              children: [
+                content,
+                Container(
+                  height: 600,
+                  width: 800,
+                  decoration: BoxDecoration(
+                    color: const Color.fromRGBO(3, 8, 29, 0.4),
+                    borderRadius: GlobalStyles.borderRadius,
+                  ),
+                )
+              ],
+            )
+          : content;
+    });
   }
 }
 

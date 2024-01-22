@@ -10,20 +10,8 @@ import 'package:get/get.dart';
 import 'dart:html' as html;
 
 class PrivateGame extends Game {
-  /// SuccessCreateRoomData
-  late Map<String, dynamic> succeededCreatedRoomData;
-
-  /// DBRoomSettings
-  late Map<String, dynamic> settings;
-  void updateSettings(String key, dynamic value) {
-    if (key == 'rounds') {
-      rounds.value = value;
-    }
-    settings[key] = value;
-  }
-
   PrivateGame._internal(
-      {required this.succeededCreatedRoomData,
+      {required this.options,
       required this.settings,
       required super.status,
       required super.word,
@@ -32,6 +20,16 @@ class PrivateGame extends Game {
       required super.rounds,
       required super.playersByList,
       required super.roomCode});
+
+  late Map<String, dynamic> options;
+  late Map<String, dynamic> settings;
+
+  void updateSettings(String key, dynamic value) {
+    if (key == 'rounds') {
+      rounds.value = value;
+    }
+    settings[key] = value;
+  }
 
   String get inviteLink => '${html.window.location.host}/?$roomCode';
 
@@ -47,33 +45,30 @@ class PrivateGame extends Game {
       inst.socket.emitWithAck('init_private_room', MePlayer.inst.toJSON(),
           ack: (requestedRoomResult) {
         if (requestedRoomResult['success']) {
-          var data = requestedRoomResult['data'];
+          var createdRoom = requestedRoomResult['data'];
 
-          Map<String, dynamic> succeededCreatedRoomData = data;
-          succeededCreatedRoomData['settings']['default']['use_custom_words_only'] = false;
-
-          // set default for PrivateGame settings
-          var settings = Map<String, dynamic>.from(data['settings']['default']);
+          var settings = createdRoom['settings']['default'];
 
           // set room owner name if empty
           if (MePlayer.inst.name.isEmpty) {
-            MePlayer.inst.name = data['ownerName'];
+            MePlayer.inst.name = createdRoom['ownerName'];
           }
-          MePlayer.inst.id = data['player_id'];
+          MePlayer.inst.id = createdRoom['player_id'];
           me.isOwner = true;
 
           Game.inst = PrivateGame._internal(
-              roomCode: data['code'],
+              roomCode: createdRoom['code'],
               settings: settings,
               remainingTime: 0,
               currentRound: RxInt(1),
               rounds: RxInt(settings['rounds']),
+              // ignore: unnecessary_cast
               playersByList: [me as Player].obs,
-              succeededCreatedRoomData: succeededCreatedRoomData,
               status: 'waiting'.obs,
-              word: ''.obs);
+              word: ''.obs,
+              options: createdRoom['settings']['options']);
 
-          Game.inst.addMessage(data['message']);
+          Game.inst.addMessage(createdRoom['message']);
 
           GameplayController.setUpOwnedPrivateGame();
           Get.to(() => const GameplayPage(),
@@ -107,43 +102,44 @@ class PrivateGame extends Game {
           .emitWithAck('join_private_room', {'player': MePlayer.inst.toJSON(), 'code': roomCode},
               ack: (requestedJoiningRoomResult) {
         if (requestedJoiningRoomResult['success']) {
-          var successJoinRoom = requestedJoiningRoomResult['data'];
+          var roomAndNewPlayer = requestedJoiningRoomResult['data'];
 
           // modify MePlayer
           if (me.name.isEmpty) {
-            me.name = successJoinRoom['player']['name'];
+            me.name = roomAndNewPlayer['player']['name'];
           }
-          me.id = successJoinRoom['player']['id'];
+          me.id = roomAndNewPlayer['player']['id'];
 
-          var joinRoomData = successJoinRoom['room'];
+          var room = roomAndNewPlayer['room'];
+          print(room);
 
           // remainingTime
           int remainingTime = 0;
-          if (joinRoomData['currentRoundStartedAt'] != null) {
-            remainingTime = hasPassed(joinRoomData['currentRoundStartedAt']).inSeconds;
+          if (room['currentRoundStartedAt'] != null) {
+            remainingTime = hasPassed(room['currentRoundStartedAt']).inSeconds;
           }
 
           // currentRound
           int currentRound = 1;
-          if (joinRoomData['currentRound'] != null) {
-            currentRound = joinRoomData['currentRound'];
+          if (room['currentRound'] != null) {
+            currentRound = room['currentRound'];
           }
 
           // rounds
-          int rounds = joinRoomData['settings']['rounds'];
+          int rounds = room['settings']['rounds'];
 
           // status
-          String status = joinRoomData['status'];
+          String status = room['status'];
 
           // word
           String word = '';
-          List<dynamic>? words = joinRoomData['words'];
+          List<dynamic>? words = room['words'];
           if (words != null) {
             word = words[words.length - 1];
           }
 
           // players
-          List<dynamic> rawPlayers = joinRoomData['players'];
+          List<dynamic> rawPlayers = room['players'];
           List<Player> players = [];
           for (dynamic rawPlayer in rawPlayers) {
             if (rawPlayer['id'] == me.id) {
@@ -153,7 +149,7 @@ class PrivateGame extends Game {
             }
           }
 
-          String roomCode = joinRoomData['code'];
+          String roomCode = room['code'];
 
           Game.inst = PrivateGame._internal(
               remainingTime: remainingTime,
@@ -163,8 +159,8 @@ class PrivateGame extends Game {
               word: word.obs,
               playersByList: players.obs,
               roomCode: roomCode,
-              succeededCreatedRoomData: {},
-              settings: {});
+              options: room['options'],
+              settings: room['settings']);
 
           // set up gameplay
           GameplayController.setUpPrivateGameForGuest();
@@ -173,7 +169,7 @@ class PrivateGame extends Game {
           Get.to(() => const GameplayPage(),
               binding: GameplayBinding(), transition: Transition.noTransition);
 
-          for (dynamic rawMessage in joinRoomData['messages']) {
+          for (dynamic rawMessage in room['messages']) {
             Game.inst.addMessage(rawMessage);
           }
         } else {
@@ -208,7 +204,7 @@ class PrivateGame extends Game {
                 Get.find<HomeController>().isLoading.value = false;
 
                 SocketIO.inst.socket.disconnect();
-                dialogOpenCount=0;
+                dialogOpenCount = 0;
               },
               barrierDismissible: false);
         }
@@ -227,7 +223,7 @@ class PrivateGame extends Game {
                 Game.inst.leave();
               },
               onConfirm: () {
-              Get.back();
+                Get.back();
               },
               barrierDismissible: false);
         }
@@ -237,12 +233,12 @@ class PrivateGame extends Game {
     inst.eventHandlers.onReconnect = (_) => dialogOpenCount = 0;
   }
 
-  Map<String, dynamic> getDifferentSettingsFromDefault() {
-    Map<String, dynamic> result = {};
-    var defaultSettings = succeededCreatedRoomData['settings']['default'];
-    for (String key in settings.keys) {
-      if (settings[key] != defaultSettings[key]) result[key] = settings[key];
-    }
-    return result;
-  }
+  // Map<String, dynamic> getDifferentSettingsFromDefault() {
+  //   Map<String, dynamic> result = {};
+  //   var defaultSettings = succeededCreatedRoomData['settings']['default'];
+  //   for (String key in settings.keys) {
+  //     if (settings[key] != defaultSettings[key]) result[key] = settings[key];
+  //   }
+  //   return result;
+  // }
 }

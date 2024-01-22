@@ -1,6 +1,9 @@
 import 'package:cd_mobile/models/game/game.dart';
 import 'package:cd_mobile/models/game/player.dart';
+import 'package:cd_mobile/models/game/private_game.dart';
+import 'package:cd_mobile/pages/gameplay/widgets/main_content/main_content.dart';
 import 'package:cd_mobile/utils/api.dart';
+import 'package:get/get.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 
 class SocketIO {
@@ -28,11 +31,10 @@ class SocketIO {
       onNewHost(hostLeaveEmit[1]);
     });
 
-    _socket.on('player_guess', (guessMsg){
+    _socket.on('player_guess', (guessMsg) {
       Game.inst.addMessage(guessMsg);
-      // TODO: DISPLAY TOOLTIP BESIDE PLAYER CARD 
+      // TODO: DISPLAY TOOLTIP BESIDE PLAYER CARD
     });
-
   }
   static final SocketIO _inst = SocketIO._internal();
 
@@ -55,17 +57,20 @@ class SocketIO {
     inst.playersByMap.removeWhere((key, value) => key == leftPlayerId);
   }
 
-  onNewHost(dynamic newHostEmit){
-    var inst  = Game.inst;
+  onNewHost(dynamic newHostEmit) {
+    var inst = Game.inst;
     var newHost = inst.playersByMap[newHostEmit['player_id']]!;
     newHost.isOwner = true;
     inst.playersByList.refresh();
 
     inst.addMessage(newHostEmit);
 
-    if (MePlayer.inst.isOwner == true){
-      // TODO: do stuff for new host
-      print('i am new host');
+    if (MePlayer.inst.isOwner == true) {
+      var game = (Game.inst as PrivateGame);
+      game.settings = newHostEmit['settings'];
+      if (game.status.value == 'waiting') {
+        Get.find<MainContentController>().showSettings();
+      }
     }
   }
 }

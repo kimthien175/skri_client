@@ -44,7 +44,7 @@ class GameplayController extends ResponsivePageController {
   static setUpPrivateGameForGuest() {
     if (Game.inst.status.value == 'waiting') {
       setUp = () {
-        Get.find<MainContentController>().showOverlay();
+        Get.find<MainContentController>().showSettingsWithGuest();
         Get.find<GameFooterController>().child.value = const InviteSection();
       };
     }

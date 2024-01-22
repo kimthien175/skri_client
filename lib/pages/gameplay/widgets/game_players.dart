@@ -6,7 +6,6 @@ import 'package:cd_mobile/widgets/animated_button.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-// TODO: LOAD PLAYERS INFO FROM GAME.INST
 class GamePlayers extends StatelessWidget {
   const GamePlayers({super.key});
 
