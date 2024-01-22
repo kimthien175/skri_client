@@ -35,6 +35,12 @@ class SocketIO {
       Game.inst.addMessage(guessMsg);
       // TODO: DISPLAY TOOLTIP BESIDE PLAYER CARD
     });
+
+    _socket.on('change_settings',(setting){
+      print(setting);
+      var entry = (setting as Map<String, dynamic>).entries.first;
+      (Game.inst as PrivateGame).settings[entry.key] = entry.value;
+    });
   }
   static final SocketIO _inst = SocketIO._internal();
 
@@ -67,7 +73,7 @@ class SocketIO {
 
     if (MePlayer.inst.isOwner == true) {
       var game = (Game.inst as PrivateGame);
-      game.settings = newHostEmit['settings'];
+      game.settings.value = newHostEmit['settings'];
       if (game.status.value == 'waiting') {
         Get.find<MainContentController>().showSettings();
       }

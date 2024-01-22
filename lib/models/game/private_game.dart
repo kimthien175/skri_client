@@ -21,14 +21,14 @@ class PrivateGame extends Game {
       required super.playersByList,
       required super.roomCode});
 
-  late Map<String, dynamic> options;
-  late Map<String, dynamic> settings;
-
-  void updateSettings(String key, dynamic value) {
-    if (key == 'rounds') {
+  Map<String, dynamic> options;
+  RxMap<String, dynamic> settings;
+  void changeSettings(String key, dynamic value){
+        if (key == 'rounds') {
       rounds.value = value;
     }
     settings[key] = value;
+    SocketIO.inst.socket.emit('change_settings',{key: value});
   }
 
   String get inviteLink => '${html.window.location.host}/?$roomCode';
@@ -47,7 +47,7 @@ class PrivateGame extends Game {
         if (requestedRoomResult['success']) {
           var createdRoom = requestedRoomResult['data'];
 
-          var settings = createdRoom['settings']['default'];
+          Map<String, dynamic> settings = createdRoom['settings']['default'];
 
           // set room owner name if empty
           if (MePlayer.inst.name.isEmpty) {
@@ -58,7 +58,7 @@ class PrivateGame extends Game {
 
           Game.inst = PrivateGame._internal(
               roomCode: createdRoom['code'],
-              settings: settings,
+              settings: settings.obs,
               remainingTime: 0,
               currentRound: RxInt(1),
               rounds: RxInt(settings['rounds']),
@@ -111,7 +111,6 @@ class PrivateGame extends Game {
           me.id = roomAndNewPlayer['player']['id'];
 
           var room = roomAndNewPlayer['room'];
-          print(room);
 
           // remainingTime
           int remainingTime = 0;
@@ -160,7 +159,7 @@ class PrivateGame extends Game {
               playersByList: players.obs,
               roomCode: roomCode,
               options: room['options'],
-              settings: room['settings']);
+              settings: (room['settings']as Map<String,dynamic>).obs);
 
           // set up gameplay
           GameplayController.setUpPrivateGameForGuest();

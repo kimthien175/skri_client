@@ -204,7 +204,7 @@ class _SettingsItem extends StatelessWidget {
   final String gif;
   final String settingKey;
 
-  void changeSetting(dynamic value) => (Game.inst as PrivateGame).updateSettings(settingKey, value);
+  void changeSetting(dynamic value) => (Game.inst as PrivateGame).changeSettings(settingKey, value);
 
   dynamic getSetting() => (Game.inst as PrivateGame).settings[settingKey];
 
@@ -230,40 +230,33 @@ class _SettingsItem extends StatelessWidget {
       }
     }
     return Expanded(
-        child: Row(
-      children: [
-        Expanded(
-            flex: 55,
-            child: Row(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-              FittedBox(
-                  child: GifManager.inst.misc(gif).builder.initShadowedOrigin().doFreezeSize()),
-              const SizedBox(width: 7),
-              Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(settingKey.tr,
-                      style: const TextStyle(
-                          color: Color.fromRGBO(240, 240, 240, 1),
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500)))
-            ])),
-        Expanded(
-            flex: 45,
-            child: Container(
-                decoration: InputStyles.decoration,
-                child: StatefulBuilder(
-                  builder: (ct, setState) {
-                    return DropdownButtonHideUnderline(
-                        child: DropdownButton(
-                            icon: Icon(Icons.keyboard_arrow_down_rounded, color: InputStyles.color),
-                            padding: const EdgeInsets.only(left: 7),
-                            // isExpanded: true,
-                            value: getSetting(),
-                            items: items,
-                            onChanged: (value) => setState(() => changeSetting(value))));
-                  },
-                )))
-      ],
-    ));
+        child: Row(children: [
+      Expanded(
+          flex: 55,
+          child: Row(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+            FittedBox(child: GifManager.inst.misc(gif).builder.initShadowedOrigin().doFreezeSize()),
+            const SizedBox(width: 7),
+            Align(
+                alignment: Alignment.centerLeft,
+                child: Text(settingKey.tr,
+                    style: const TextStyle(
+                        color: Color.fromRGBO(240, 240, 240, 1),
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500)))
+          ])),
+      Expanded(
+          flex: 45,
+          child: Container(
+              decoration: InputStyles.decoration,
+              child: Obx(() => DropdownButtonHideUnderline(
+                  child: DropdownButton(
+                      icon: Icon(Icons.keyboard_arrow_down_rounded, color: InputStyles.color),
+                      padding: const EdgeInsets.only(left: 7),
+                      // isExpanded: true,
+                      value: getSetting(),
+                      items: items,
+                      onChanged: changeSetting)))))
+    ]));
   }
 }
 
@@ -271,21 +264,19 @@ class _SettingsItem extends StatelessWidget {
 class _UseCustomWordsOnlyCheckbox extends StatelessWidget {
   const _UseCustomWordsOnlyCheckbox();
 
-  dynamic gameSettings() => (Game.inst as PrivateGame).settings;
+  RxMap<String, dynamic> gameSettings() => (Game.inst as PrivateGame).settings;
   @override
   Widget build(BuildContext context) {
-    return StatefulBuilder(builder: (ct, setState) {
-      return Checkbox(
-          fillColor: MaterialStateProperty.resolveWith((states) {
-            if (states.contains(MaterialState.selected)) {
-              return Colors.blue; // Set the background color when checked
-            }
-            return Colors.white; // Set the background color when unchecked
-          }),
-          value: gameSettings()['use_custom_words_only'],
-          onChanged: (bool? value) {
-            setState(() => gameSettings()['use_custom_words_only'] = value);
-          });
-    });
+    return Obx(() => Checkbox(
+        fillColor: MaterialStateProperty.resolveWith((states) {
+          if (states.contains(MaterialState.selected)) {
+            return Colors.blue; // Set the background color when checked
+          }
+          return Colors.white; // Set the background color when unchecked
+        }),
+        value: gameSettings()['use_custom_words_only'],
+        onChanged: (bool? value) {
+          (Game.inst as PrivateGame).changeSettings('use_custom_words_only', value);
+        }));
   }
 }
