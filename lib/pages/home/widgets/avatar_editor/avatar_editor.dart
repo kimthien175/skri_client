@@ -1,4 +1,4 @@
-import 'package:cd_mobile/models/game_play/player.dart';
+import 'package:cd_mobile/models/game/player.dart';
 import 'package:cd_mobile/pages/home/widgets/avatar_editor/controller.dart';
 import 'package:cd_mobile/models/gif/gif.dart';
 import 'package:cd_mobile/models/gif_manager.dart';

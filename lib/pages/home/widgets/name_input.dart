@@ -1,4 +1,4 @@
-import 'package:cd_mobile/models/game_play/player.dart';
+import 'package:cd_mobile/models/game/player.dart';
 import 'package:cd_mobile/utils/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

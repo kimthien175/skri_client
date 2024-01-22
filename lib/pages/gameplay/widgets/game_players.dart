@@ -1,5 +1,5 @@
-import 'package:cd_mobile/models/game_play/game.dart';
-import 'package:cd_mobile/models/game_play/player.dart';
+import 'package:cd_mobile/models/game/game.dart';
+import 'package:cd_mobile/models/game/player.dart';
 import 'package:cd_mobile/models/gif_manager.dart';
 import 'package:cd_mobile/utils/styles.dart';
 import 'package:cd_mobile/widgets/animated_button.dart';

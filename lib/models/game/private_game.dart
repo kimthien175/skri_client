@@ -1,5 +1,5 @@
-import 'package:cd_mobile/models/game_play/game.dart';
-import 'package:cd_mobile/models/game_play/player.dart';
+import 'package:cd_mobile/models/game/game.dart';
+import 'package:cd_mobile/models/game/player.dart';
 import 'package:cd_mobile/pages/gameplay/gameplay.dart';
 import 'package:cd_mobile/pages/home/home.dart';
 import 'package:cd_mobile/utils/datetime.dart';
@@ -10,12 +10,12 @@ import 'package:get/get.dart';
 import 'dart:html' as html;
 
 class PrivateGame extends Game {
-  static Future<void> init() async {
+  static Future<void> host() async {
     // set up me player
     var me = MePlayer.inst;
     me.name = me.name.trim();
-
-    Game.registerRoomErrorHandler('Can not create private room right now');
+  
+    handleOnConnectError("create_private_room_error_title".tr);
 
     var inst = SocketIO.inst;
     inst.eventHandlers.onConnect = (_) {
@@ -104,12 +104,12 @@ class PrivateGame extends Game {
   String mainUrl = html.window.location.href;
   String get inviteLink => '$mainUrl?${succeededCreatedRoomData['code']}';
 
-  static void initAsGuest(String roomCode) {
+  static void join(String roomCode) {
     // set up me player
     var me = MePlayer.inst;
     me.name = me.name.trim();
 
-    Game.registerRoomErrorHandler('Can not join private room right now');
+    // Game.registerRoomErrorHandlerAtGameplayPage('Can not join private room right now');
 
     var inst = SocketIO.inst;
     inst.eventHandlers.onConnect = (_) {
@@ -201,37 +201,24 @@ class PrivateGame extends Game {
     inst.socket.connect();
   }
 
-  @override
-  void leave() {
-    // if meplayer are the only player on the list, mean meplayer is owner
-    if (playersByList.length == 1) {
-      // emit to server to delete the room
-      SocketIO.inst.socket.emitWithAck('delete_room_on_leave', roomCode, ack: (response) {
-        SocketIO.inst.socket.disconnect();
-      });
-      Get.back();
-      GameplayPage.onBack();
+  static void handleOnConnectError(String title) {
+    var inst = SocketIO.inst;
+    inst.eventHandlers.onConnectError = (error) {
+      // keep loading on home page
+      Get.defaultDialog(
+        title: title,
+        middleText: '${"create_private_room_error_content".tr}\n${error.toString()}',
+        onCancel: () {
+          // close dialog
+          Get.back();
 
-      return;
-    }
+          Get.find<HomeController>().isLoading.value = false;
 
-    if (MePlayer.inst.isOwner) {
-      // pass owner ship to the near player
-      // emit to pass owener ship
-      SocketIO.inst.socket.emitWithAck('pass_owner_ship_on_leave',
-          {'code': roomCode, 'playerId': getRandomPlayerIdExceptMePlayer()}, ack: (response) {
-        SocketIO.inst.socket.disconnect();
-      });
-      Get.back();
-      GameplayPage.onBack();
-      return;
-    }
+          SocketIO.inst.socket.disconnect();
+        },
+        barrierDismissible: false
+      );
 
-    // room still has players and meplayer is not room owner
-    SocketIO.inst.socket.emitWithAck('player_leave_on_private_room', roomCode, ack: (reponse) {
-      SocketIO.inst.socket.disconnect();
-    });
-    Get.back();
-    GameplayPage.onBack();
+      inst.eventHandlers.onConnectError = SessionEventHandlers.emptyOnConnectError;    };
   }
 }

@@ -1,5 +1,5 @@
-import 'package:cd_mobile/models/game_play/game.dart';
-import 'package:cd_mobile/models/game_play/private_game/private_game.dart';
+import 'package:cd_mobile/models/game/game.dart';
+import 'package:cd_mobile/models/game/private_game.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';

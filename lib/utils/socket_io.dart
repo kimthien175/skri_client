@@ -1,6 +1,3 @@
-import 'package:cd_mobile/models/game_play/game.dart';
-import 'package:cd_mobile/models/game_play/message.dart';
-import 'package:cd_mobile/models/game_play/player.dart';
 import 'package:cd_mobile/utils/api.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 
@@ -11,33 +8,52 @@ class SocketIO {
 
     eventHandlers = SessionEventHandlers.initWithSocket(socket: socket);
 
-    _socket.on('message_from_server', (msg) {
-      print(msg);
-      Game.inst.addMessage(msg);
-    });
+    // _socket.on('message_from_server', (msg) {
+    //   print(msg);
+    //   Game.inst.addMessage(msg);
+    // });
 
-    _socket.on('player_joined', (newPlayerEmit) {
-      var inst = Game.inst;
-      var newPlayer = Player.fromJSON(newPlayerEmit['player']);
-      inst.playersByList.add(newPlayer);
-      inst.playersByMap[newPlayer.id] = newPlayer;
+    // _socket.on('player_join', (newPlayerEmit) {
+    //   var inst = Game.inst;
+    //   var newPlayer = Player.fromJSON(newPlayerEmit['player']);
+    //   inst.playersByList.add(newPlayer);
+    //   inst.playersByMap[newPlayer.id] = newPlayer;
 
-      inst.addMessage(newPlayerEmit['message']);
-    });
+    //   inst.addMessage(newPlayerEmit['message']);
+    // });
 
-    _socket.on('player_leave', (leftPlayerId) {
-      print('player leave');
-      // player list side
-      var inst = Game.inst;
-      inst.playersByList.removeWhere((element) => element.id == leftPlayerId);
+    // _socket.on('player_leave', (playerLeaveEmit) {
+    //   var leftPlayerId = playerLeaveEmit['player_id'];
+    //   // player list side
+    //   var inst = Game.inst;
+    //   inst.playersByList.removeWhere((element) => element.id == leftPlayerId);
 
-      // message side
-      inst.messages.add(LeftPlayerMessage(
-        playerName: inst.playersByMap[leftPlayerId]!.name,
-      ));
+    //   // message side
+    //   inst.messages.add(LeftPlayerMessage(
+    //     playerName: inst.playersByMap[leftPlayerId]!.name,
+    //   ));
 
-      inst.playersByMap.removeWhere((key, value) => key == leftPlayerId);
-    });
+    //   inst.playersByMap.removeWhere((key, value) => key == leftPlayerId);
+    // });
+
+    // _socket.on('host_leave', (hostLeaveEmit) {
+    //   var leftPlayerId = hostLeaveEmit['player_id'];
+    //   // player list side
+    //   var inst = Game.inst;
+    //   inst.playersByList.removeWhere((element) => element.id == leftPlayerId);
+
+    //   // message side
+    //   inst.messages.add(LeftPlayerMessage(
+    //     playerName: inst.playersByMap[leftPlayerId]!.name,
+    //   ));
+
+    //   inst.playersByMap.removeWhere((key, value) => key == leftPlayerId);
+
+    //   // set new owner
+    //   var newHostId = hostLeaveEmit['new_host_id'];
+    //   inst.playersByMap[newHostId]!.isOwner = true;
+    //   inst.playersByList.refresh();
+    // });
   }
   static final SocketIO _inst = SocketIO._internal();
 

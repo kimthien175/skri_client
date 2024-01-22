@@ -1,5 +1,4 @@
-import 'package:cd_mobile/models/game_play/game.dart';
-import 'package:cd_mobile/models/game_play/player.dart';
+import 'package:cd_mobile/models/game/game.dart';
 import 'package:cd_mobile/pages/gameplay/mobile/mobile.dart';
 import 'package:cd_mobile/pages/gameplay/web/web.dart';
 import 'package:cd_mobile/pages/gameplay/widgets/footer.dart';
@@ -58,38 +57,26 @@ class GameplayPage extends StatelessWidget {
 
   // final GameplayController controller = Get.put(GameplayController());
 
-  static onBack() {
-    Game.empty();
-    // reset meplayer as well
-    var me = MePlayer.inst;
-    me.isOwner = false;
-    me.points = 0;
-  }
-
   @override
   Widget build(BuildContext context) {
     var controller = Get.find<GameplayController>();
-    return PopScope(
-        onPopInvoked: (didPop) {
-          if (didPop) onBack();
-        },
-        child: Scaffold(
-            body: Container(
-                constraints: const BoxConstraints.expand(),
-                decoration: const BoxDecoration(
-                    image: DecorationImage(
-                        scale: 1.2,
-                        repeat: ImageRepeat.repeat,
-                        image: AssetImage('assets/background.png'))),
-                child: Obx(() {
-                  var content =
-                      SafeArea(child: controller.isWebLayout.value ? const Web() : const Mobile());
-                  return controller.isLoading.value
-                      ? Stack(
-                          alignment: Alignment.center,
-                          children: [content, const LoadingOverlay()],
-                        )
-                      : content;
-                }))));
+    return Scaffold(
+        body: Container(
+            constraints: const BoxConstraints.expand(),
+            decoration: const BoxDecoration(
+                image: DecorationImage(
+                    scale: 1.2,
+                    repeat: ImageRepeat.repeat,
+                    image: AssetImage('assets/background.png'))),
+            child: Obx(() {
+              var content =
+                  SafeArea(child: controller.isWebLayout.value ? const Web() : const Mobile());
+              return controller.isLoading.value
+                  ? Stack(
+                      alignment: Alignment.center,
+                      children: [content, const LoadingOverlay()],
+                    )
+                  : content;
+            })));
   }
 }

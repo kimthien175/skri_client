@@ -56,12 +56,15 @@ class LocaleKeys {
   static const message_link_coppied = 'message_link_coppied';
   static const guess_input_placeholder = 'guess_input_placeholder';
   static const message_room_owner_statement = 'message_room_owner_statement';
+  static const message_new_player_joined = 'message_new_player_joined';
+  static const message_player_leave = 'message_player_leave';
+  static const waiting = 'waiting';
+  static const create_private_room_error_title =
+      'create_private_room_error_title';
+  static const create_private_room_error_content =
+      'create_private_room_error_content';
   static const gameplay_connection_error_message =
       'gameplay_connection_error_message';
-  static const connection_error = 'connection_error';
-  static const message_new_player_joined = 'message_new_player_joined';
-  static const waiting = 'waiting';
-  static const message_player_leave = 'message_player_leave';
   static const You = 'You';
   static const Normal = 'Normal';
   static const Hidden = 'Hidden';
@@ -125,12 +128,15 @@ class Locales {
     'message_link_coppied': 'Link coppied!',
     'guess_input_placeholder': 'Type your guess here...',
     'message_room_owner_statement': '@room_owner is now the room owner!',
+    'message_new_player_joined': '@player_name joined the room!',
+    'message_player_leave': '@player_name left the room!',
+    'waiting': 'WAITING',
+    'create_private_room_error_title':
+        'Connection Error: can\'t create private room right now',
+    'create_private_room_error_content':
+        'Press Cancel to abort trying to connect',
     'gameplay_connection_error_message':
         'If you want to keep trying to reconnect, please hold, or press No to disconnect',
-    'connection_error': 'Connection Error!',
-    'message_new_player_joined': '@player_name joined the room!',
-    'waiting': 'WAITING',
-    'message_player_leave': '@player_name left the room!',
   };
   static const vi_VN = {
     'displayName': 'Tiếng Việt',
@@ -189,13 +195,14 @@ class Locales {
         'Từ vựng tự chọn không hợp lệ má ui, kiểm tra lại ei',
     'message_link_coppied': 'Đã sao chép link!',
     'guess_input_placeholder': 'Nhập từ bạn đoán vô đây...',
+    'No': 'Khum',
+    'waiting': 'ĐANG CHỜ',
     'message_room_owner_statement': '@room_owner được chọn làm chủ phòng!',
+    'message_new_player_joined': '@player_name đã tham gia phòng!',
+    'message_player_leave': '@player_name đã rời khỏi phòng!',
+    'create_private_room_error_title': 'Đứt dây cáp: không thể tạo phòng!',
+    'create_private_room_error_content': 'Nhấn Cancel để ngắt kết nối',
     'gameplay_connection_error_message':
         'Đang kết nối lại, vui lòng chờ, hoặc bạn có thể thoát bằng nút Không',
-    'connection_error': 'Đứt dây cáp!',
-    'No': 'Khum',
-    'message_new_player_joined': '@player_name đã tham gia phòng!',
-    'waiting': 'ĐANG CHỜ',
-    'message_player_leave': '@player_name đã rời khỏi phòng!',
   };
 }

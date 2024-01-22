@@ -1,4 +1,4 @@
-import 'package:cd_mobile/models/game_play/game.dart';
+import 'package:cd_mobile/models/game/game.dart';
 import 'package:cd_mobile/pages/gameplay/widgets/footer.dart';
 import 'package:cd_mobile/pages/gameplay/widgets/game_bar.dart';
 import 'package:cd_mobile/pages/gameplay/widgets/game_chat.dart';

@@ -6,6 +6,13 @@ class Message extends StatelessWidget {
   final Color backgroundColor;
   final double paddingLeft = 10;
 
+  static const String newHost = 'new_host';
+  //static const String drawing = 'drawing';
+  //static const String guess = 'guess';
+  //static const String correctGuess = 'correct_guess';
+  //static const String playerJoin = 'player_join';
+  //static const String playerLeave = 'player_leave';
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -13,8 +20,8 @@ class Message extends StatelessWidget {
   }
 }
 
-class HostingMessage extends Message {
-  const HostingMessage({super.key, required this.playerName, super.backgroundColor});
+class NewHostMessage extends Message {
+  const NewHostMessage({super.key, required this.playerName, super.backgroundColor});
   final String playerName;
 
   @override

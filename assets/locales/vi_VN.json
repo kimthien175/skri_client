@@ -43,11 +43,16 @@
     "custom_words_input_invalidation_message":"Từ vựng tự chọn không hợp lệ má ui, kiểm tra lại ei",
     "message_link_coppied":"Đã sao chép link!",
     "guess_input_placeholder":"Nhập từ bạn đoán vô đây...",
-    "message_room_owner_statement":"@room_owner được chọn làm chủ phòng!",
-    "gameplay_connection_error_message":"Đang kết nối lại, vui lòng chờ, hoặc bạn có thể thoát bằng nút Không",
-    "connection_error":"Đứt dây cáp!",
+
     "No":"Khum",
-    "message_new_player_joined":"@player_name đã tham gia phòng!",
     "waiting":"ĐANG CHỜ",
-    "message_player_leave": "@player_name đã rời khỏi phòng!"
+
+    "message_room_owner_statement":"@room_owner được chọn làm chủ phòng!",
+    "message_new_player_joined":"@player_name đã tham gia phòng!",
+    "message_player_leave": "@player_name đã rời khỏi phòng!",
+
+    "create_private_room_error_title":"Đứt dây cáp: không thể tạo phòng!",
+    "create_private_room_error_content":"Nhấn Cancel để ngắt kết nối",
+
+    "gameplay_connection_error_message":"Đang kết nối lại, vui lòng chờ, hoặc bạn có thể thoát bằng nút Không"
 }

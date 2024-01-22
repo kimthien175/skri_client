@@ -1,4 +1,4 @@
-import 'package:cd_mobile/models/game_play/private_game/private_game.dart';
+import 'package:cd_mobile/models/game/private_game.dart';
 import 'package:cd_mobile/pages/home/home.dart';
 import 'package:cd_mobile/utils/styles.dart';
 import 'package:flutter/material.dart';
@@ -21,7 +21,7 @@ class PlayButton extends StatelessWidget {
               //   Game.joinPublicGame();
               //   return;
               // }
-              PrivateGame.initAsGuest(roomCode!);
+              PrivateGame.join(roomCode!);
             },
             child: Container(
               alignment: Alignment.center,

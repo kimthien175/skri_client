@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:cd_mobile/models/game_play/player.dart';
+import 'package:cd_mobile/models/game/player.dart';
 import 'package:cd_mobile/models/gif/avatar/model.dart';
 import 'package:cd_mobile/models/gif_manager.dart';
 import 'package:get/get.dart';
