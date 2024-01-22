@@ -46,6 +46,9 @@
 
     "create_private_room_error_title":"Connection Error: can't create private room right now",
     "create_private_room_error_content":"Press Cancel to abort trying to connect",
+
+    "join_private_room_error_title":"Connection Error: can't join private room right now",
+    "wrong_private_room_code":"Can't connect to room, pls check the link again",
     
     "gameplay_connection_error_message":"If you want to keep trying to reconnect, please hold, or press No to disconnect"
 

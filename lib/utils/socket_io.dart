@@ -1,3 +1,5 @@
+import 'package:cd_mobile/models/game/game.dart';
+import 'package:cd_mobile/models/game/player.dart';
 import 'package:cd_mobile/utils/api.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 
@@ -13,14 +15,14 @@ class SocketIO {
     //   Game.inst.addMessage(msg);
     // });
 
-    // _socket.on('player_join', (newPlayerEmit) {
-    //   var inst = Game.inst;
-    //   var newPlayer = Player.fromJSON(newPlayerEmit['player']);
-    //   inst.playersByList.add(newPlayer);
-    //   inst.playersByMap[newPlayer.id] = newPlayer;
+    _socket.on('player_join', (newPlayerEmit) {
+      var inst = Game.inst;
+      var newPlayer = Player.fromJSON(newPlayerEmit['player']);
+      inst.playersByList.add(newPlayer);
+      inst.playersByMap[newPlayer.id] = newPlayer;
 
-    //   inst.addMessage(newPlayerEmit['message']);
-    // });
+      inst.addMessage(newPlayerEmit['message']);
+    });
 
     // _socket.on('player_leave', (playerLeaveEmit) {
     //   var leftPlayerId = playerLeaveEmit['player_id'];

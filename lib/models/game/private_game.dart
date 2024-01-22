@@ -10,11 +10,38 @@ import 'package:get/get.dart';
 import 'dart:html' as html;
 
 class PrivateGame extends Game {
+    /// SuccessCreateRoomData
+  late Map<String, dynamic> succeededCreatedRoomData;
+
+  /// DBRoomSettings
+  late Map<String, dynamic> settings;
+  void updateSettings(String key, dynamic value) {
+    if (key == 'rounds') {
+      rounds.value = value;
+    }
+    settings[key] = value;
+  }
+
+  PrivateGame._internal(
+      {required this.succeededCreatedRoomData,
+      required this.settings,
+      required super.status,
+      required super.word,
+      required super.remainingTime,
+      required super.currentRound,
+      required super.rounds,
+      required super.playersByList,
+      required super.roomCode});
+
+  // init when the main page is showing -> get main url
+  String mainUrl = html.window.location.href;
+  String get inviteLink => '$mainUrl?${succeededCreatedRoomData['code']}';
+
   static Future<void> host() async {
     // set up me player
     var me = MePlayer.inst;
     me.name = me.name.trim();
-  
+
     handleOnConnectError("create_private_room_error_title".tr);
 
     var inst = SocketIO.inst;
@@ -69,47 +96,12 @@ class PrivateGame extends Game {
     inst.socket.connect();
   }
 
-  /// SuccessCreateRoomData
-  late Map<String, dynamic> succeededCreatedRoomData;
-
-  /// DBRoomSettings
-  late Map<String, dynamic> settings;
-  void updateSettings(String key, dynamic value) {
-    if (key == 'rounds') {
-      rounds.value = value;
-    }
-    settings[key] = value;
-  }
-
-  PrivateGame._internal(
-      {required this.succeededCreatedRoomData,
-      required this.settings,
-      required super.status,
-      required super.word,
-      required super.remainingTime,
-      required super.currentRound,
-      required super.rounds,
-      required super.playersByList,
-      required super.roomCode});
-  Map<String, dynamic> getDifferentSettingsFromDefault() {
-    Map<String, dynamic> result = {};
-    var defaultSettings = succeededCreatedRoomData['settings']['default'];
-    for (String key in settings.keys) {
-      if (settings[key] != defaultSettings[key]) result[key] = settings[key];
-    }
-    return result;
-  }
-
-  // init when the main page is showing -> get main url
-  String mainUrl = html.window.location.href;
-  String get inviteLink => '$mainUrl?${succeededCreatedRoomData['code']}';
-
   static void join(String roomCode) {
     // set up me player
     var me = MePlayer.inst;
     me.name = me.name.trim();
 
-    // Game.registerRoomErrorHandlerAtGameplayPage('Can not join private room right now');
+    handleOnConnectError("join_private_room_error_title".tr);
 
     var inst = SocketIO.inst;
     inst.eventHandlers.onConnect = (_) {
@@ -189,7 +181,7 @@ class PrivateGame extends Game {
           showDialog(
               context: Get.context!,
               builder: (context) => AlertDialog(
-                  title: const Text('Can not create private room right now'),
+                  title: Text('wrong_private_room_code'.tr),
                   content: Text(requestedJoiningRoomResult['data'].toString())));
         }
 
@@ -206,19 +198,28 @@ class PrivateGame extends Game {
     inst.eventHandlers.onConnectError = (error) {
       // keep loading on home page
       Get.defaultDialog(
-        title: title,
-        middleText: '${"create_private_room_error_content".tr}\n${error.toString()}',
-        onCancel: () {
-          // close dialog
-          Get.back();
+          title: title,
+          middleText: '${"create_private_room_error_content".tr}\n${error.toString()}',
+          onCancel: () {
+            // close dialog
+            Get.back();
 
-          Get.find<HomeController>().isLoading.value = false;
+            Get.find<HomeController>().isLoading.value = false;
 
-          SocketIO.inst.socket.disconnect();
-        },
-        barrierDismissible: false
-      );
+            SocketIO.inst.socket.disconnect();
+          },
+          barrierDismissible: false);
 
-      inst.eventHandlers.onConnectError = SessionEventHandlers.emptyOnConnectError;    };
+      inst.eventHandlers.onConnectError = SessionEventHandlers.emptyOnConnectError;
+    };
+  }
+
+  Map<String, dynamic> getDifferentSettingsFromDefault() {
+    Map<String, dynamic> result = {};
+    var defaultSettings = succeededCreatedRoomData['settings']['default'];
+    for (String key in settings.keys) {
+      if (settings[key] != defaultSettings[key]) result[key] = settings[key];
+    }
+    return result;
   }
 }

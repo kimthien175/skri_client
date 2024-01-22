@@ -46,6 +46,13 @@ abstract class Game extends GetxController {
             backgroundColor: messages.length % 2 == 0 ? Colors.white : const Color(0xffececec)));
         break;
 
+      case Message.playerJoin:
+        var playerName = playersByMap[rawMessage['player_id']]!.name;
+        messages.add(PlayerJoinMessage(
+            playerName: playerName,
+            backgroundColor: messages.length % 2 == 0 ? Colors.white : const Color(0xffececec)));
+        break;
+
       // case Message.drawing:
       //   var playerName = playersByMap[rawMessage['player_id']]!.name;
       //   messages.add(DrawingMessage(

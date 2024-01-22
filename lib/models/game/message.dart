@@ -7,10 +7,11 @@ class Message extends StatelessWidget {
   final double paddingLeft = 10;
 
   static const String newHost = 'new_host';
+  static const String playerJoin = 'player_join';
   //static const String drawing = 'drawing';
   //static const String guess = 'guess';
   //static const String correctGuess = 'correct_guess';
-  //static const String playerJoin = 'player_join';
+
   //static const String playerLeave = 'player_leave';
 
   @override
@@ -99,8 +100,8 @@ class SpamWarningMessage extends Message {
   }
 }
 
-class NewPlayerMessage extends Message {
-  const NewPlayerMessage({required this.playerName, super.key, super.backgroundColor});
+class PlayerJoinMessage extends Message {
+  const PlayerJoinMessage({required this.playerName, super.key, super.backgroundColor});
   final String playerName;
   @override
   Widget build(BuildContext context) {
