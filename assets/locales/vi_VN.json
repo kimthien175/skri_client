@@ -45,15 +45,18 @@
     "custom_words_input_validate_invalid_word_length":"Độ dài từ không hợp lệ: @invalidLengthWords! từ @min_char_per_word-@max_char_per_word kí tự mỗi từ",
     "custom_words_input_validate_duplicated_words":"Từ bị lặp: @duplicatedWords",
 
-    "message_link_coppied":"Đã sao chép link!",
     "guess_input_placeholder":"Nhập từ bạn đoán vô đây...",
 
-    "No":"Khum",
-    "waiting":"ĐANG CHỜ",
+
 
     "message_room_owner_statement":"@room_owner được chọn làm chủ phòng!",
     "message_new_player_joined":"@player_name đã tham gia phòng!",
     "message_player_leave": "@player_name đã rời khỏi phòng!",
+    "message_you_need_at_least_2_players":"Bạn cần tối thiểu 2 người để bắt đầu trò chơi!",
+    "message_link_copied":"Đã sao chép link vào bộ nhớ đệm!",
+
+    "No":"Khum",
+    "waiting":"đang chờ",
 
     "create_private_room_error_title":"Đứt dây cáp: không thể tạo phòng!",
     "create_private_room_error_content":"Nhấn Cancel để ngắt kết nối",
@@ -61,5 +64,8 @@
     "join_private_room_error_title":"Đứt dây cáp! Hãy kiểm tra lại kết nối!",
     "wrong_private_room_code":"Không thể thể vào phòng, hãy kiểm tra lại link",
 
-    "gameplay_connection_error":"Nếu bạn muốn kết nối lại, xin vui lòng kiểm tra kết nối, hoặc nhấn Cancel để thoát"
+    "gameplay_connection_error":"Nếu bạn muốn kết nối lại, xin vui lòng kiểm tra kết nối, hoặc nhấn Cancel để thoát",
+
+
+    "gamebar_round_display":"Vòng @currentRound / @rounds"
 }

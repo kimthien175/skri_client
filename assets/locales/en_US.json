@@ -39,14 +39,13 @@
     "custom_words_input_validate_invalid_word_length":"Invalid word length: @invalidLengthWords!, must be @min_char_per_word-@max_char_per_word characters",
     "custom_words_input_validate_duplicated_words":"Duplicated words: @duplicatedWords",
 
-    "message_link_coppied":"Link coppied!",
     "guess_input_placeholder":"Type your guess here...",
 
     "message_room_owner_statement":"@room_owner is now the room owner!",
     "message_new_player_joined":"@player_name joined the room!",
     "message_player_leave": "@player_name left the room!",
-
-    "waiting":"WAITING",
+    "message_you_need_at_least_2_players":"You need at least 2 players to start the game!",
+    "message_link_copied":"Copied room link to clipboard!",
 
     "create_private_room_error_title":"Connection Error: can't create private room right now",
     "create_private_room_error_content":"Press Cancel to abort trying to connect",
@@ -54,5 +53,7 @@
     "join_private_room_error_title":"Connection Error: can't join private room right now",
     "wrong_private_room_code":"Can't connect to room, pls check the link again",
     
-    "gameplay_connection_error":"If you want to keep trying to reconnect, please hold, or press Cancel to disconnect"
+    "gameplay_connection_error":"If you want to keep trying to reconnect, please hold, or press Cancel to disconnect",
+
+    "gamebar_round_display":"Round @currentRound of @rounds"
 }

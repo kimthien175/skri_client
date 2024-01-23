@@ -36,33 +36,39 @@ abstract class Game extends GetxController {
   /// edit on this won't cause emiting to socketio
   RxList<Message> messages = List<Message>.empty().obs;
 
+  void addMessage(Message Function(Color color) callback) {
+    messages.add(callback(messages.length % 2 == 0 ? Colors.white : const Color(0xffececec)));
+  }
+
   /// add message only on client
-  void addMessage(Map<String, dynamic> rawMessage) {
+  void addMessageByRaw(Map<String, dynamic> rawMessage) {
+    Color color = messages.length % 2 == 0 ? Colors.white : const Color(0xffececec);
     switch (rawMessage['type']) {
       case Message.newHost:
-        messages.add(NewHostMessage(
-            playerName: rawMessage['player_name'],
-            backgroundColor: messages.length % 2 == 0 ? Colors.white : const Color(0xffececec)));
+        messages.add(NewHostMessage(playerName: rawMessage['player_name'], backgroundColor: color));
         break;
 
       case Message.playerJoin:
-        messages.add(PlayerJoinMessage(
-            playerName: rawMessage['player_name'],
-            backgroundColor: messages.length % 2 == 0 ? Colors.white : const Color(0xffececec)));
+        messages
+            .add(PlayerJoinMessage(playerName: rawMessage['player_name'], backgroundColor: color));
         break;
 
       case Message.playerLeave:
-        inst.messages.add(PlayerLeaveMessage(
-            playerName: rawMessage['player_name'],
-            backgroundColor: messages.length % 2 == 0 ? Colors.white : const Color(0xffececec)));
+        inst.messages
+            .add(PlayerLeaveMessage(playerName: rawMessage['player_name'], backgroundColor: color));
         break;
 
       case Message.playerGuess:
         inst.messages.add(PlayerGuessMessage(
             playerName: rawMessage['player_name'],
             guess: rawMessage['guess'],
-            backgroundColor: messages.length % 2 == 0 ? Colors.white : const Color(0xffececec)));
+            backgroundColor: color));
         break;
+
+      case Message.min2Players:
+        inst.messages.add(Minimum2PlayersToStartMessage(
+          backgroundColor: color,
+        ));
 
       // case Message.drawing:
       //   var playerName = playersByMap[rawMessage['player_id']]!.name;
@@ -71,16 +77,12 @@ abstract class Game extends GetxController {
       //       backgroundColor: messages.length % 2 == 0 ? Colors.white : const Color(0xffececec)));
       //   break;
 
-
-
       // case Message.correctGuess:
       //   var playerName = playersByMap[rawMessage['player_id']]!.name;
       //   messages.add(CorrectGuessMessage(
       //       playerName: playerName,
       //       backgroundColor: messages.length % 2 == 0 ? Colors.white : const Color(0xffececec)));
       //   break;
-
-
 
       default:
         messages.add(Message(

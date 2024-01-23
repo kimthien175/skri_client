@@ -114,12 +114,12 @@ class CustomWordsInput extends StatelessWidget {
   CustomWordsInput({super.key}) {
     formKey = Get.put(GlobalKey<FormState>());
   }
-  //static String content = '';
+
   static List<String> proceededWords = [];
 
   String? validator(String? value) {
     if (value == null) return '';
-    //content = value!;
+
     var fetchedRules = GameSettings.fetchedOptions['custom_words_rules'];
 
     // check length per word
@@ -227,7 +227,6 @@ class CustomWordsInput extends StatelessWidget {
               child: TextFormField(
                 validator: validator,
                 maxLength: maxLength,
-                // onChanged: (value) => content = value,
                 decoration: InputDecoration(
                     isCollapsed: true,
                     contentPadding: const EdgeInsets.symmetric(vertical: 6, horizontal: 3),

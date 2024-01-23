@@ -1,4 +1,5 @@
 import 'package:cd_mobile/models/game/game.dart';
+import 'package:cd_mobile/models/game/message.dart';
 import 'package:cd_mobile/models/game/player.dart';
 import 'package:cd_mobile/pages/gameplay/gameplay.dart';
 import 'package:cd_mobile/pages/gameplay/widgets/game_settings.dart';
@@ -24,12 +25,12 @@ class PrivateGame extends Game {
 
   Map<String, dynamic> options;
   RxMap<String, dynamic> settings;
-  void changeSettings(String key, dynamic value){
-        if (key == 'rounds') {
+  void changeSettings(String key, dynamic value) {
+    if (key == 'rounds') {
       rounds.value = value;
     }
     settings[key] = value;
-    SocketIO.inst.socket.emit('change_settings',{key: value});
+    SocketIO.inst.socket.emit('change_settings', {key: value});
   }
 
   String get inviteLink => '${html.window.location.host}/?$roomCode';
@@ -69,7 +70,8 @@ class PrivateGame extends Game {
               word: ''.obs,
               options: createdRoom['settings']['options']);
 
-          Game.inst.addMessage(createdRoom['message']);
+          Game.inst.addMessage((color) => NewHostMessage(
+              playerName: createdRoom['message']['player_name'], backgroundColor: color));
 
           GameplayController.setUpOwnedPrivateGame();
           Get.to(() => const GameplayPage(),
@@ -160,7 +162,7 @@ class PrivateGame extends Game {
               playersByList: players.obs,
               roomCode: roomCode,
               options: room['options'],
-              settings: (room['settings']as Map<String,dynamic>).obs);
+              settings: (room['settings'] as Map<String, dynamic>).obs);
 
           // set up gameplay
           GameplayController.setUpPrivateGameForGuest();
@@ -170,7 +172,7 @@ class PrivateGame extends Game {
               binding: GameplayBinding(), transition: Transition.noTransition);
 
           for (dynamic rawMessage in room['messages']) {
-            Game.inst.addMessage(rawMessage);
+            Game.inst.addMessageByRaw(rawMessage);
           }
         } else {
           Get.find<HomeController>().isLoading.value = false;
@@ -233,13 +235,20 @@ class PrivateGame extends Game {
     inst.eventHandlers.onReconnect = (_) => dialogOpenCount = 0;
   }
 
-  void startGame(){
+  void startGame() {
+    if (playersByList.length == 1) {
+      Game.inst.addMessage((Color color) => Minimum2PlayersToStartMessage(
+            backgroundColor: color,
+          ));
+      return;
+    }
     // gather settings, settings from dropdown and check button is saved in settings already
     // now have left only the custom words
-    if (Get.find<GlobalKey<FormState>>().currentState!.validate()){
+    if (Get.find<GlobalKey<FormState>>().currentState!.validate()) {
       // start game
-      print('CustomWordsInput');
-      print(CustomWordsInput.proceededWords);
+      var settings = Map<String, dynamic>.from((Game.inst as PrivateGame).settings);
+      settings['custom_words'] = CustomWordsInput.proceededWords;
+      SocketIO.inst.socket.emitWithAck('start_private_game', settings, ack: (result) {});
     }
   }
 

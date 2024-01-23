@@ -1,4 +1,5 @@
 import 'package:cd_mobile/models/game/game.dart';
+import 'package:cd_mobile/models/game/message.dart';
 import 'package:cd_mobile/models/game/player.dart';
 import 'package:cd_mobile/models/game/private_game.dart';
 import 'package:cd_mobile/pages/gameplay/widgets/main_content/main_content.dart';
@@ -19,7 +20,8 @@ class SocketIO {
       inst.playersByList.add(newPlayer);
       inst.playersByMap[newPlayer.id] = newPlayer;
 
-      inst.addMessage(newPlayerEmit['message']);
+      inst.addMessage((color) => PlayerJoinMessage(
+          playerName: newPlayerEmit['message']['player_name'], backgroundColor: color));
     });
 
     _socket.on('player_leave', onPlayerLeave);
@@ -32,14 +34,22 @@ class SocketIO {
     });
 
     _socket.on('player_guess', (guessMsg) {
-      Game.inst.addMessage(guessMsg);
+      Game.inst.addMessage((color) => PlayerGuessMessage(
+          playerName: guessMsg['player_name'], guess: guessMsg['guess'], backgroundColor: color));
       // TODO: DISPLAY TOOLTIP BESIDE PLAYER CARD
     });
 
-    _socket.on('change_settings',(setting){
-      print(setting);
+    _socket.on('change_settings', (setting) {
+      var game = (Game.inst as PrivateGame);
+
       var entry = (setting as Map<String, dynamic>).entries.first;
-      (Game.inst as PrivateGame).settings[entry.key] = entry.value;
+      var key = entry.key;
+      var value = entry.value;
+
+      if (key == 'rounds') {
+        game.rounds.value = value;
+      }
+      (Game.inst as PrivateGame).settings[key] = value;
     });
   }
   static final SocketIO _inst = SocketIO._internal();
@@ -58,7 +68,8 @@ class SocketIO {
     inst.playersByList.removeWhere((element) => element.id == leftPlayerId);
 
     // message side
-    inst.addMessage(playerLeaveEmit);
+    inst.addMessage((color) =>
+        PlayerLeaveMessage(playerName: playerLeaveEmit['player_name'], backgroundColor: color));
 
     inst.playersByMap.removeWhere((key, value) => key == leftPlayerId);
   }
@@ -69,7 +80,8 @@ class SocketIO {
     newHost.isOwner = true;
     inst.playersByList.refresh();
 
-    inst.addMessage(newHostEmit);
+    inst.addMessage(
+        (color) => NewHostMessage(playerName: newHostEmit['player_name'], backgroundColor: color));
 
     if (MePlayer.inst.isOwner == true) {
       var game = (Game.inst as PrivateGame);

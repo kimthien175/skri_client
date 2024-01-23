@@ -55,12 +55,13 @@ class LocaleKeys {
       'custom_words_input_validate_invalid_word_length';
   static const custom_words_input_validate_duplicated_words =
       'custom_words_input_validate_duplicated_words';
-  static const message_link_coppied = 'message_link_coppied';
   static const guess_input_placeholder = 'guess_input_placeholder';
   static const message_room_owner_statement = 'message_room_owner_statement';
   static const message_new_player_joined = 'message_new_player_joined';
   static const message_player_leave = 'message_player_leave';
-  static const waiting = 'waiting';
+  static const message_you_need_at_least_2_players =
+      'message_you_need_at_least_2_players';
+  static const message_link_copied = 'message_link_copied';
   static const create_private_room_error_title =
       'create_private_room_error_title';
   static const create_private_room_error_content =
@@ -68,12 +69,14 @@ class LocaleKeys {
   static const join_private_room_error_title = 'join_private_room_error_title';
   static const wrong_private_room_code = 'wrong_private_room_code';
   static const gameplay_connection_error = 'gameplay_connection_error';
+  static const gamebar_round_display = 'gamebar_round_display';
   static const You = 'You';
   static const Normal = 'Normal';
   static const Hidden = 'Hidden';
   static const Combination = 'Combination';
   static const Copy = 'Copy';
   static const No = 'No';
+  static const waiting = 'waiting';
 }
 
 class Locales {
@@ -129,12 +132,13 @@ class Locales {
         'Invalid word length: @invalidLengthWords!, must be @min_char_per_word-@max_char_per_word characters',
     'custom_words_input_validate_duplicated_words':
         'Duplicated words: @duplicatedWords',
-    'message_link_coppied': 'Link coppied!',
     'guess_input_placeholder': 'Type your guess here...',
     'message_room_owner_statement': '@room_owner is now the room owner!',
     'message_new_player_joined': '@player_name joined the room!',
     'message_player_leave': '@player_name left the room!',
-    'waiting': 'WAITING',
+    'message_you_need_at_least_2_players':
+        'You need at least 2 players to start the game!',
+    'message_link_copied': 'Copied room link to clipboard!',
     'create_private_room_error_title':
         'Connection Error: can\'t create private room right now',
     'create_private_room_error_content':
@@ -145,6 +149,7 @@ class Locales {
         'Can\'t connect to room, pls check the link again',
     'gameplay_connection_error':
         'If you want to keep trying to reconnect, please hold, or press Cancel to disconnect',
+    'gamebar_round_display': 'Round @currentRound of @rounds',
   };
   static const vi_VN = {
     'displayName': 'Tiếng Việt',
@@ -202,18 +207,21 @@ class Locales {
         'Độ dài từ không hợp lệ: @invalidLengthWords! từ @min_char_per_word-@max_char_per_word kí tự mỗi từ',
     'custom_words_input_validate_duplicated_words':
         'Từ bị lặp: @duplicatedWords',
-    'message_link_coppied': 'Đã sao chép link!',
     'guess_input_placeholder': 'Nhập từ bạn đoán vô đây...',
-    'No': 'Khum',
-    'waiting': 'ĐANG CHỜ',
     'message_room_owner_statement': '@room_owner được chọn làm chủ phòng!',
     'message_new_player_joined': '@player_name đã tham gia phòng!',
     'message_player_leave': '@player_name đã rời khỏi phòng!',
+    'message_you_need_at_least_2_players':
+        'Bạn cần tối thiểu 2 người để bắt đầu trò chơi!',
+    'message_link_copied': 'Đã sao chép link vào bộ nhớ đệm!',
+    'No': 'Khum',
+    'waiting': 'đang chờ',
     'create_private_room_error_title': 'Đứt dây cáp: không thể tạo phòng!',
     'create_private_room_error_content': 'Nhấn Cancel để ngắt kết nối',
     'join_private_room_error_title': 'Đứt dây cáp! Hãy kiểm tra lại kết nối!',
     'wrong_private_room_code': 'Không thể thể vào phòng, hãy kiểm tra lại link',
     'gameplay_connection_error':
         'Nếu bạn muốn kết nối lại, xin vui lòng kiểm tra kết nối, hoặc nhấn Cancel để thoát',
+    'gamebar_round_display': 'Vòng @currentRound / @rounds',
   };
 }

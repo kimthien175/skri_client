@@ -1,4 +1,5 @@
 import 'package:cd_mobile/models/game/game.dart';
+import 'package:cd_mobile/models/game/message.dart';
 import 'package:cd_mobile/models/game/player.dart';
 import 'package:cd_mobile/utils/socket_io.dart';
 import 'package:cd_mobile/utils/styles.dart';
@@ -31,11 +32,14 @@ class Messages extends StatelessWidget {
       if (_scrollController.hasClients) {
         _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
       }
-      return ListView(
-        controller: _scrollController,
-        shrinkWrap: true,
-        children: Game.inst.messages,
-      );
+      return Scrollbar(
+          controller: _scrollController,
+          thumbVisibility: true,
+          child: ListView(
+            controller: _scrollController,
+            shrinkWrap: true,
+            children: Game.inst.messages,
+          ));
     });
   }
 }
@@ -106,8 +110,11 @@ class GuessInputController extends GetxController {
     text = text.trim();
     if (text.isNotEmpty) {
       // submit
-      Game.inst
-          .addMessage({'type': 'player_guess', 'player_name': MePlayer.inst.name, 'guess': text});
+      Game.inst.addMessage((color) => PlayerGuessMessage(
+            playerName: MePlayer.inst.name,
+            guess: text,
+            backgroundColor: color,
+          ));
       // emit to server
       SocketIO.inst.socket.emit('player_guess', text);
     }

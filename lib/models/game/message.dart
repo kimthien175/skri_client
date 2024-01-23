@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class Message extends StatelessWidget {
-  const Message({this.backgroundColor = Colors.white, super.key});
+  const Message({super.key, required this.backgroundColor});
+
   final Color backgroundColor;
   final double paddingLeft = 10;
 
@@ -10,20 +11,24 @@ class Message extends StatelessWidget {
   static const String playerJoin = 'player_join';
   static const String playerLeave = 'player_leave';
   static const String playerGuess = 'player_guess';
+  static const String min2Players = 'min_2_players';
   //static const String drawing = 'drawing';
 
   //static const String correctGuess = 'correct_guess';
-
-
 
   @override
   Widget build(BuildContext context) {
     throw UnimplementedError();
   }
 }
+// TODO: COLOR LIKE PLAYER LEAVE: DISLIKE DRAWING, GETTING KICKED BY THE HOST, SPAWN,
+// TODO: COLOR LIKE PLAYER JOIN: LIKE DRAWING, GUESS CORRECTLY, REVEAL WORD
+// TODO: YELLOW COLOR: GUESS CLOSE, VOTE KICK
+// TODO: BLUE COLOR: PLAYER IS BEGINNING TO DRAW
+// TODO: COLOR LIKE NEWHOSTMSG: notify who won
 
 class NewHostMessage extends Message {
-  const NewHostMessage({super.key, required this.playerName, super.backgroundColor});
+  const NewHostMessage({super.key, required this.playerName, required super.backgroundColor});
   final String playerName;
 
   @override
@@ -55,7 +60,7 @@ class PlayerGuessMessage extends Message {
   final String guess;
 
   const PlayerGuessMessage(
-      {required this.playerName, required this.guess, super.key, super.backgroundColor});
+      {required this.playerName, required this.guess, super.key, required super.backgroundColor});
 
   @override
   Widget build(BuildContext context) {
@@ -100,7 +105,7 @@ class PlayerGuessMessage extends Message {
 // }
 
 class PlayerJoinMessage extends Message {
-  const PlayerJoinMessage({required this.playerName, super.key, super.backgroundColor});
+  const PlayerJoinMessage({required this.playerName, super.key, required super.backgroundColor});
   final String playerName;
   @override
   Widget build(BuildContext context) {
@@ -115,7 +120,7 @@ class PlayerJoinMessage extends Message {
 }
 
 class PlayerLeaveMessage extends Message {
-  const PlayerLeaveMessage({required this.playerName, super.key, super.backgroundColor});
+  const PlayerLeaveMessage({required this.playerName, super.key, required super.backgroundColor});
   final String playerName;
   @override
   Widget build(BuildContext context) {
@@ -126,5 +131,33 @@ class PlayerLeaveMessage extends Message {
         child: Text("message_player_leave".trParams({'player_name': playerName}),
             style: const TextStyle(
                 color: Color.fromRGBO(206, 79, 10, 1), fontSize: 14, fontWeight: FontWeight.w700)));
+  }
+}
+
+class Minimum2PlayersToStartMessage extends Message {
+  const Minimum2PlayersToStartMessage({super.key, required super.backgroundColor});
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        color: backgroundColor,
+        alignment: Alignment.centerLeft,
+        padding: EdgeInsets.only(left: paddingLeft),
+        child: Text("message_you_need_at_least_2_players".tr,
+            style: const TextStyle(
+                color: Color.fromRGBO(206, 79, 10, 1), fontSize: 14, fontWeight: FontWeight.w700)));
+  }
+}
+
+class LinkCopiedMessage extends Message {
+  const LinkCopiedMessage({super.key, required super.backgroundColor});
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        color: backgroundColor,
+        alignment: Alignment.centerLeft,
+        padding: EdgeInsets.only(left: paddingLeft),
+        child: Text("message_link_copied".tr,
+            style: const TextStyle(
+                color: Color.fromRGBO(226, 203, 0, 1), fontSize: 14, fontWeight: FontWeight.w700)));
   }
 }

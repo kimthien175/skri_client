@@ -1,4 +1,5 @@
 import 'package:cd_mobile/models/game/game.dart';
+import 'package:cd_mobile/models/game/message.dart';
 import 'package:cd_mobile/models/game/private_game.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -74,8 +75,7 @@ class _CopyButton extends StatelessWidget {
         child: GestureDetector(
             onTap: () {
               Clipboard.setData(ClipboardData(text: (Game.inst as PrivateGame).inviteLink)).then(
-                  (value) => ScaffoldMessenger.of(context)
-                      .showSnackBar(SnackBar(content: Text('message_link_coppied'.tr))));
+                  (value) => Game.inst.addMessage((color) => LinkCopiedMessage(backgroundColor: color)));
             },
             child: Container(
                 decoration: const BoxDecoration(

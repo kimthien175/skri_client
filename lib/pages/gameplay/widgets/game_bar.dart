@@ -25,13 +25,16 @@ class GameBar extends StatelessWidget {
                   left: 60,
                   top: 13,
                   child: Obx(() => Text(
-                      'Round ${Game.inst.currentRound.value} of ${Game.inst.rounds.value}',
+                      "gamebar_round_display".trParams({
+                        "currentRound": Game.inst.currentRound.value.toString(),
+                        "rounds": Game.inst.rounds.value.toString()
+                      }),
                       style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w800))))
             ]),
             Flexible(
                 child: Center(
                     child: Obx(() => Text(
-                          Game.inst.status.value.tr,
+                          Game.inst.status.value.tr.toUpperCase(),
                           style: const TextStyle(
                               fontFamily: 'Inconsolata', fontWeight: FontWeight.w700, fontSize: 16),
                         )))),
@@ -39,9 +42,9 @@ class GameBar extends StatelessWidget {
                 width: 300,
                 alignment: Alignment.centerRight,
                 child: AnimatedButton(
-                  onTap: () {
-                    // TODO: SETTINGS BUTTON
-                  },
+                    onTap: () {
+                      // TODO: SETTINGS BUTTON
+                    },
                     minOpacity: 0.85,
                     child: namedGifs('settings')
                         .builder
