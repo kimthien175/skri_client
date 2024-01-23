@@ -232,6 +232,10 @@ class PrivateGame extends Game {
     inst.eventHandlers.onReconnect = (_) => dialogOpenCount = 0;
   }
 
+  void startGame(){
+    
+  }
+
   // Map<String, dynamic> getDifferentSettingsFromDefault() {
   //   Map<String, dynamic> result = {};
   //   var defaultSettings = succeededCreatedRoomData['settings']['default'];
