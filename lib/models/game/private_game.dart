@@ -1,6 +1,7 @@
 import 'package:cd_mobile/models/game/game.dart';
 import 'package:cd_mobile/models/game/player.dart';
 import 'package:cd_mobile/pages/gameplay/gameplay.dart';
+import 'package:cd_mobile/pages/gameplay/widgets/game_settings.dart';
 import 'package:cd_mobile/pages/home/home.dart';
 import 'package:cd_mobile/utils/datetime.dart';
 import 'package:cd_mobile/utils/socket_io.dart';
@@ -233,7 +234,13 @@ class PrivateGame extends Game {
   }
 
   void startGame(){
-    
+    // gather settings, settings from dropdown and check button is saved in settings already
+    // now have left only the custom words
+    if (Get.find<GlobalKey<FormState>>().currentState!.validate()){
+      // start game
+      print('CustomWordsInput');
+      print(CustomWordsInput.proceededWords);
+    }
   }
 
   // Map<String, dynamic> getDifferentSettingsFromDefault() {

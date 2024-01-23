@@ -75,18 +75,18 @@ class GameSettings extends StatelessWidget {
                       child: GestureDetector(
                           onTap: (Game.inst as PrivateGame).startGame,
                           child: Container(
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          color: const Color(0xff53e237),
-                          borderRadius: GlobalStyles.borderRadius,
-                        ),
-                        child: Text('start'.tr,
-                            style: TextStyle(
-                                fontSize: 32,
-                                color: PanelStyles.textColor,
-                                fontWeight: FontWeight.w800,
-                                shadows: [GlobalStyles.textShadow])),
-                      ))))
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              color: const Color(0xff53e237),
+                              borderRadius: GlobalStyles.borderRadius,
+                            ),
+                            child: Text('start'.tr,
+                                style: TextStyle(
+                                    fontSize: 32,
+                                    color: PanelStyles.textColor,
+                                    fontWeight: FontWeight.w800,
+                                    shadows: [GlobalStyles.textShadow])),
+                          ))))
             ],
           ));
 
@@ -114,51 +114,101 @@ class CustomWordsInput extends StatelessWidget {
   CustomWordsInput({super.key}) {
     formKey = Get.put(GlobalKey<FormState>());
   }
-  static String content = '';
+  //static String content = '';
   static List<String> proceededWords = [];
 
   String? validator(String? value) {
-    content = value!;
+    if (value == null) return '';
+    //content = value!;
     var fetchedRules = GameSettings.fetchedOptions['custom_words_rules'];
-
-    var checkBoxName = 'use_custom_words_only'.tr;
-
-    // check empty content
-    if (value.isEmpty) {
-      return 'custom_words_input_validate_empty_content'.trParams({'checkBoxName': checkBoxName});
-    }
-
-    // check word count
-    var words = content.split(',');
-
-    var minWords = fetchedRules['min_words'];
-    if (words.length < minWords) {
-      return 'custom_words_input_validate_words_count'.trParams({'min_words': minWords.toString()});
-    }
 
     // check length per word
     var minCharPerWord = fetchedRules['min_char_per_word'];
     var maxCharPerWord = fetchedRules['max_char_per_word'];
-    List<String> invalidWords = [];
+
+    // check word count
+    var words = value.split(',');
+
+    List<String> specialCharsWords = [];
+    List<String> invalidLengthWords = [];
+    Map<String, String> duplicatedWords = {};
+    Map<String, String> uniqueValidWords = {};
+
+    // get only strings with [a-zA-Z] maybe space
     for (int i = 0; i < words.length; i++) {
-      words[i] = words[i].trim();
-      var word = words[i];
-      if (word.length < minCharPerWord || word.length > maxCharPerWord) {
-        invalidWords.add(word);
+      var noMultiSpacesWord = fixSpaces(words[i]);
+      // check the string has special chars other than a-zA-Z and space
+      if (noMultiSpacesWord.isEmpty) continue;
+
+      if (hasInvalidCharacters(noMultiSpacesWord)) {
+        specialCharsWords.add(noMultiSpacesWord);
+      } else {
+        // check duplication
+        var key = noMultiSpacesWord.toLowerCase();
+        if (uniqueValidWords.containsKey(key)) {
+          duplicatedWords[noMultiSpacesWord.toLowerCase()] = noMultiSpacesWord;
+        } else {
+          // no duplication, check word length
+          var charsCountOfWord = notSpaceCharsCount(noMultiSpacesWord);
+          if (charsCountOfWord < minCharPerWord || charsCountOfWord > maxCharPerWord) {
+            // invalid
+            invalidLengthWords.add(noMultiSpacesWord);
+          } else {
+            // valid
+            uniqueValidWords[key] = noMultiSpacesWord;
+          }
+        }
       }
     }
-    if (invalidWords.isNotEmpty) {
-      return 'custom_words_input_validate_word_length'.trParams({
-        'invalidWords': invalidWords.toString(),
+
+    if (uniqueValidWords.isEmpty) {
+      return null;
+    }
+
+    String invalidationMsg = '';
+    if (specialCharsWords.isNotEmpty) {
+      invalidationMsg = "custom_words_input_validate_not_words"
+          .trParams({'specialCharsWords': specialCharsWords.toString()});
+    }
+
+    if (invalidLengthWords.isNotEmpty) {
+      var newMsg = 'custom_words_input_validate_invalid_word_length'.trParams({
+        'invalidLengthWords': invalidLengthWords.toString(),
         'min_char_per_word': minCharPerWord.toString(),
         'max_char_per_word': maxCharPerWord.toString()
       });
+      invalidationMsg = "${invalidationMsg.isEmpty ? '':'$invalidationMsg\n'}$newMsg";
     }
 
-    proceededWords = words;
+    if (duplicatedWords.isNotEmpty) {
+      var newMsg = "custom_words_input_validate_duplicated_words"
+          .trParams({'duplicatedWords': duplicatedWords.values.toString()});
+      invalidationMsg = "${invalidationMsg.isEmpty ? '':'$invalidationMsg\n'}$newMsg";
+    }
+
+    if (invalidationMsg.isNotEmpty) {
+      invalidationMsg = "\n${"custom_words_input_validate_ignore_title".tr}\n$invalidationMsg";
+    }
+
+    // check word count
+    var minWords = fetchedRules['min_words'];
+    if (uniqueValidWords.length < minWords) {
+      var newMsg =
+          'custom_words_input_validate_words_count'.trParams({'min_words': minWords.toString()});
+      return "$newMsg$invalidationMsg";
+    }
+
+    proceededWords = uniqueValidWords.values.toList();
 
     return null;
   }
+
+  int notSpaceCharsCount(String word) => word.length - ' '.allMatches(word).length;
+
+  // Use the pattern to check if the input contains invalid characters
+  bool hasInvalidCharacters(String input) => RegExp(r'[^a-zA-Z\s]').hasMatch(input);
+
+  String fixSpaces(String str) => str.replaceAll(RegExp(r"\s+"), " ").trim();
 
   late final GlobalKey<FormState> formKey;
 
@@ -177,7 +227,7 @@ class CustomWordsInput extends StatelessWidget {
               child: TextFormField(
                 validator: validator,
                 maxLength: maxLength,
-                onChanged: (value) => content = value,
+                // onChanged: (value) => content = value,
                 decoration: InputDecoration(
                     isCollapsed: true,
                     contentPadding: const EdgeInsets.symmetric(vertical: 6, horizontal: 3),

@@ -37,10 +37,14 @@
     "Hidden": "Ẩn",
     "Combination": "Kết hợp",
     "Copy": "Sao chép",
-    "custom_words_input_validate_empty_content":"Nhập từ của bạn, hoặc bỏ chọn '@checkBoxName'",
-    "custom_words_input_validate_words_count":"Hãy nhập thêm từ, tối thiểu tất cả @min_words",
-    "custom_words_input_validate_word_length":"'@invalidWords' hơi sai! phải từ @min_char_per_word đến @max_char_per_word chữ mỗi từ!",
-    "custom_words_input_invalidation_message":"Từ vựng tự chọn không hợp lệ má ui, kiểm tra lại ei",
+
+    "custom_words_input_validate_words_count":"Hãy bổ sung từ! tất cả tối thiểu @min_words",
+
+    "custom_words_input_validate_ignore_title":"Từ không hợp lệ, không tính:",
+    "custom_words_input_validate_not_words":"Không phải từ: @specialCharsWords",
+    "custom_words_input_validate_invalid_word_length":"Độ dài từ không hợp lệ: @invalidLengthWords! từ @min_char_per_word-@max_char_per_word kí tự mỗi từ",
+    "custom_words_input_validate_duplicated_words":"Từ bị lặp: @duplicatedWords",
+
     "message_link_coppied":"Đã sao chép link!",
     "guess_input_placeholder":"Nhập từ bạn đoán vô đây...",
 

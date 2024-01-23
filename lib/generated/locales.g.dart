@@ -45,14 +45,16 @@ class LocaleKeys {
   static const invite_your_friends = 'invite_your_friends';
   static const hover_over_me_to_see_the_invite_link =
       'hover_over_me_to_see_the_invite_link';
-  static const custom_words_input_validate_empty_content =
-      'custom_words_input_validate_empty_content';
   static const custom_words_input_validate_words_count =
       'custom_words_input_validate_words_count';
-  static const custom_words_input_validate_word_length =
-      'custom_words_input_validate_word_length';
-  static const custom_words_input_invalidation_message =
-      'custom_words_input_invalidation_message';
+  static const custom_words_input_validate_ignore_title =
+      'custom_words_input_validate_ignore_title';
+  static const custom_words_input_validate_not_words =
+      'custom_words_input_validate_not_words';
+  static const custom_words_input_validate_invalid_word_length =
+      'custom_words_input_validate_invalid_word_length';
+  static const custom_words_input_validate_duplicated_words =
+      'custom_words_input_validate_duplicated_words';
   static const message_link_coppied = 'message_link_coppied';
   static const guess_input_placeholder = 'guess_input_placeholder';
   static const message_room_owner_statement = 'message_room_owner_statement';
@@ -118,14 +120,15 @@ class Locales {
     'invite_your_friends': 'Invite your friends!',
     'hover_over_me_to_see_the_invite_link':
         'Hover over me to see the invite link!',
-    'custom_words_input_validate_empty_content':
-        'Please enter some text, or uncheck \'@checkBoxName\'',
     'custom_words_input_validate_words_count':
         'Please put in more words, at least @min_words in total',
-    'custom_words_input_validate_word_length':
-        'Invalid \'@invalidWords\'! must be @min_char_per_word-@max_char_per_word characters',
-    'custom_words_input_invalidation_message':
-        'Invalidation on custom words, please check again',
+    'custom_words_input_validate_ignore_title':
+        'Invalid words, they will get ignored:',
+    'custom_words_input_validate_not_words': 'Not words: @specialCharsWords',
+    'custom_words_input_validate_invalid_word_length':
+        'Invalid word length: @invalidLengthWords!, must be @min_char_per_word-@max_char_per_word characters',
+    'custom_words_input_validate_duplicated_words':
+        'Duplicated words: @duplicatedWords',
     'message_link_coppied': 'Link coppied!',
     'guess_input_placeholder': 'Type your guess here...',
     'message_room_owner_statement': '@room_owner is now the room owner!',
@@ -190,14 +193,15 @@ class Locales {
     'Hidden': 'Ẩn',
     'Combination': 'Kết hợp',
     'Copy': 'Sao chép',
-    'custom_words_input_validate_empty_content':
-        'Nhập từ của bạn, hoặc bỏ chọn \'@checkBoxName\'',
     'custom_words_input_validate_words_count':
-        'Hãy nhập thêm từ, tối thiểu tất cả @min_words',
-    'custom_words_input_validate_word_length':
-        '\'@invalidWords\' hơi sai! phải từ @min_char_per_word đến @max_char_per_word chữ mỗi từ!',
-    'custom_words_input_invalidation_message':
-        'Từ vựng tự chọn không hợp lệ má ui, kiểm tra lại ei',
+        'Hãy bổ sung từ! tất cả tối thiểu @min_words',
+    'custom_words_input_validate_ignore_title': 'Từ không hợp lệ, không tính:',
+    'custom_words_input_validate_not_words':
+        'Không phải từ: @specialCharsWords',
+    'custom_words_input_validate_invalid_word_length':
+        'Độ dài từ không hợp lệ: @invalidLengthWords! từ @min_char_per_word-@max_char_per_word kí tự mỗi từ',
+    'custom_words_input_validate_duplicated_words':
+        'Từ bị lặp: @duplicatedWords',
     'message_link_coppied': 'Đã sao chép link!',
     'guess_input_placeholder': 'Nhập từ bạn đoán vô đây...',
     'No': 'Khum',
