@@ -65,24 +65,16 @@ abstract class Game extends GetxController {
             backgroundColor: color));
         break;
 
-      case Message.min2Players:
-        inst.messages.add(Minimum2PlayersToStartMessage(
-          backgroundColor: color,
-        ));
-
-      // case Message.drawing:
-      //   var playerName = playersByMap[rawMessage['player_id']]!.name;
-      //   messages.add(DrawingMessage(
-      //       playerName: playerName,
-      //       backgroundColor: messages.length % 2 == 0 ? Colors.white : const Color(0xffececec)));
-      //   break;
-
-      // case Message.correctGuess:
-      //   var playerName = playersByMap[rawMessage['player_id']]!.name;
-      //   messages.add(CorrectGuessMessage(
-      //       playerName: playerName,
-      //       backgroundColor: messages.length % 2 == 0 ? Colors.white : const Color(0xffececec)));
-      //   break;
+      case Message.playerWin:
+        inst.messages.add(PlayerWinMessage(
+            playerName: rawMessage['player_name'],
+            score: rawMessage['score'],
+            backgroundColor: color));
+        break;
+      
+      case Message.playerDraw:
+        inst.messages.add(PlayerDrawMessage(playerName: rawMessage['player_name'], backgroundColor: color));
+        break;
 
       default:
         messages.add(Message(
@@ -108,51 +100,6 @@ abstract class Game extends GetxController {
     Get.back();
     Game.empty();
   }
-  // static void registerRoomErrorHandlerAtGameplayPage(String title) {
-
-  //     // at GameplayPage, try to reconnect
-  //     if (Get.currentRoute != '/') {
-  //       if (isDialogShown) return;
-
-  //       var gameplayController = Get.find<GameplayController>();
-
-  //       // set loading
-  //       gameplayController.isLoading.value = true;
-
-  //       // stop loading when reconnect sucessfully
-  //       inst.eventHandlers.onReconnect = (_) {
-  //         gameplayController.isLoading.value = false;
-  //         if (isDialogShown) {
-  //           Get.back();
-  //           isDialogShown = false;
-  //         }
-
-  //         inst.eventHandlers.onReconnect = SessionEventHandlers.emptyOnReconnect;
-  //       };
-
-  //       Get.defaultDialog(
-  //         content: PopScope(canPop: false, child: Text('gameplay_connection_error_message'.tr)),
-  //         barrierDismissible: false,
-  //         title: 'connection_error'.tr,
-  //         textCancel: 'No'.tr,
-  //         onCancel: () {
-  //           Get.back();
-  //           Game.inst.leave();
-  //         },
-  //       );
-  //       isDialogShown = true;
-
-  //       return;
-  //     }
-
-  //     // at homepage trying to create room
-  //     inst.socket.disconnect();
-  //     Get.find<HomeController>().isLoading.value = false;
-  //     showDialog(
-  //         context: Get.context!,
-  //         builder: (context) => AlertDialog(title: Text(title), content: Text(data.toString())));
-  //   };
-  // }
 }
 
 class GameTimer {

@@ -54,6 +54,8 @@
     "message_player_leave": "@player_name đã rời khỏi phòng!",
     "message_you_need_at_least_2_players":"Bạn cần tối thiểu 2 người để bắt đầu trò chơi!",
     "message_link_copied":"Đã sao chép link vào bộ nhớ đệm!",
+    "message_player_won":"@playerName đã chiến thắng với số điểm @score!",
+    "message_player_draw":"@playerName bắt đầu vẽ!",
 
     "No":"Khum",
     "waiting":"đang chờ",

@@ -62,6 +62,8 @@ class LocaleKeys {
   static const message_you_need_at_least_2_players =
       'message_you_need_at_least_2_players';
   static const message_link_copied = 'message_link_copied';
+  static const message_player_won = 'message_player_won';
+  static const message_player_draw = 'message_player_draw';
   static const create_private_room_error_title =
       'create_private_room_error_title';
   static const create_private_room_error_content =
@@ -139,6 +141,8 @@ class Locales {
     'message_you_need_at_least_2_players':
         'You need at least 2 players to start the game!',
     'message_link_copied': 'Copied room link to clipboard!',
+    'message_player_won': '@playerName won with a score of @score!',
+    'message_player_draw': '@playerName is drawing now!',
     'create_private_room_error_title':
         'Connection Error: can\'t create private room right now',
     'create_private_room_error_content':
@@ -214,6 +218,8 @@ class Locales {
     'message_you_need_at_least_2_players':
         'Bạn cần tối thiểu 2 người để bắt đầu trò chơi!',
     'message_link_copied': 'Đã sao chép link vào bộ nhớ đệm!',
+    'message_player_won': '@playerName đã chiến thắng với số điểm @score!',
+    'message_player_draw': '@playerName bắt đầu vẽ!',
     'No': 'Khum',
     'waiting': 'đang chờ',
     'create_private_room_error_title': 'Đứt dây cáp: không thể tạo phòng!',

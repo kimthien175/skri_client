@@ -7,25 +7,29 @@ class Message extends StatelessWidget {
   final Color backgroundColor;
   final double paddingLeft = 10;
 
+  // relating to server
   static const String newHost = 'new_host';
   static const String playerJoin = 'player_join';
   static const String playerLeave = 'player_leave';
   static const String playerGuess = 'player_guess';
-  static const String min2Players = 'min_2_players';
-  //static const String drawing = 'drawing';
+  static const String playerWin = 'player_win';
+  static const String playerDraw = 'player_draw';
 
-  //static const String correctGuess = 'correct_guess';
+  static const Color darkOrange = Color.fromRGBO(206, 79, 10, 1);
+  static const Color orange = Color.fromRGBO(255, 168, 68, 1);
+  static const Color green = Color.fromRGBO(86, 206, 39, 1);
+  static const Color yellow = Color.fromRGBO(226, 203, 0, 1);
+  static const Color blue = Color.fromRGBO(57, 117, 206, 1);
 
   @override
   Widget build(BuildContext context) {
     throw UnimplementedError();
   }
 }
-// TODO: COLOR LIKE PLAYER LEAVE: DISLIKE DRAWING, GETTING KICKED BY THE HOST, SPAWN,
-// TODO: COLOR LIKE PLAYER JOIN: LIKE DRAWING, GUESS CORRECTLY, REVEAL WORD
-// TODO: YELLOW COLOR: GUESS CLOSE, VOTE KICK
-// TODO: BLUE COLOR: PLAYER IS BEGINNING TO DRAW
-// TODO: COLOR LIKE NEWHOSTMSG: notify who won
+// TODO: DARK ORANGE: DISLIKE DRAWING, GETTING KICKED BY HOST, SPAMMING
+// TODO: GREEN: LIKE DRAWING, GUEST CORRECTLY, WORD REVEAL
+// TODO: OLIVE???
+// TODO: YELLOW: GUESS CLOSE, VOTE KICK
 
 class NewHostMessage extends Message {
   const NewHostMessage({super.key, required this.playerName, required super.backgroundColor});
@@ -38,22 +42,10 @@ class NewHostMessage extends Message {
         alignment: Alignment.centerLeft,
         padding: EdgeInsets.only(left: paddingLeft),
         child: Text('message_room_owner_statement'.trParams({'room_owner': playerName}),
-            style: const TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w700,
-                color: Color.fromRGBO(255, 168, 68, 1))));
+            style:
+                const TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: Message.orange)));
   }
 }
-
-// class DrawingMessage extends Message {
-//   final String playerName;
-
-//   const DrawingMessage({required this.playerName, super.key, super.backgroundColor});
-//   @override
-//   Widget build(BuildContext context) {
-//     throw UnimplementedError();
-//   }
-// }
 
 class PlayerGuessMessage extends Message {
   final String playerName;
@@ -85,25 +77,6 @@ class PlayerGuessMessage extends Message {
   }
 }
 
-// class CorrectGuessMessage extends Message {
-//   const CorrectGuessMessage({required this.playerName, super.key, super.backgroundColor});
-//   final String playerName;
-//   @override
-//   Widget build(BuildContext context) {
-//     throw UnimplementedError();
-//   }
-// }
-
-// TODO: SPAM DETECT
-// class SpamWarningMessage extends Message {
-//   const SpamWarningMessage({super.key, super.backgroundColor});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     throw UnimplementedError();
-//   }
-// }
-
 class PlayerJoinMessage extends Message {
   const PlayerJoinMessage({required this.playerName, super.key, required super.backgroundColor});
   final String playerName;
@@ -115,7 +88,7 @@ class PlayerJoinMessage extends Message {
         padding: EdgeInsets.only(left: paddingLeft),
         child: Text("message_new_player_joined".trParams({'player_name': playerName}),
             style: const TextStyle(
-                fontSize: 14, fontWeight: FontWeight.w700, color: Color.fromRGBO(86, 206, 39, 1))));
+                fontSize: 14, fontWeight: FontWeight.w700, color: Message.green)));
   }
 }
 
@@ -130,7 +103,7 @@ class PlayerLeaveMessage extends Message {
         padding: EdgeInsets.only(left: paddingLeft),
         child: Text("message_player_leave".trParams({'player_name': playerName}),
             style: const TextStyle(
-                color: Color.fromRGBO(206, 79, 10, 1), fontSize: 14, fontWeight: FontWeight.w700)));
+                color: Message.darkOrange, fontSize: 14, fontWeight: FontWeight.w700)));
   }
 }
 
@@ -144,7 +117,7 @@ class Minimum2PlayersToStartMessage extends Message {
         padding: EdgeInsets.only(left: paddingLeft),
         child: Text("message_you_need_at_least_2_players".tr,
             style: const TextStyle(
-                color: Color.fromRGBO(206, 79, 10, 1), fontSize: 14, fontWeight: FontWeight.w700)));
+                color: Message.darkOrange, fontSize: 14, fontWeight: FontWeight.w700)));
   }
 }
 
@@ -158,6 +131,43 @@ class LinkCopiedMessage extends Message {
         padding: EdgeInsets.only(left: paddingLeft),
         child: Text("message_link_copied".tr,
             style: const TextStyle(
-                color: Color.fromRGBO(226, 203, 0, 1), fontSize: 14, fontWeight: FontWeight.w700)));
+                color: Message.yellow, fontSize: 14, fontWeight: FontWeight.w700)));
+  }
+}
+
+class PlayerWinMessage extends Message {
+  const PlayerWinMessage(
+      {required this.playerName, required this.score, super.key, required super.backgroundColor});
+  final String playerName;
+  final int score;
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        color: backgroundColor,
+        alignment: Alignment.centerLeft,
+        padding: EdgeInsets.only(left: paddingLeft),
+        child: Text(
+            "message_player_won".trParams({'playerName': playerName, 'score': score.toString()}),
+            style: const TextStyle(
+                color: Message.orange,
+                fontSize: 14,
+                fontWeight: FontWeight.w700)));
+  }
+}
+
+class PlayerDrawMessage extends Message {
+  const PlayerDrawMessage({super.key, required this.playerName, required super.backgroundColor});
+  final String playerName;
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        color: backgroundColor,
+        alignment: Alignment.centerLeft,
+        padding: EdgeInsets.only(left: paddingLeft),
+        child: Text("message_player_draw".trParams({"playerName": playerName}),
+            style: const TextStyle(
+                color: Message.blue,
+                fontSize: 14,
+                fontWeight: FontWeight.w700)));
   }
 }
