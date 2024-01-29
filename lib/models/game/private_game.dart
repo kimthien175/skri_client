@@ -44,7 +44,8 @@ class PrivateGame extends Game {
 
     var inst = SocketIO.inst;
     inst.eventHandlers.onConnect = (_) {
-      inst.socket.emitWithAck('init_private_room', MePlayer.inst.toJSON(),
+      inst.socket.emitWithAck(
+          'init_private_room', {'player': MePlayer.inst.toJSON(), 'lang': Get.locale!.languageCode},
           ack: (requestedRoomResult) {
         if (requestedRoomResult['success']) {
           var createdRoom = requestedRoomResult['data'];
@@ -77,6 +78,7 @@ class PrivateGame extends Game {
           Get.to(() => const GameplayPage(),
               binding: GameplayBinding(), transition: Transition.noTransition);
         } else {
+          inst.socket.disconnect();
           showDialog(
               context: Get.context!,
               builder: (context) => AlertDialog(
@@ -102,7 +104,7 @@ class PrivateGame extends Game {
     var inst = SocketIO.inst;
     inst.eventHandlers.onConnect = (_) {
       inst.socket
-          .emitWithAck('join_private_room', {'player': MePlayer.inst.toJSON(), 'code': roomCode},
+          .emitWithAck('join_private_room', {'player': MePlayer.inst.toJSON(), 'code': roomCode, 'lang':Get.locale!.languageCode},
               ack: (requestedJoiningRoomResult) {
         if (requestedJoiningRoomResult['success']) {
           var roomAndNewPlayer = requestedJoiningRoomResult['data'];
@@ -166,7 +168,6 @@ class PrivateGame extends Game {
 
           // set up gameplay
           GameplayController.setUpPrivateGameForGuest();
-          Get.find<HomeController>().isLoading.value = false;
 
           Get.to(() => const GameplayPage(),
               binding: GameplayBinding(), transition: Transition.noTransition);
@@ -175,7 +176,7 @@ class PrivateGame extends Game {
             Game.inst.addMessageByRaw(rawMessage);
           }
         } else {
-          Get.find<HomeController>().isLoading.value = false;
+          inst.socket.disconnect();
           showDialog(
               context: Get.context!,
               builder: (context) => AlertDialog(
@@ -183,6 +184,7 @@ class PrivateGame extends Game {
                   content: Text(requestedJoiningRoomResult['data'].toString())));
         }
 
+        Get.find<HomeController>().isLoading.value = false;
         inst.eventHandlers.onConnect = SessionEventHandlers.emptyOnConnect;
       });
     };
@@ -195,6 +197,7 @@ class PrivateGame extends Game {
     var inst = SocketIO.inst;
     inst.eventHandlers.onConnectError = (error) {
       if (Get.currentRoute == '/') {
+        SocketIO.inst.socket.disconnect();
         // at home page
         if (dialogOpenCount == 0) {
           dialogOpenCount++;
@@ -205,7 +208,6 @@ class PrivateGame extends Game {
               onCancel: () {
                 Get.find<HomeController>().isLoading.value = false;
 
-                SocketIO.inst.socket.disconnect();
                 dialogOpenCount = 0;
               },
               barrierDismissible: false);
@@ -248,7 +250,7 @@ class PrivateGame extends Game {
       // start game
       var settings = Map<String, dynamic>.from((Game.inst as PrivateGame).settings);
       settings['custom_words'] = CustomWordsInput.proceededWords;
-      SocketIO.inst.socket.emitWithAck('start_private_game', settings, ack: (result) {});
+      SocketIO.inst.socket.emit('start_private_game', settings);
     }
   }
 

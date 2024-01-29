@@ -51,6 +51,15 @@ class SocketIO {
       }
       (Game.inst as PrivateGame).settings[key] = value;
     });
+
+    _socket.on('start_private_game', (startPrivateGamePackage){
+      // word_options, player_turn_id
+      if (MePlayer.inst.id == startPrivateGamePackage['player_turn_id']){
+        
+      } else {
+
+      }
+    });
   }
   static final SocketIO _inst = SocketIO._internal();
 

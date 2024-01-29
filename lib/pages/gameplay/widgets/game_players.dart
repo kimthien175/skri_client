@@ -78,7 +78,7 @@ class PlayerCard extends StatelessWidget {
                           style: TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w800,
-                              color: GameplayStyles.colorPlayerMe,
+                              color: info.id ==MePlayer.inst.id ?  GameplayStyles.colorPlayerMe : Colors.black,
                               height: 1.1)),
                       const Text('0 points',
                           style: TextStyle(fontSize: 12.6, height: 1, fontWeight: FontWeight.w700))
@@ -101,7 +101,7 @@ class PlayerCard extends StatelessWidget {
                     bottom: 0,
                     left: 4,
                     child:
-                        Opacity(opacity: 0.6, child: GifManager.inst.misc('owner').builder.init()))
+                        Opacity(opacity: 0.7, child: GifManager.inst.misc('owner').builder.init()))
             ])));
   }
 }

@@ -18,9 +18,11 @@ class PlayButton extends StatelessWidget {
               if (roomCode == null) return;
 
               if (RegExp(r'^[a-z0-9]{4,}$').hasMatch(roomCode!)) {
+                print('match');
                 Get.find<HomeController>().isLoading.value = true;
                 PrivateGame.join(roomCode!);
               } else {
+                print('no match');
                 showDialog(
                     context: Get.context!,
                     builder: (context) => AlertDialog(
