@@ -58,7 +58,11 @@
     "message_player_draw":"@playerName bắt đầu vẽ!",
 
     "No":"Khum",
-    "waiting":"đang chờ",
+    
+    "WAITING":"ĐANG CHỜ",
+    "WORD_HIDDEN":"TỪ BỊ ẨN",
+    "GUESS_THIS":"ĐOÁN TỪ",
+    "DRAW_THIS":"VẼ TỪ",
 
     "create_private_room_error_title":"Đứt dây cáp: không thể tạo phòng!",
     "create_private_room_error_content":"Nhấn Cancel để ngắt kết nối",
@@ -69,5 +73,9 @@
     "gameplay_connection_error":"Nếu bạn muốn kết nối lại, xin vui lòng kiểm tra kết nối, hoặc nhấn Cancel để thoát",
 
 
-    "gamebar_round_display":"Vòng @currentRound / @rounds"
+    "gamebar_round_display":"Vòng @currentRound / @rounds",
+
+    "round_noti": "Vòng @round",
+    "player_choosing":"@playerName đang chọn 1 từ",
+    "choose_a_word":"Chọn 1 từ"
 }

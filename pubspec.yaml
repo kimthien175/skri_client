@@ -102,6 +102,11 @@ flutter:
     - assets/gif/setting/setting_4.gif
     - assets/gif/setting/setting_5.gif
     - assets/gif/setting/setting_6.gif
+    - assets/gif/size.gif
+    - assets/gif/pen.gif
+    - assets/gif/fill.gif
+    - assets/gif/undo.gif
+    - assets/gif/clear.gif
 
 
 

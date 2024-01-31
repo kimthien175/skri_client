@@ -49,6 +49,10 @@
     "message_player_won":"@playerName won with a score of @score!",
     "message_player_draw":"@playerName is drawing now!",
 
+    "WORD_HIDDEN":"WORD HIDDEN",
+    "GUESS_THIS":"GUESS THIS",
+    "DRAW_THIS":"DRAW THIS",
+
     "create_private_room_error_title":"Connection Error: can't create private room right now",
     "create_private_room_error_content":"Press Cancel to abort trying to connect",
 
@@ -57,5 +61,9 @@
     
     "gameplay_connection_error":"If you want to keep trying to reconnect, please hold, or press Cancel to disconnect",
 
-    "gamebar_round_display":"Round @currentRound of @rounds"
+    "gamebar_round_display":"Round @currentRound of @rounds",
+
+    "round_noti": "Round @round",
+    "player_choosing":"@playerName is choosing a word",
+    "choose_a_word":"Choose a word"
 }

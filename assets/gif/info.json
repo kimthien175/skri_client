@@ -161,6 +161,26 @@
             {
                 "name": "setting_6",
                 "source": "assets/gif/setting/setting_6.gif"
+            },
+            {
+                "name":"stroke_size",
+                "source":"assets/gif/size.gif"
+            },
+            {
+                "name":"pen",
+                "source":"assets/gif/pen.gif"
+            },
+            {
+                "name":"fill",
+                "source":"assets/gif/fill.gif"
+            },
+            {
+                "name":"undo",
+                "source":"assets/gif/undo.gif"
+            },
+            {
+                "name":"clear",
+                "source":"assets/gif/clear.gif"
             }
         ]
     }
