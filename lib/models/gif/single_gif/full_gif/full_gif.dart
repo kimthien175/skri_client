@@ -47,13 +47,15 @@ class FullGifBuilder extends GifBuilder<FullGifModel> {
   FullGifBuilder(super.model, {super.key});
 
   @override
-  GifBuilder<GifModel> init() {
+  GifBuilder<GifModel> init({Color? color}) {
+    this.color = color;
     widget = _origin;
     return this;
   }
 
   @override
-  GifBuilder<GifModel> initShadowedOrigin({ShadowInfo info = const ShadowInfo()}) {
+  GifBuilder<GifModel> initShadowedOrigin({Color? color, ShadowInfo info = const ShadowInfo()}) {
+    this.color = color;
     widget = Stack(clipBehavior: Clip.none, children: [
       Transform.translate(
           offset: Offset(info.offsetLeft, info.offsetTop),
@@ -75,7 +77,7 @@ class FullGifBuilder extends GifBuilder<FullGifModel> {
     return this;
   }
 
-  Widget get _origin => Image.asset(model.path);
+  Widget get _origin => Image.asset(model.path, color: color);
   
   @override
   GifBuilder<GifModel> doFreezeSize() {

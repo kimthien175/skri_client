@@ -21,9 +21,10 @@ abstract class GifBuilder<MODEL_TYPE extends GifModel<MODEL_TYPE>> extends State
   GifBuilder(this.model, {super.key});
   MODEL_TYPE model;
   Widget? widget;
+  Color? color;
 
-  GifBuilder initShadowedOrigin({ShadowInfo info = const ShadowInfo()});
-  GifBuilder init();
+  GifBuilder initShadowedOrigin({Color? color, ShadowInfo info = const ShadowInfo()});
+  GifBuilder init({Color? color});
 
   GifBuilder doScale(double ratio);
   GifBuilder doFitSize({double? height, double? width});

@@ -29,7 +29,7 @@ class AvatarBuilder extends GifBuilder<AvatarModel> {
   }
 
   @override
-  AvatarBuilder init() {
+  AvatarBuilder init({Color? color}) {
     widget = Obx(() => CustomPaint(
         painter: AvatarCustomPainter(model, controller!.currentFrameIndex.value, Paint()),
         child: SizedBox(height: model.height, width: model.width)));
@@ -37,7 +37,7 @@ class AvatarBuilder extends GifBuilder<AvatarModel> {
   }
 
   @override
-  AvatarBuilder initShadowedOrigin({ShadowInfo info = const ShadowInfo()}) {
+  AvatarBuilder initShadowedOrigin({Color? color, ShadowInfo info = const ShadowInfo()}) {
     widget = Obx(() => Stack(clipBehavior: Clip.none, children: [
           Transform.translate(
               offset: Offset(info.offsetLeft, info.offsetTop),

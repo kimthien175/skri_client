@@ -43,13 +43,13 @@ class ChildGifBuilder extends GifBuilder<ChildGifModel> {
   }
 
   @override
-  GifBuilder<GifModel> init() {
+  GifBuilder<GifModel> init({Color? color}) {
     widget = _origin;
     return this;
   }
 
   @override
-  GifBuilder<GifModel> initShadowedOrigin({ShadowInfo info = const ShadowInfo()}) {
+  GifBuilder<GifModel> initShadowedOrigin({Color? color, ShadowInfo info = const ShadowInfo()}) {
     widget = Obx(() => Stack(
           clipBehavior: Clip.none,
           children: [
