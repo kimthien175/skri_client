@@ -57,7 +57,7 @@ class StrokeValueItem extends StatelessWidget {
             decoration: BoxDecoration(
                 color: controller.isHovered.value
                     ? const Color.fromRGBO(76, 76, 76, 1)
-                    : Colors.white),
+                    : (DrawTools.inst.currentColor == Colors.white ? Colors.grey : Colors.white)),
             height: size,
             width: size,
             child: SlideTransition(position: controller._animation, child: child)))
@@ -69,7 +69,9 @@ class StrokeValueItem extends StatelessWidget {
                         ? Colors.deepPurpleAccent
                         : controller.isHovered.value
                             ? const Color.fromRGBO(76, 76, 76, 1)
-                            : Colors.white),
+                            : (DrawTools.inst.currentColor == Colors.white
+                                ? Colors.grey
+                                : Colors.white)),
                 height: size,
                 width: size,
                 child: SlideTransition(position: controller._animation, child: child)),

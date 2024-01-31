@@ -1,9 +1,9 @@
+import 'package:cd_mobile/models/gif_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../manager.dart';
 import 'stroke_value_item.dart';
-
 
 class StrokeValueSelector extends StatelessWidget {
   const StrokeValueSelector({super.key});
@@ -19,9 +19,16 @@ class StrokeValueSelector extends StatelessWidget {
           onTap: () {
             Get.find<StrokeValueListController>().isOpened.value = true;
           },
-          child: Obx(
-            () => Text(controller.value.value.toStringAsFixed(2)),
-          ),
+          child: Obx(() {
+            var size = 48 * controller.value.value / DrawTools.inst.strokeSizeList.last;
+            return GifManager.inst
+                .misc('stroke_size')
+                .builder
+                .initShadowedOrigin(color: DrawTools.inst.currentColor)
+                .doFitSize(height: size, width: size);
+          }
+              // Text(controller.value.value.toStringAsFixed(2)),
+              ),
         ));
   }
 }
@@ -38,14 +45,20 @@ class StrokeValueList extends StatelessWidget {
     final List<StrokeValueItem> items = [];
     var list = DrawTools.inst.strokeSizeList;
     for (int i = 0; i < list.length; i++) {
+      var size = 48 * list[i] / list.last;
       items.add(StrokeValueItem(
           controller: StrokeValueItemController(list[i].obs),
           onTap: () {
             DrawTools.inst.currentStrokeSize = DrawTools.inst.strokeSizeList[i];
             Get.find<StrokeValueListController>().isOpened.value = false;
-            Get.find<StrokeValueItemController>(tag: 'stroke_value_selector').value.value = DrawTools.inst.currentStrokeSize;
+            Get.find<StrokeValueItemController>(tag: 'stroke_value_selector').value.value =
+                DrawTools.inst.currentStrokeSize;
           },
-          child: Text(list[i].toStringAsFixed(2))));
+          child: GifManager.inst
+              .misc('stroke_size')
+              .builder
+              .initShadowedOrigin(color: DrawTools.inst.currentColor)
+              .doFitSize(height: size, width: size)));
     }
 
     return TapRegion(

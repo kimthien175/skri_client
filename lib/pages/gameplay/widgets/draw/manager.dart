@@ -1,5 +1,6 @@
 // ignore_for_file: invalid_use_of_protected_member,
 
+import 'package:cd_mobile/pages/gameplay/widgets/draw/widgets/stroke_value_item.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -7,8 +8,7 @@ import 'mode.dart';
 import 'step.dart';
 import 'widgets/color.dart';
 
-
-class DrawTools {
+class DrawTools extends GetxController{
   // singleton
   static init() {
     _inst = DrawTools._internal();
@@ -64,6 +64,9 @@ class DrawTools {
     _currentColor = value;
     DrawManager.inst._currentStep.value.changeColor(value);
     Get.find<RecentColorController>().addRecent();
+    var mainStrokeItemController = Get.find<StrokeValueItemController>(tag: 'stroke_value_selector');
+    mainStrokeItemController.value.refresh();
+    mainStrokeItemController.isHovered.refresh();
   }
 
   late double _currentStrokeSize;
@@ -73,11 +76,12 @@ class DrawTools {
     DrawManager.inst._currentStep.value.changeStrokeSize(value);
   }
 
-  DrawMode _currentMode = BrushMode();
-  DrawMode get currentMode => _currentMode;
+  // ignore: unnecessary_cast
+  final Rx<DrawMode> _currentMode = (BrushMode() as DrawMode).obs;
+  DrawMode get currentMode => _currentMode.value;
 
   set currentMode(DrawMode mode) {
-    _currentMode = mode;
+    _currentMode.value = mode;
     DrawManager.inst.setCurrentStep();
   }
 }

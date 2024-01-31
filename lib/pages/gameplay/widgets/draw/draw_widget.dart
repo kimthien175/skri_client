@@ -1,3 +1,4 @@
+import 'package:cd_mobile/models/gif_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -6,7 +7,6 @@ import 'mode.dart';
 import 'widgets/color.dart';
 import 'widgets/stroke.dart';
 import 'widgets/stroke_value_item.dart';
-
 
 class DrawWidget extends StatelessWidget {
   DrawWidget({super.key}) {
@@ -45,42 +45,116 @@ class DrawWidget extends StatelessWidget {
                               size: const Size(DrawManager.width, DrawManager.height),
                               painter: DrawStepCustomPainter(repaint: DrawManager.inst.repaint)),
                         )))),
-            const SizedBox(height: 10),
-            SizedBox(
+            const SizedBox(height: 6),
+            const SizedBox(
                 width: 800,
                 child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  const RecentColor(),
-                  const ColorSelector(),
-                  const StrokeValueSelector(),
-                  ElevatedButton(
-                      child: Text('Brush'),
-                      onPressed: () {
-                        print('Brush');
-                        if (DrawTools.inst.currentMode is! BrushMode) {
-                          DrawTools.inst.currentMode = BrushMode();
-                        }
-                      }),
-                  ElevatedButton(
-                    child: Text('Fill'),
-                    onPressed: () {
-                      print('Fill');
-                      if (DrawTools.inst.currentMode is! FillMode) {
-                        DrawTools.inst.currentMode = FillMode();
-                      }
-                    },
-                  ),
-                  ElevatedButton(child: Text('Undo'), onPressed: DrawManager.inst.undo),
-                  ElevatedButton(
-                    child: Text('Clear'),
-                    onPressed: DrawManager.inst.clear,
-                  )
+                  RecentColor(),
+                  SizedBox(width: 6),
+                  ColorSelector(),
+                  SizedBox(width: 6),
+                  StrokeValueSelector(),
+                  Spacer(),
+                  BrushButton(),
+                  SizedBox(width: 6),
+                  FillButton(),
+                  Spacer(),
+                  UndoButton(),
+                  SizedBox(width: 6),
+                  ClearButton()
                 ]))
           ]),
           if (Get.find<StrokeValueListController>().isOpened.value)
             Positioned(
                 left: 360,
-                top: 610 - 12 - DrawTools.inst.strokeSizeList.length * StrokeValueItem.size,
+                top: 610 - 18 - DrawTools.inst.strokeSizeList.length * StrokeValueItem.size,
                 child: const StrokeValueList())
         ]));
+  }
+}
+
+class BrushButton extends StatelessWidget {
+  const BrushButton({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+        onTap: () {
+          if (DrawTools.inst.currentMode is! BrushMode) {
+            DrawTools.inst.currentMode = BrushMode();
+          }
+        },
+        child: Obx(() => Container(
+            decoration: BoxDecoration(
+                color: DrawTools.inst.currentMode is BrushMode
+                    ? const Color.fromRGBO(171, 102, 235, 1)
+                    : Colors.white,
+                borderRadius: const BorderRadius.all(Radius.circular(3))),
+            child: GifManager.inst
+                .misc('pen')
+                .builder
+                .initShadowedOrigin()
+                .doFitSize(height: 48, width: 48))));
+  }
+}
+
+class FillButton extends StatelessWidget {
+  const FillButton({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+        onTap: () {
+          if (DrawTools.inst.currentMode is! FillMode) {
+            DrawTools.inst.currentMode = FillMode();
+          }
+        },
+        child: Obx(() => Container(
+            decoration: BoxDecoration(
+                color: DrawTools.inst.currentMode is FillMode
+                    ? const Color.fromRGBO(171, 102, 235, 1)
+                    : Colors.white,
+                borderRadius: const BorderRadius.all(Radius.circular(3))),
+            child: GifManager.inst
+                .misc('fill')
+                .builder
+                .initShadowedOrigin()
+                .doFitSize(height: 48, width: 48))));
+  }
+}
+
+class UndoButton extends StatelessWidget {
+  const UndoButton({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+        onTap: DrawManager.inst.undo,
+        child: Container(
+            decoration: const BoxDecoration(
+                color: Colors.white, borderRadius: BorderRadius.all(Radius.circular(3))),
+            child: GifManager.inst
+                .misc('undo')
+                .builder
+                .initShadowedOrigin()
+                .doFitSize(height: 48, width: 48)));
+  }
+}
+
+class ClearButton extends StatelessWidget {
+  const ClearButton({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+        onTap: DrawManager.inst.clear,
+        child: Container(
+            decoration: const BoxDecoration(
+                color: Colors.white, borderRadius: BorderRadius.all(Radius.circular(3))),
+            child: GifManager.inst
+                .misc('clear')
+                .builder
+                .initShadowedOrigin()
+                .doFitSize(height: 48, width: 48)));
   }
 }
