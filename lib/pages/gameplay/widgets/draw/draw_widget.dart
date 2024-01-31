@@ -123,38 +123,76 @@ class FillButton extends StatelessWidget {
   }
 }
 
-class UndoButton extends StatelessWidget {
+class UndoButton extends StatefulWidget {
   const UndoButton({super.key});
 
   @override
+  State<UndoButton> createState() => _UndoButtonState();
+}
+
+class _UndoButtonState extends State<UndoButton> {
+  bool isHovered = false;
+  @override
   Widget build(BuildContext context) {
-    return InkWell(
-        onTap: DrawManager.inst.undo,
-        child: Container(
-            decoration: const BoxDecoration(
-                color: Colors.white, borderRadius: BorderRadius.all(Radius.circular(3))),
-            child: GifManager.inst
-                .misc('undo')
-                .builder
-                .initShadowedOrigin()
-                .doFitSize(height: 48, width: 48)));
+    return MouseRegion(
+        onEnter: (_) {
+          setState(() {
+            isHovered = true;
+          });
+        },
+        onExit: (_) {
+          setState(() {
+            isHovered = false;
+          });
+        },
+        child: InkWell(
+            onTap: DrawManager.inst.undo,
+            child: Container(
+                decoration: const BoxDecoration(
+                    color: Colors.white, borderRadius: BorderRadius.all(Radius.circular(3))),
+                child: Opacity(
+                    opacity: isHovered ? 1 : 0.7,
+                    child: GifManager.inst
+                        .misc('undo')
+                        .builder
+                        .initShadowedOrigin()
+                        .doFitSize(height: 48, width: 48)))));
   }
 }
 
-class ClearButton extends StatelessWidget {
+class ClearButton extends StatefulWidget {
   const ClearButton({super.key});
 
   @override
+  State<ClearButton> createState() => _ClearButtonState();
+}
+
+class _ClearButtonState extends State<ClearButton> {
+  bool isHovered = false;
+  @override
   Widget build(BuildContext context) {
-    return InkWell(
-        onTap: DrawManager.inst.clear,
-        child: Container(
-            decoration: const BoxDecoration(
-                color: Colors.white, borderRadius: BorderRadius.all(Radius.circular(3))),
-            child: GifManager.inst
-                .misc('clear')
-                .builder
-                .initShadowedOrigin()
-                .doFitSize(height: 48, width: 48)));
+    return MouseRegion(
+        onEnter: (_) {
+          setState(() {
+            isHovered = true;
+          });
+        },
+        onExit: (_) {
+          setState(() {
+            isHovered = false;
+          });
+        },
+        child: InkWell(
+            onTap: DrawManager.inst.clear,
+            child: Container(
+                decoration: const BoxDecoration(
+                    color: Colors.white, borderRadius: BorderRadius.all(Radius.circular(3))),
+                child: Opacity(
+                    opacity: isHovered ? 1 : 0.7,
+                    child: GifManager.inst
+                        .misc('clear')
+                        .builder
+                        .initShadowedOrigin()
+                        .doFitSize(height: 48, width: 48)))));
   }
 }

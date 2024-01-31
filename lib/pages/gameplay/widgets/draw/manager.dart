@@ -56,7 +56,7 @@ class DrawTools extends GetxController{
     (5 / 9) * 20,
     (37 / 45) * 20,
     1 * 20
-  ]; // TODO
+  ];
 
   late Color _currentColor;
   Color get currentColor => _currentColor;
