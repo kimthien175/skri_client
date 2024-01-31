@@ -110,13 +110,13 @@ class GuessInputController extends GetxController {
     text = text.trim();
     if (text.isNotEmpty) {
       // submit
-      Game.inst.addMessage((color) => PlayerGuessMessage(
+      Game.inst.addMessage((color) => PlayerChatMessage(
             playerName: MePlayer.inst.name,
-            guess: text,
+            chat: text,
             backgroundColor: color,
           ));
       // emit to server
-      SocketIO.inst.socket.emit('player_guess', text);
+      SocketIO.inst.socket.emit('player_chat', text);
     }
 
     // clear the text

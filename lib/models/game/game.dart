@@ -1,21 +1,22 @@
 import 'dart:async';
 
+import 'package:cd_mobile/models/game/state/game_state.dart';
 import 'package:cd_mobile/models/game/message.dart';
 import 'package:cd_mobile/models/game/player.dart';
+import 'package:cd_mobile/pages/gameplay/widgets/main_content_footer/top_widget.dart';
 import 'package:cd_mobile/utils/socket_io.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 abstract class Game extends GetxController {
   Game(
-      {required int remainingTime,
-      required this.currentRound,
+      {required this.currentRound,
       required this.rounds,
-      required this.status,
-      required this.word,
+      required this.state,
       required this.playersByList,
-      required this.roomCode}) {
-    this.remainingTime = GameTimer(remainingTime);
+      required this.roomCode,
+      required this.settings
+      }) {
     for (int i = 0; i < playersByList.length; i++) {
       var rxPlayer = playersByList[i];
       playersByMap[rxPlayer.id] = rxPlayer;
@@ -25,13 +26,13 @@ abstract class Game extends GetxController {
   static Game get inst => _inst!;
   static set inst(Game game) => _inst = game;
 
-  late GameTimer remainingTime;
+  GameTimer remainingTime = GameTimer(0);
   RxInt rounds;
   RxInt currentRound;
-  RxString word;
   RxList<Player> playersByList;
   Map<String, Player> playersByMap = {};
   String roomCode;
+    RxMap<String, dynamic> settings;
 
   /// edit on this won't cause emiting to socketio
   RxList<Message> messages = List<Message>.empty().obs;
@@ -58,10 +59,10 @@ abstract class Game extends GetxController {
             .add(PlayerLeaveMessage(playerName: rawMessage['player_name'], backgroundColor: color));
         break;
 
-      case Message.playerGuess:
-        inst.messages.add(PlayerGuessMessage(
+      case Message.playerChat:
+        inst.messages.add(PlayerChatMessage(
             playerName: rawMessage['player_name'],
-            guess: rawMessage['guess'],
+            chat: rawMessage['chat'],
             backgroundColor: color));
         break;
 
@@ -71,9 +72,10 @@ abstract class Game extends GetxController {
             score: rawMessage['score'],
             backgroundColor: color));
         break;
-      
+
       case Message.playerDraw:
-        inst.messages.add(PlayerDrawMessage(playerName: rawMessage['player_name'], backgroundColor: color));
+        inst.messages
+            .add(PlayerDrawMessage(playerName: rawMessage['player_name'], backgroundColor: color));
         break;
 
       default:
@@ -83,7 +85,7 @@ abstract class Game extends GetxController {
     }
   }
 
-  Rx<String> status;
+  Rx<GameState> state;
 
   static void empty() => _inst = null;
 
@@ -100,22 +102,33 @@ abstract class Game extends GetxController {
     Get.back();
     Game.empty();
   }
+
+  void chooseWord(String word) {
+    Get.find<TopWidgetController>().controller.reverse();
+    SocketIO.inst.socket.emit('choose_word', word);
+  }
 }
 
 class GameTimer {
   GameTimer(int remainingTime) {
     seconds = remainingTime.obs;
-    if (seconds > 0) {
-      // start counting down
-      timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-        if (seconds.value > 0) {
-          seconds.value -= 1;
-        } else {
-          timer.cancel();
-        }
-      });
-    }
   }
   late RxInt seconds;
   late Timer? timer;
+  void start(int remainingTime, Function() onDone) {
+    seconds.value = remainingTime;
+    timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (seconds.value > 0) {
+        seconds.value -= 1;
+      } else {
+        timer.cancel();
+        onDone();
+      }
+    });
+  }
+
+  void stop() {
+    seconds.value = 0;
+    timer?.cancel();
+  }
 }

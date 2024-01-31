@@ -1,9 +1,8 @@
 import 'package:cd_mobile/models/game/game.dart';
-import 'package:cd_mobile/pages/gameplay/widgets/footer.dart';
 import 'package:cd_mobile/pages/gameplay/widgets/game_bar.dart';
 import 'package:cd_mobile/pages/gameplay/widgets/game_chat.dart';
 import 'package:cd_mobile/pages/gameplay/widgets/game_players.dart';
-import 'package:cd_mobile/pages/gameplay/widgets/main_content/main_content.dart';
+import 'package:cd_mobile/pages/gameplay/widgets/main_content_footer/main_content_footer.dart';
 import 'package:cd_mobile/utils/styles.dart';
 import 'package:cd_mobile/widgets/logo.dart';
 import 'package:flutter/material.dart';
@@ -29,7 +28,7 @@ class Web extends StatelessWidget {
           children: [
             const GamePlayers(),
             GameplayStyles.layoutGap,
-            Column(children: [MainContent(), GameplayStyles.layoutGap, const GameFooter()]),
+            Column(children: [MainContentAndFooter()]),
             GameplayStyles.layoutGap,
             const GameChat()
           ],

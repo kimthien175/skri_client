@@ -2,7 +2,8 @@ import 'package:cd_mobile/models/game/game.dart';
 import 'package:cd_mobile/models/game/message.dart';
 import 'package:cd_mobile/models/game/player.dart';
 import 'package:cd_mobile/models/game/private_game.dart';
-import 'package:cd_mobile/pages/gameplay/widgets/main_content/main_content.dart';
+import 'package:cd_mobile/models/game/state/wait_for_setup.dart';
+import 'package:cd_mobile/pages/gameplay/widgets/game_settings.dart';
 import 'package:cd_mobile/utils/api.dart';
 import 'package:get/get.dart';
 import 'package:socket_io_client/socket_io_client.dart';
@@ -33,9 +34,9 @@ class SocketIO {
       onNewHost(hostLeaveEmit[1]);
     });
 
-    _socket.on('player_guess', (guessMsg) {
-      Game.inst.addMessage((color) => PlayerGuessMessage(
-          playerName: guessMsg['player_name'], guess: guessMsg['guess'], backgroundColor: color));
+    _socket.on('player_chat', (chatMsg) {
+      Game.inst.addMessage((color) => PlayerChatMessage(
+          playerName: chatMsg['player_name'], chat: chatMsg['chat'], backgroundColor: color));
       // TODO: DISPLAY TOOLTIP BESIDE PLAYER CARD
     });
 
@@ -52,13 +53,15 @@ class SocketIO {
       (Game.inst as PrivateGame).settings[key] = value;
     });
 
-    _socket.on('start_private_game', (startPrivateGamePackage){
-      // word_options, player_turn_id
-      if (MePlayer.inst.id == startPrivateGamePackage['player_turn_id']){
-        
-      } else {
+    _socket.on('start_private_game', (startPrivateGamePackage) {
+      // Start round 1 and choosing word
+      Game.inst.state.value
+          .next(startPrivateGamePackage)
+          .then((value) => Game.inst.state.value = value);
+    });
 
-      }
+    _socket.on('choose_word', (chooseWordPkg) {
+      Game.inst.state.value.next(chooseWordPkg).then((value) => Game.inst.state.value = value);
     });
   }
   static final SocketIO _inst = SocketIO._internal();
@@ -83,6 +86,7 @@ class SocketIO {
     inst.playersByMap.removeWhere((key, value) => key == leftPlayerId);
   }
 
+  // TODO: NOTE STATE
   onNewHost(dynamic newHostEmit) {
     var inst = Game.inst;
     var newHost = inst.playersByMap[newHostEmit['player_id']]!;
@@ -95,8 +99,8 @@ class SocketIO {
     if (MePlayer.inst.isOwner == true) {
       var game = (Game.inst as PrivateGame);
       game.settings.value = newHostEmit['settings'];
-      if (game.status.value == 'waiting') {
-        Get.find<MainContentController>().showSettings();
+      if (game.state.value is WaitForSetupState) {
+        Get.find<GameSettingsController>().isCovered.value = false;
       }
     }
   }

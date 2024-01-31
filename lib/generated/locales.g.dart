@@ -64,6 +64,9 @@ class LocaleKeys {
   static const message_link_copied = 'message_link_copied';
   static const message_player_won = 'message_player_won';
   static const message_player_draw = 'message_player_draw';
+  static const WORD_HIDDEN = 'WORD_HIDDEN';
+  static const GUESS_THIS = 'GUESS_THIS';
+  static const DRAW_THIS = 'DRAW_THIS';
   static const create_private_room_error_title =
       'create_private_room_error_title';
   static const create_private_room_error_content =
@@ -72,13 +75,16 @@ class LocaleKeys {
   static const wrong_private_room_code = 'wrong_private_room_code';
   static const gameplay_connection_error = 'gameplay_connection_error';
   static const gamebar_round_display = 'gamebar_round_display';
+  static const round_noti = 'round_noti';
+  static const player_choosing = 'player_choosing';
+  static const choose_a_word = 'choose_a_word';
   static const You = 'You';
   static const Normal = 'Normal';
   static const Hidden = 'Hidden';
   static const Combination = 'Combination';
   static const Copy = 'Copy';
   static const No = 'No';
-  static const waiting = 'waiting';
+  static const WAITING = 'WAITING';
 }
 
 class Locales {
@@ -143,6 +149,9 @@ class Locales {
     'message_link_copied': 'Copied room link to clipboard!',
     'message_player_won': '@playerName won with a score of @score!',
     'message_player_draw': '@playerName is drawing now!',
+    'WORD_HIDDEN': 'WORD HIDDEN',
+    'GUESS_THIS': 'GUESS THIS',
+    'DRAW_THIS': 'DRAW THIS',
     'create_private_room_error_title':
         'Connection Error: can\'t create private room right now',
     'create_private_room_error_content':
@@ -154,6 +163,9 @@ class Locales {
     'gameplay_connection_error':
         'If you want to keep trying to reconnect, please hold, or press Cancel to disconnect',
     'gamebar_round_display': 'Round @currentRound of @rounds',
+    'round_noti': 'Round @round',
+    'player_choosing': '@playerName is choosing a word',
+    'choose_a_word': 'Choose a word',
   };
   static const vi_VN = {
     'displayName': 'Tiếng Việt',
@@ -221,7 +233,10 @@ class Locales {
     'message_player_won': '@playerName đã chiến thắng với số điểm @score!',
     'message_player_draw': '@playerName bắt đầu vẽ!',
     'No': 'Khum',
-    'waiting': 'đang chờ',
+    'WAITING': 'ĐANG CHỜ',
+    'WORD_HIDDEN': 'TỪ BỊ ẨN',
+    'GUESS_THIS': 'ĐOÁN TỪ',
+    'DRAW_THIS': 'VẼ TỪ',
     'create_private_room_error_title': 'Đứt dây cáp: không thể tạo phòng!',
     'create_private_room_error_content': 'Nhấn Cancel để ngắt kết nối',
     'join_private_room_error_title': 'Đứt dây cáp! Hãy kiểm tra lại kết nối!',
@@ -229,5 +244,8 @@ class Locales {
     'gameplay_connection_error':
         'Nếu bạn muốn kết nối lại, xin vui lòng kiểm tra kết nối, hoặc nhấn Cancel để thoát',
     'gamebar_round_display': 'Vòng @currentRound / @rounds',
+    'round_noti': 'Vòng @round',
+    'player_choosing': '@playerName đang chọn 1 từ',
+    'choose_a_word': 'Chọn 1 từ',
   };
 }

@@ -11,7 +11,7 @@ class Message extends StatelessWidget {
   static const String newHost = 'new_host';
   static const String playerJoin = 'player_join';
   static const String playerLeave = 'player_leave';
-  static const String playerGuess = 'player_guess';
+  static const String playerChat = 'player_chat';
   static const String playerWin = 'player_win';
   static const String playerDraw = 'player_draw';
 
@@ -47,12 +47,12 @@ class NewHostMessage extends Message {
   }
 }
 
-class PlayerGuessMessage extends Message {
+class PlayerChatMessage extends Message {
   final String playerName;
-  final String guess;
+  final String chat;
 
-  const PlayerGuessMessage(
-      {required this.playerName, required this.guess, super.key, required super.backgroundColor});
+  const PlayerChatMessage(
+      {required this.playerName, required this.chat, super.key, required super.backgroundColor});
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +68,7 @@ class PlayerGuessMessage extends Message {
                   style: const TextStyle(
                       fontSize: 14, fontWeight: FontWeight.w700, fontFamily: 'Nunito')),
               TextSpan(
-                  text: guess,
+                  text: chat,
                   style: const TextStyle(
                       fontSize: 14, fontWeight: FontWeight.w500, fontFamily: 'Nunito')),
             ],

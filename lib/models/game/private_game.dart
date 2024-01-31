@@ -1,10 +1,12 @@
 import 'package:cd_mobile/models/game/game.dart';
+import 'package:cd_mobile/models/game/state/game_state.dart';
 import 'package:cd_mobile/models/game/message.dart';
 import 'package:cd_mobile/models/game/player.dart';
+import 'package:cd_mobile/models/game/state/wait_for_setup.dart';
 import 'package:cd_mobile/pages/gameplay/gameplay.dart';
 import 'package:cd_mobile/pages/gameplay/widgets/game_settings.dart';
+import 'package:cd_mobile/pages/gameplay/widgets/main_content_footer/main_content_footer.dart';
 import 'package:cd_mobile/pages/home/home.dart';
-import 'package:cd_mobile/utils/datetime.dart';
 import 'package:cd_mobile/utils/socket_io.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -14,17 +16,15 @@ import 'dart:html' as html;
 class PrivateGame extends Game {
   PrivateGame._internal(
       {required this.options,
-      required this.settings,
-      required super.status,
-      required super.word,
-      required super.remainingTime,
+      required super.settings,
+      required super.state,
       required super.currentRound,
       required super.rounds,
       required super.playersByList,
       required super.roomCode});
 
   Map<String, dynamic> options;
-  RxMap<String, dynamic> settings;
+
   void changeSettings(String key, dynamic value) {
     if (key == 'rounds') {
       rounds.value = value;
@@ -45,7 +45,7 @@ class PrivateGame extends Game {
     var inst = SocketIO.inst;
     inst.eventHandlers.onConnect = (_) {
       inst.socket.emitWithAck(
-          'init_private_room', {'player': MePlayer.inst.toJSON(), 'lang': Get.locale!.languageCode},
+          'init_private_room', {'player': MePlayer.inst.toJSON(), 'lang': Get.locale!.toString()},
           ack: (requestedRoomResult) {
         if (requestedRoomResult['success']) {
           var createdRoom = requestedRoomResult['data'];
@@ -62,19 +62,18 @@ class PrivateGame extends Game {
           Game.inst = PrivateGame._internal(
               roomCode: createdRoom['code'],
               settings: settings.obs,
-              remainingTime: 0,
               currentRound: RxInt(1),
               rounds: RxInt(settings['rounds']),
               // ignore: unnecessary_cast
               playersByList: [me as Player].obs,
-              status: 'waiting'.obs,
-              word: ''.obs,
+              // ignore: unnecessary_cast
+              state: (WaitForSetupState() as GameState).obs,
               options: createdRoom['settings']['options']);
 
           Game.inst.addMessage((color) => NewHostMessage(
               playerName: createdRoom['message']['player_name'], backgroundColor: color));
 
-          GameplayController.setUpOwnedPrivateGame();
+          // GameplayController.setUpOwnedPrivateGame();
           Get.to(() => const GameplayPage(),
               binding: GameplayBinding(), transition: Transition.noTransition);
         } else {
@@ -103,9 +102,11 @@ class PrivateGame extends Game {
 
     var inst = SocketIO.inst;
     inst.eventHandlers.onConnect = (_) {
-      inst.socket
-          .emitWithAck('join_private_room', {'player': MePlayer.inst.toJSON(), 'code': roomCode, 'lang':Get.locale!.languageCode},
-              ack: (requestedJoiningRoomResult) {
+      inst.socket.emitWithAck('join_private_room', {
+        'player': MePlayer.inst.toJSON(),
+        'code': roomCode,
+        'lang': Get.locale!.toString()
+      }, ack: (requestedJoiningRoomResult) {
         if (requestedJoiningRoomResult['success']) {
           var roomAndNewPlayer = requestedJoiningRoomResult['data'];
 
@@ -117,12 +118,6 @@ class PrivateGame extends Game {
 
           var room = roomAndNewPlayer['room'];
 
-          // remainingTime
-          int remainingTime = 0;
-          if (room['currentRoundStartedAt'] != null) {
-            remainingTime = hasPassed(room['currentRoundStartedAt']).inSeconds;
-          }
-
           // currentRound
           int currentRound = 1;
           if (room['currentRound'] != null) {
@@ -132,15 +127,8 @@ class PrivateGame extends Game {
           // rounds
           int rounds = room['settings']['rounds'];
 
-          // status
-          String status = room['status'];
-
-          // word
-          String word = '';
-          List<dynamic>? words = room['words'];
-          if (words != null) {
-            word = words[words.length - 1];
-          }
+          // state
+          GameState state = GameState.fromJSON(room['state']);
 
           // players
           List<dynamic> rawPlayers = room['players'];
@@ -156,18 +144,13 @@ class PrivateGame extends Game {
           String roomCode = room['code'];
 
           Game.inst = PrivateGame._internal(
-              remainingTime: remainingTime,
               currentRound: currentRound.obs,
               rounds: rounds.obs,
-              status: status.obs,
-              word: word.obs,
+              state: state.obs,
               playersByList: players.obs,
               roomCode: roomCode,
               options: room['options'],
               settings: (room['settings'] as Map<String, dynamic>).obs);
-
-          // set up gameplay
-          GameplayController.setUpPrivateGameForGuest();
 
           Get.to(() => const GameplayPage(),
               binding: GameplayBinding(), transition: Transition.noTransition);
@@ -247,6 +230,7 @@ class PrivateGame extends Game {
     // gather settings, settings from dropdown and check button is saved in settings already
     // now have left only the custom words
     if (Get.find<GlobalKey<FormState>>().currentState!.validate()) {
+      Get.find<MainContentAndFooterController>().clearCanvasAndHideTopWidget();
       // start game
       var settings = Map<String, dynamic>.from((Game.inst as PrivateGame).settings);
       settings['custom_words'] = CustomWordsInput.proceededWords;

@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:url_strategy/url_strategy.dart';
 
-// TODO: JOIN ROOM
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   setPathUrlStrategy();

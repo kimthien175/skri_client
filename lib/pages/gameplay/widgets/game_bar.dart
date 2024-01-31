@@ -31,13 +31,7 @@ class GameBar extends StatelessWidget {
                       }),
                       style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w800))))
             ]),
-            Flexible(
-                child: Center(
-                    child: Obx(() => Text(
-                          Game.inst.status.value.tr.toUpperCase(),
-                          style: const TextStyle(
-                              fontFamily: 'Inconsolata', fontWeight: FontWeight.w700, fontSize: 16),
-                        )))),
+            Flexible(child: Center(child: Obx(() => Game.inst.state.value.middleStatusOnBar))),
             Container(
                 width: 300,
                 alignment: Alignment.centerRight,

@@ -1,4 +1,6 @@
+import 'package:cd_mobile/generated/locales.g.dart';
 import 'package:cd_mobile/models/game/game.dart';
+import 'package:cd_mobile/models/game/player.dart';
 import 'package:cd_mobile/models/game/private_game.dart';
 import 'package:cd_mobile/models/gif_manager.dart';
 import 'package:cd_mobile/utils/styles.dart';
@@ -6,13 +8,18 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class GameSettingsController extends GetxController {
-  RxBool isCovered = false.obs;
+  GameSettingsController() {
+    isCovered = (!(MePlayer.inst.isOwner == true)).obs;
+  }
+  late RxBool isCovered;
 }
 
 class GameSettings extends StatelessWidget {
-  GameSettings({super.key});
+  GameSettings({ super.key}) {
+    controller = Get.put(GameSettingsController());
+  }
 
-  final controller = Get.put(GameSettingsController());
+  late final GameSettingsController controller;
 
   // DBRoomSettingsDocument
   static Map<String, dynamic> get fetchedOptions => (Game.inst as PrivateGame).options;
@@ -30,7 +37,7 @@ class GameSettings extends StatelessWidget {
                   child: Column(children: [
                     _SettingsItem(gif: 'setting_1', settingKey: 'players'),
                     SizedBox(height: 3.5),
-                    _SettingsItem(gif: 'setting_0', settingKey: 'language'),
+                    _LanguageSettingItem(),
                     SizedBox(height: 3.5),
                     _SettingsItem(gif: 'setting_2', settingKey: 'drawtime'),
                     SizedBox(height: 3.5),
@@ -177,13 +184,13 @@ class CustomWordsInput extends StatelessWidget {
         'min_char_per_word': minCharPerWord.toString(),
         'max_char_per_word': maxCharPerWord.toString()
       });
-      invalidationMsg = "${invalidationMsg.isEmpty ? '':'$invalidationMsg\n'}$newMsg";
+      invalidationMsg = "${invalidationMsg.isEmpty ? '' : '$invalidationMsg\n'}$newMsg";
     }
 
     if (duplicatedWords.isNotEmpty) {
       var newMsg = "custom_words_input_validate_duplicated_words"
           .trParams({'duplicatedWords': duplicatedWords.values.toString()});
-      invalidationMsg = "${invalidationMsg.isEmpty ? '':'$invalidationMsg\n'}$newMsg";
+      invalidationMsg = "${invalidationMsg.isEmpty ? '' : '$invalidationMsg\n'}$newMsg";
     }
 
     if (invalidationMsg.isNotEmpty) {
@@ -262,8 +269,7 @@ class _SettingsItem extends StatelessWidget {
       child: Text(value is String ? value.tr : value.toString(),
           style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700)));
 
-  @override
-  Widget build(BuildContext context) {
+  List<DropdownMenuItem> getItems() {
     List<DropdownMenuItem> items = [];
     var settings = GameSettings.fetchedOptions[settingKey];
     if (settings['list'] == null) {
@@ -278,6 +284,11 @@ class _SettingsItem extends StatelessWidget {
         items.add(_menuItem(e));
       }
     }
+    return items;
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Expanded(
         child: Row(children: [
       Expanded(
@@ -303,7 +314,7 @@ class _SettingsItem extends StatelessWidget {
                       padding: const EdgeInsets.only(left: 7),
                       // isExpanded: true,
                       value: getSetting(),
-                      items: items,
+                      items: getItems(),
                       onChanged: changeSetting)))))
     ]));
   }
@@ -327,5 +338,33 @@ class _UseCustomWordsOnlyCheckbox extends StatelessWidget {
         onChanged: (bool? value) {
           (Game.inst as PrivateGame).changeSettings('use_custom_words_only', value);
         }));
+  }
+}
+
+class _LanguageSettingItem extends _SettingsItem {
+  const _LanguageSettingItem() : super(gif: 'setting_0', settingKey: 'language');
+  @override
+  List<DropdownMenuItem> getItems() {
+    List<DropdownMenuItem> items = [];
+    var settings = GameSettings.fetchedOptions[settingKey];
+
+    for (dynamic e in settings['list']) {
+      items.add(_menuItem(e));
+    }
+
+    return items;
+  }
+
+  @override
+  DropdownMenuItem _menuItem(dynamic value) => DropdownMenuItem(
+      value: value,
+      child: Text(AppTranslation.translations[value]!['displayName']!,
+          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700)));
+
+  @override
+  void changeSetting(value) {
+    super.changeSetting(value);
+    var list = value!.split('_');
+    Get.updateLocale(Locale(list[0], list[1]));
   }
 }
