@@ -135,6 +135,11 @@ class StartRoundState extends GameState {
 
     return DrawState.afterChooseWord(startedAt: data['started_at'], playerId: playerId, word: data['word']);
   }
+
+  @override
+  void clear() {
+    Game.inst.remainingTime.stop();
+  }
 }
 
 class RoundWidget extends StatelessWidget {

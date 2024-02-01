@@ -20,7 +20,7 @@ abstract class GameState {
             playerId: rawGameState['playerId'],
             startedAt: rawGameState['startedAt'],
             word: rawGameState['word']);
-            
+
       case 'chooseWord':
         return ChooseWordState(
             playerId: rawGameState['playerId'],
@@ -43,6 +43,8 @@ abstract class GameState {
       );
 
   Future<void> setup();
+
+  void clear(){}
 }
 
 class ChooseWordState extends GameState {
@@ -60,6 +62,8 @@ class ChooseWordState extends GameState {
     // TODO: implement next
     throw UnimplementedError();
   }
+  
+
 }
 
 class DrawResultState extends GameState {
@@ -76,6 +80,8 @@ class DrawResultState extends GameState {
     // TODO: implement next
     throw UnimplementedError();
   }
+  
+
 }
 
 class GameResultState extends GameState {
@@ -90,6 +96,8 @@ class GameResultState extends GameState {
     // TODO: implement setup
     throw UnimplementedError();
   }
+  
+
 }
 
 class MatchMakingState extends GameState {
@@ -108,4 +116,5 @@ class MatchMakingState extends GameState {
     // TODO: implement next
     throw UnimplementedError();
   }
+
 }

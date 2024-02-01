@@ -92,6 +92,7 @@ abstract class Game extends GetxController {
   static bool get isEmpty => _inst == null;
 
   void leave() {
+    state.value.clear();
     SocketIO.inst.socket.disconnect();
 
     // reset meplayer as well

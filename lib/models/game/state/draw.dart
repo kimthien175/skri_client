@@ -3,6 +3,7 @@ import 'package:cd_mobile/models/game/player.dart';
 import 'package:cd_mobile/models/game/private_game.dart';
 import 'package:cd_mobile/models/game/state/game_state.dart';
 import 'package:cd_mobile/pages/gameplay/widgets/draw/draw_widget.dart';
+import 'package:cd_mobile/pages/gameplay/widgets/draw_view/draw_view.dart';
 import 'package:cd_mobile/pages/gameplay/widgets/main_content_footer/main_content_footer.dart';
 import 'package:cd_mobile/utils/datetime.dart';
 import 'package:cd_mobile/utils/socket_io.dart';
@@ -12,7 +13,7 @@ import 'package:get/get.dart';
 class DrawState extends GameState {
   DrawState({required this.startedAt, required this.playerId, required this.word});
 
-  DrawState.afterChooseWord({required this.startedAt, required this.playerId, required this.word}){
+  DrawState.afterChooseWord({required this.startedAt, required this.playerId, required this.word}) {
     afterChooseWord();
   }
   String startedAt;
@@ -20,12 +21,14 @@ class DrawState extends GameState {
   String word;
 
   void afterChooseWord() async {
-    Get.find<MainContentAndFooterController>().child.value = DrawWidget();
+    Get.find<MainContentAndFooterController>().child.value =
+        playerId == MePlayer.inst.id ? DrawWidget() : DrawViewWidget();
 
     var durationFromStarted = hasPassed(startedAt);
-    Game.inst.remainingTime.start(Game.inst.settings['drawtime'] - durationFromStarted.inSeconds, (){
-      if (playerId == MePlayer.inst.id){
-        SocketIO.inst.socket.emit('end_draw','smt');
+    Game.inst.remainingTime.start(Game.inst.settings['drawtime'] - durationFromStarted.inSeconds,
+        () {
+      if (playerId == MePlayer.inst.id) {
+        SocketIO.inst.socket.emit('end_draw', 'smt');
       }
     });
   }
@@ -76,7 +79,7 @@ class DrawState extends GameState {
     );
   }
 
-@override
+  @override
   Future<void> setup() async {
     afterChooseWord();
   }
@@ -85,5 +88,10 @@ class DrawState extends GameState {
   Future<GameState> next(data) {
     // TODO: implement next
     throw UnimplementedError();
+  }
+
+  @override
+  void clear() {
+    Game.inst.remainingTime.stop();
   }
 }
