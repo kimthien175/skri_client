@@ -1,6 +1,7 @@
 // ignore_for_file: invalid_use_of_protected_member,
 
 import 'package:cd_mobile/pages/gameplay/widgets/draw/widgets/stroke_value_item.dart';
+import 'package:cd_mobile/utils/socket_io.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -8,7 +9,7 @@ import 'mode.dart';
 import 'step.dart';
 import 'widgets/color.dart';
 
-class DrawTools extends GetxController{
+class DrawTools extends GetxController {
   // singleton
   static init() {
     _inst = DrawTools._internal();
@@ -50,21 +51,16 @@ class DrawTools extends GetxController{
     Color.fromRGBO(204, 119, 77, 1),
     Color.fromRGBO(99, 48, 13, 1),
   ];
-  List<double> strokeSizeList = [
-    0.2 * 20,
-    (1 / 3) * 20,
-    (5 / 9) * 20,
-    (37 / 45) * 20,
-    1 * 20
-  ];
+  List<double> strokeSizeList = [0.2 * 20, (1 / 3) * 20, (5 / 9) * 20, (37 / 45) * 20, 1 * 20];
 
   late Color _currentColor;
   Color get currentColor => _currentColor;
   set currentColor(Color value) {
     _currentColor = value;
-    DrawManager.inst._currentStep.value.changeColor(value);
+    DrawManager.inst._currentStep.changeColor(value);
     Get.find<RecentColorController>().addRecent();
-    var mainStrokeItemController = Get.find<StrokeValueItemController>(tag: 'stroke_value_selector');
+    var mainStrokeItemController =
+        Get.find<StrokeValueItemController>(tag: 'stroke_value_selector');
     mainStrokeItemController.value.refresh();
     mainStrokeItemController.isHovered.refresh();
   }
@@ -73,7 +69,7 @@ class DrawTools extends GetxController{
   double get currentStrokeSize => _currentStrokeSize;
   set currentStrokeSize(double value) {
     _currentStrokeSize = value;
-    DrawManager.inst._currentStep.value.changeStrokeSize(value);
+    DrawManager.inst._currentStep.changeStrokeSize(value);
   }
 
   // ignore: unnecessary_cast
@@ -86,28 +82,27 @@ class DrawTools extends GetxController{
   }
 }
 
-class DrawManager extends GetxController {
+class DrawManager extends ChangeNotifier {
   void onDown(Offset point) {
-    _currentStep.value.onDown(point);
-    repaint.notifyListeners();
+    _currentStep.onDown(point);
+    notifyListeners();
   }
 
   void onUpdate(Offset point) {
-    _currentStep.value.onUpdate(point);
-    repaint.notifyListeners();
+    _currentStep.onUpdate(point);
+    notifyListeners();
   }
 
   void onEnd() {
-    if (!(_currentStep.value.onEnd())) return;
+    if (!(_currentStep.onEnd())) return;
 
     // push the old current step into past steps
-    _currentStep.value.id = pastSteps.length;
-    pastSteps.add(_currentStep.value);
+    _currentStep.id = pastSteps.length;
+    pastSteps.add(_currentStep);
     // compile temp
     addToCompilingChain();
 
     setCurrentStep();
-    //repaint.notifyListeners();
   }
 
   void undo() {
@@ -116,23 +111,23 @@ class DrawManager extends GetxController {
     pastSteps.removeLast();
 
     // check current draw index
-    if (pastSteps.length == drawnTempIndex.value) {
+    if (pastSteps.length == drawnTempIndex) {
       decreaseDrawTempIndex();
     }
   }
 
   void clear() {
     pastSteps.add(ClearStep(id: pastSteps.length));
-    drawnTempIndex.value = pastSteps.length - 1;
+    drawnTempIndex = pastSteps.length - 1;
     // because the clear step make the compiling chain stop
     addToCompilingChain();
   }
 
   Future<void> addToCompilingChain() async {
-    if (completedTempIndex.value == pastSteps.length - 2) {
+    if (completedTempIndex == pastSteps.length - 2) {
       do {
         try {
-          await pastSteps[completedTempIndex.value + 1].compileTemp();
+          await pastSteps[completedTempIndex + 1].compileTemp();
           increaseCompletedTempIndex();
         } catch (e) {
           // print('sync e');
@@ -140,51 +135,63 @@ class DrawManager extends GetxController {
           // await _fixErrorNodeAndContinue(1);
 
           // remove this node
-          pastSteps.removeAt(completedTempIndex.value + 1);
+          pastSteps.removeAt(completedTempIndex + 1);
           // fix drawnTempIndex
           if (pastSteps.last is ClearStep) {
-            drawnTempIndex.value--;
+            drawnTempIndex--;
           }
 
-          for (int i = completedTempIndex.value + 1; i < pastSteps.length; i++) {
+          for (int i = completedTempIndex + 1; i < pastSteps.length; i++) {
             pastSteps[i].id--;
           }
         }
-      } while (completedTempIndex.value < pastSteps.length - 1);
+      } while (completedTempIndex < pastSteps.length - 1);
     }
   }
 
   static const double width = 800;
   static const double height = 600;
 
-  RxInt completedTempIndex = (-1).obs;
-  RxInt drawnTempIndex = (-1).obs;
+  int completedTempIndex = -1;
+  int _drawnTempIndex = -1;
+  int get drawnTempIndex => _drawnTempIndex;
+  set drawnTempIndex(int value) {
+    _drawnTempIndex = value;
+    notifyListeners();
+    emitTemp(value);
+  }
+
+  Future<void> emitTemp(int value) async {
+    if (value == -1) {
+      SocketIO.inst.socket.emit('draw:temp', {'type': 'empty'});
+    } else {
+      DrawManager.inst.pastSteps[value].emitTemp();
+    }
+  }
 
   void decreaseDrawTempIndex() {
-    drawnTempIndex.value--;
+    drawnTempIndex--;
     // < : completedTempIndex = drawTempIndex
     // = : ok
     // > : set drawTempIndex = completedTEmpIndex
-    if (drawnTempIndex.value < completedTempIndex.value) {
-      completedTempIndex.value = drawnTempIndex.value;
-    } else if (drawnTempIndex.value > completedTempIndex.value) {
-      drawnTempIndex.value = completedTempIndex.value;
+    if (drawnTempIndex < completedTempIndex) {
+      completedTempIndex = drawnTempIndex;
+    } else if (drawnTempIndex > completedTempIndex) {
+      drawnTempIndex = completedTempIndex;
     }
-    repaint.notifyListeners();
   }
 
   void increaseCompletedTempIndex() {
-    completedTempIndex.value++;
+    completedTempIndex++;
     // hey i'm newer, point to me to draw the new one
-    if (completedTempIndex.value > drawnTempIndex.value) {
-      drawnTempIndex.value = completedTempIndex.value;
+    if (completedTempIndex > drawnTempIndex) {
+      drawnTempIndex = completedTempIndex;
     }
-    repaint.notifyListeners();
   }
 
-  final Rx<DrawStep> _currentStep = DrawTools.inst.currentMode.step(id: -2).obs;
+  DrawStep _currentStep = DrawTools.inst.currentMode.step(id: -2);
   void setCurrentStep() {
-    _currentStep.value = DrawTools.inst.currentMode.step(id: -2);
+    _currentStep = DrawTools.inst.currentMode.step(id: -2);
   }
 
   List<DrawStep> pastSteps = [];
@@ -192,8 +199,6 @@ class DrawManager extends GetxController {
   static DrawManager? _inst;
   static bool get isNull => _inst == null;
   static DrawManager get inst => _inst!;
-
-  ChangeNotifier repaint = ChangeNotifier();
 
   static init() {
     DrawTools.init();
@@ -210,10 +215,10 @@ class DrawStepCustomPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     // draw temp in pastSteps
-    if (drawInst.drawnTempIndex.value != -1) {
-      drawInst.pastSteps[drawInst.drawnTempIndex.value].drawTemp(canvas);
+    if (drawInst.drawnTempIndex != -1) {
+      drawInst.pastSteps[drawInst.drawnTempIndex].drawTemp(canvas);
     }
-    drawInst._currentStep.value.drawCurrent(canvas);
+    drawInst._currentStep.drawCurrent(canvas);
   }
 
   @override

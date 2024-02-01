@@ -32,19 +32,18 @@ class DrawWidget extends StatelessWidget {
                     child: MouseRegion(
                         cursor: DrawTools.inst.currentMode.cursor,
                         child: GestureDetector(
-                          onPanDown: (details) {
-                            DrawManager.inst.onDown(details.localPosition);
-                          },
-                          onPanUpdate: (details) {
-                            DrawManager.inst.onUpdate(details.localPosition);
-                          },
-                          onPanEnd: (details) {
-                            DrawManager.inst.onEnd();
-                          },
-                          child: CustomPaint(
-                              size: const Size(DrawManager.width, DrawManager.height),
-                              painter: DrawStepCustomPainter(repaint: DrawManager.inst.repaint)),
-                        )))),
+                            onPanDown: (details) {
+                              DrawManager.inst.onDown(details.localPosition);
+                            },
+                            onPanUpdate: (details) {
+                              DrawManager.inst.onUpdate(details.localPosition);
+                            },
+                            onPanEnd: (details) {
+                              DrawManager.inst.onEnd();
+                            },
+                            child: CustomPaint(
+                                size: const Size(DrawManager.width, DrawManager.height),
+                                painter: DrawStepCustomPainter(repaint: DrawManager.inst)))))),
             const SizedBox(height: 6),
             const SizedBox(
                 width: 800,
