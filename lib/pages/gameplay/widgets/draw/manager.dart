@@ -165,7 +165,7 @@ class DrawManager extends ChangeNotifier {
 
   Future<void> emitTemp(int value) async {
     if (value == -1) {
-      SocketIO.inst.socket.emit('draw:temp', {'type': 'empty'});
+      SocketIO.inst.socket.emit('draw:clear');
     } else {
       DrawManager.inst.pastSteps[value].emitTemp();
     }

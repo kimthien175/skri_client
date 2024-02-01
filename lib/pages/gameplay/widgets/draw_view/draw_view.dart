@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:cd_mobile/utils/socket_io.dart';
 import 'package:flutter/material.dart';
 
@@ -56,11 +58,18 @@ class DrawViewManager extends ChangeNotifier {
   static void init() {
     _inst = DrawViewManager._internal();
     SocketIO.inst.socket.on('draw:temp', (data) async {
-      inst.temp = await TempStepView.fromJSON(data);
-      inst.notifyListeners();
+      TempStepView.fromJSON(data).then((value) {
+        inst.temp = value;
+        inst.notifyListeners();
+      });
     });
     SocketIO.inst.socket.on('draw:current', (data) {
       inst.current = CurrentStepView.fromJSON(data);
+      inst.notifyListeners();
+    });
+    SocketIO.inst.socket.on('draw:clear',(_){
+      inst.current = null;
+      inst.temp = null;
       inst.notifyListeners();
     });
   }
@@ -75,7 +84,12 @@ class DrawViewManager extends ChangeNotifier {
 
 abstract class CurrentStepView {
   static CurrentStepView fromJSON(dynamic data) {
-    return BrushCurrentViewStep(data);
+    switch (data['type']) {
+      case 'brush':
+        return BrushCurrentViewStep(data);
+      default:
+        throw Exception('CurrentStepView fromJSON: unimplemented case $data');
+    }
   }
 
   void draw(Canvas canvas);
@@ -85,7 +99,8 @@ class BrushCurrentViewStep extends CurrentStepView {
   BrushCurrentViewStep(dynamic data) {
     _brush = Paint()
       ..strokeWidth = data['size']
-      ..color = Color.fromARGB(data['a'], data['r'], data['g'], data['b'])..strokeCap = StrokeCap.round;
+      ..color = Color.fromARGB(data['a'], data['r'], data['g'], data['b'])
+      ..strokeCap = StrokeCap.round;
     for (var rawPoint in data['points']) {
       points.add(Offset(rawPoint['x'], rawPoint['y']));
     }
@@ -106,28 +121,25 @@ class BrushCurrentViewStep extends CurrentStepView {
 }
 
 abstract class TempStepView {
-  static Future<TempStepView> fromJSON(dynamic data) async {
+  static Future<TempStepView?> fromJSON(dynamic data) async {
     switch (data['type']) {
       case 'color':
         return ColorTempStepView(Color.fromARGB(data['a'], data['r'], data['g'], data['b']));
 
       case 'Uint8List':
+      
         var codec = await ui.instantiateImageCodec(
-            data['Uint8List']); //, targetWidth: decodedImage.width, targetHeight: height)
+            Uint8List.view(data['Uint8List'] as ByteBuffer)
+            ); //, targetWidth: decodedImage.width, targetHeight: height)
 
         var frameInfo = await codec.getNextFrame();
         return ImageTempStepView(frameInfo.image);
+      default:
+        throw Exception('TempStepView fromJSON: unimplemented case, $data');
     }
-    // case 'empty'
-    return ClearTempStepView();
   }
 
   void draw(Canvas canvas);
-}
-
-class ClearTempStepView extends TempStepView {
-  @override
-  void draw(Canvas canvas) {}
 }
 
 class ImageTempStepView extends TempStepView {

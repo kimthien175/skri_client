@@ -240,7 +240,7 @@ class ClearStep extends DrawStep {
 
   @override
   Future<void> emitTemp() async {
-    SocketIO.inst.socket.emit('draw:temp', {'type': 'empty'});
+    SocketIO.inst.socket.emit('draw:clear');
   }
 
   @override
