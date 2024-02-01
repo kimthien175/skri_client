@@ -86,11 +86,13 @@ class DrawManager extends ChangeNotifier {
   void onDown(Offset point) {
     _currentStep.onDown(point);
     notifyListeners();
+    _currentStep.emitCurrent();
   }
 
   void onUpdate(Offset point) {
     _currentStep.onUpdate(point);
     notifyListeners();
+    _currentStep.emitCurrent();
   }
 
   void onEnd() {

@@ -1,8 +1,11 @@
+import 'dart:typed_data';
 import 'dart:ui';
+
+import 'package:cd_mobile/utils/socket_io.dart';
+import 'package:flutter/foundation.dart';
 
 import 'flood_fill.dart';
 import 'manager.dart';
-
 
 abstract class DrawStep {
   DrawStep({required this.id});
@@ -39,6 +42,20 @@ abstract class DrawStep {
   void drawTemp(Canvas canvas) {
     canvas.drawPicture(temp!);
   }
+
+  Future<void> emitTemp() async {
+    temp!
+        .toImage(DrawManager.width.toInt(), DrawManager.height.toInt())
+        .then((value) => value.toByteData(format: ImageByteFormat.png))
+        .then((value) {
+      if (value != null) {
+        SocketIO.inst.socket.emit('draw:temp',
+            {'type': 'Uint8List', 'hashCode': hashCode, 'Uint8List': value.buffer.asUint8List()});
+      }
+    });
+  }
+
+  Future<void> emitCurrent();
 }
 
 class FillStep extends DrawStep {
@@ -110,16 +127,43 @@ class FillStep extends DrawStep {
           point: _point!,
           fillColor: _color);
 
-      var image = await floodfiller.prepareAndFill();
+      byteList = await floodfiller.prepareAndFill();
+      var codec = await instantiateImageCodec(
+          byteList!); //, targetWidth: decodedImage.width, targetHeight: height)
 
-      pictureCanvas.drawImage(image, const Offset(0, 0), Paint());
+      var frameInfo = await codec.getNextFrame();
+
+      pictureCanvas.drawImage(frameInfo.image, const Offset(0, 0), Paint());
     } finally {
       temp = recorder.endRecording();
     }
   }
 
+  /// Unint8list
+  Uint8List? byteList;
+
   @override
   void drawCurrent(Canvas canvas) {}
+
+  @override
+  Future<void> emitTemp() async {
+    if (byteList == null) {
+      SocketIO.inst.socket.emit('draw:temp', {
+        'type': 'color',
+        'hashCode': hashCode,
+        'r': _color.red,
+        'g': _color.green,
+        'b': _color.blue,
+        'a': _color.alpha
+      });
+    } else {
+      SocketIO.inst.socket
+          .emit('draw:temp', {'type': 'Uint8List', 'hashCode': hashCode, 'Uint8List': byteList});
+    }
+  }
+
+  @override
+  Future<void> emitCurrent() async {}
 }
 
 class BrushStep extends DrawStep {
@@ -163,6 +207,23 @@ class BrushStep extends DrawStep {
       canvas.drawLine(points[i], points[i + 1], _brush);
     }
   }
+
+  @override
+  Future<void> emitCurrent() async {
+    var rawPoints = [];
+    for (int i = 0; i < points.length; i++) {
+      rawPoints.add({'x': points[i].dx, 'y': points[i].dy});
+    }
+    SocketIO.inst.socket.emit('draw:current', {
+      'type': 'brush',
+      'size': _brush.strokeWidth,
+      'r': _brush.color.red,
+      'g': _brush.color.green,
+      'b': _brush.color.blue,
+      'a': _brush.color.alpha,
+      'points': rawPoints
+    });
+  }
 }
 
 class ClearStep extends DrawStep {
@@ -176,4 +237,12 @@ class ClearStep extends DrawStep {
 
   @override
   Future<void> compileTemp() async {}
+
+  @override
+  Future<void> emitTemp() async {
+    SocketIO.inst.socket.emit('draw:temp', {'type': 'empty'});
+  }
+
+  @override
+  Future<void> emitCurrent() async {}
 }

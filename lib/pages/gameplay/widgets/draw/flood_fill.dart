@@ -1,6 +1,7 @@
 // ignore_for_file: library_private_types_in_public_api
 
 import 'dart:collection';
+import 'dart:typed_data';
 import 'dart:ui' as ui;
 import 'package:image/image.dart' as img;
 
@@ -8,7 +9,7 @@ class FloodFiller {
   //int stackSize = 16777216;
   //int stackPointer = 0;
   List<int> stack = [];
-  void fill() {
+  void _fill() {
     //CrissCross fills lines in 4 directions : up(q2 = 2), down(q2=3), left(q2=-2), right(q2=-3)
     int x1, x2, lastminx, lastminy, lastmaxx, lastmaxy, t1, t2, q1, q2;
 
@@ -160,21 +161,22 @@ class FloodFiller {
     stack.add(q);
   }
 
-  Future<ui.Image> prepareAndFill() async {
+  Future<Uint8List> prepareAndFill() async {
     // CHECK
     if (isTheSameColorWithFiller(chosenPixel)) throw Exception('FloodFill: duplicated color');
 
-    fill();
+    _fill();
 
     // CONVERT IT BACK AND RETURN
-    var byteList = img.encodePng(decodedImage);
+    //var byteList = img.encodePng(decodedImage);
+    return img.encodePng(decodedImage);
 
-    var codec = await ui
-        .instantiateImageCodec(byteList); //, targetWidth: decodedImage.width, targetHeight: height)
+    // var codec = await ui
+    //     .instantiateImageCodec(byteList); //, targetWidth: decodedImage.width, targetHeight: height)
 
-    var frameInfo = await codec.getNextFrame();
+    // var frameInfo = await codec.getNextFrame();
 
-    return frameInfo.image;
+    // return frameInfo.image;
   }
 
   void changeColor(int x, int y) {
@@ -184,40 +186,6 @@ class FloodFiller {
   // void changePixelColor(img.Pixel pixel) {
   //   decodedImage.setPixelRgba(
   //       pixel.x, pixel.y, fillColor.red, fillColor.green, fillColor.blue, fillColor.alpha);
-  // }
-
-  // void addNeighbors(img.Pixel pixel) {
-  //   // west
-  //   if (pixel.x >= 1) {
-  //     var west = decodedImage.getPixel(pixel.x - 1, pixel.y);
-  //     if (isTheSameColorWithTarget(west)) {
-  //       queue.add(west);
-  //     }
-  //   }
-
-  //   // north
-  //   if (pixel.y >= 1) {
-  //     var north = decodedImage.getPixel(pixel.x, pixel.y - 1);
-  //     if (isTheSameColorWithTarget(north)) {
-  //       queue.add(north);
-  //     }
-  //   }
-
-  //   // east
-  //   if (pixel.x <= width - 2) {
-  //     var east = decodedImage.getPixelSafe(pixel.x + 1, pixel.y);
-  //     if (isTheSameColorWithTarget(east)) {
-  //       queue.add(east);
-  //     }
-  //   }
-
-  //   // south
-  //   if (pixel.y <= height - 2) {
-  //     var south = decodedImage.getPixelSafe(pixel.x, pixel.y + 1);
-  //     if (isTheSameColorWithTarget(south)) {
-  //       queue.add(south);
-  //     }
-  //   }
   // }
 
   bool sameWithOld(int x, int y) {
