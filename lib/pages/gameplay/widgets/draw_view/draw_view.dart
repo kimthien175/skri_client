@@ -60,6 +60,7 @@ class DrawViewManager extends ChangeNotifier {
     SocketIO.inst.socket.on('draw:temp', (data) async {
       TempStepView.fromJSON(data).then((value) {
         inst.temp = value;
+        inst.current = null;
         inst.notifyListeners();
       });
     });

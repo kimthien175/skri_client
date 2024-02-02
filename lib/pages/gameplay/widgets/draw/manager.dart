@@ -123,6 +123,7 @@ class DrawManager extends ChangeNotifier {
     drawnTempIndex = pastSteps.length - 1;
     // because the clear step make the compiling chain stop
     addToCompilingChain();
+    SocketIO.inst.socket.emit('draw:clear');
   }
 
   Future<void> addToCompilingChain() async {
