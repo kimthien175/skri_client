@@ -67,7 +67,7 @@ class DrawViewManager extends ChangeNotifier {
       inst.current = CurrentStepView.fromJSON(data);
       inst.notifyListeners();
     });
-    SocketIO.inst.socket.on('draw:clear',(_){
+    SocketIO.inst.socket.on('draw:clear', (_) {
       inst.current = null;
       inst.temp = null;
       inst.notifyListeners();
@@ -80,6 +80,8 @@ class DrawViewManager extends ChangeNotifier {
 
   CurrentStepView? current;
   TempStepView? temp;
+
+  Map<int, TempStepView> cachedTemp = {};
 }
 
 abstract class CurrentStepView {
@@ -122,21 +124,30 @@ class BrushCurrentViewStep extends CurrentStepView {
 
 abstract class TempStepView {
   static Future<TempStepView?> fromJSON(dynamic data) async {
-    switch (data['type']) {
-      case 'color':
-        return ColorTempStepView(Color.fromARGB(data['a'], data['r'], data['g'], data['b']));
+    var cached = DrawViewManager.inst.cachedTemp[data['hashCode']];
+    if (cached == null) {
+      TempStepView newItem;
+      switch (data['type']) {
+        case 'color':
+          newItem = ColorTempStepView(Color.fromARGB(data['a'], data['r'], data['g'], data['b']));
+          break;
 
-      case 'Uint8List':
-      
-        var codec = await ui.instantiateImageCodec(
-            Uint8List.view(data['Uint8List'] as ByteBuffer)
-            ); //, targetWidth: decodedImage.width, targetHeight: height)
+        case 'Uint8List':
+          var codec = await ui.instantiateImageCodec(Uint8List.view(data['Uint8List']
+              as ByteBuffer)); //, targetWidth: decodedImage.width, targetHeight: height)
 
-        var frameInfo = await codec.getNextFrame();
-        return ImageTempStepView(frameInfo.image);
-      default:
-        throw Exception('TempStepView fromJSON: unimplemented case, $data');
+          var frameInfo = await codec.getNextFrame();
+          newItem = ImageTempStepView(frameInfo.image);
+          break;
+
+        default:
+          throw Exception('TempStepView fromJSON: unimplemented case, $data');
+      }
+      DrawViewManager.inst.cachedTemp[data['hashCode']] = newItem;
+      return newItem;
     }
+
+    return cached;
   }
 
   void draw(Canvas canvas);
