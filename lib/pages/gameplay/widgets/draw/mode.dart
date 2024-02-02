@@ -1,6 +1,7 @@
+import 'package:cd_mobile/pages/gameplay/widgets/draw/step/brush.dart';
 import 'package:flutter/material.dart';
 
-import 'step.dart';
+import 'step/step.dart';
 
 abstract class DrawMode {
   DrawStep Function({required int id}) get step;

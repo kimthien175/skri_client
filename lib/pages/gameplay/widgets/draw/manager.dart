@@ -1,12 +1,13 @@
 // ignore_for_file: invalid_use_of_protected_member,
 
+import 'package:cd_mobile/pages/gameplay/widgets/draw/step/clear.dart';
 import 'package:cd_mobile/pages/gameplay/widgets/draw/widgets/stroke_value_item.dart';
 import 'package:cd_mobile/utils/socket_io.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import 'mode.dart';
-import 'step.dart';
+import 'step/step.dart';
 import 'widgets/color.dart';
 
 class DrawTools extends GetxController {
