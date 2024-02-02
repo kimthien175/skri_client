@@ -58,14 +58,16 @@ class DrawViewManager extends ChangeNotifier {
   static void init() {
     _inst = DrawViewManager._internal();
     SocketIO.inst.socket.on('draw:temp', (data) async {
-      TempStepView.fromJSON(data).then((value) {
-        inst.temp = value;
-        inst.current = null;
-        inst.notifyListeners();
-      });
+      TempStepView.fromJSON(data);
+ 
     });
-    SocketIO.inst.socket.on('draw:current', (data) {
+    SocketIO.inst.socket.on('draw:down_current', (data) {
       inst.current = CurrentStepView.fromJSON(data);
+      inst.notifyListeners();
+    });
+
+    SocketIO.inst.socket.on('draw:update_current', (data) {
+      inst.current!.update(data);
       inst.notifyListeners();
     });
     SocketIO.inst.socket.on('draw:clear', (_) {
@@ -96,6 +98,7 @@ abstract class CurrentStepView {
   }
 
   void draw(Canvas canvas);
+  void update(dynamic point) {}
 }
 
 class BrushCurrentViewStep extends CurrentStepView {
@@ -104,9 +107,8 @@ class BrushCurrentViewStep extends CurrentStepView {
       ..strokeWidth = data['size']
       ..color = Color.fromARGB(data['a'], data['r'], data['g'], data['b'])
       ..strokeCap = StrokeCap.round;
-    for (var rawPoint in data['points']) {
-      points.add(Offset(rawPoint['x'], rawPoint['y']));
-    }
+
+    points.add(Offset(data['point']['x'], data['point']['y']));
   }
   late ui.Paint _brush;
   List<Offset> points = [];
@@ -120,6 +122,11 @@ class BrushCurrentViewStep extends CurrentStepView {
     for (int i = 0; i < points.length - 1; i++) {
       canvas.drawLine(points[i], points[i + 1], _brush);
     }
+  }
+
+  @override
+  void update(point) {
+    points.add(Offset(point['x'], point['y']));
   }
 }
 

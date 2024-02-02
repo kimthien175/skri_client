@@ -1,6 +1,7 @@
 import 'package:cd_mobile/models/game/player.dart';
 import 'package:cd_mobile/models/game/state/game_state.dart';
 import 'package:cd_mobile/models/game/state/start_round.dart';
+import 'package:cd_mobile/pages/gameplay/widgets/draw/draw_widget.dart';
 import 'package:cd_mobile/pages/gameplay/widgets/main_content_footer/main_content_footer.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -8,7 +9,7 @@ import 'package:get/get.dart';
 class WaitForSetupState extends GameState {
   @override
   Future<void> setup() async {
-    Get.find<MainContentAndFooterController>().showSettings();
+    Get.find<MainContentAndFooterController>().child.value = DrawWidget();
   }
 
   @override

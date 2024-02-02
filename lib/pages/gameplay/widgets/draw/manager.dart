@@ -75,10 +75,11 @@ class DrawTools extends GetxController {
   // ignore: unnecessary_cast
   final Rx<DrawMode> _currentMode = (BrushMode() as DrawMode).obs;
   DrawMode get currentMode => _currentMode.value;
+  DrawStep get newCurrentStep => _currentMode.value.step(id: -2);
 
   set currentMode(DrawMode mode) {
     _currentMode.value = mode;
-    DrawManager.inst.setCurrentStep();
+    DrawManager.inst._currentStep = newCurrentStep;
   }
 }
 
@@ -86,116 +87,42 @@ class DrawManager extends ChangeNotifier {
   void onDown(Offset point) {
     _currentStep.onDown(point);
     notifyListeners();
-    _currentStep.emitCurrent();
   }
 
   void onUpdate(Offset point) {
     _currentStep.onUpdate(point);
     notifyListeners();
-    _currentStep.emitCurrent();
   }
 
   void onEnd() {
     if (!(_currentStep.onEnd())) return;
 
-    // push the old current step into past steps
     _currentStep.id = pastSteps.length;
     pastSteps.add(_currentStep);
-    // compile temp
-    addToCompilingChain();
 
-    setCurrentStep();
+    _currentStep = DrawTools.inst.newCurrentStep;
   }
 
   void undo() {
     if (pastSteps.isEmpty) return;
-    // remove last step on pastSteps
+
     pastSteps.removeLast();
 
-    // check current draw index
-    if (pastSteps.length == drawnTempIndex) {
-      decreaseDrawTempIndex();
-    }
+    lastStepRepaint.notifyListeners();
   }
+
+  final ChangeNotifier lastStepRepaint = ChangeNotifier();
 
   void clear() {
     pastSteps.add(ClearStep(id: pastSteps.length));
-    drawnTempIndex = pastSteps.length - 1;
-    // because the clear step make the compiling chain stop
-    addToCompilingChain();
+    lastStepRepaint.notifyListeners();
     SocketIO.inst.socket.emit('draw:clear');
-  }
-
-  Future<void> addToCompilingChain() async {
-    if (completedTempIndex == pastSteps.length - 2) {
-      do {
-        try {
-          await pastSteps[completedTempIndex + 1].compileTemp();
-          increaseCompletedTempIndex();
-        } catch (e) {
-          // print('sync e');
-          // print(e);
-          // await _fixErrorNodeAndContinue(1);
-
-          // remove this node
-          pastSteps.removeAt(completedTempIndex + 1);
-          // fix drawnTempIndex
-          if (pastSteps.last is ClearStep) {
-            drawnTempIndex--;
-          }
-
-          for (int i = completedTempIndex + 1; i < pastSteps.length; i++) {
-            pastSteps[i].id--;
-          }
-        }
-      } while (completedTempIndex < pastSteps.length - 1);
-    }
   }
 
   static const double width = 800;
   static const double height = 600;
 
-  int completedTempIndex = -1;
-  int _drawnTempIndex = -1;
-  int get drawnTempIndex => _drawnTempIndex;
-  set drawnTempIndex(int value) {
-    _drawnTempIndex = value;
-    notifyListeners();
-    emitTemp(value);
-  }
-
-  Future<void> emitTemp(int value) async {
-    if (value == -1) {
-      SocketIO.inst.socket.emit('draw:clear');
-    } else {
-      DrawManager.inst.pastSteps[value].emitTemp();
-    }
-  }
-
-  void decreaseDrawTempIndex() {
-    drawnTempIndex--;
-    // < : completedTempIndex = drawTempIndex
-    // = : ok
-    // > : set drawTempIndex = completedTEmpIndex
-    if (drawnTempIndex < completedTempIndex) {
-      completedTempIndex = drawnTempIndex;
-    } else if (drawnTempIndex > completedTempIndex) {
-      drawnTempIndex = completedTempIndex;
-    }
-  }
-
-  void increaseCompletedTempIndex() {
-    completedTempIndex++;
-    // hey i'm newer, point to me to draw the new one
-    if (completedTempIndex > drawnTempIndex) {
-      drawnTempIndex = completedTempIndex;
-    }
-  }
-
-  DrawStep _currentStep = DrawTools.inst.currentMode.step(id: -2);
-  void setCurrentStep() {
-    _currentStep = DrawTools.inst.currentMode.step(id: -2);
-  }
+  DrawStep _currentStep = DrawTools.inst.newCurrentStep;
 
   List<DrawStep> pastSteps = [];
 
@@ -212,20 +139,30 @@ class DrawManager extends ChangeNotifier {
   DrawManager._internal();
 }
 
-class DrawStepCustomPainter extends CustomPainter {
-  DrawStepCustomPainter({super.repaint});
+class CurrentStepCustomPainter extends CustomPainter {
+  CurrentStepCustomPainter({super.repaint});
   final drawInst = DrawManager.inst;
   @override
   void paint(Canvas canvas, Size size) {
-    // draw temp in pastSteps
-    if (drawInst.drawnTempIndex != -1) {
-      drawInst.pastSteps[drawInst.drawnTempIndex].drawTemp(canvas);
-    }
-    drawInst._currentStep.drawCurrent(canvas);
+    drawInst._currentStep.drawAddon(canvas);
   }
 
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) {
     return true;
   }
+}
+
+class LastStepCustomPainter extends CustomPainter{
+  LastStepCustomPainter({super.repaint});
+    final drawInst = DrawManager.inst;
+  @override
+  void paint(Canvas canvas, Size size) {
+    if (drawInst.pastSteps.isNotEmpty){
+      drawInst.pastSteps.last.drawFull(canvas);
+    }
+  }
+  
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) =>true;
 }
