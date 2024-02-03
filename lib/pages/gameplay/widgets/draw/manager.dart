@@ -113,6 +113,9 @@ class DrawManager extends ChangeNotifier {
   }
 
   final ChangeNotifier lastStepRepaint = ChangeNotifier();
+  void rerenderLastStep(){
+    lastStepRepaint.notifyListeners();
+  }
 
   void clear() {
     pastSteps.add(ClearStep(id: pastSteps.length));
@@ -160,7 +163,7 @@ class LastStepCustomPainter extends CustomPainter{
   @override
   void paint(Canvas canvas, Size size) {
     if (drawInst.pastSteps.isNotEmpty){
-      drawInst.pastSteps.last.drawFull(canvas);
+      drawInst.pastSteps.last.draw(canvas);
     }
   }
   

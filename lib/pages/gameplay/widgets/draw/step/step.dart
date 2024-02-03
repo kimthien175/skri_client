@@ -3,7 +3,9 @@ import 'dart:ui';
 import '../manager.dart';
 
 abstract class DrawStep {
-  DrawStep({required this.id});
+  DrawStep({required this.id}){
+    draw = drawFresh;
+  }
 
   int id;
   Picture? temp;
@@ -23,13 +25,28 @@ abstract class DrawStep {
 
   /// addOn, no previous drawing
   void drawAddon(Canvas canvas);
-  void drawFull(Canvas canvas) {
-    // draw temp of previous node
+  late void Function(Canvas canvas) draw;
+
+  void drawTemp(Canvas canvas){
+    canvas.drawPicture(temp!);
+  }
+
+  void drawFresh(Canvas canvas){
     if (id > 0) {
-      DrawManager.inst.pastSteps[id - 1].drawFull(canvas);
+      DrawManager.inst.pastSteps[id - 1].draw(canvas);
     }
 
     drawAddon(canvas);
+  }
+
+  Future<void> switchToTemp() async {
+    var pictureCanvas = Canvas(recorder);
+
+    drawFresh(pictureCanvas);
+
+    temp = recorder.endRecording();
+
+    draw = drawTemp;
   }
 
   // Future<void> emitTemp() async {

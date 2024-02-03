@@ -1,6 +1,7 @@
 import 'package:cd_mobile/pages/gameplay/widgets/draw/step/brush.dart';
 import 'package:flutter/material.dart';
 
+import 'step/fill.dart';
 import 'step/step.dart';
 
 abstract class DrawMode {
@@ -17,10 +18,10 @@ class BrushMode extends DrawMode {
   MouseCursor get cursor => SystemMouseCursors.grab;
 }
 
-// class FillMode extends DrawMode {
-//   @override
-//   DrawStep Function({required int id}) get step => FillStep.init;
+class FillMode extends DrawMode {
+  @override
+  DrawStep Function({required int id}) get step => FillStep.init;
   
-//   @override
-//   MouseCursor get cursor => SystemMouseCursors.help;
-// }
+  @override
+  MouseCursor get cursor => SystemMouseCursors.help;
+}

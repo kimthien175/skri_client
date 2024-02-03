@@ -62,7 +62,7 @@ class DrawWidget extends StatelessWidget {
                   Spacer(),
                   BrushButton(),
                   SizedBox(width: 6),
-                  //FillButton(),
+                  FillButton(),
                   Spacer(),
                   UndoButton(),
                   SizedBox(width: 6),
@@ -103,30 +103,30 @@ class BrushButton extends StatelessWidget {
   }
 }
 
-// class FillButton extends StatelessWidget {
-//   const FillButton({super.key});
+class FillButton extends StatelessWidget {
+  const FillButton({super.key});
 
-//   @override
-//   Widget build(BuildContext context) {
-//     return InkWell(
-//         onTap: () {
-//           if (DrawTools.inst.currentMode is! FillMode) {
-//             DrawTools.inst.currentMode = FillMode();
-//           }
-//         },
-//         child: Obx(() => Container(
-//             decoration: BoxDecoration(
-//                 color: DrawTools.inst.currentMode is FillMode
-//                     ? const Color.fromRGBO(171, 102, 235, 1)
-//                     : Colors.white,
-//                 borderRadius: const BorderRadius.all(Radius.circular(3))),
-//             child: GifManager.inst
-//                 .misc('fill')
-//                 .builder
-//                 .initShadowedOrigin()
-//                 .doFitSize(height: 48, width: 48))));
-//   }
-// }
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+        onTap: () {
+          if (DrawTools.inst.currentMode is! FillMode) {
+            DrawTools.inst.currentMode = FillMode();
+          }
+        },
+        child: Obx(() => Container(
+            decoration: BoxDecoration(
+                color: DrawTools.inst.currentMode is FillMode
+                    ? const Color.fromRGBO(171, 102, 235, 1)
+                    : Colors.white,
+                borderRadius: const BorderRadius.all(Radius.circular(3))),
+            child: GifManager.inst
+                .misc('fill')
+                .builder
+                .initShadowedOrigin()
+                .doFitSize(height: 48, width: 48))));
+  }
+}
 
 class UndoButton extends StatefulWidget {
   const UndoButton({super.key});

@@ -165,8 +165,9 @@ class FloodFiller {
     // CHECK
     if (isTheSameColorWithFiller(chosenPixel)) throw Exception('FloodFill: duplicated color');
 
+    Stopwatch watch = Stopwatch()..start();
     _fill();
-
+    print(watch.elapsed.inMilliseconds);
     // CONVERT IT BACK AND RETURN
     //var byteList = img.encodePng(decodedImage);
     return img.encodePng(decodedImage);

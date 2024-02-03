@@ -9,8 +9,8 @@ class ClearStep extends DrawStep {
   void drawAddon(Canvas canvas) {}
 
   @override
-  void drawFull(Canvas canvas) {}
+  void drawFresh(Canvas canvas) {}
 
-  // @override
-  // Future<void> emitTemp() async {}
+  @override
+  Future<void> switchToTemp() async {}
 }
