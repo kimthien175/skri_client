@@ -1,7 +1,6 @@
 import 'package:cd_mobile/models/gif/avatar/builder.dart';
 import 'package:cd_mobile/models/gif/avatar/model.dart';
 import 'package:get/get.dart';
-import 'package:word_generator/word_generator.dart';
 
 class Player {
   Player(
@@ -39,15 +38,6 @@ class MePlayer extends Player {
 
   @override
   String get nameForCard => '$name (${'you'.tr})';
-
-  String randomName() => WordGenerator().randomNoun();
-
-  void processName() {
-    name = name.trim();
-    if (name.isEmpty) {
-      name = randomName();
-    }
-  }
 
   static bool get isCreated => _inst != null;
 

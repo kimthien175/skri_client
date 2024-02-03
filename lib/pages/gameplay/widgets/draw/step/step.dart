@@ -21,6 +21,9 @@ abstract class DrawStep {
   void changeColor(Color color) {}
   void changeStrokeSize(double size) {}
 
+  /// Can't use before the step is pushed into the list
+  DrawStep get prevStep => DrawManager.inst.pastSteps[id - 1];
+
   final recorder = PictureRecorder();
 
   /// addOn, no previous drawing
@@ -61,6 +64,6 @@ abstract class DrawStep {
   //   });
   // }
 
-  // Future<void> emitDownCurrent(Offset point) async {}
-  // Future<void> emitUpdateCurrent(Offset point) async {}
+  Future<void> emitDownCurrent(Offset point) async {}
+  Future<void> emitUpdateCurrent(Offset point) async {}
 }

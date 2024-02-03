@@ -1,5 +1,3 @@
-// ignore_for_file: invalid_use_of_protected_member,
-
 import 'package:cd_mobile/pages/gameplay/widgets/draw/step/clear.dart';
 import 'package:cd_mobile/pages/gameplay/widgets/draw/widgets/stroke_value_item.dart';
 import 'package:cd_mobile/utils/socket_io.dart';
@@ -96,7 +94,9 @@ class DrawManager extends ChangeNotifier {
   }
 
   void onEnd() {
-    if (!(_currentStep.onEnd())) return;
+    var result = _currentStep.onEnd();
+    print(result);
+    if (!result) return;
 
     _currentStep.id = pastSteps.length;
     pastSteps.add(_currentStep);

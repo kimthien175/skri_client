@@ -9,7 +9,7 @@ import 'flood_fill.dart';
 import 'step.dart';
 
 class FillStep extends DrawStep {
-  FillStep.init({required super.id}){
+  FillStep.init({required super.id}) {
     _drawMain = drawLayzy;
   }
 
@@ -32,25 +32,25 @@ class FillStep extends DrawStep {
       var preStep = DrawManager.inst.pastSteps.last;
 
       if (preStep is ClearStep) {
-        fillWholeScreen = true;
+        _drawMain = drawFullfillColor;
         return true;
       }
 
-      if (preStep is FillStep && preStep.fillWholeScreen) {
+      if (preStep is FillStep && preStep._drawMain == preStep.drawFullfillColor) {
         if (preStep._color == _color) return false;
-        fillWholeScreen = true;
+        _drawMain = drawFullfillColor;
         return true;
       }
 
       return true;
     } else {
-      fillWholeScreen = true;
+      _drawMain = drawFullfillColor;
     }
 
     return true;
   }
 
-  bool fillWholeScreen = false;
+  //bool fillWholeScreen = false;
 
   /// Unint8list
   Uint8List? byteList;
@@ -77,17 +77,16 @@ class FillStep extends DrawStep {
 
   @override
   void drawFresh(Canvas canvas) {
-    if (fillWholeScreen) {
-      canvas.drawColor(_color, BlendMode.src);
-      return;
-    }
-
     _drawMain(canvas);
   }
 
   late void Function(Canvas) _drawMain;
 
-  void drawLayzy(Canvas canvas){
+  void drawFullfillColor(Canvas canvas) {
+    canvas.drawColor(_color, BlendMode.src);
+  }
+
+  void drawLayzy(Canvas canvas) {
     // draw previous node temp
     prevStep.draw(canvas);
 
@@ -103,9 +102,13 @@ class FillStep extends DrawStep {
     isAddedToQueue = true;
   }
 
-  bool isAddedToQueue = false;
+  void drawImage(Canvas canvas) {
+    canvas.drawImage(result!, const Offset(0, 0), Paint());
+  }
 
-  DrawStep get prevStep => DrawManager.inst.pastSteps[id - 1];
+  bool isFullfillScreenWithSameColor(Color color) => _drawMain == drawFullfillColor && _color == color;
+
+  bool isAddedToQueue = false;
 
   static Queue<FillStep> fillZoneQueue = Queue();
 
@@ -116,9 +119,10 @@ class FillStep extends DrawStep {
       await prevStep.switchToTemp();
     }
 
-    _compileTemp().then((value) {
+    _compileTemp().then((value) async{
       fillZoneQueue.removeFirst();
 
+      await Future.delayed(const Duration(seconds: 1));
       // assign result
       // byteList = value.byteList;
       // temp = value.picture;
@@ -151,8 +155,6 @@ class FillStep extends DrawStep {
   }
 
   Future<Image> _compileTemp() async {
-    //var pictureCanvas = Canvas(recorder);
-
     var img = await prevStep.temp!.toImage(DrawManager.width.toInt(), DrawManager.height.toInt());
 
     var floodfiller = await FloodFiller.init(image: img, point: _point!, fillColor: _color);
@@ -161,19 +163,9 @@ class FillStep extends DrawStep {
     Completer<Image> completer = Completer<Image>();
     decodeImageFromPixels(byteList!, DrawManager.width.toInt(), DrawManager.height.toInt(),
         PixelFormat.rgba8888, completer.complete);
-        
+
     return completer.future;
   }
 
-  drawImage(Canvas canvas) {
-    canvas.drawImage(result!, const Offset(0, 0), Paint());
-  }
-
   Image? result;
-}
-
-class CompiledTempResult {
-  CompiledTempResult(this.byteList, this.image);
-  Uint8List byteList;
-  Image image;
 }
