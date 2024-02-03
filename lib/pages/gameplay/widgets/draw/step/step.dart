@@ -3,7 +3,7 @@ import 'dart:ui';
 import '../manager.dart';
 
 abstract class DrawStep {
-  DrawStep({required this.id}){
+  DrawStep({required this.id}) {
     draw = drawFresh;
   }
 
@@ -27,11 +27,11 @@ abstract class DrawStep {
   void drawAddon(Canvas canvas);
   late void Function(Canvas canvas) draw;
 
-  void drawTemp(Canvas canvas){
+  void drawTemp(Canvas canvas) {
     canvas.drawPicture(temp!);
   }
 
-  void drawFresh(Canvas canvas){
+  void drawFresh(Canvas canvas) {
     if (id > 0) {
       DrawManager.inst.pastSteps[id - 1].draw(canvas);
     }

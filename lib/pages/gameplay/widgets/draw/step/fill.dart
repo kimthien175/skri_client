@@ -3,16 +3,15 @@ import 'dart:collection';
 import 'dart:typed_data';
 import 'dart:ui';
 
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
-
 import '../manager.dart';
 import 'clear.dart';
 import 'flood_fill.dart';
 import 'step.dart';
 
 class FillStep extends DrawStep {
-  FillStep.init({required super.id});
+  FillStep.init({required super.id}){
+    _drawMain = drawLayzy;
+  }
 
   Offset? _point;
   Color _color = DrawTools.inst.currentColor;
@@ -83,6 +82,12 @@ class FillStep extends DrawStep {
       return;
     }
 
+    _drawMain(canvas);
+  }
+
+  late void Function(Canvas) _drawMain;
+
+  void drawLayzy(Canvas canvas){
     // draw previous node temp
     prevStep.draw(canvas);
 
@@ -106,30 +111,23 @@ class FillStep extends DrawStep {
 
   /// for fill zone obviouslly, compile temp for this and continue the queue
   Future<void> compileTemp() async {
-
     // incase prevstep is brush step or other step
     if (prevStep.temp == null) {
       await prevStep.switchToTemp();
     }
 
-    compute(_compileTemp, {
-      'prevTemp': prevStep.temp,
-      'width': DrawManager.width,
-      'height': DrawManager.height,
-      'point': _point,
-      'color': _color
-    }).then((value) {
+    _compileTemp().then((value) {
       fillZoneQueue.removeFirst();
 
       // assign result
-      byteList = value.byteList;
-      temp = value.picture;
+      // byteList = value.byteList;
+      // temp = value.picture;
+      result = value;
 
       // switch to draw temp
-      draw = drawTemp;
+      _drawMain = drawImage;
 
       DrawManager.inst.rerenderLastStep();
-
 
       // compile next node
       if (fillZoneQueue.isEmpty) return;
@@ -152,31 +150,30 @@ class FillStep extends DrawStep {
     });
   }
 
-  FutureOr<CompiledTempResult> _compileTemp(Map<String, dynamic> isolatedMsg) async {
-    var recorder = PictureRecorder();
-    var pictureCanvas = Canvas(recorder);
+  Future<Image> _compileTemp() async {
+    //var pictureCanvas = Canvas(recorder);
 
-    var floodfiller = await FloodFiller.init(
-        image: await (isolatedMsg['prevTemp'] as Picture)
-            .toImage(isolatedMsg['width'], isolatedMsg['height']),
-        point: isolatedMsg['point'],
-        fillColor: isolatedMsg['color']);
+    var img = await prevStep.temp!.toImage(DrawManager.width.toInt(), DrawManager.height.toInt());
 
-    var byteList = await floodfiller.prepareAndFill();
+    var floodfiller = await FloodFiller.init(image: img, point: _point!, fillColor: _color);
 
-    var codec = await instantiateImageCodec(
-        byteList); //, targetWidth: decodedImage.width, targetHeight: height)
-
-    var frameInfo = await codec.getNextFrame();
-
-    pictureCanvas.drawImage(frameInfo.image, const Offset(0, 0), Paint());
-
-    return CompiledTempResult(byteList, recorder.endRecording());
+    byteList = floodfiller.prepareAndFill();
+    Completer<Image> completer = Completer<Image>();
+    decodeImageFromPixels(byteList!, DrawManager.width.toInt(), DrawManager.height.toInt(),
+        PixelFormat.rgba8888, completer.complete);
+        
+    return completer.future;
   }
+
+  drawImage(Canvas canvas) {
+    canvas.drawImage(result!, const Offset(0, 0), Paint());
+  }
+
+  Image? result;
 }
 
 class CompiledTempResult {
-  CompiledTempResult(this.byteList, this.picture);
+  CompiledTempResult(this.byteList, this.image);
   Uint8List byteList;
-  Picture picture;
+  Image image;
 }

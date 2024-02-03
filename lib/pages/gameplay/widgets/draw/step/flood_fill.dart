@@ -1,9 +1,9 @@
 // ignore_for_file: library_private_types_in_public_api
 
-import 'dart:collection';
+//import 'dart:collection';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
-import 'package:image/image.dart' as img;
+//import 'package:image/image.dart' as img;
 
 class FloodFiller {
   //int stackSize = 16777216;
@@ -15,8 +15,8 @@ class FloodFiller {
 
     int x = pointX;
     int y = pointY;
-    int w = decodedImage.width;
-    int h = decodedImage.height;
+    int w = width;
+    int h = height;
     int h2 = h - 1;
 
     //color oldcolor = tB[y][x];
@@ -161,27 +161,24 @@ class FloodFiller {
     stack.add(q);
   }
 
-  Future<Uint8List> prepareAndFill() async {
+  Uint8List prepareAndFill() {
     // CHECK
-    if (isTheSameColorWithFiller(chosenPixel)) throw Exception('FloodFill: duplicated color');
+    if (isTheSameColorWithFiller(pointX, pointY)) throw Exception('FloodFill: duplicated color');
 
-    Stopwatch watch = Stopwatch()..start();
     _fill();
-    print(watch.elapsed.inMilliseconds);
+
     // CONVERT IT BACK AND RETURN
     //var byteList = img.encodePng(decodedImage);
-    return img.encodePng(decodedImage);
-
-    // var codec = await ui
-    //     .instantiateImageCodec(byteList); //, targetWidth: decodedImage.width, targetHeight: height)
-
-    // var frameInfo = await codec.getNextFrame();
-
-    // return frameInfo.image;
+    return byteList;
   }
 
   void changeColor(int x, int y) {
-    decodedImage.setPixelRgba(x, y, fillColorR, fillColorG, fillColorB, fillColorA);
+    // decodedImage.setPixelRgba(x, y, fillColorR, fillColorG, fillColorB, fillColorA);
+    var index = pixelIndex(x, y);
+    byteList[index] = fillColorR;
+    byteList[index + 1] = fillColorG;
+    byteList[index + 2] = fillColorB;
+    byteList[index + 3] = fillColorA;
   }
 
   // void changePixelColor(img.Pixel pixel) {
@@ -190,26 +187,39 @@ class FloodFiller {
   // }
 
   bool sameWithOld(int x, int y) {
-    var pixel = decodedImage.getPixel(x, y);
-    return pixel.r == targetRed &&
-        pixel.g == targetGreen &&
-        pixel.b == targetBlue &&
-        pixel.a == targetAlpha;
+    // var pixel = decodedImage.getPixel(x, y);
+    // return pixel.r == targetRed &&
+    //     pixel.g == targetGreen &&
+    //     pixel.b == targetBlue &&
+    //     pixel.a == targetAlpha;
+    var index = pixelIndex(x, y);
+    return byteList[index] == targetRed &&
+        byteList[index + 1] == targetGreen &&
+        byteList[index + 2] == targetBlue &&
+        byteList[index + 3] == targetAlpha;
   }
 
+  int pixelIndex(int x, int y) => (y * width + x) * 4;
   // TESTED
-  bool isTheSameColorWithFiller(img.Pixel pixel) {
-    return pixel.r == fillColorR &&
-        pixel.g == fillColorG &&
-        pixel.b == fillColorB &&
-        pixel.a == fillColorA;
+  // bool isTheSameColorWithFiller(img.Pixel pixel) {
+  //   return pixel.r == fillColorR &&
+  //       pixel.g == fillColorG &&
+  //       pixel.b == fillColorB &&
+  //       pixel.a == fillColorA;
+  // }
+  bool isTheSameColorWithFiller(int x, int y) {
+    var index = pixelIndex(x, y);
+    return byteList[index] == fillColorR &&
+        byteList[index + 1] == fillColorG &&
+        byteList[index + 2] == fillColorB &&
+        byteList[index + 3] == fillColorA;
   }
 
-  // final int width;
-  // final int height;
+  final int width;
+  final int height;
 
-  //Uint8List byteList;
-  img.Image decodedImage;
+  Uint8List byteList;
+  //img.Image decodedImage;
 
   // final int pointX;
   // final int pointY;
@@ -218,45 +228,47 @@ class FloodFiller {
 
   static Future<FloodFiller> init(
       {required ui.Image image, required ui.Offset point, required ui.Color fillColor}) async {
-    var byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+    var byteData = await image.toByteData();
     if (byteData == null) throw Exception('FloodFill: null byte data');
 
-    var decodedImage = img.decodeImage(byteData.buffer.asUint8List());
-    if (decodedImage == null) throw Exception('Decode image failed');
+    // var decodedImage = img.decodeImage(byteData.buffer.asUint8List());
+    // if (decodedImage == null) throw Exception('Decode image failed');
 
     return FloodFiller._internal(
-      decodedImage: decodedImage,
-      pointX: point.dx.toInt(),
-      pointY: point.dy.toInt(),
-      fillColorR: fillColor.red,
-      fillColorB: fillColor.blue,
-      fillColorG: fillColor.green,
-      fillColorA: fillColor.alpha,
-      // width: image.width,
-      // height: image.height
-    );
+        //decodedImage: decodedImage,
+        byteList: byteData.buffer.asUint8List(),
+        pointX: point.dx.toInt(),
+        pointY: point.dy.toInt(),
+        fillColorR: fillColor.red,
+        fillColorB: fillColor.blue,
+        fillColorG: fillColor.green,
+        fillColorA: fillColor.alpha,
+        width: image.width,
+        height: image.height);
   }
 
-  FloodFiller._internal({
-    required this.decodedImage,
-    required this.pointX,
-    required this.pointY,
-    required this.fillColorR,
-    required this.fillColorG,
-    required this.fillColorB,
-    required this.fillColorA,
-    // required this.width,
-    // required this.height
-  }) {
+  FloodFiller._internal(
+      {
+      //required this.decodedImage,
+      required this.byteList,
+      required this.pointX,
+      required this.pointY,
+      required this.fillColorR,
+      required this.fillColorG,
+      required this.fillColorB,
+      required this.fillColorA,
+      required this.width,
+      required this.height}) {
 // get target color
-    chosenPixel = decodedImage.getPixelSafe(pointX, pointY);
-    if (chosenPixel is img.PixelUndefined) {
-      throw Exception('FloodFill: chosen point is out of range');
-    }
-    targetRed = chosenPixel.r;
-    targetGreen = chosenPixel.g;
-    targetBlue = chosenPixel.b;
-    targetAlpha = chosenPixel.a;
+    //chosenPixel = decodedImage.getPixelSafe(pointX, pointY);
+    // if (chosenPixel is img.PixelUndefined) {
+    //   throw Exception('FloodFill: chosen point is out of range');
+    // }
+    var index = pixelIndex(pointX, pointY);
+    targetRed = byteList[index];
+    targetGreen = byteList[index + 1];
+    targetBlue = byteList[index + 2];
+    targetAlpha = byteList[index + 3];
   }
 
   int fillColorR;
@@ -267,10 +279,10 @@ class FloodFiller {
   int pointX;
   int pointY;
 
-  Queue<img.Pixel> queue = Queue();
+  // Queue<img.Pixel> queue = Queue();
   late num targetRed;
   late num targetBlue;
   late num targetGreen;
   late num targetAlpha;
-  late img.Pixel chosenPixel;
+  //late img.Pixel chosenPixel;
 }
