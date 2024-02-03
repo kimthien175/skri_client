@@ -8,26 +8,44 @@ import 'clear.dart';
 import 'flood_fill.dart';
 import 'step.dart';
 
-class FillStep extends DrawStep {
+class FillStep extends GestureDrawStep {
   FillStep.init({required super.id}) {
-    _drawMain = drawLayzy;
+    _drawMain = drawLazy;
+    onUpdate = (Offset point) {};
+
+    changeColor();
   }
 
   Offset? _point;
-  Color _color = DrawTools.inst.currentColor;
+  late Color _color;
 
   @override
-  void changeColor(Color color) {
-    _color = color;
+  void changeColor() {
+    _color = DrawTools.inst.currentColor;
+    if (isLegitBeforeDrawing()) {
+      enable();
+    } else {
+      disable();
+    }
   }
 
-  @override
-  void onDown(Offset point) {
+  void enable() {
+    onDown = enabledOnDown;
+    onEnd = enabledOnEnd;
+  }
+
+  void disable() {
+    onDown = (point) {};
+    onEnd = () => false;
+  }
+
+  void enabledOnDown(Offset point) {
     _point = point;
   }
 
-  @override
-  bool onEnd() {
+  bool enabledOnEnd() => true;
+
+  bool isLegitBeforeDrawing() {
     if (DrawManager.inst.pastSteps.isNotEmpty) {
       var preStep = DrawManager.inst.pastSteps.last;
 
@@ -50,9 +68,6 @@ class FillStep extends DrawStep {
     return true;
   }
 
-  //bool fillWholeScreen = false;
-
-  /// Unint8list
   Uint8List? byteList;
 
   @override
@@ -86,7 +101,7 @@ class FillStep extends DrawStep {
     canvas.drawColor(_color, BlendMode.src);
   }
 
-  void drawLayzy(Canvas canvas) {
+  void drawLazy(Canvas canvas) {
     // draw previous node temp
     prevStep.draw(canvas);
 
@@ -103,10 +118,11 @@ class FillStep extends DrawStep {
   }
 
   void drawImage(Canvas canvas) {
-    canvas.drawImage(result!, const Offset(0, 0), Paint());
+    canvas.drawImage(image!, const Offset(0, 0), Paint());
   }
 
-  bool isFullfillScreenWithSameColor(Color color) => _drawMain == drawFullfillColor && _color == color;
+  bool isFullfillScreenWithSameColor(Color color) =>
+      _drawMain == drawFullfillColor && _color == color;
 
   bool isAddedToQueue = false;
 
@@ -119,14 +135,10 @@ class FillStep extends DrawStep {
       await prevStep.switchToTemp();
     }
 
-    _compileTemp().then((value) async{
+    _compileTemp().then((value) async {
       fillZoneQueue.removeFirst();
 
-      await Future.delayed(const Duration(seconds: 1));
-      // assign result
-      // byteList = value.byteList;
-      // temp = value.picture;
-      result = value;
+      image = value;
 
       // switch to draw temp
       _drawMain = drawImage;
@@ -137,7 +149,7 @@ class FillStep extends DrawStep {
       if (fillZoneQueue.isEmpty) return;
 
       fillZoneQueue.first.compileTemp();
-    }).catchError((e) {
+    }).catchError((e) async {
       fillZoneQueue.removeFirst();
 
       // remove this node
@@ -167,5 +179,5 @@ class FillStep extends DrawStep {
     return completer.future;
   }
 
-  Image? result;
+  Image? image;
 }

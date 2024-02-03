@@ -19,6 +19,7 @@ class DrawWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var drawInst = DrawManager.inst;
     return Obx(() => Stack(children: [
           Column(children: [
             ClipRRect(
@@ -31,23 +32,23 @@ class DrawWidget extends StatelessWidget {
                         cursor: DrawTools.inst.currentMode.cursor,
                         child: GestureDetector(
                             onPanDown: (details) {
-                              DrawManager.inst.onDown(details.localPosition);
+                              drawInst.currentStep.onDown(details.localPosition);
                             },
                             onPanUpdate: (details) {
-                              DrawManager.inst.onUpdate(details.localPosition);
+                              drawInst.currentStep.onUpdate(details.localPosition);
                             },
                             onPanEnd: (details) {
-                              DrawManager.inst.onEnd();
+                              drawInst.onEnd();
                             },
                             child: Stack(
                               children: [
                                 CustomPaint(
                                     size: const Size(DrawManager.width, DrawManager.height),
                                     painter: LastStepCustomPainter(
-                                        repaint: DrawManager.inst.lastStepRepaint)),
+                                        repaint: drawInst.lastStepRepaint)),
                                 CustomPaint(
                                     size: const Size(DrawManager.width, DrawManager.height),
-                                    painter: CurrentStepCustomPainter(repaint: DrawManager.inst))
+                                    painter: CurrentStepCustomPainter(repaint: drawInst))
                               ],
                             ))))),
             const SizedBox(height: 6),

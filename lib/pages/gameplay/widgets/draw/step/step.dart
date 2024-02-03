@@ -10,20 +10,6 @@ abstract class DrawStep {
   int id;
   Picture? temp;
 
-  void onDown(Offset point) {}
-  void onUpdate(Offset point) {}
-
-  /// DECIDE PUSH STEP OR NOT
-  bool onEnd() {
-    return true;
-  }
-
-  void changeColor(Color color) {}
-  void changeStrokeSize(double size) {}
-
-  /// Can't use before the step is pushed into the list
-  DrawStep get prevStep => DrawManager.inst.pastSteps[id - 1];
-
   final recorder = PictureRecorder();
 
   /// addOn, no previous drawing
@@ -66,4 +52,18 @@ abstract class DrawStep {
 
   Future<void> emitDownCurrent(Offset point) async {}
   Future<void> emitUpdateCurrent(Offset point) async {}
+}
+
+abstract class GestureDrawStep extends DrawStep {
+  GestureDrawStep({required super.id});
+
+  late void Function(Offset point) onDown;
+  late void Function(Offset point) onUpdate;
+  late bool Function() onEnd;
+
+  void changeColor() {}
+  void changeStrokeSize() {}
+
+  /// Can't use before the step is pushed into the list
+  DrawStep get prevStep => DrawManager.inst.pastSteps[id - 1];
 }

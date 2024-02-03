@@ -1,3 +1,5 @@
+// ignore_for_file: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
+
 import 'dart:ui';
 
 import 'package:cd_mobile/pages/gameplay/widgets/draw/step/fill.dart';
@@ -6,40 +8,32 @@ import 'package:cd_mobile/utils/socket_io.dart';
 import '../manager.dart';
 import 'step.dart';
 
-class BrushStep extends DrawStep {
+class BrushStep extends GestureDrawStep {
   BrushStep.init({required super.id}) {
     var drawTools = DrawTools.inst;
     _brush = Paint()
       ..strokeWidth = drawTools.currentStrokeSize
-      ..color = drawTools.currentColor
       ..strokeCap = StrokeCap.round;
+
+    changeColor();
   }
+
+  BrushStep.defaultInit({required super.id}) {
+    var drawTools = DrawTools.inst;
+    _brush = Paint()
+      ..strokeWidth = drawTools.currentStrokeSize
+      ..strokeCap = StrokeCap.round
+      ..color = DrawTools.inst.currentColor;
+
+    enable();
+  }
+
   List<Offset> points = [];
   late final Paint _brush;
 
-  @override
-  void changeColor(Color color) {
-    _brush.color = color;
-  }
-
-  @override
-  void changeStrokeSize(double size) {
-    _brush.strokeWidth = size;
-  }
-
-  @override
-  void onDown(Offset point) {
-    points.add(point);
-  }
-
-  @override
-  void onUpdate(Offset point) {
-    points.add(point);
-  }
-
-  @override
-  bool onEnd() {
+  bool isLegitBeforeDraw() {
     var pastSteps = DrawManager.inst.pastSteps;
+
     if (pastSteps.isEmpty) return true;
 
     if (pastSteps.last is! FillStep) return true;
@@ -47,6 +41,45 @@ class BrushStep extends DrawStep {
     if ((pastSteps.last as FillStep).isFullfillScreenWithSameColor(_brush.color)) return false;
 
     return true;
+  }
+
+  @override
+  void changeColor() {
+    _brush.color = DrawTools.inst.currentColor;
+    if (isLegitBeforeDraw()) {
+      enable();
+    } else {
+      disable();
+    }
+  }
+
+  void enable() {
+    onDown = enabledOnDown;
+    onUpdate = enabledOnUpdate;
+    onEnd = enabledOnEnd;
+  }
+
+  void disable() {
+    onDown = (point) {};
+    onUpdate = (point) {};
+    onEnd = () => false;
+  }
+
+  void enabledOnDown(Offset point) {
+    points.add(point);
+    DrawManager.inst.notifyListeners();
+  }
+
+  void enabledOnUpdate(Offset point) {
+    points.add(point);
+    DrawManager.inst.notifyListeners();
+  }
+
+  bool enabledOnEnd() => true;
+
+  @override
+  void changeStrokeSize() {
+    _brush.strokeWidth = DrawTools.inst.currentStrokeSize;
   }
 
   @override
