@@ -106,6 +106,8 @@ class DrawManager extends ChangeNotifier {
   }
 
   void clear() {
+    if (pastSteps.isEmpty) return;
+    
     pastSteps.add(ClearStep(id: pastSteps.length));
     lastStepRepaint.notifyListeners();
     SocketIO.inst.socket.emit('draw:clear');

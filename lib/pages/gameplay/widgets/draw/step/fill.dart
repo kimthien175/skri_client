@@ -5,7 +5,7 @@ import 'dart:ui';
 
 import '../manager.dart';
 import 'clear.dart';
-import 'flood_fill.dart';
+import 'utils/flood_fill.dart';
 import 'step.dart';
 
 class FillStep extends GestureDrawStep {
@@ -67,11 +67,8 @@ class FillStep extends GestureDrawStep {
 
     return true;
   }
-
+ 
   Uint8List? byteList;
-
-  @override
-  void drawAddon(Canvas canvas) {}
 
   // @override
   // Future<void> emitTemp() async {

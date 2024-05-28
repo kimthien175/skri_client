@@ -1,7 +1,6 @@
 import 'package:cd_mobile/pages/home/footer/news.dart';
-import 'package:cd_mobile/pages/home/mobile/mobile.dart';
-import 'package:cd_mobile/pages/home/web/controller.dart';
-import 'package:cd_mobile/pages/home/web/web.dart';
+import 'package:cd_mobile/pages/home/layouts/mobile.dart';
+import 'package:cd_mobile/pages/home/layouts/web.dart';
 import 'package:cd_mobile/pages/home/widgets/avatar_editor/controller.dart';
 import 'package:cd_mobile/pages/home/widgets/play_button.dart';
 import 'package:cd_mobile/pages/home/widgets/random_avatars.dart';
@@ -39,23 +38,42 @@ class HomeController extends ResponsivePageController {
   @override
   void didChangeMetrics() {
     // won't triggered on first run, only triggered when resize
-
-    if (isWebLayout.value) {
-      if (webLayoutStatus) {
-        // constantly on web
-        Get.find<WebController>().processLayout();
-      } else {
-        // from web to mobile
-        isWebLayout.trigger(false);
-      }
-    } else {
-      if (webLayoutStatus) {
-        // from mobile to web
-        isWebLayout.trigger(true);
-      }
+    processLayout();
+    if (isWebLayout.value != webLayoutStatus) {
+      isWebLayout.toggle();
     }
 
+    // if (isWebLayout.value) {
+    //   if (webLayoutStatus) {
+    //     // constantly on web
+    //     Get.find<WebController>().processLayout();
+    //   } else {
+    //     // from web to mobile
+    //     isWebLayout.trigger(false);
+    //   }
+    // } else {
+    //   if (webLayoutStatus) {
+    //     // from mobile to web
+    //     isWebLayout.trigger(true);
+    //   }
+    // }
+
     super.didChangeMetrics();
+  }
+
+  var mainContentKey = GlobalKey();
+  var footerKey = GlobalKey();
+
+  var isMinimumSize = false.obs;
+
+  void processLayout() {
+    var mainHeight = mainContentKey.currentContext?.size?.height;
+    var footerHeight = footerKey.currentContext?.size?.height;
+    if (mainHeight != null && footerHeight != null) {
+      isMinimumSize.value = mainHeight + footerHeight <= Get.height;
+    } else {
+      isMinimumSize.value = false;
+    }
   }
 }
 
@@ -76,7 +94,7 @@ class HomePage extends StatelessWidget {
           child: Obx(() {
             if (!ResourcesController.inst.isLoaded.value) return const LoadingOverlay();
 
-            var content = SafeArea(child: controller.isWebLayout.value ? Web() : const Mobile());
+            var content = SafeArea(child: controller.isWebLayout.value ? Web() : Mobile());
             return controller.isLoading.value
                 ? Stack(
                     children: [content, const LoadingOverlay()],

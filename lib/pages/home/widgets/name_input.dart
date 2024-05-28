@@ -12,6 +12,7 @@ class NameInput extends StatelessWidget {
   Widget build(BuildContext context) {
     return Expanded(
         child: Container(
+            alignment: Alignment.centerLeft,
             padding: const EdgeInsets.only(left: 10, right: 10),
             decoration: InputStyles.decoration,
             height: 34,
@@ -43,6 +44,8 @@ class _TextField extends StatelessWidget {
           ],
           style: const TextStyle(fontWeight: FontWeight.w800),
           decoration: InputDecoration(
+              isDense: true,
+              constraints: const BoxConstraints.tightForFinite(),
               border: InputBorder.none,
               hintText: 'name_input_placeholder'.tr,
               hintStyle: const TextStyle(fontWeight: FontWeight.w800, color: Colors.black38)),

@@ -1,3 +1,5 @@
+import 'package:cd_mobile/pages/home/home.dart';
+import 'package:cd_mobile/pages/home/layouts/base.dart';
 import 'package:cd_mobile/pages/home/widgets/avatar_editor/avatar_editor.dart';
 import 'package:cd_mobile/pages/home/footer/footer.dart';
 import 'package:cd_mobile/pages/home/footer/triangle.dart';
@@ -12,18 +14,16 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:measure_size/measure_size.dart';
 
-import 'controller.dart';
-
 // TODO: WHEN USER ZOOM IN OR RESIZE TO SMALLER WIDTH, MAKE FOOTER SECTIONS JUMP DOWN LIKE TRUE MEANING OF WRAP
-class Web extends StatelessWidget {
+class Web extends HomeLayout {
   Web({super.key});
-
-  final controller = Get.put(WebController());
 
   @override
   Widget build(BuildContext context) {
+    var homeController = Get.find<HomeController>();
     var mainContent = IntrinsicWidth(
-        child: Column(key: controller.mainContentKey, mainAxisSize: MainAxisSize.min, children: [
+        child:
+            Column(key: homeController.mainContentKey, mainAxisSize: MainAxisSize.min, children: [
       const SizedBox(height: 25),
       Logo(() => Get.offNamed('/')),
       const SizedBox(height: 10),
@@ -47,41 +47,21 @@ class Web extends StatelessWidget {
     var footer = IntrinsicWidth(
         child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
-            key: controller.footerKey,
+            key: homeController.footerKey,
             mainAxisSize: MainAxisSize.min,
             children: const [Triangle(), Footer()]));
 
-    // return Column(
-    //   children: [
-    //     Expanded(child: LayoutBuilder(builder: (cxt, constrants) {
-    //       return SizedBox(
-    //           height: constrants.maxHeight,
-    //           child: SingleChildScrollView(
-    //               child: Column(
-    //             mainAxisSize: MainAxisSize.min,
-    //             children: mainContent,
-    //           )));
-    //     })),
-    //     ...footer
-    //   ],
-    // );
     var horizontalScrollController = ScrollController();
+    var verticalScrollController = ScrollController();
+
     return Obx(() {
-      if (controller.firstRun.value) {
-        var verticalScrollController = ScrollController();
+      if (layoutController.firstRun.value) {
         return MeasureSize(
             onChange: (size) {
-              controller.processLayout();
-              controller.firstRun.value = false;
+              homeController.processLayout();
+              layoutController.firstRun.value = false;
             },
             child:
-                // SingleChildScrollView(
-                //     scrollDirection: Axis.horizontal,
-                //     child: Container(
-                //             constraints: BoxConstraints.loose(Get.find<HomeController>().originalSize),
-                //             child: ListView(shrinkWrap: true, children: [mainContent, footer])))
-
-                // vertical scroll bar show at the end of the right
                 // TODO: vertical scrollbar has to stay in right of the screen, not the right of the widget
                 Scrollbar(
                     thumbVisibility: true,
@@ -101,7 +81,7 @@ class Web extends StatelessWidget {
                                   mainAxisSize: MainAxisSize.min,
                                   children: [mainContent, footer],
                                 ))))));
-      } else if (controller.isMinimumSize.value) {
+      } else if (homeController.isMinimumSize.value) {
         return Scrollbar(
             controller: horizontalScrollController,
             thumbVisibility: true,
@@ -113,7 +93,6 @@ class Web extends StatelessWidget {
                   children: [mainContent, const Spacer(), footer],
                 )));
       } else {
-        var verticalScrollController = ScrollController();
         return Scrollbar(
             thumbVisibility: true,
             trackVisibility: true,
@@ -131,11 +110,3 @@ class Web extends StatelessWidget {
     });
   }
 }
-
-// NotificationListener<SizeChangedLayoutNotification> sizeListener(
-//     {required Widget child, required bool Function(SizeChangedLayoutNotification) onSizeChanged}) {
-//   return NotificationListener<SizeChangedLayoutNotification>(
-//     onNotification: onSizeChanged,
-//     child: SizeChangedLayoutNotifier(child: child),
-//   );
-// }

@@ -68,6 +68,8 @@ class BrushStep extends GestureDrawStep {
   void enabledOnDown(Offset point) {
     points.add(point);
     DrawManager.inst.notifyListeners();
+
+
   }
 
   void enabledOnUpdate(Offset point) {
@@ -95,7 +97,7 @@ class BrushStep extends GestureDrawStep {
 
   @override
   Future<void> emitDownCurrent(Offset point) async {
-    SocketIO.inst.socket.emit('draw:down_current', {
+    SocketIO.inst.socket.emit('draw:down', {
       'type': 'brush',
       'size': _brush.strokeWidth,
       'r': _brush.color.red,

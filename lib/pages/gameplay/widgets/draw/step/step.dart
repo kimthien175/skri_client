@@ -13,7 +13,7 @@ abstract class DrawStep {
   final recorder = PictureRecorder();
 
   /// addOn, no previous drawing
-  void drawAddon(Canvas canvas);
+  void drawAddon(Canvas canvas){}
   late void Function(Canvas canvas) draw;
 
   void drawTemp(Canvas canvas) {
