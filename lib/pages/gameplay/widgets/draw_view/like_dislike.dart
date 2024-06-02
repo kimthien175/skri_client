@@ -1,4 +1,4 @@
-import 'package:cd_mobile/widgets/animated_button.dart';
+import 'package:cd_mobile/widgets/animated_button/builder.dart';
 import 'package:flutter/material.dart';
 
 class LikeAndDislikeButtons extends StatefulWidget {
@@ -17,16 +17,16 @@ class _LikeAndDislikeButtonsState extends State<LikeAndDislikeButtons> {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            AnimatedButton(
+            AnimatedButtonBuilder(
               child: Image.asset('assets/gif/thumbsup.gif'),
               onTap: () {
                 setState(() {
                   isVisible = false;
                 });
-  // TODO: SEND LIKE MSG
+                // TODO: SEND LIKE MSG
               },
-            ),
-            AnimatedButton(
+            ).child,
+            AnimatedButtonBuilder(
               child: Image.asset('assets/gif/thumbsdown.gif'),
               onTap: () {
                 setState(() {
@@ -34,7 +34,7 @@ class _LikeAndDislikeButtonsState extends State<LikeAndDislikeButtons> {
                 });
 // TODO: SEND DISLIKE MSG
               },
-            )
+            ).child
           ],
         ));
   }
