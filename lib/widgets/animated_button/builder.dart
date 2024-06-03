@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import 'decorator.dart';
+import 'decorators/tooltip.dart';
 
 class AnimatedButtonBuilder {
   AnimatedButtonBuilder(

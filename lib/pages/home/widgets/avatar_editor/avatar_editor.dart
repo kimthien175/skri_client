@@ -6,6 +6,7 @@ import 'package:cd_mobile/models/gif_manager.dart';
 import 'package:cd_mobile/utils/styles.dart';
 import 'package:cd_mobile/widgets/animated_button/builder.dart';
 import 'package:cd_mobile/widgets/animated_button/decorator.dart';
+import 'package:cd_mobile/widgets/animated_button/decorators/tooltip.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -113,7 +114,7 @@ class _RandomButton extends StatelessWidget {
         scaleDecorator: AnimatedButtonScaleDecorator(),
         tooltipDecorator: AnimatedButtonTooltipDecorator(
             tooltip: 'randomize_your_avatar'.tr,
-            position: AnimatedButtonTooltipPosition.bottom,
+            position: AnimatedButtonTooltipPosition.left,
             scale: () => Get.find<HomeController>().isWebLayout.value
                 ? 1.0
                 : PanelStyles.widthOnMobile / PanelStyles.width)).build();
