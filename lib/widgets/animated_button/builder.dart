@@ -4,90 +4,54 @@ import 'package:get/get.dart';
 
 import 'decorator.dart';
 
-// class AnimatedButtonBuilder {
-//   AnimatedButtonBuilder({
-//     required this.child,
-//     this.onTap,
-//     AnimatedButtonOpacityDecorator? opacityDecorator,
-// //AnimatedButtonScaleDecorator scaleDecorator = AnimatedButtonScaleDecorator(),
-//     //  this.tooltipDecorator
-//   }) {
-//     if (opacityDecorator == null) {
-//       this.opacityDecorator = AnimatedButtonOpacityDecorator();
-//     }
-//   }
-
-//   final Widget child;
-//   final void Function()? onTap;
-
-//   late final AnimatedButtonOpacityDecorator? opacityDecorator;
-//   // AnimatedButtonScaleDecorator? scaleDecorator = AnimatedButtonScaleDecorator();
-//   // Rx<AnimatedButtonTooltipDecorator>? tooltipDecorator;
-
-//   // void Function()? onLongPress;
-//   // void Function(LongPressEndDetails)? onLongPressEnd;
-// }
-
-// class _AnimatedButton extends StatefulWidget {
-//   @override
-//   State<StatefulWidget> createState() => _AnimatedButtonState();
-// }
-
-// class _AnimatedButtonState extends State<_AnimatedButton>
-//     with SingleTickerProviderStateMixin {
-//   _AnimatedButtonState() {
-//     // decoration
-//     widget.opacityDecorator?.decorate(this);
-
-//     // finish onEnter, onExit with re render method
-//     var prevOnEnter = onEnter!;
-//     onEnter = (e) {
-//       prevOnEnter(e);
-//       setState(() {});
-//     };
-
-//     var prevOnExit = onExit!;
-//     onExit = (e) {
-//       prevOnExit(e);
-//       setState(() {});
-//     };
-//   }
-
 class AnimatedButtonBuilder {
   AnimatedButtonBuilder(
-      {required this.child, this.onTap, this.opacityDecorator}) {
-    // with opacity for default
-    opacityDecorator ??= AnimatedButtonOpacityDecorator();
+      {required this.child,
+      this.onTap,
+      this.opacityDecorator,
+      this.scaleDecorator,
+      this.tooltipDecorator}) {
+    controller = Get.put(AnimatedButtonController(this));
 
     onEnter = (e) {
-      // controller.update();
       controller._controller.forward();
       print('super onEnter');
     };
 
     onExit = (e) {
-      //    controller.update();
       controller._controller.reverse();
       print('super onExit');
     };
 
     // decorating
     opacityDecorator?.decorate(this);
+    scaleDecorator?.decorate(this);
+    tooltipDecorator?.decorate(this);
   }
 
-  final AnimatedButtonController controller = AnimatedButtonController();
+  void cleanUp() {
+    opacityDecorator?.cleanUp();
+    tooltipDecorator?.removeOverlayEntry();
+  }
+
+  late final AnimatedButtonController controller;
 
   void Function()? onTap;
 
   late void Function(PointerEnterEvent) onEnter;
   late void Function(PointerExitEvent) onExit;
 
+  final GlobalKey buttonKey = GlobalKey();
+
   Widget child;
 
-  AnimatedButtonOpacityDecorator? opacityDecorator;
+  final AnimatedButtonOpacityDecorator? opacityDecorator;
+  final AnimatedButtonScaleDecorator? scaleDecorator;
+  final AnimatedButtonTooltipDecorator? tooltipDecorator;
 
   Widget build() {
     return GestureDetector(
+        key: buttonKey,
         onTap: onTap,
         child: MouseRegion(
             cursor: SystemMouseCursors.click,
@@ -99,6 +63,10 @@ class AnimatedButtonBuilder {
 
 class AnimatedButtonController extends GetxController
     with GetSingleTickerProviderStateMixin {
+  AnimatedButtonController(this.builder);
+
+  final AnimatedButtonBuilder builder;
+
   //#region anim specs
   late final _controller = AnimationController(
       duration: duration, vsync: this, lowerBound: 0.9, upperBound: 1);
@@ -113,5 +81,11 @@ class AnimatedButtonController extends GetxController
   void dispose() {
     _controller.dispose();
     super.dispose();
+  }
+
+  @override
+  void onClose() {
+    builder.cleanUp();
+    super.onClose();
   }
 }

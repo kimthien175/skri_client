@@ -50,8 +50,9 @@ class Mobile extends HomeLayout {
                   child: Container(
                       decoration: PanelStyles.mobileDecoration,
                       padding: PanelStyles.padding,
-                      width: 400,
+                      width: PanelStyles.width,
                       child: const Column(
+                        mainAxisSize: MainAxisSize.min,
                         children: [
                           Row(children: [NameInput(), LangSelector()]),
                           AvatarEditor(),

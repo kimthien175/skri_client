@@ -78,6 +78,7 @@ class LocaleKeys {
   static const round_noti = 'round_noti';
   static const player_choosing = 'player_choosing';
   static const choose_a_word = 'choose_a_word';
+  static const randomize_your_avatar = 'randomize_your_avatar';
   static const You = 'You';
   static const Normal = 'Normal';
   static const Hidden = 'Hidden';
@@ -166,6 +167,7 @@ class Locales {
     'round_noti': 'Round @round',
     'player_choosing': '@playerName is choosing a word',
     'choose_a_word': 'Choose a word',
+    'randomize_your_avatar': 'Randomize your Avatar!',
   };
   static const vi_VN = {
     'displayName': 'Tiếng Việt',
@@ -247,5 +249,6 @@ class Locales {
     'round_noti': 'Vòng @round',
     'player_choosing': '@playerName đang chọn 1 từ',
     'choose_a_word': 'Chọn 1 từ',
+    'randomize_your_avatar': 'Ngẫu nhiên Avatar của bạn!',
   };
 }

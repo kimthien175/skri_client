@@ -1,9 +1,11 @@
 import 'package:cd_mobile/models/game/player.dart';
+import 'package:cd_mobile/pages/home/home.dart';
 import 'package:cd_mobile/pages/home/widgets/avatar_editor/controller.dart';
 import 'package:cd_mobile/models/gif/gif.dart';
 import 'package:cd_mobile/models/gif_manager.dart';
 import 'package:cd_mobile/utils/styles.dart';
 import 'package:cd_mobile/widgets/animated_button/builder.dart';
+import 'package:cd_mobile/widgets/animated_button/decorator.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -101,12 +103,19 @@ class _RandomButton extends StatelessWidget {
   Widget build(BuildContext context) {
     var controller = Get.find<AvatarEditorController>();
     return AnimatedButtonBuilder(
-      child: GifManager.inst
-          .misc('randomize')
-          .builder
-          .init()
-          .doFitSize(height: 36, width: 36),
-      onTap: controller.randomize,
-    ).build();
+        child: GifManager.inst
+            .misc('randomize')
+            .builder
+            .init()
+            .doFitSize(height: 36, width: 36),
+        onTap: controller.randomize,
+        opacityDecorator: AnimatedButtonOpacityDecorator(),
+        scaleDecorator: AnimatedButtonScaleDecorator(),
+        tooltipDecorator: AnimatedButtonTooltipDecorator(
+            tooltip: 'randomize_your_avatar'.tr,
+            position: AnimatedButtonTooltipPosition.top,
+            scale: () => Get.find<HomeController>().isWebLayout.value
+                ? 1.0
+                : PanelStyles.widthOnMobile / PanelStyles.width)).build();
   }
 }

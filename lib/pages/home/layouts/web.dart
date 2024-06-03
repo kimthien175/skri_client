@@ -22,28 +22,30 @@ class Web extends HomeLayout {
   Widget build(BuildContext context) {
     var homeController = Get.find<HomeController>();
     var mainContent = IntrinsicWidth(
-        child:
-            Column(key: homeController.mainContentKey, mainAxisSize: MainAxisSize.min, children: [
-      const SizedBox(height: 25),
-      Logo(() => Get.offNamed('/')),
-      const SizedBox(height: 10),
-      const RandomAvatars(),
-      const SizedBox(height: 40),
-      Container(
-          padding: PanelStyles.padding,
-          decoration: PanelStyles.webDecoration,
-          width: 400,
-          child: const Column(
+        child: Column(
+            key: homeController.mainContentKey,
+            mainAxisSize: MainAxisSize.min,
             children: [
-              Row(children: [NameInput(), LangSelector()]),
-              AvatarEditor(),
-              PlayButton(),
-              SizedBox(height: 10),
-              CreatePrivateRoomButton(),
-            ],
-          )),
-      const SizedBox(height: 10)
-    ]));
+          const SizedBox(height: 25),
+          Logo(() => Get.offNamed('/')),
+          const SizedBox(height: 10),
+          const RandomAvatars(),
+          const SizedBox(height: 40),
+          Container(
+              padding: PanelStyles.padding,
+              decoration: PanelStyles.webDecoration,
+              width: PanelStyles.width,
+              child: const Column(
+                children: [
+                  Row(children: [NameInput(), LangSelector()]),
+                  AvatarEditor(),
+                  PlayButton(),
+                  SizedBox(height: 10),
+                  CreatePrivateRoomButton(),
+                ],
+              )),
+          const SizedBox(height: 10)
+        ]));
     var footer = IntrinsicWidth(
         child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,

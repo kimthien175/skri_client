@@ -49,8 +49,8 @@ class GameBar extends StatelessWidget {
                             .builder
                             .initShadowedOrigin()
                             .doFitSize(height: 48, width: 48),
-                        // opacityDecorator:
-                        //     AnimatedButtonOpacityDecorator(minOpacity: 0.85),
+                        opacityDecorator:
+                            AnimatedButtonOpacityDecorator(minOpacity: 0.85),
                         onTap: () {
                           // TODO: SETTINGS BUTTON
                         })
