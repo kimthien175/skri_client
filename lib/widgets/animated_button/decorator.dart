@@ -93,14 +93,14 @@ class AnimatedButtonTooltipDecorator extends AnimatedButtonDecorator {
       switch (position) {
         case AnimatedButtonTooltipPosition.left:
           // knowing the button stay on the top half or bottom half
-          if (offset.dy + size.height / 2 <= (Get.height - 1) / 2) {
+          if (offset.dy + size.height / 2 <= Get.height / 2) {
             // top half
             tooltipBuilder = (Widget child) => Positioned(
                   top: 0,
                   left: 0,
                   child: SizedBox(
-                      width: offset.dx + 1,
-                      height: (offset.dy + 1) * 2 + size.height,
+                      width: offset.dx,
+                      height: offset.dy * 2 + size.height,
                       child: Align(
                           alignment: Alignment.centerRight,
                           child: ratio == 1.0
@@ -117,8 +117,8 @@ class AnimatedButtonTooltipDecorator extends AnimatedButtonDecorator {
                 left: 0,
                 bottom: 0,
                 child: SizedBox(
-                    width: offset.dx + 1,
-                    height: (Get.height - 1 - offset.dy) * 2 - size.height,
+                    width: offset.dx,
+                    height: (Get.height - offset.dy) * 2 - size.height,
                     child: Align(
                         alignment: Alignment.centerRight,
                         child: ratio == 1.0
@@ -132,14 +132,14 @@ class AnimatedButtonTooltipDecorator extends AnimatedButtonDecorator {
           break;
         case AnimatedButtonTooltipPosition.top:
           // know left half or right half
-          if (offset.dx + size.width / 2 <= (Get.width - 1) / 2) {
+          if (offset.dx + size.width / 2 <= Get.width / 2) {
             // left half
             tooltipBuilder = (Widget child) => Positioned(
                 top: 0,
                 left: 0,
                 child: SizedBox(
-                    width: (offset.dx + 1) * 2 + size.width,
-                    height: offset.dy + 1,
+                    width: offset.dx * 2 + size.width,
+                    height: offset.dy,
                     child: Align(
                         alignment: Alignment.bottomCenter,
                         child: ratio == 1.0
@@ -154,8 +154,8 @@ class AnimatedButtonTooltipDecorator extends AnimatedButtonDecorator {
                 top: 0,
                 right: 0,
                 child: SizedBox(
-                    width: (Get.width - 1 - offset.dx) * 2 - size.width,
-                    height: offset.dy + 1,
+                    width: (Get.width - offset.dx) * 2 - size.width,
+                    height: offset.dy,
                     child: Align(
                       alignment: Alignment.bottomCenter,
                       child: ratio == 1.0
@@ -170,18 +170,78 @@ class AnimatedButtonTooltipDecorator extends AnimatedButtonDecorator {
 
           break;
         case AnimatedButtonTooltipPosition.right:
-          tooltipBuilder = (Widget child) => Positioned(
-                top: offset.dy,
-                left: offset.dx + size.width,
-                child: child,
-              );
+          // know top half or bottom half
+          if (offset.dy + size.height / 2 <= Get.height / 2) {
+            // top half
+            tooltipBuilder = (Widget child) => Positioned(
+                top: 0,
+                right: 0,
+                child: SizedBox(
+                    height: offset.dy * 2 + size.height,
+                    width: Get.width - offset.dx - size.width,
+                    child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: ratio == 1.0
+                            ? child
+                            : Transform.scale(
+                                scale: ratio,
+                                alignment: Alignment.centerLeft,
+                                child: child,
+                              ))));
+          } else {
+            // bottom half
+            tooltipBuilder = (Widget child) => Positioned(
+                bottom: 0,
+                right: 0,
+                child: SizedBox(
+                    height: (Get.height - offset.dy) * 2 - size.height,
+                    width: Get.width - offset.dx - size.width,
+                    child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: ratio == 1.0
+                            ? child
+                            : Transform.scale(
+                                scale: ratio,
+                                alignment: Alignment.centerLeft,
+                                child: child))));
+          }
+
           break;
         default:
-          tooltipBuilder = (Widget child) => Positioned(
-                left: offset.dx,
-                top: offset.dy + size.height,
-                child: child,
-              );
+          // know left half or right half
+          if (offset.dx + size.width / 2 <= Get.width / 2) {
+            // left half
+            tooltipBuilder = (Widget child) => Positioned(
+                left: 0,
+                bottom: 0,
+                child: SizedBox(
+                    width: offset.dx * 2 + size.width,
+                    height: Get.height - offset.dy - size.height,
+                    child: Align(
+                        alignment: Alignment.topCenter,
+                        child: ratio == 1.0
+                            ? child
+                            : Transform.scale(
+                                scale: ratio,
+                                alignment: Alignment.topCenter,
+                                child: child))));
+          } else {
+            // right half
+            tooltipBuilder = (Widget child) => Positioned(
+                right: 0,
+                bottom: 0,
+                child: SizedBox(
+                    width: (Get.width - offset.dx) * 2 - size.width,
+                    height: Get.height - offset.dy - size.height,
+                    child: Align(
+                        alignment: Alignment.topCenter,
+                        child: ratio == 1.0
+                            ? child
+                            : Transform.scale(
+                                scale: ratio,
+                                alignment: Alignment.topCenter,
+                                child: child))));
+          }
       }
 
       overlayEntry = OverlayEntry(

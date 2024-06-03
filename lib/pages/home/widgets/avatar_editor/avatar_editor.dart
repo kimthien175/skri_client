@@ -113,7 +113,7 @@ class _RandomButton extends StatelessWidget {
         scaleDecorator: AnimatedButtonScaleDecorator(),
         tooltipDecorator: AnimatedButtonTooltipDecorator(
             tooltip: 'randomize_your_avatar'.tr,
-            position: AnimatedButtonTooltipPosition.top,
+            position: AnimatedButtonTooltipPosition.bottom,
             scale: () => Get.find<HomeController>().isWebLayout.value
                 ? 1.0
                 : PanelStyles.widthOnMobile / PanelStyles.width)).build();
