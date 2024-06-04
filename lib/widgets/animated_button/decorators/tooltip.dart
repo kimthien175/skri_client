@@ -21,6 +21,7 @@ class AnimatedButtonTooltipDecorator extends AnimatedButtonDecorator {
   OverlayEntry? overlayEntry;
 
   void removeOverlayEntry() {
+    if (overlayEntry == null) return;
     overlayEntry?.remove();
     overlayEntry?.dispose();
     overlayEntry = null;
@@ -29,9 +30,7 @@ class AnimatedButtonTooltipDecorator extends AnimatedButtonDecorator {
   static Color tooltipBackgroundColor = const Color.fromRGBO(69, 113, 255, 1.0);
 
   Widget leftAlign(Widget child, double ratio) {
-    var newChild = Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [child, _TooltipArrow.left()]);
+    var newChild = Row(mainAxisSize: MainAxisSize.min, children: [child, _TooltipArrow.left()]);
     return Align(
         alignment: Alignment.centerRight,
         child: ratio == 1.0
@@ -44,9 +43,7 @@ class AnimatedButtonTooltipDecorator extends AnimatedButtonDecorator {
   }
 
   Widget rightAlign(Widget child, double ratio) {
-    var newChild = Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [_TooltipArrow.right(), child]);
+    var newChild = Row(mainAxisSize: MainAxisSize.min, children: [_TooltipArrow.right(), child]);
     return Align(
         alignment: Alignment.centerLeft,
         child: ratio == 1.0
@@ -59,43 +56,34 @@ class AnimatedButtonTooltipDecorator extends AnimatedButtonDecorator {
   }
 
   Widget topAlign(Widget child, double ratio) {
-    var newChild = Column(
-        mainAxisSize: MainAxisSize.min, children: [child, _TooltipArrow.top()]);
+    var newChild = Column(mainAxisSize: MainAxisSize.min, children: [child, _TooltipArrow.top()]);
     return Align(
         alignment: Alignment.bottomCenter,
         child: ratio == 1.0
             ? newChild
-            : Transform.scale(
-                scale: ratio,
-                alignment: Alignment.bottomCenter,
-                child: newChild));
+            : Transform.scale(scale: ratio, alignment: Alignment.bottomCenter, child: newChild));
   }
 
   Widget bottomAlign(Widget child, double ratio) {
-    var newChild = Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [_TooltipArrow.bottom(), child]);
+    var newChild =
+        Column(mainAxisSize: MainAxisSize.min, children: [_TooltipArrow.bottom(), child]);
     return Align(
         alignment: Alignment.topCenter,
         child: ratio == 1.0
             ? newChild
-            : Transform.scale(
-                scale: ratio, alignment: Alignment.topCenter, child: newChild));
+            : Transform.scale(scale: ratio, alignment: Alignment.topCenter, child: newChild));
   }
 
   @override
   void decorate(AnimatedButtonBuilder builder) {
     // if (kIsWeb) {
     // modify onEnter, onExit
-    var onEnter = builder.onEnter;
-    builder.onEnter = (e) {
+    builder.onEnter.add((e) {
+      if (overlayEntry != null) return;
       //#region show tooltip
 
-      removeOverlayEntry();
-
       // get button position
-      var box =
-          builder.buttonKey.currentContext!.findRenderObject() as RenderBox;
+      var box = builder.buttonKey.currentContext!.findRenderObject() as RenderBox;
 
       var ratio = _scale();
       Size size = box.size * ratio;
@@ -221,15 +209,12 @@ class AnimatedButtonTooltipDecorator extends AnimatedButtonDecorator {
 
       addOverlay(overlayEntry!);
       //#endregion
+    });
 
-      onEnter(e);
-    };
+    // removeOverlay on reverse end
+    builder.onReverseEnd.add(removeOverlayEntry);
+    builder.cleanUpCallbacks.add(removeOverlayEntry);
 
-    var onExit = builder.onExit;
-    builder.onExit = (e) {
-      removeOverlayEntry();
-      onExit(e);
-    };
     // } else if (Platform.isAndroid || Platform.isIOS) {
     //   // modify onLongPress, onLongPressEnd for mobile platform
     //   var onLongPress = controller.onLongPress;

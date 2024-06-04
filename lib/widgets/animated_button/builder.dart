@@ -3,52 +3,50 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import 'decorator.dart';
-import 'decorators/tooltip.dart';
 
 class AnimatedButtonBuilder {
   AnimatedButtonBuilder(
       {required this.child,
       this.onTap,
-      this.opacityDecorator,
-      this.scaleDecorator,
-      this.tooltipDecorator}) {
+      List<AnimatedButtonDecorator>? decorators,
+      // this.opacityDecorator,
+      // this.scaleDecorator,
+      // this.tooltipDecorator
+      }) {
+this.decorators = decorators ?? [];
     controller = Get.put(AnimatedButtonController(this));
 
-    onEnter = (e) {
-      controller._controller.forward();
-      print('super onEnter');
-    };
-
-    onExit = (e) {
-      controller._controller.reverse();
-      print('super onExit');
-    };
-
     // decorating
-    opacityDecorator?.decorate(this);
-    scaleDecorator?.decorate(this);
-    tooltipDecorator?.decorate(this);
+    for (var decorator in this.decorators){
+      decorator.decorate(this);
+    }
+    // opacityDecorator?.decorate(this);
+    // scaleDecorator?.decorate(this);
+    // tooltipDecorator?.decorate(this);
   }
 
   void cleanUp() {
-    opacityDecorator?.cleanUp();
-    tooltipDecorator?.removeOverlayEntry();
+    for (var callback in cleanUpCallbacks){
+      callback();
+    }
   }
+
+  final List<void Function()> cleanUpCallbacks = [];
+
+  final List<void Function()> onReverseEnd = [];
 
   late final AnimatedButtonController controller;
 
   void Function()? onTap;
 
-  late void Function(PointerEnterEvent) onEnter;
-  late void Function(PointerExitEvent) onExit;
+  final List<void Function(PointerEnterEvent)> onEnter = [];
+  final List<void Function(PointerExitEvent)> onExit = [];
 
   final GlobalKey buttonKey = GlobalKey();
 
   Widget child;
 
-  final AnimatedButtonOpacityDecorator? opacityDecorator;
-  final AnimatedButtonScaleDecorator? scaleDecorator;
-  final AnimatedButtonTooltipDecorator? tooltipDecorator;
+  late final List<AnimatedButtonDecorator> decorators;
 
   Widget build() {
     return GestureDetector(
@@ -56,21 +54,36 @@ class AnimatedButtonBuilder {
         onTap: onTap,
         child: MouseRegion(
             cursor: SystemMouseCursors.click,
-            onEnter: onEnter,
-            onExit: onExit,
+            onEnter: (e) {
+              for (var callback in onEnter) {
+                callback(e);
+              }
+              controller._controller.forward();
+            },
+            onExit: (e) {
+              for (var callback in onExit) {
+                callback(e);
+              }
+              controller._controller.reverse().then(
+                (value) {
+                  for (var callback in onReverseEnd) {
+                    callback();
+                  }
+                },
+              );
+            },
             child: child));
   }
 }
 
-class AnimatedButtonController extends GetxController
-    with GetSingleTickerProviderStateMixin {
+class AnimatedButtonController extends GetxController with GetSingleTickerProviderStateMixin {
   AnimatedButtonController(this.builder);
 
   final AnimatedButtonBuilder builder;
 
   //#region anim specs
-  late final _controller = AnimationController(
-      duration: duration, vsync: this, lowerBound: 0.9, upperBound: 1);
+  late final _controller =
+      AnimationController(duration: duration, vsync: this, lowerBound: 0.9, upperBound: 1);
   static const Duration duration = Duration(milliseconds: 130);
   late final Animation<double> animation = CurvedAnimation(
     parent: _controller,

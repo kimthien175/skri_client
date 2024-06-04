@@ -13,24 +13,11 @@ class AnimatedButtonOpacityDecorator extends AnimatedButtonDecorator {
   final RxBool _visible = false.obs;
   final double minOpacity;
 
-  void cleanUp() {
-    _visible.close();
-  }
-
   @override
   void decorate(AnimatedButtonBuilder builder) {
     // modify onEnter and onExit behavior
-    var onEnter = builder.onEnter;
-    builder.onEnter = (e) {
-      _visible.value = true;
-      onEnter(e);
-    };
-
-    var onExit = builder.onExit;
-    builder.onExit = (e) {
-      _visible.value = false;
-      onExit(e);
-    };
+    builder.onEnter.add((e) => _visible.value = true);
+    builder.onExit.add((e) => _visible.value = false);
 
     // modify widget: wrap widget with AnimatedOpacity
 
@@ -39,6 +26,8 @@ class AnimatedButtonOpacityDecorator extends AnimatedButtonDecorator {
         opacity: _visible.value ? 1 : minOpacity,
         duration: AnimatedButtonController.duration,
         child: widget));
+
+    builder.cleanUpCallbacks.add(()=>_visible.close());
   }
 }
 
@@ -50,7 +39,6 @@ class AnimatedButtonScaleDecorator extends AnimatedButtonDecorator {
   void decorate(AnimatedButtonBuilder builder) {
     // wrap the widget with ScaleTransition
     var widget = builder.child;
-    builder.child =
-        ScaleTransition(scale: builder.controller.animation, child: widget);
+    builder.child = ScaleTransition(scale: builder.controller.animation, child: widget);
   }
 }

@@ -22,8 +22,7 @@ class AvatarEditor extends StatelessWidget {
       Container(
         margin: const EdgeInsets.only(top: 10, bottom: 10),
         decoration: BoxDecoration(
-            color: Colors.black.withOpacity(0.1),
-            borderRadius: GlobalStyles.borderRadius),
+            color: Colors.black.withOpacity(0.1), borderRadius: GlobalStyles.borderRadius),
         padding: const EdgeInsets.all(8),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -31,26 +30,17 @@ class AvatarEditor extends StatelessWidget {
           children: [
             Column(
               children: [
-                _SwitchButton('left_arrow', 'chosen_left_arrow',
-                    controller.onPreviousEyes),
-                _SwitchButton('left_arrow', 'chosen_left_arrow',
-                    controller.onPreviousMouth),
-                _SwitchButton('left_arrow', 'chosen_left_arrow',
-                    controller.onPreviousColor),
+                _SwitchButton('left_arrow', 'chosen_left_arrow', controller.onPreviousEyes),
+                _SwitchButton('left_arrow', 'chosen_left_arrow', controller.onPreviousMouth),
+                _SwitchButton('left_arrow', 'chosen_left_arrow', controller.onPreviousColor),
               ],
             ),
-            SizedBox(
-                height: 96,
-                width: 96,
-                child: FittedBox(child: MePlayer.inst.avatar)),
+            SizedBox(height: 96, width: 96, child: FittedBox(child: MePlayer.inst.avatar)),
             Column(
               children: [
-                _SwitchButton(
-                    'right_arrow', 'chosen_right_arrow', controller.onNextEyes),
-                _SwitchButton('right_arrow', 'chosen_right_arrow',
-                    controller.onNextMouth),
-                _SwitchButton('right_arrow', 'chosen_right_arrow',
-                    controller.onNextColor),
+                _SwitchButton('right_arrow', 'chosen_right_arrow', controller.onNextEyes),
+                _SwitchButton('right_arrow', 'chosen_right_arrow', controller.onNextMouth),
+                _SwitchButton('right_arrow', 'chosen_right_arrow', controller.onNextColor),
               ],
             ),
           ],
@@ -88,9 +78,8 @@ class _SwitchButton extends StatelessWidget {
             child: SizedBox(
                 height: 34,
                 width: 34,
-                child: FittedBox(
-                    child: Obx(() =>
-                        controller.isHover.value ? onHoverChild : child)))));
+                child:
+                    FittedBox(child: Obx(() => controller.isHover.value ? onHoverChild : child)))));
   }
 }
 
@@ -104,19 +93,17 @@ class _RandomButton extends StatelessWidget {
   Widget build(BuildContext context) {
     var controller = Get.find<AvatarEditorController>();
     return AnimatedButtonBuilder(
-        child: GifManager.inst
-            .misc('randomize')
-            .builder
-            .init()
-            .doFitSize(height: 36, width: 36),
+        child: GifManager.inst.misc('randomize').builder.init().doFitSize(height: 36, width: 36),
         onTap: controller.randomize,
-        opacityDecorator: AnimatedButtonOpacityDecorator(),
-        scaleDecorator: AnimatedButtonScaleDecorator(),
-        tooltipDecorator: AnimatedButtonTooltipDecorator(
-            tooltip: 'randomize_your_avatar'.tr,
-            position: AnimatedButtonTooltipPosition.left,
-            scale: () => Get.find<HomeController>().isWebLayout.value
-                ? 1.0
-                : PanelStyles.widthOnMobile / PanelStyles.width)).build();
+        decorators: [
+          AnimatedButtonOpacityDecorator(),
+          AnimatedButtonScaleDecorator(),
+          AnimatedButtonTooltipDecorator(
+              tooltip: 'randomize_your_avatar'.tr,
+              position: AnimatedButtonTooltipPosition.left,
+              scale: () => Get.find<HomeController>().isWebLayout.value
+                  ? 1.0
+                  : PanelStyles.widthOnMobile / PanelStyles.width)
+        ]).build();
   }
 }
