@@ -5,19 +5,16 @@ import 'package:get/get.dart';
 import 'decorator.dart';
 
 class AnimatedButtonBuilder {
-  AnimatedButtonBuilder(
-      {required this.child,
-      this.onTap,
-      List<AnimatedButtonDecorator>? decorators,
-      // this.opacityDecorator,
-      // this.scaleDecorator,
-      // this.tooltipDecorator
-      }) {
-this.decorators = decorators ?? [];
+  AnimatedButtonBuilder({
+    required this.child,
+    this.onTap,
+    List<AnimatedButtonDecorator>? decorators,
+  }) {
+    this.decorators = decorators ?? [];
     controller = Get.put(AnimatedButtonController(this));
 
     // decorating
-    for (var decorator in this.decorators){
+    for (var decorator in this.decorators) {
       decorator.decorate(this);
     }
     // opacityDecorator?.decorate(this);
@@ -25,28 +22,26 @@ this.decorators = decorators ?? [];
     // tooltipDecorator?.decorate(this);
   }
 
+  Widget child;
+  void Function()? onTap;
+  late final List<AnimatedButtonDecorator> decorators;
+
   void cleanUp() {
-    for (var callback in cleanUpCallbacks){
+    for (var callback in cleanUpCallbacks) {
       callback();
     }
   }
 
   final List<void Function()> cleanUpCallbacks = [];
 
-  final List<void Function()> onReverseEnd = [];
-
   late final AnimatedButtonController controller;
 
-  void Function()? onTap;
+  final List<void Function(PointerEnterEvent)> onEnterCallbacks = [];
+  final List<void Function(PointerExitEvent)> onExitCallbacks = [];
 
-  final List<void Function(PointerEnterEvent)> onEnter = [];
-  final List<void Function(PointerExitEvent)> onExit = [];
+  //final List<void Function()> onReverseEndCallbacks = [];
 
   final GlobalKey buttonKey = GlobalKey();
-
-  Widget child;
-
-  late final List<AnimatedButtonDecorator> decorators;
 
   Widget build() {
     return GestureDetector(
@@ -55,22 +50,16 @@ this.decorators = decorators ?? [];
         child: MouseRegion(
             cursor: SystemMouseCursors.click,
             onEnter: (e) {
-              for (var callback in onEnter) {
+              for (var callback in onEnterCallbacks) {
                 callback(e);
               }
               controller._controller.forward();
             },
             onExit: (e) {
-              for (var callback in onExit) {
+              for (var callback in onExitCallbacks) {
                 callback(e);
               }
-              controller._controller.reverse().then(
-                (value) {
-                  for (var callback in onReverseEnd) {
-                    callback();
-                  }
-                },
-              );
+              controller._controller.reverse();
             },
             child: child));
   }
@@ -93,12 +82,14 @@ class AnimatedButtonController extends GetxController with GetSingleTickerProvid
 
   @override
   void dispose() {
+    print('dispose');
     _controller.dispose();
     super.dispose();
   }
 
   @override
   void onClose() {
+    print('onCLose');
     builder.cleanUp();
     super.onClose();
   }

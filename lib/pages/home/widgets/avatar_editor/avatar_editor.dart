@@ -7,6 +7,7 @@ import 'package:cd_mobile/utils/styles.dart';
 import 'package:cd_mobile/widgets/animated_button/builder.dart';
 import 'package:cd_mobile/widgets/animated_button/decorator.dart';
 import 'package:cd_mobile/widgets/animated_button/decorators/tooltip.dart';
+import 'package:cd_mobile/widgets/animated_button/decorators/tooltip/position.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -96,14 +97,14 @@ class _RandomButton extends StatelessWidget {
         child: GifManager.inst.misc('randomize').builder.init().doFitSize(height: 36, width: 36),
         onTap: controller.randomize,
         decorators: [
-          AnimatedButtonOpacityDecorator(),
           AnimatedButtonScaleDecorator(),
           AnimatedButtonTooltipDecorator(
               tooltip: 'randomize_your_avatar'.tr,
-              position: AnimatedButtonTooltipPosition.left,
+              position: TooltipPositionBottom(),
               scale: () => Get.find<HomeController>().isWebLayout.value
                   ? 1.0
-                  : PanelStyles.widthOnMobile / PanelStyles.width)
+                  : PanelStyles.widthOnMobile / PanelStyles.width),
+          AnimatedButtonOpacityDecorator(),
         ]).build();
   }
 }

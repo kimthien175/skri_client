@@ -16,8 +16,8 @@ class AnimatedButtonOpacityDecorator extends AnimatedButtonDecorator {
   @override
   void decorate(AnimatedButtonBuilder builder) {
     // modify onEnter and onExit behavior
-    builder.onEnter.add((e) => _visible.value = true);
-    builder.onExit.add((e) => _visible.value = false);
+    builder.onEnterCallbacks.add((e) => _visible.value = true);
+    builder.onExitCallbacks.add((e) => _visible.value = false);
 
     // modify widget: wrap widget with AnimatedOpacity
 
@@ -27,7 +27,7 @@ class AnimatedButtonOpacityDecorator extends AnimatedButtonDecorator {
         duration: AnimatedButtonController.duration,
         child: widget));
 
-    builder.cleanUpCallbacks.add(()=>_visible.close());
+    builder.cleanUpCallbacks.add(() => _visible.close());
   }
 }
 

@@ -4,8 +4,10 @@ class ResponsivePageController extends SuperController {
   ResponsivePageController() {
     isWebLayout = webLayoutStatus.obs;
   }
+
   /// observable var of controller
-  late RxBool isWebLayout;
+  late final RxBool isWebLayout;
+
   /// get current condition of web layout
   bool get webLayoutStatus => Get.width >= Get.height;
 
