@@ -1,8 +1,8 @@
-import 'package:cd_mobile/models/game/player.dart';
 import 'package:cd_mobile/pages/home/home.dart';
 import 'package:cd_mobile/pages/home/widgets/avatar_editor/controller.dart';
 import 'package:cd_mobile/models/gif/gif.dart';
 import 'package:cd_mobile/models/gif_manager.dart';
+import 'package:cd_mobile/pages/home/widgets/avatar_editor/jiggle_avatar.dart';
 import 'package:cd_mobile/utils/styles.dart';
 import 'package:cd_mobile/widgets/animated_button/builder.dart';
 import 'package:cd_mobile/widgets/animated_button/decorator.dart';
@@ -11,8 +11,6 @@ import 'package:cd_mobile/widgets/animated_button/decorators/tooltip/position.da
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-// TODO: small transition on translate when switching color, eyes, mouth
-// ignore: must_be_immutable
 class AvatarEditor extends StatelessWidget {
   const AvatarEditor({super.key});
 
@@ -36,7 +34,7 @@ class AvatarEditor extends StatelessWidget {
                 _SwitchButton('left_arrow', 'chosen_left_arrow', controller.onPreviousColor),
               ],
             ),
-            SizedBox(height: 96, width: 96, child: FittedBox(child: MePlayer.inst.avatar)),
+            const SizedBox(height: 96, width: 96, child: FittedBox(child: JiggleAvatar())),
             Column(
               children: [
                 _SwitchButton('right_arrow', 'chosen_right_arrow', controller.onNextEyes),

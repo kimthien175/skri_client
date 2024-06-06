@@ -1,8 +1,7 @@
+import 'package:cd_mobile/widgets/animated_button/decorators/tooltip.dart';
 import 'package:cd_mobile/widgets/animated_button/decorators/tooltip/controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
-import '../tooltip.dart';
 
 abstract class AnimatedButtonTooltipPosition {
   // AnimatedButtonTooltipPosition(this.decorator);
@@ -16,11 +15,10 @@ abstract class AnimatedButtonTooltipPosition {
 
   Widget _buildWithAlign(Widget child, double scale) {
     // put original child in tooltip 'background', wrap with ScaleTransition
-    var newChild = _build(child);
-    // ScaleTransition(
-    //     alignment: relativeAlignment,
-    //     scale: Get.find<ScaleTooltipController>(tag: hashCode.toString()).animation,
-    //     child: _build(child));
+    var newChild = ScaleTransition(
+        alignment: relativeAlignment,
+        scale: Get.find<ScaleTooltipController>(tag: hashCode.toString()).animation,
+        child: _build(child));
     return Align(
         alignment: relativeAlignment,
         child: scale == 1.0

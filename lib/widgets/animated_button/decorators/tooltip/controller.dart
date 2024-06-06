@@ -1,7 +1,6 @@
+import 'package:cd_mobile/widgets/animated_button/builder.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
-import '../../builder.dart';
 
 class ScaleTooltipController extends GetxController with GetSingleTickerProviderStateMixin {
   late final animController = AnimationController(
@@ -10,7 +9,6 @@ class ScaleTooltipController extends GetxController with GetSingleTickerProvider
       CurvedAnimation(parent: animController, curve: Curves.linear);
   @override
   void dispose() {
-    print('tooltip controller dispose');
     animController.dispose();
     super.dispose();
   }

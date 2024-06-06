@@ -1,8 +1,7 @@
+import 'package:cd_mobile/widgets/animated_button/decorator.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
-import 'decorator.dart';
 
 class AnimatedButtonBuilder {
   AnimatedButtonBuilder({
@@ -82,14 +81,12 @@ class AnimatedButtonController extends GetxController with GetSingleTickerProvid
 
   @override
   void dispose() {
-    print('dispose');
     _controller.dispose();
     super.dispose();
   }
 
   @override
   void onClose() {
-    print('onCLose');
     builder.cleanUp();
     super.onClose();
   }

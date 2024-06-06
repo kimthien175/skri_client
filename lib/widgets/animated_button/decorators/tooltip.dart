@@ -1,11 +1,10 @@
 import 'package:cd_mobile/utils/overlay.dart';
+import 'package:cd_mobile/widgets/animated_button/builder.dart';
+import 'package:cd_mobile/widgets/animated_button/decorator.dart';
+import 'package:cd_mobile/widgets/animated_button/decorators/tooltip/controller.dart';
+import 'package:cd_mobile/widgets/animated_button/decorators/tooltip/position.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
-import '../builder.dart';
-import '../decorator.dart';
-import 'tooltip/controller.dart';
-import 'tooltip/position.dart';
 
 class AnimatedButtonTooltipDecorator extends AnimatedButtonDecorator {
   AnimatedButtonTooltipDecorator(

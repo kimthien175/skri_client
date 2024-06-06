@@ -1,7 +1,6 @@
+import 'package:cd_mobile/widgets/animated_button/builder.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
-import 'builder.dart';
 
 class AnimatedButtonDecorator {
   void decorate(AnimatedButtonBuilder builder) {}
