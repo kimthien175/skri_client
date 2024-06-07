@@ -15,22 +15,47 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:measure_size/measure_size.dart';
 
-class Mobile extends StatelessWidget {
+class MobileController extends GetxController {
+  final RxBool isFit = false.obs;
+  void processLayout() {
+    var homeController = Get.find<HomeController>();
+    var mainHeight = homeController.mainContentKey.currentContext?.size?.height;
+    var footerHeight = homeController.footerKey.currentContext?.size?.height;
+    if (mainHeight != null && footerHeight != null) {
+      isFit.value = mainHeight + footerHeight <= Get.height;
+    } else {
+      isFit.value = false;
+    }
+  }
+
+  final ScrollController scrollController = ScrollController();
+
+  @override
+  void dispose() {
+    scrollController.dispose();
+    super.dispose();
+  }
+}
+
+class Mobile extends GetView<MobileController> {
   const Mobile({super.key});
 
   @override
   Widget build(BuildContext context) {
+    Get.put(MobileController());
+
+    // LESSION: use Get.width and Get.height instead of context.width and context.height, the widgets width will freeze, that's weird
     var w = context.width;
     var h = context.height;
     var homeController = Get.find<HomeController>();
-    var verticalScrollController = ScrollController();
+
     var mainContent = Column(
       key: homeController.mainContentKey,
       mainAxisSize: MainAxisSize.min,
       children: [
         SizedBox(height: PanelStyles.widthOnMobile * 0.06),
         SizedBox(
-            width: min(0.95 * w, 0.65 * h),
+            width: min(0.9 * w, 0.65 * h),
             child: FittedBox(
                 child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -54,6 +79,7 @@ class Mobile extends StatelessWidget {
                         Row(children: [NameInput(), LangSelector()]),
                         AvatarEditor(),
                         PlayButton(),
+                        SizedBox(height: 10),
                         CreatePrivateRoomButton(),
                       ],
                     )))),
@@ -69,40 +95,30 @@ class Mobile extends StatelessWidget {
         Footer(),
       ],
     );
-    return Obx(() {
-      var controller = Get.find<HomeController>();
-      if (controller.isFit.value) {
-        return MeasureSize(
-            onChange: (_) {
-              controller.processLayout();
-            },
-            child: SingleChildScrollView(
+
+    return Obx(() => MeasureSize(
+        onChange: (_) => controller.processLayout(),
+        child: controller.isFit.value
+            ? SingleChildScrollView(
                 child: Container(
-                    width: Get.width,
-                    constraints: BoxConstraints(minHeight: Get.height),
+                    width: w,
+                    constraints: BoxConstraints(minHeight: h),
                     child: Stack(
                       clipBehavior: Clip.none,
                       children: [
-                        SizedBox(width: Get.width, child: mainContent),
-                        Positioned(bottom: 0, child: SizedBox(width: Get.width, child: footer))
+                        SizedBox(width: w, child: mainContent),
+                        Positioned(bottom: 0, child: SizedBox(width: w, child: footer))
                       ],
-                    ))));
-      }
-
-      return MeasureSize(
-          onChange: (_) {
-            controller.processLayout();
-          },
-          child: Scrollbar(
-              thumbVisibility: true,
-              trackVisibility: true,
-              controller: verticalScrollController,
-              child: SingleChildScrollView(
-                  controller: verticalScrollController,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [mainContent, footer],
-                  ))));
-    });
+                    )))
+            : Scrollbar(
+                thumbVisibility: true,
+                trackVisibility: true,
+                controller: controller.scrollController,
+                child: SingleChildScrollView(
+                    controller: controller.scrollController,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [mainContent, SizedBox(height: h * 0.05), footer],
+                    )))));
   }
 }

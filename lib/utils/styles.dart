@@ -172,13 +172,12 @@ import 'package:get/get.dart';
 class PanelStyles {
   static Color textColor = const Color(0xfff0f0f0);
   static EdgeInsetsGeometry padding = const EdgeInsets.all(15);
-  static BoxDecoration webDecoration = BoxDecoration(
-      color: PanelStyles.color, borderRadius: GlobalStyles.borderRadius);
+  static BoxDecoration webDecoration =
+      BoxDecoration(color: PanelStyles.color, borderRadius: GlobalStyles.borderRadius);
   static BoxDecoration mobileDecoration = BoxDecoration(
-      color: PanelStyles.color,
-      borderRadius: const BorderRadius.all(Radius.circular(10)));
+      color: PanelStyles.color, borderRadius: const BorderRadius.all(Radius.circular(10)));
   static Color color = const Color.fromRGBO(12, 44, 150, 0.75);
-  static double get widthOnMobile => min(0.95 * Get.width, 0.55 * Get.height);
+  static double get widthOnMobile => min(0.9 * Get.width, 0.55 * Get.height);
   static double width = 400;
   static Color borderFocusColor = const Color(0xff56b2fd);
 }
@@ -193,8 +192,7 @@ class InputStyles {
 
 class GlobalStyles {
   static BorderRadius borderRadius = const BorderRadius.all(Radius.circular(3));
-  static Shadow textShadow =
-      const Shadow(color: Color(0x2b000000), offset: Offset(2, 2));
+  static Shadow textShadow = const Shadow(color: Color(0x2b000000), offset: Offset(2, 2));
 }
 
 class GameplayStyles {

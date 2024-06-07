@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'dart:ui';
 
+import 'package:cd_mobile/utils/overlay.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -50,5 +51,26 @@ class LoadingOverlay extends StatelessWidget {
               child: Container(color: Colors.black.withOpacity(0)))),
       Center(child: SizedBox(height: size, width: size, child: const FittedBox(child: Loading())))
     ]);
+  }
+}
+
+class LoadingManager extends GetxController {
+  LoadingManager._internal();
+  static final LoadingManager _inst = LoadingManager._internal();
+  static LoadingManager get inst => _inst;
+
+  OverlayEntry? _entry;
+  bool get isLoading => _entry != null;
+  void show() {
+    if (isLoading) return;
+    _entry = OverlayEntry(builder: (ct) => const LoadingOverlay());
+    addOverlay(_entry!);
+  }
+
+  void hide() {
+    if (!isLoading) return;
+    _entry?.remove();
+    _entry?.dispose();
+    _entry = null;
   }
 }

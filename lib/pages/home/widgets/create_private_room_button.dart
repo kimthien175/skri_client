@@ -1,6 +1,6 @@
 import 'package:cd_mobile/models/game/private_game.dart';
-import 'package:cd_mobile/pages/home/home.dart';
 import 'package:cd_mobile/utils/styles.dart';
+import 'package:cd_mobile/widgets/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -14,7 +14,7 @@ class CreatePrivateRoomButton extends StatelessWidget {
         child: GestureDetector(
             onTap: () {
               // set home to loading state
-              Get.find<HomeController>().isLoading.value = true;
+              LoadingManager.inst.show();
               // init private room
               PrivateGame.host();
             },

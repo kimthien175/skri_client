@@ -6,8 +6,8 @@ import 'package:cd_mobile/models/game/state/wait_for_setup.dart';
 import 'package:cd_mobile/pages/gameplay/gameplay.dart';
 import 'package:cd_mobile/pages/gameplay/widgets/game_settings.dart';
 import 'package:cd_mobile/pages/gameplay/widgets/main_content_footer/main_content_footer.dart';
-import 'package:cd_mobile/pages/home/home.dart';
 import 'package:cd_mobile/utils/socket_io.dart';
+import 'package:cd_mobile/widgets/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 // ignore: avoid_web_libraries_in_flutter
@@ -85,7 +85,7 @@ class PrivateGame extends Game {
                   content: Text(requestedRoomResult['data'].toString())));
         }
 
-        Get.find<HomeController>().isLoading.value = false;
+        LoadingManager.inst.hide();
         inst.eventHandlers.onConnect = SessionEventHandlers.emptyOnConnect;
       });
     };
@@ -167,7 +167,7 @@ class PrivateGame extends Game {
                   content: Text(requestedJoiningRoomResult['data'].toString())));
         }
 
-        Get.find<HomeController>().isLoading.value = false;
+        LoadingManager.inst.hide();
         inst.eventHandlers.onConnect = SessionEventHandlers.emptyOnConnect;
       });
     };
@@ -189,7 +189,7 @@ class PrivateGame extends Game {
               title: title,
               middleText: '${"create_private_room_error_content".tr}\n${error.toString()}',
               onCancel: () {
-                Get.find<HomeController>().isLoading.value = false;
+                LoadingManager.inst.hide();
 
                 dialogOpenCount = 0;
               },

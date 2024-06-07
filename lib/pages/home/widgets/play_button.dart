@@ -1,6 +1,6 @@
 import 'package:cd_mobile/models/game/private_game.dart';
-import 'package:cd_mobile/pages/home/home.dart';
 import 'package:cd_mobile/utils/styles.dart';
+import 'package:cd_mobile/widgets/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -18,7 +18,7 @@ class PlayButton extends StatelessWidget {
               if (roomCode == null) return;
 
               if (RegExp(r'^[a-z0-9]{4,}$').hasMatch(roomCode!)) {
-                Get.find<HomeController>().isLoading.value = true;
+                LoadingManager.inst.show();
                 PrivateGame.join(roomCode!);
               } else {
                 showDialog(

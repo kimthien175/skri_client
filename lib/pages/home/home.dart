@@ -33,53 +33,23 @@ class HomeController extends ResponsivePageController {
     }
   }
 
-  var isLoading = false.obs;
-
   @override
   void didChangeMetrics() {
     // won't triggered on first run, only triggered when resize
-    processLayout();
+    if (isWebLayout.value) {
+      Get.find<WebController>().processLayout();
+    } else {
+      Get.find<MobileController>().processLayout();
+    }
     if (isWebLayout.value != webLayoutStatus) {
       isWebLayout.toggle();
     }
-
-    // if (isWebLayout.value) {
-    //   if (webLayoutStatus) {
-    //     // constantly on web
-    //     Get.find<WebController>().processLayout();
-    //   } else {
-    //     // from web to mobile
-    //     isWebLayout.trigger(false);
-    //   }
-    // } else {
-    //   if (webLayoutStatus) {
-    //     // from mobile to web
-    //     isWebLayout.trigger(true);
-    //   }
-    // }
 
     super.didChangeMetrics();
   }
 
   var mainContentKey = GlobalKey();
   var footerKey = GlobalKey();
-
-  var isFit = false.obs;
-
-  void processLayout() {
-    var mainHeight = mainContentKey.currentContext?.size?.height;
-    var footerHeight = footerKey.currentContext?.size?.height;
-    if (mainHeight != null && footerHeight != null) {
-      var _isFit = mainHeight + footerHeight <= Get.height;
-      if (isFit.value != _isFit) {
-        isFit.trigger(_isFit);
-      }
-    } else {
-      if (isFit.value) {
-        isFit.trigger(false);
-      }
-    }
-  }
 }
 
 class HomePage extends StatelessWidget {
@@ -96,16 +66,11 @@ class HomePage extends StatelessWidget {
                   scale: 1.2,
                   repeat: ImageRepeat.repeat,
                   image: AssetImage('assets/background.png'))),
-          child: Obx(() {
+          child: SafeArea(child: Obx(() {
             if (!ResourcesController.inst.isLoaded.value) return const LoadingOverlay();
 
-            var content = SafeArea(child: controller.isWebLayout.value ? Web() : Mobile());
-            return controller.isLoading.value
-                ? Stack(
-                    children: [content, const LoadingOverlay()],
-                  )
-                : content;
-          })),
+            return controller.isWebLayout.value ? Web() : Mobile();
+          }))),
     );
   }
 }
