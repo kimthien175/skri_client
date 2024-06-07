@@ -5,13 +5,19 @@ import 'package:get/get.dart';
 
 class JiggleController extends GetxController with GetSingleTickerProviderStateMixin {
   late final animController =
-      AnimationController(duration: const Duration(milliseconds: 180), vsync: this);
+      AnimationController(duration: const Duration(milliseconds: 150), vsync: this);
   late final Animation<Offset> animation =
       Tween<Offset>(begin: Offset.zero, end: const Offset(0, 0.06))
           .animate(CurvedAnimation(parent: animController, curve: Curves.decelerate));
 
   void jiggle() {
     animController.forward().then((_) => animController.reverse());
+  }
+
+  @override
+  void dispose() {
+    animController.dispose();
+    super.dispose();
   }
 }
 

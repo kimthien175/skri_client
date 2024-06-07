@@ -64,15 +64,20 @@ class HomeController extends ResponsivePageController {
   var mainContentKey = GlobalKey();
   var footerKey = GlobalKey();
 
-  var isMinimumSize = false.obs;
+  var isFit = false.obs;
 
   void processLayout() {
     var mainHeight = mainContentKey.currentContext?.size?.height;
     var footerHeight = footerKey.currentContext?.size?.height;
     if (mainHeight != null && footerHeight != null) {
-      isMinimumSize.value = mainHeight + footerHeight <= Get.height;
+      var _isFit = mainHeight + footerHeight <= Get.height;
+      if (isFit.value != _isFit) {
+        isFit.trigger(_isFit);
+      }
     } else {
-      isMinimumSize.value = false;
+      if (isFit.value) {
+        isFit.trigger(false);
+      }
     }
   }
 }

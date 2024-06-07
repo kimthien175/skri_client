@@ -6,7 +6,6 @@ import 'package:cd_mobile/models/gif_manager.dart';
 import 'package:cd_mobile/pages/home/widgets/avatar_editor/jiggle_avatar.dart';
 import 'package:get/get.dart';
 
-/// MePlayer is created at here
 class AvatarEditorController extends GetxController {
   AvatarEditorController() {
     var rd = Random();
@@ -21,8 +20,15 @@ class AvatarEditorController extends GetxController {
   late final RxInt eyes;
   late final RxInt mouth;
 
-  JiggleController jiggleEyes = JiggleController();
-  JiggleController jiggleMouth = JiggleController();
+  @override
+  void dispose() {
+    jiggleEyes.dispose();
+    jiggleMouth.dispose();
+    super.dispose();
+  }
+
+  final JiggleController jiggleEyes = JiggleController();
+  final JiggleController jiggleMouth = JiggleController();
 
   void onPreviousEyes() {
     if (eyes.value == 0) {
