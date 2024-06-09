@@ -11,22 +11,25 @@ import 'package:url_launcher/url_launcher.dart';
 class Footer extends StatelessWidget {
   const Footer({super.key});
 
+  static const double webWidth = 1040;
+
   @override
   Widget build(BuildContext context) {
-    var sections = [
-      Section('about', 'section_about'.tr, const AboutContent()),
-      Section('news', 'section_news'.tr, const NewsContent()),
-      Section('how', 'section_how_to_play'.tr, const HowToPlayContent()),
-    ];
-    var isWeb = Get.find<HomeController>().isWebLayout.value;
-
-    if (isWeb) {
+    if (Get.find<HomeController>().isWebLayout.value) {
       return Container(
           color: PanelStyles.color,
           padding: const EdgeInsets.only(top: 10, bottom: 10),
           child: Column(children: [
-            Wrap(
-              children: sections,
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const SizedBox(width: 10),
+                Section('about', 'section_about'.tr, const AboutContent()),
+                Section('news', 'section_news'.tr, const NewsContent()),
+                Section('how', 'section_how_to_play'.tr, const HowToPlayContent()),
+                const SizedBox(width: 10)
+              ],
             ),
             const Row(
               mainAxisSize: MainAxisSize.min,
@@ -55,7 +58,11 @@ class Footer extends StatelessWidget {
               //crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 SizedBox(height: mobilePanelWidth * 0.05),
-                Column(mainAxisSize: MainAxisSize.min, children: sections),
+                Column(mainAxisSize: MainAxisSize.min, children: [
+                  Section('about', 'section_about'.tr, const AboutContent()),
+                  Section('news', 'section_news'.tr, const NewsContent()),
+                  Section('how', 'section_how_to_play'.tr, const HowToPlayContent()),
+                ]),
                 Center(
                     child: SizedBox(
                         width: mobilePanelWidth * 0.6,

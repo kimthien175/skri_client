@@ -9,9 +9,9 @@ import 'package:cd_mobile/pages/home/widgets/play_button.dart';
 import 'package:cd_mobile/utils/styles.dart';
 import 'package:cd_mobile/widgets/logo.dart';
 import 'package:cd_mobile/pages/home/widgets/random_avatars.dart';
+import 'package:cd_mobile/widgets/measure_size.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:measure_size/measure_size.dart';
 
 class WebController extends GetxController {
   final RxBool isHeightFit = false.obs;
@@ -51,10 +51,7 @@ class Web extends GetView<WebController> {
     var mainContent =
         Column(key: homeController.mainContentKey, mainAxisSize: MainAxisSize.min, children: [
       const SizedBox(height: 25),
-      Logo(() {
-        // check if private code in url, then clean it
-        Get.parameters = {};
-      }),
+      const Logo(Logo.clearUrl),
       const SizedBox(height: 10),
       const RandomAvatars(),
       const SizedBox(height: 40),
@@ -80,22 +77,26 @@ class Web extends GetView<WebController> {
       children: const [Triangle(), Footer()],
     );
 
+    return Stack(
+      alignment: Alignment.topCenter,
+      clipBehavior: Clip.none,
+      children: [mainContent, Positioned(bottom: 0, child: footer)],
+    );
+
     return Obx(() => MeasureSize(
-          onChange: (_) => controller.processLayout(),
+          onChange: controller.processLayout,
           child: controller.isWidthFit.value
               ? (controller.isHeightFit.value
                   ?
                   // TODO: fit width and height
                   SingleChildScrollView(
-                      child: SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: Container(
-                              constraints:
-                                  BoxConstraints(minHeight: Get.height, minWidth: Get.width),
-                              child: Stack(
-                                clipBehavior: Clip.none,
-                                children: [mainContent, Positioned(bottom: 0, child: footer)],
-                              ))))
+                      scrollDirection: Axis.horizontal,
+                      child: Container(
+                          constraints: BoxConstraints(minHeight: Get.height, minWidth: Get.width),
+                          child: Stack(
+                            clipBehavior: Clip.none,
+                            children: [mainContent, Positioned(bottom: 0, child: footer)],
+                          )))
                   :
                   // TODO:  fit width but not height
                   Container())

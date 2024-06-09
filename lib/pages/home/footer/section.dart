@@ -9,6 +9,8 @@ class Section extends StatelessWidget {
   final String icon;
   final String title;
   final Widget content;
+
+  //static const double width = 340;
   @override
   Widget build(BuildContext context) {
     var isWeb = Get.find<HomeController>().isWebLayout.value;

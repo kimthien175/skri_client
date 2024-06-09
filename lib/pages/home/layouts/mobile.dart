@@ -11,9 +11,9 @@ import 'package:cd_mobile/pages/home/widgets/play_button.dart';
 import 'package:cd_mobile/pages/home/widgets/random_avatars.dart';
 import 'package:cd_mobile/utils/styles.dart';
 import 'package:cd_mobile/widgets/logo.dart';
+import 'package:cd_mobile/widgets/measure_size.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:measure_size/measure_size.dart';
 
 class MobileController extends GetxController {
   final RxBool isFit = false.obs;
@@ -56,14 +56,10 @@ class Mobile extends GetView<MobileController> {
         SizedBox(height: PanelStyles.widthOnMobile * 0.06),
         SizedBox(
             width: min(0.9 * w, 0.65 * h),
-            child: FittedBox(
+            child: const FittedBox(
                 child: Column(
               mainAxisSize: MainAxisSize.min,
-              children: [
-                Logo(() => Get.offNamed('/')),
-                const SizedBox(height: 10),
-                const RandomAvatars()
-              ],
+              children: [Logo(Logo.clearUrl), SizedBox(height: 10), RandomAvatars()],
             ))),
         SizedBox(height: 0.04 * w),
         SizedBox(
@@ -83,6 +79,7 @@ class Mobile extends GetView<MobileController> {
                         CreatePrivateRoomButton(),
                       ],
                     )))),
+        SizedBox(height: h * 0.05),
       ],
     );
 
@@ -97,19 +94,13 @@ class Mobile extends GetView<MobileController> {
     );
 
     return Obx(() => MeasureSize(
-        onChange: (_) => controller.processLayout(),
+        onChange: controller.processLayout,
         child: controller.isFit.value
-            ? SingleChildScrollView(
-                child: Container(
-                    width: w,
-                    constraints: BoxConstraints(minHeight: h),
-                    child: Stack(
-                      clipBehavior: Clip.none,
-                      children: [
-                        SizedBox(width: w, child: mainContent),
-                        Positioned(bottom: 0, child: SizedBox(width: w, child: footer))
-                      ],
-                    )))
+            ? Stack(
+                alignment: Alignment.topCenter,
+                clipBehavior: Clip.none,
+                children: [mainContent, Positioned(bottom: 0, child: footer)],
+              )
             : Scrollbar(
                 thumbVisibility: true,
                 trackVisibility: true,
@@ -118,7 +109,7 @@ class Mobile extends GetView<MobileController> {
                     controller: controller.scrollController,
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
-                      children: [mainContent, SizedBox(height: h * 0.05), footer],
+                      children: [mainContent, footer],
                     )))));
   }
 }

@@ -13,15 +13,9 @@ import 'package:get/get.dart';
 class HomeController extends ResponsivePageController {
   HomeController() : super() {
     if (ResourcesController.inst.isLoaded.value) {
-      Get.put(RandomAvatarsController());
-      Get.put(NewsContentController());
-      Get.put(AvatarEditorController());
+      loadChildrenControllers();
     } else {
-      ResourcesController.inst.onDone.add(() {
-        Get.put(RandomAvatarsController());
-        Get.put(NewsContentController());
-        Get.put(AvatarEditorController());
-      });
+      ResourcesController.inst.onDone.add(loadChildrenControllers);
     }
 
     // check for room code
@@ -31,6 +25,12 @@ class HomeController extends ResponsivePageController {
       // change Play btn function
       PlayButton.roomCode = rawRoomCode.toLowerCase();
     }
+  }
+
+  void loadChildrenControllers() {
+    Get.put(RandomAvatarsController());
+    Get.put(NewsContentController());
+    Get.put(AvatarEditorController());
   }
 
   @override
@@ -52,12 +52,12 @@ class HomeController extends ResponsivePageController {
   var footerKey = GlobalKey();
 }
 
-class HomePage extends StatelessWidget {
-  HomePage({super.key});
-  final HomeController controller = Get.put(HomeController());
+class HomePage extends GetView<HomeController> {
+  const HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    Get.put(HomeController());
     return Scaffold(
       body: Container(
           constraints: const BoxConstraints.expand(),
@@ -69,7 +69,7 @@ class HomePage extends StatelessWidget {
           child: SafeArea(child: Obx(() {
             if (!ResourcesController.inst.isLoaded.value) return const LoadingOverlay();
 
-            return controller.isWebLayout.value ? Web() : Mobile();
+            return controller.isWebLayout.value ? const Web() : const Mobile();
           }))),
     );
   }
