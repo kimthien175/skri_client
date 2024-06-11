@@ -3,6 +3,7 @@ import 'package:cd_mobile/pages/home/footer/news.dart';
 import 'package:cd_mobile/pages/home/footer/section.dart';
 import 'package:cd_mobile/pages/home/footer/tutorial.dart';
 import 'package:cd_mobile/pages/home/home.dart';
+import 'package:cd_mobile/pages/home/layouts/web.dart';
 import 'package:cd_mobile/utils/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -16,10 +17,14 @@ class Footer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (Get.find<HomeController>().isWebLayout.value) {
-      return Container(
+      return Obx(()=>Container(
+        width: Get.find<WebController>().isWidthFit.value ? context.width : webWidth,
+          //constraints: const BoxConstraints(minWidth: webWidth, maxWidth: double.infinity),
           color: PanelStyles.color,
           padding: const EdgeInsets.only(top: 10, bottom: 10),
-          child: Column(children: [
+          child: Column(
+           // crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
@@ -49,7 +54,7 @@ class Footer extends StatelessWidget {
                     fontWeight: FontWeight.w600,
                     fontFamily: 'Nunito',
                     color: Color.fromRGBO(103, 122, 249, 1)))
-          ]));
+          ])));
     } else {
       var mobilePanelWidth = PanelStyles.widthOnMobile;
       return Container(

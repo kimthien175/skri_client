@@ -22,7 +22,7 @@ class WebController extends GetxController {
     var footerSize = homeController.footerKey.currentContext?.size;
     if (mainSize != null && footerSize != null) {
       isHeightFit.value = mainSize.height + footerSize.height <= Get.height;
-      isWidthFit.value = mainSize.width + footerSize.width <= Get.width;
+      isWidthFit.value = Footer.webWidth <= Get.width;
     } else {
       isHeightFit.value = false;
       isWidthFit.value = false;
@@ -68,7 +68,7 @@ class Web extends GetView<WebController> {
               CreatePrivateRoomButton(),
             ],
           )),
-      const SizedBox(height: 10)
+      const SizedBox(height: 20)
     ]);
 
     var footer = Column(
@@ -77,46 +77,68 @@ class Web extends GetView<WebController> {
       children: const [Triangle(), Footer()],
     );
 
-    return Stack(
-      alignment: Alignment.topCenter,
-      clipBehavior: Clip.none,
-      children: [mainContent, Positioned(bottom: 0, child: footer)],
-    );
+    return Obx(() {
+      print('____');
+      print('width ${controller.isWidthFit.value}');
+      print('height ${controller.isHeightFit.value}');
 
-    return Obx(() => MeasureSize(
-          onChange: controller.processLayout,
-          child: controller.isWidthFit.value
-              ? (controller.isHeightFit.value
-                  ?
-                  // TODO: fit width and height
-                  SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Container(
-                          constraints: BoxConstraints(minHeight: Get.height, minWidth: Get.width),
-                          child: Stack(
-                            clipBehavior: Clip.none,
-                            children: [mainContent, Positioned(bottom: 0, child: footer)],
-                          )))
-                  :
-                  // TODO:  fit width but not height
-                  Container())
-              : (controller.isHeightFit.value
-                  ?
-                  // TODO:fit height but not width
-                  Container()
-                  :
-                  // TODO:  fit no height nor width
-                  SingleChildScrollView(
-                      child: SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: Container(
-                              constraints:
-                                  BoxConstraints(minHeight: Get.height, minWidth: Get.width),
-                              child: Stack(
-                                clipBehavior: Clip.none,
-                                children: [mainContent, Positioned(bottom: 0, child: footer)],
-                              ))))),
-        ));
+      return MeasureSize(
+        onChange: controller.processLayout,
+        child: controller.isWidthFit.value
+            ? (controller.isHeightFit.value
+                ? SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Stack(
+                      alignment: Alignment.bottomCenter,
+                      clipBehavior: Clip.none,
+                      children: [Positioned(top: 0, child: mainContent), footer],
+                    ))
+                : Scrollbar(
+                    thumbVisibility: true,
+                    trackVisibility: true,
+                    controller: controller.verticalScrollController,
+                    child: SingleChildScrollView(
+                        controller: controller.verticalScrollController,
+                        child: SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [mainContent, footer],
+                            )))))
+            : (controller.isHeightFit.value
+                ? Scrollbar(
+                    thumbVisibility: true,
+                    trackVisibility: true,
+                    controller: controller.horizontalScrollController,
+                    child: SingleChildScrollView(
+                        controller: controller.horizontalScrollController,
+                        scrollDirection: Axis.horizontal,
+                        child: Stack(
+                          alignment: Alignment.bottomCenter,
+                          clipBehavior: Clip.none,
+                          children: [Positioned(top: 0, child: mainContent), footer],
+                        )))
+                :
+                // TODO:  fit no height nor width
+                Scrollbar(
+                    thumbVisibility: true,
+                    trackVisibility: true,
+                    controller: controller.verticalScrollController,
+                    child: Scrollbar(
+                        thumbVisibility: true,
+                        trackVisibility: true,
+                        controller: controller.horizontalScrollController,
+                        child: SingleChildScrollView(
+                            controller: controller.horizontalScrollController,
+                            scrollDirection: Axis.horizontal,
+                            child: SingleChildScrollView(
+                                controller: controller.verticalScrollController,
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [mainContent, footer],
+                                )))))),
+      );
+    });
     // var controller = Get.find<HomeController>();
     // if (controller.isFit.value) {
     //   if (_widthController.isFit.value) {

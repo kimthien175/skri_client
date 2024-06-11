@@ -1,3 +1,6 @@
+import 'package:cd_mobile/pages/home/footer/footer.dart';
+import 'package:cd_mobile/pages/home/home.dart';
+import 'package:cd_mobile/pages/home/layouts/web.dart';
 import 'package:cd_mobile/utils/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -25,13 +28,19 @@ class SvgTriangle extends CustomPainter {
 class Triangle extends StatelessWidget {
   const Triangle({this.height = 40, super.key});
 
- final  double height;
+  final double height;
 
   @override
   Widget build(BuildContext context) {
-    return CustomPaint(
+    
+    return Obx(()=>CustomPaint(
       painter: SvgTriangle(),
-      size: Size(context.width, height),
-    );
+      size: Size(
+          Get.find<HomeController>().isWebLayout.value &&
+                  !(Get.find<WebController>().isWidthFit.value)
+              ? Footer.webWidth
+              : context.width,
+          height),
+    ));
   }
 }
