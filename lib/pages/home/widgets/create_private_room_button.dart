@@ -20,8 +20,8 @@ class CreatePrivateRoomButton extends StatelessWidget {
             },
             child: Container(
               alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: const Color(0xff2c8de7),
+              decoration: const BoxDecoration(
+                color: Color(0xff2c8de7),
                 borderRadius: GlobalStyles.borderRadius,
               ),
               constraints: const BoxConstraints.expand(height: 40),

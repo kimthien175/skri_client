@@ -15,7 +15,7 @@ class GameSettingsController extends GetxController {
 }
 
 class GameSettings extends StatelessWidget {
-  GameSettings({ super.key}) {
+  GameSettings({super.key}) {
     controller = Get.put(GameSettingsController());
   }
 
@@ -83,8 +83,8 @@ class GameSettings extends StatelessWidget {
                           onTap: (Game.inst as PrivateGame).startGame,
                           child: Container(
                             alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                              color: const Color(0xff53e237),
+                            decoration: const BoxDecoration(
+                              color: Color(0xff53e237),
                               borderRadius: GlobalStyles.borderRadius,
                             ),
                             child: Text('start'.tr,
@@ -104,8 +104,8 @@ class GameSettings extends StatelessWidget {
                 Container(
                   height: 600,
                   width: 800,
-                  decoration: BoxDecoration(
-                    color: const Color.fromRGBO(3, 8, 29, 0.4),
+                  decoration: const BoxDecoration(
+                    color: Color.fromRGBO(3, 8, 29, 0.4),
                     borderRadius: GlobalStyles.borderRadius,
                   ),
                 )
@@ -328,8 +328,10 @@ class _UseCustomWordsOnlyCheckbox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Obx(() => Checkbox(
-        fillColor: MaterialStateProperty.resolveWith((states) {
-          if (states.contains(MaterialState.selected)) {
+      // TODO: CHANGED FROM MATERIALSTATEPROPERTY TO THIS, TEST AGAIN
+        fillColor: WidgetStateProperty.resolveWith((states) {
+          // TODO: CHANGED FROM MATERIALSTATE TO THIS, TEST AGAIN
+          if (states.contains(WidgetState.selected)) {
             return Colors.blue; // Set the background color when checked
           }
           return Colors.white; // Set the background color when unchecked

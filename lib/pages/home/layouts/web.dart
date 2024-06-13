@@ -11,6 +11,7 @@ import 'package:cd_mobile/widgets/logo.dart';
 import 'package:cd_mobile/pages/home/widgets/random_avatars.dart';
 import 'package:cd_mobile/widgets/measure_size.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
 
 class WebController extends GetxController {
@@ -40,7 +41,6 @@ class WebController extends GetxController {
   }
 }
 
-// TODO: WHEN USER ZOOM IN OR RESIZE TO SMALLER WIDTH, MAKE FOOTER SECTIONS JUMP DOWN LIKE TRUE MEANING OF WRAP
 class Web extends GetView<WebController> {
   const Web({super.key});
 
@@ -78,33 +78,30 @@ class Web extends GetView<WebController> {
     );
 
     return Obx(() {
-      print('____');
-      print('width ${controller.isWidthFit.value}');
-      print('height ${controller.isHeightFit.value}');
-
+      // print('____');
+      // print('width ${controller.isWidthFit.value}');
+      // print('height ${controller.isHeightFit.value}');
       return MeasureSize(
         onChange: controller.processLayout,
         child: controller.isWidthFit.value
             ? (controller.isHeightFit.value
-                ? SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
+                ? ClipRect(
                     child: Stack(
-                      alignment: Alignment.bottomCenter,
-                      clipBehavior: Clip.none,
-                      children: [Positioned(top: 0, child: mainContent), footer],
-                    ))
+                    alignment: Alignment.bottomCenter,
+                    clipBehavior: Clip.none,
+                    children: [Positioned(top: 0, child: mainContent), footer],
+                  ))
                 : Scrollbar(
                     thumbVisibility: true,
                     trackVisibility: true,
                     controller: controller.verticalScrollController,
                     child: SingleChildScrollView(
                         controller: controller.verticalScrollController,
-                        child: SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
+                        child: ClipRect(
                             child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [mainContent, footer],
-                            )))))
+                          mainAxisSize: MainAxisSize.min,
+                          children: [mainContent, footer],
+                        )))))
             : (controller.isHeightFit.value
                 ? Scrollbar(
                     thumbVisibility: true,
@@ -118,113 +115,105 @@ class Web extends GetView<WebController> {
                           clipBehavior: Clip.none,
                           children: [Positioned(top: 0, child: mainContent), footer],
                         )))
-                :
-                // TODO:  fit no height nor width
-                Scrollbar(
-                    thumbVisibility: true,
-                    trackVisibility: true,
-                    controller: controller.verticalScrollController,
-                    child: Scrollbar(
-                        thumbVisibility: true,
-                        trackVisibility: true,
-                        controller: controller.horizontalScrollController,
-                        child: SingleChildScrollView(
-                            controller: controller.horizontalScrollController,
-                            scrollDirection: Axis.horizontal,
-                            child: SingleChildScrollView(
-                                controller: controller.verticalScrollController,
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [mainContent, footer],
-                                )))))),
+                : _SingleChildTwoDimensionalScrollView.builder(
+                    child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [mainContent, footer],
+                  ))
+            // Scrollbar(
+            //     thumbVisibility: true,
+            //     trackVisibility: true,
+            //     controller: controller.verticalScrollController,
+            //     child: Scrollbar(
+            //         thumbVisibility: true,
+            //         trackVisibility: true,
+            //         controller: controller.horizontalScrollController,
+            //         child: SingleChildScrollView(
+            //             controller: controller.horizontalScrollController,
+            //             scrollDirection: Axis.horizontal,
+            //             child: SingleChildScrollView(
+            //                 controller: controller.verticalScrollController,
+            //                 child: Column(
+            //                   mainAxisSize: MainAxisSize.min,
+            //                   children: [mainContent, footer],
+            //                 )))))
+            ),
       );
     });
-    // var controller = Get.find<HomeController>();
-    // if (controller.isFit.value) {
-    //   if (_widthController.isFit.value) {
-    //     // fit height and width
-    //     return MeasureSize(
-    //         onChange: (_) {
-    //           controller.processLayout();
-    //           _widthController.processLayout();
-    //         },
-    //         child: SingleChildScrollView(
-    //           scrollDirection: Axis.horizontal,
-    //           child: SingleChildScrollView(
-    //             child:
-    //           )
-    //         ));
-    //   }
-    //   // fit height, not width
-    //   return MeasureSize(
-    //       onChange: (_) {
-    //         controller.processLayout();
-    //         _widthController.processLayout();
-    //       },
-    //       child: Container());
-    // }
-    // if (_widthController.isFit.value) {
-    //   // fit width, not height
-    //   return MeasureSize(
-    //       onChange: (_) {
-    //         controller.processLayout();
-    //         _widthController.processLayout();
-    //       },
-    //       child: Container());
-    // }
-    // // not fit width nor height
-    // return MeasureSize(
-    //     onChange: (_) {
-    //       controller.processLayout();
-    //       _widthController.processLayout();
-    //     },
-    //     child: Container());
+  }
+}
 
-    // TODO: vertical scrollbar has to stay in right of the screen, not the right of the widget
-    // return Scrollbar(
-    //     thumbVisibility: true,
-    //     trackVisibility: true,
-    //     scrollbarOrientation: ScrollbarOrientation.right,
-    //     controller: verticalScrollController,
-    //     child: Scrollbar(
-    //         thumbVisibility: true,
-    //         trackVisibility: true,
-    //         controller: horizontalScrollController,
-    //         child: SingleChildScrollView(
-    //             controller: horizontalScrollController,
-    //             scrollDirection: Axis.horizontal,
-    //             child: SingleChildScrollView(
-    //                 controller: verticalScrollController,
-    //                 child: Column(
-    //                   mainAxisSize: MainAxisSize.min,
-    //                   children: [mainContent, footer],
-    //                 )))));
-    // } else if (homeController.isFit.value) {
-    //   return Scrollbar(
-    //       controller: horizontalScrollController,
-    //       thumbVisibility: true,
-    //       trackVisibility: true,
-    //       child: SingleChildScrollView(
-    //           controller: horizontalScrollController,
-    //           scrollDirection: Axis.horizontal,
-    //           child: Column(
-    //             children: [mainContent, const Spacer(), footer],
-    //           )));
-    // } else {
-    //   return Scrollbar(
-    //       thumbVisibility: true,
-    //       trackVisibility: true,
-    //       controller: horizontalScrollController,
-    //       child: SingleChildScrollView(
-    //           controller: horizontalScrollController,
-    //           scrollDirection: Axis.horizontal,
-    //           child: SingleChildScrollView(
-    //               controller: verticalScrollController,
-    //               child: Column(
-    //                 mainAxisSize: MainAxisSize.min,
-    //                 children: [mainContent, footer],
-    //               ))));
-    // }
-    // });
+class _SingleChildTwoDimensionalScrollView extends TwoDimensionalScrollView {
+  static _SingleChildTwoDimensionalScrollView builder({required Widget child}) {
+    return _SingleChildTwoDimensionalScrollView._internal(
+        delegate: _TwoDimensionalChildDelegate(child), child: child);
+  }
+
+  const _SingleChildTwoDimensionalScrollView._internal({
+    required this.child,
+    required super.delegate,
+  });
+  final Widget child;
+  @override
+  Widget buildViewport(
+          BuildContext context, ViewportOffset verticalOffset, ViewportOffset horizontalOffset) =>
+      // ClipRect(
+      //     child: Transform.translate(
+      //         offset: Offset(-horizontalOffset.pixels, -verticalOffset.pixels)));
+      _TwoDimensionalViewport(
+        verticalOffset: verticalOffset,
+        verticalAxisDirection: verticalDetails.direction,
+        horizontalOffset: horizontalOffset,
+        horizontalAxisDirection: horizontalDetails.direction,
+        delegate: delegate,
+        mainAxis: mainAxis,
+      );
+}
+
+class _TwoDimensionalChildDelegate extends TwoDimensionalChildDelegate {
+  _TwoDimensionalChildDelegate(this.child);
+  Widget child;
+  @override
+  Widget? build(BuildContext context, covariant ChildVicinity vicinity) => null;
+
+  @override
+  bool shouldRebuild(covariant _TwoDimensionalChildDelegate oldDelegate) =>
+      oldDelegate.child != child;
+}
+
+class _TwoDimensionalViewport extends TwoDimensionalViewport {
+  const _TwoDimensionalViewport(
+      {required super.verticalOffset,
+      required super.verticalAxisDirection,
+      required super.horizontalOffset,
+      required super.horizontalAxisDirection,
+      required super.delegate,
+      required super.mainAxis});
+
+  @override
+  RenderTwoDimensionalViewport createRenderObject(BuildContext context) =>
+      _RenderTwoDimensionalViewport(
+          horizontalOffset: horizontalOffset,
+          horizontalAxisDirection: horizontalAxisDirection,
+          verticalOffset: verticalOffset,
+          verticalAxisDirection: verticalAxisDirection,
+          delegate: delegate,
+          mainAxis: mainAxis,
+          childManager: context as TwoDimensionalChildManager);
+}
+
+class _RenderTwoDimensionalViewport extends RenderTwoDimensionalViewport {
+  _RenderTwoDimensionalViewport(
+      {required super.horizontalOffset,
+      required super.horizontalAxisDirection,
+      required super.verticalOffset,
+      required super.verticalAxisDirection,
+      required super.delegate,
+      required super.mainAxis,
+      required super.childManager});
+
+  @override
+  void layoutChildSequence() {
+    // TODO: implement layoutChildSequence
   }
 }

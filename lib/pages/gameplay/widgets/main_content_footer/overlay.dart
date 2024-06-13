@@ -14,8 +14,8 @@ class CanvasOverlay extends StatelessWidget {
         child: Container(
           height: 600,
           width: 800,
-          decoration: BoxDecoration(
-            color: const Color.fromRGBO(3, 8, 29, 0.8),
+          decoration: const BoxDecoration(
+            color: Color.fromRGBO(3, 8, 29, 0.8),
             borderRadius: GlobalStyles.borderRadius,
           ),
         ));

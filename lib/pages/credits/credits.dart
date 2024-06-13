@@ -42,7 +42,7 @@ class CreditsPage extends StatelessWidget {
                             Container(
                                 width: 400,
                                 padding: const EdgeInsets.all(15),
-                                decoration: BoxDecoration(
+                                decoration: const BoxDecoration(
                                   color: PanelStyles.color,
                                   borderRadius: GlobalStyles.borderRadius,
                                 ),

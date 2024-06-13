@@ -30,8 +30,8 @@ class PlayButton extends StatelessWidget {
             },
             child: Container(
               alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: const Color(0xff53e237),
+              decoration: const BoxDecoration(
+                color: Color(0xff53e237),
                 borderRadius: GlobalStyles.borderRadius,
               ),
               constraints: const BoxConstraints.expand(height: 54),

@@ -82,7 +82,7 @@ class CanvasAndFooterController extends GetxController {
   static Widget emptyCanvas = Container(
     height: 600,
     width: 800,
-    decoration: BoxDecoration(
+    decoration: const BoxDecoration(
       color: Colors.white,
       borderRadius: GlobalStyles.borderRadius,
     ),
@@ -103,7 +103,7 @@ class EmptyCanvasAndInvite extends StatelessWidget {
             Container(
               height: 600,
               width: 800,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 color: Colors.white,
                 borderRadius: GlobalStyles.borderRadius,
               ),
