@@ -1,4 +1,3 @@
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -16,14 +15,10 @@ class MyHomePage extends StatelessWidget {
               return Container(
                 color: vicinity.xIndex.isEven && vicinity.yIndex.isEven
                     ? Colors.amber[50]
-                    : (vicinity.xIndex.isOdd && vicinity.yIndex.isOdd
-                        ? Colors.purple[50]
-                        : null),
+                    : (vicinity.xIndex.isOdd && vicinity.yIndex.isOdd ? Colors.purple[50] : null),
                 height: 200,
                 width: 200,
-                child: Center(
-                    child: Text(
-                        'Row ${vicinity.yIndex}: Column ${vicinity.xIndex}')),
+                child: Center(child: Text('Row ${vicinity.yIndex}: Column ${vicinity.xIndex}')),
               );
             }),
       ),
@@ -119,28 +114,18 @@ class RenderTwoDimensionalGridViewport extends RenderTwoDimensionalViewport {
 
   @override
   void layoutChildSequence() {
+    // // Subclasses only need to set the normalized layout offset. The super
+    // // class adjusts for reversed axes.
+    // parentDataOf(child).layoutOffset = Offset(xLayoutOffset, yLayoutOffset);
 
-
-        // Subclasses only need to set the normalized layout offset. The super
-        // class adjusts for reversed axes.
-        parentDataOf(child).layoutOffset = Offset(xLayoutOffset, yLayoutOffset);
-        yLayoutOffset += 200;
-      
-      xLayoutOffset += 200;
-    
-
-    // Set the min and max scroll extents for each axis.
-    final double verticalExtent = 200 * (maxRowIndex + 1);
-    verticalOffset.applyContentDimensions(
-      0.0,
-      clampDouble(
-          verticalExtent - viewportDimension.height, 0.0, double.infinity),
-    );
-    horizontalOffset.applyContentDimensions(
-      0.0,
-      clampDouble(
-          horizontalExtent - viewportDimension.width, 0.0, double.infinity),
-    );
+    // verticalOffset.applyContentDimensions(
+    //   0.0,
+    //   clampDouble(verticalExtent - viewportDimension.height, 0.0, double.infinity),
+    // );
+    // horizontalOffset.applyContentDimensions(
+    //   0.0,
+    //   clampDouble(horizontalExtent - viewportDimension.width, 0.0, double.infinity),
+    // );
     // Super class handles garbage collection too!
   }
 }

@@ -19,43 +19,44 @@ class Footer extends StatelessWidget {
   Widget build(BuildContext context) {
     if (Get.find<HomeController>().isWebLayout.value) {
       return Container(
-        width: max(context.width, Footer.webWidth),
+          width: max(context.width, Footer.webWidth),
           //constraints: const BoxConstraints(minWidth: webWidth, maxWidth: double.infinity),
           color: PanelStyles.color,
           padding: const EdgeInsets.only(top: 10, bottom: 10),
           child: Column(
-           // crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
+              // crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                const SizedBox(width: 10),
-                Section('about', 'section_about'.tr, const AboutContent()),
-                Section('news', 'section_news'.tr, const NewsContent()),
-                Section('how', 'section_how_to_play'.tr, const HowToPlayContent()),
-                const SizedBox(width: 10)
-              ],
-            ),
-            const Row(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                _ContactLink(),
-                SizedBox(width: 8),
-                _TermsLink(),
-                SizedBox(width: 8),
-                _CreditsLink()
-              ],
-            ),
-            Text('footer_caution'.tr,
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                    fontSize: 12.8,
-                    fontWeight: FontWeight.w600,
-                    fontFamily: 'Nunito',
-                    color: Color.fromRGBO(103, 122, 249, 1)))
-          ]));
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const SizedBox(width: 10),
+                    Section('about', 'section_about'.tr, const AboutContent()),
+                    Section('news', 'section_news'.tr, const NewsContent()),
+                    Section('how', 'section_how_to_play'.tr, const HowToPlayContent()),
+                    const SizedBox(width: 10)
+                  ],
+                ),
+                const Row(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    _ContactLink(),
+                    SizedBox(width: 8),
+                    _TermsLink(),
+                    SizedBox(width: 8),
+                    _CreditsLink()
+                  ],
+                ),
+                Text('footer_caution'.tr,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                        fontSize: 12.8,
+                        fontWeight: FontWeight.w600,
+                        fontFamily: 'Nunito',
+                        color: Color.fromRGBO(103, 122, 249, 1)))
+              ]));
     } else {
       var mobilePanelWidth = PanelStyles.widthOnMobile;
       return Container(
