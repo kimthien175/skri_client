@@ -11,7 +11,7 @@ class JiggleController extends GetxController with GetSingleTickerProviderStateM
           .animate(CurvedAnimation(parent: animController, curve: Curves.decelerate));
 
   void jiggle() {
-    animController.forward().then((_) => animController.reverse());
+    animController.forward(from: 0).then((_) => animController.reverse());
   }
 
   @override

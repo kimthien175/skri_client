@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:cd_mobile/pages/home/footer/about.dart';
 import 'package:cd_mobile/pages/home/footer/news.dart';
 import 'package:cd_mobile/pages/home/footer/section.dart';
@@ -13,14 +11,13 @@ import 'package:url_launcher/url_launcher.dart';
 class Footer extends StatelessWidget {
   const Footer({super.key});
 
-  static const double webWidth = 1040;
+  //static const double webWidth = 1040;
 
   @override
   Widget build(BuildContext context) {
     if (Get.find<HomeController>().isWebLayout.value) {
       return Container(
-          width: max(context.width, Footer.webWidth),
-          //constraints: const BoxConstraints(minWidth: webWidth, maxWidth: double.infinity),
+          width: double.infinity,
           color: PanelStyles.color,
           padding: const EdgeInsets.only(top: 10, bottom: 10),
           child: Column(
