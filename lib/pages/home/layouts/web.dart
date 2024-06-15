@@ -11,7 +11,6 @@ import 'package:cd_mobile/widgets/logo.dart';
 import 'package:cd_mobile/pages/home/widgets/random_avatars.dart';
 import 'package:cd_mobile/widgets/measure_size.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
 
 class WebController extends GetxController {
@@ -213,7 +212,9 @@ class _SingleChildTwoAxisScrollView extends GetView<_SingleChildTwoAxisScrollCon
                   controller.dx.value += details.delta.dx;
                 },
                 child: Obx(() => ClipRect(
-                    clipper: _Clipper(controller.dx.value, controller.dy.value), child: child)))));
+                    clipBehavior: Clip.antiAlias,
+                    clipper: _Clipper(controller.dx.value, controller.dy.value),
+                    child: child)))));
   }
 }
 
@@ -223,7 +224,7 @@ class _Clipper extends CustomClipper<Rect> {
   final double top;
   @override
   Rect getClip(Size size) {
-    return Rect.fromLTRB(left, top, left + size.width, top + size.height);
+    return Rect.fromLTWH(left, top, size.width, size.height);
   }
 
   @override
