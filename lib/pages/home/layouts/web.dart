@@ -12,10 +12,8 @@ import 'package:cd_mobile/utils/styles.dart';
 import 'package:cd_mobile/widgets/logo.dart';
 import 'package:cd_mobile/pages/home/widgets/random_avatars.dart';
 import 'package:cd_mobile/widgets/measure_size.dart';
-import 'package:flutter/foundation.dart';
+import 'package:cd_mobile/widgets/single_child_2d_scroll_view.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:get/get.dart';
 
 class WebController extends GetxController {
@@ -61,202 +59,59 @@ class Web extends GetView<WebController> {
   @override
   Widget build(BuildContext context) {
     Get.put(WebController());
-    var homeController = Get.find<HomeController>();
-    var mainContent =
-        Column(key: homeController.mainContentKey, mainAxisSize: MainAxisSize.min, children: [
-      const SizedBox(height: 25),
-      const Logo(Logo.clearUrl),
-      const SizedBox(height: 10),
-      const RandomAvatars(),
-      const SizedBox(height: 40),
-      Container(
-          padding: PanelStyles.padding,
-          decoration: PanelStyles.webDecoration,
-          width: PanelStyles.width,
-          child: const Column(
-            children: [
-              Row(children: [NameInput(), LangSelector()]),
-              AvatarEditor(),
-              PlayButton(),
-              SizedBox(height: 10),
-              CreatePrivateRoomButton(),
-            ],
-          )),
-      const SizedBox(height: 20)
-    ]);
-
-    var footer = SizedBox(
-        key: homeController.footerKey,
-        width: max(context.width, minWidth),
-        child: const Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [Triangle(), Footer()],
-        ));
-
-    return Obx(() {
-      print('____');
-      print('width ${controller.isWidthFit.value}');
-      print('height ${controller.isHeightFit.value}');
-      return MeasureSize(
-          onChange: controller.processLayout,
-          child: controller.isWidthFit.value
-              ? (controller.isHeightFit.value
-                  ? ClipRect(
-                      child: Stack(
-                      alignment: Alignment.bottomCenter,
-                      clipBehavior: Clip.none,
-                      children: [Positioned(top: 0, child: mainContent), footer],
-                    ))
-                  : ClipRect(
-                      child: Scrollbar(
-                          thumbVisibility: true,
-                          trackVisibility: true,
-                          controller: controller.verticalScrollController,
-                          child: SingleChildScrollView(
-                              controller: controller.verticalScrollController,
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [mainContent, footer],
-                              )))))
-              : (controller.isHeightFit.value
-                  ? Scrollbar(
-                      thumbVisibility: true,
-                      trackVisibility: true,
-                      controller: controller.horizontalScrollController,
-                      child: SingleChildScrollView(
-                          controller: controller.horizontalScrollController,
-                          scrollDirection: Axis.horizontal,
-                          child: Stack(
-                            alignment: Alignment.bottomCenter,
-                            clipBehavior: Clip.none,
-                            children: [Positioned(top: 0, child: mainContent), footer],
-                          )))
-                  :
-                  // Scrollbar(
-                  //   thumbVisibility: true,
-                  //   trackVisibility: true,
-                  //     controller: controller.horizontalScrollController,
-                  //       child: Scrollbar(
-                  //         thumbVisibility: true,
-                  //         trackVisibility: true,
-                  //         controller: controller.verticalScrollController,
-                  //         child: SingleChildScrollView(
-                  //             controller: controller.verticalScrollController,
-                  //             child: SingleChildScrollView(
-                  //                 scrollDirection: Axis.horizontal,
-                  //                 controller: controller.horizontalScrollController,
-                  //                 child: Column(
-                  //                   mainAxisSize: MainAxisSize.min,
-                  //                   children: [mainContent, footer],
-                  //                 )))),
-                  //   )
-
-                  Scrollbar(
-                      thumbVisibility: true,
-                      trackVisibility: true,
-                      controller: controller.verticalScrollController,
-                      child: Scrollbar(
-                          thumbVisibility: true,
-                          trackVisibility: true,
-                          controller: controller.horizontalScrollController,
-                          child: SingleChild2DScrollView(
-                            delegate: SingleChild2DDelegate(
-                                child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [mainContent, footer],
-                            )),
-                            verticalDetails: controller.verticalScrollDetails,
-                            horizontalDetails: controller.horizontalScrollDetails,
-                          )))));
-    });
+    return
+        // Scrollbar(
+        //                 thumbVisibility: true,
+        //                 trackVisibility: true,
+        //                 controller: controller.verticalScrollController,
+        //                 child: Scrollbar(
+        //                     thumbVisibility: true,
+        //                     trackVisibility: true,
+        //                     controller: controller.horizontalScrollController,
+        //                     child:
+        SingleChild2DScrollView(
+      delegate: SingleChild2DDelegate(
+          child: SizedBox(
+              height: max(context.height, minHeight),
+              width: max(context.width, minWidth),
+              child: Column(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                const SizedBox(height: 25),
+                const Logo(Logo.clearUrl),
+                const SizedBox(height: 10),
+                const RandomAvatars(),
+                const SizedBox(height: 40),
+                Container(
+                    padding: PanelStyles.padding,
+                    decoration: PanelStyles.webDecoration,
+                    width: PanelStyles.width,
+                    child: const Column(
+                      children: [
+                        Row(children: [NameInput(), LangSelector()]),
+                        AvatarEditor(),
+                        PlayButton(),
+                        SizedBox(height: 10),
+                        CreatePrivateRoomButton(),
+                      ],
+                    )),
+                const SizedBox(height: 20),
+                const Spacer(),
+                const Triangle(),
+                const Footer()
+              ]))),
+      verticalDetails: controller.verticalScrollDetails,
+      horizontalDetails: controller.horizontalScrollDetails,
+    );
   }
 }
 
-class SingleChild2DScrollView extends TwoDimensionalScrollView {
-  const SingleChild2DScrollView(
-      {super.key,
-      required super.delegate,
-      required super.verticalDetails,
-      required super.horizontalDetails})
-      : super(primary: false);
+class MyScrollBehavior extends MaterialScrollBehavior {
   @override
-  Widget buildViewport(
-          BuildContext context, ViewportOffset verticalOffset, ViewportOffset horizontalOffset) =>
-      _TwoDimensionalViewport(
-        verticalOffset: verticalOffset,
-        verticalAxisDirection: verticalDetails.direction,
-        horizontalOffset: horizontalOffset,
-        horizontalAxisDirection: horizontalDetails.direction,
-        delegate: delegate,
-        mainAxis: mainAxis,
-      );
-}
-
-class SingleChild2DDelegate extends TwoDimensionalChildDelegate {
-  SingleChild2DDelegate({required this.child});
-  final Widget child;
-  @override
-  Widget? build(BuildContext context, covariant ChildVicinity vicinity) => child;
-
-  @override
-  bool shouldRebuild(covariant SingleChild2DDelegate oldDelegate) => oldDelegate.child != child;
-}
-
-class _TwoDimensionalViewport extends TwoDimensionalViewport {
-  const _TwoDimensionalViewport(
-      {required super.verticalOffset,
-      required super.verticalAxisDirection,
-      required super.horizontalOffset,
-      required super.horizontalAxisDirection,
-      required super.delegate,
-      required super.mainAxis});
-
-  @override
-  RenderTwoDimensionalViewport createRenderObject(BuildContext context) =>
-      _RenderTwoDimensionalViewport(
-          horizontalOffset: horizontalOffset,
-          horizontalAxisDirection: horizontalAxisDirection,
-          verticalOffset: verticalOffset,
-          verticalAxisDirection: verticalAxisDirection,
-          delegate: delegate,
-          mainAxis: mainAxis,
-          childManager: context as TwoDimensionalChildManager);
-
-  @override
-  void updateRenderObject(BuildContext context, RenderTwoDimensionalViewport renderObject) {
-    renderObject
-      ..horizontalOffset = horizontalOffset
-      ..horizontalAxisDirection = horizontalAxisDirection
-      ..verticalOffset = verticalOffset
-      ..verticalAxisDirection = verticalAxisDirection
-      ..mainAxis = mainAxis
-      ..delegate = delegate
-      ..cacheExtent = cacheExtent
-      ..clipBehavior = clipBehavior;
-  }
-}
-
-class _RenderTwoDimensionalViewport extends RenderTwoDimensionalViewport {
-  _RenderTwoDimensionalViewport(
-      {required super.horizontalOffset,
-      required super.horizontalAxisDirection,
-      required super.verticalOffset,
-      required super.verticalAxisDirection,
-      required super.delegate,
-      required super.mainAxis,
-      required super.childManager});
-
-  @override
-  void layoutChildSequence() {
-    var child = buildOrObtainChildFor(const ChildVicinity(xIndex: 0, yIndex: 0))!;
-    child.layout(const BoxConstraints());
-
-    parentDataOf(child).layoutOffset = Offset(-horizontalOffset.pixels, -verticalOffset.pixels);
-
-    // TODO: HOW TO MAKE THIS WIDGET DOESN'T KNOW THE CHILD SIZE YET,  CHECK THE SINGLECHILDWIDGET FOR THE TECHNIQUE
-    verticalOffset.applyContentDimensions(
-        0, clampDouble(child.size.height - viewportDimension.height, 0.0, double.infinity));
-    horizontalOffset.applyContentDimensions(
-        0, clampDouble(child.size.width - viewportDimension.width, 0.0, double.infinity));
+  Widget buildScrollbar(BuildContext context, Widget child, ScrollableDetails details) {
+    return Scrollbar(
+        thumbVisibility: details.direction == Axis.vertical
+            ? details.controller!.position.maxScrollExtent > 0
+            : details.controller!.position.maxScrollExtent > 0,
+        controller: details.controller,
+        child: child);
   }
 }

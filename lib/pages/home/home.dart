@@ -41,9 +41,9 @@ class HomeController extends ResponsivePageController {
     // } else {
     //   Get.find<MobileController>().processLayout();
     // }
-    if (isWebLayout.value != webLayoutStatus) {
-      isWebLayout.toggle();
-    }
+    // if (isWebLayout.value != webLayoutStatus) {
+    //   isWebLayout.toggle();
+    // }
 
     super.didChangeMetrics();
   }
