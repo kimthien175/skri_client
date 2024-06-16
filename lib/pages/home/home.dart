@@ -36,11 +36,11 @@ class HomeController extends ResponsivePageController {
   @override
   void didChangeMetrics() {
     // won't triggered on first run, only triggered when resize
-    if (isWebLayout.value) {
-      Get.find<WebController>().processLayout();
-    } else {
-      Get.find<MobileController>().processLayout();
-    }
+    // if (isWebLayout.value) {
+    //   Get.find<WebController>().processLayout();
+    // } else {
+    //   Get.find<MobileController>().processLayout();
+    // }
     if (isWebLayout.value != webLayoutStatus) {
       isWebLayout.toggle();
     }

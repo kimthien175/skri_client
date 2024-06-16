@@ -15,6 +15,7 @@ import 'package:cd_mobile/widgets/measure_size.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:get/get.dart';
 
 class WebController extends GetxController {
@@ -37,13 +38,16 @@ class WebController extends GetxController {
     }
   }
 
-  final horizontalScrollController = ScrollController();
-  final verticalScrollController = ScrollController();
+  ScrollController? get horizontalScrollController => horizontalScrollDetails.controller;
+  ScrollController? get verticalScrollController => verticalScrollDetails.controller;
+
+  final verticalScrollDetails = const ScrollableDetails.vertical();
+  final horizontalScrollDetails = const ScrollableDetails.horizontal();
 
   @override
   void dispose() {
-    horizontalScrollController.dispose();
-    verticalScrollController.dispose();
+    verticalScrollController?.dispose();
+    horizontalScrollController?.dispose();
     super.dispose();
   }
 }
@@ -146,22 +150,35 @@ class Web extends GetView<WebController> {
                   //                   children: [mainContent, footer],
                   //                 )))),
                   //   )
-                  _SingleChildTwoDimensionalScrollView.builder(
-                      child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [mainContent, footer],
-                    ))));
+
+                  Scrollbar(
+                      thumbVisibility: true,
+                      trackVisibility: true,
+                      controller: controller.verticalScrollController,
+                      child: Scrollbar(
+                          thumbVisibility: true,
+                          trackVisibility: true,
+                          controller: controller.horizontalScrollController,
+                          child: SingleChild2DScrollView(
+                            delegate: SingleChild2DDelegate(
+                                child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [mainContent, footer],
+                            )),
+                            verticalDetails: controller.verticalScrollDetails,
+                            horizontalDetails: controller.horizontalScrollDetails,
+                          )))));
     });
   }
 }
 
-class _SingleChildTwoDimensionalScrollView extends TwoDimensionalScrollView {
-  static _SingleChildTwoDimensionalScrollView builder({required Widget child}) =>
-      _SingleChildTwoDimensionalScrollView._internal(delegate: _TwoDimensionalChildDelegate(child));
-
-  const _SingleChildTwoDimensionalScrollView._internal({
-    required super.delegate,
-  });
+class SingleChild2DScrollView extends TwoDimensionalScrollView {
+  const SingleChild2DScrollView(
+      {super.key,
+      required super.delegate,
+      required super.verticalDetails,
+      required super.horizontalDetails})
+      : super(primary: false);
   @override
   Widget buildViewport(
           BuildContext context, ViewportOffset verticalOffset, ViewportOffset horizontalOffset) =>
@@ -175,18 +192,14 @@ class _SingleChildTwoDimensionalScrollView extends TwoDimensionalScrollView {
       );
 }
 
-class _TwoDimensionalChildDelegate extends TwoDimensionalChildDelegate {
-  _TwoDimensionalChildDelegate(Widget child) {
-    this.child = Container(key: key, child: child);
-  }
-  late final Widget child;
-  GlobalKey key = GlobalKey();
+class SingleChild2DDelegate extends TwoDimensionalChildDelegate {
+  SingleChild2DDelegate({required this.child});
+  final Widget child;
   @override
   Widget? build(BuildContext context, covariant ChildVicinity vicinity) => child;
 
   @override
-  bool shouldRebuild(covariant _TwoDimensionalChildDelegate oldDelegate) =>
-      oldDelegate.child != child;
+  bool shouldRebuild(covariant SingleChild2DDelegate oldDelegate) => oldDelegate.child != child;
 }
 
 class _TwoDimensionalViewport extends TwoDimensionalViewport {
@@ -236,11 +249,14 @@ class _RenderTwoDimensionalViewport extends RenderTwoDimensionalViewport {
   @override
   void layoutChildSequence() {
     var child = buildOrObtainChildFor(const ChildVicinity(xIndex: 0, yIndex: 0))!;
-    child.layout(constraints.loosen());
-    parentDataOf(child).layoutOffset = Offset.zero;
+    child.layout(const BoxConstraints());
+
+    parentDataOf(child).layoutOffset = Offset(-horizontalOffset.pixels, -verticalOffset.pixels);
+
+    // TODO: HOW TO MAKE THIS WIDGET DOESN'T KNOW THE CHILD SIZE YET,  CHECK THE SINGLECHILDWIDGET FOR THE TECHNIQUE
     verticalOffset.applyContentDimensions(
-        0, clampDouble(Web.minHeight - viewportDimension.height, 0.0, double.infinity));
+        0, clampDouble(child.size.height - viewportDimension.height, 0.0, double.infinity));
     horizontalOffset.applyContentDimensions(
-        0, clampDouble(Web.minWidth - viewportDimension.width, 0.0, double.infinity));
+        0, clampDouble(child.size.width - viewportDimension.width, 0.0, double.infinity));
   }
 }
