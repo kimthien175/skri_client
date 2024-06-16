@@ -1,4 +1,3 @@
-import 'package:cd_mobile/pages/home/home.dart';
 import 'package:cd_mobile/pages/home/widgets/avatar_editor/controller.dart';
 import 'package:cd_mobile/models/gif/gif.dart';
 import 'package:cd_mobile/models/gif_manager.dart';
@@ -99,7 +98,7 @@ class _RandomButton extends StatelessWidget {
           AnimatedButtonTooltipDecorator(
               tooltip: 'randomize_your_avatar'.tr,
               position: TooltipPositionBottom(),
-              scale: () => Get.find<HomeController>().isWebLayout.value
+              scale: () => context.width >= context.height
                   ? 1.0
                   : PanelStyles.widthOnMobile / PanelStyles.width),
           AnimatedButtonOpacityDecorator(),

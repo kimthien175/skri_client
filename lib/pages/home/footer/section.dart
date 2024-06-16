@@ -1,5 +1,4 @@
 import 'package:cd_mobile/models/gif_manager.dart';
-import 'package:cd_mobile/pages/home/home.dart';
 import 'package:cd_mobile/utils/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -13,9 +12,7 @@ class Section extends StatelessWidget {
   //static const double width = 340;
   @override
   Widget build(BuildContext context) {
-    var isWeb = Get.find<HomeController>().isWebLayout.value;
-
-    if (isWeb) {
+    if (context.width >= context.height) {
       return Stack(children: [
         Container(
             width: 320,

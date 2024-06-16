@@ -4,13 +4,12 @@ import 'package:cd_mobile/pages/home/layouts/web.dart';
 import 'package:cd_mobile/pages/home/widgets/avatar_editor/controller.dart';
 import 'package:cd_mobile/pages/home/widgets/play_button.dart';
 import 'package:cd_mobile/pages/home/widgets/random_avatars.dart';
-import 'package:cd_mobile/pages/page_controller/responsive_page_controller.dart';
 import 'package:cd_mobile/utils/start_up.dart';
 import 'package:cd_mobile/widgets/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class HomeController extends ResponsivePageController {
+class HomeController extends GetxController {
   HomeController() : super() {
     if (ResourcesController.inst.isLoaded.value) {
       loadChildrenControllers();
@@ -32,24 +31,6 @@ class HomeController extends ResponsivePageController {
     Get.put(NewsContentController());
     Get.put(AvatarEditorController());
   }
-
-  @override
-  void didChangeMetrics() {
-    // won't triggered on first run, only triggered when resize
-    // if (isWebLayout.value) {
-    //   Get.find<WebController>().processLayout();
-    // } else {
-    //   Get.find<MobileController>().processLayout();
-    // }
-    // if (isWebLayout.value != webLayoutStatus) {
-    //   isWebLayout.toggle();
-    // }
-
-    super.didChangeMetrics();
-  }
-
-  var mainContentKey = GlobalKey();
-  var footerKey = GlobalKey();
 }
 
 class HomePage extends GetView<HomeController> {
@@ -69,7 +50,7 @@ class HomePage extends GetView<HomeController> {
           child: SafeArea(child: Obx(() {
             if (!ResourcesController.inst.isLoaded.value) return const LoadingOverlay();
 
-            return controller.isWebLayout.value ? const Web() : const Mobile();
+            return context.width >= context.height ? const Web() : const Mobile();
           }))),
     );
   }

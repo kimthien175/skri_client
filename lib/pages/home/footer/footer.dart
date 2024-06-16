@@ -2,7 +2,6 @@ import 'package:cd_mobile/pages/home/footer/about.dart';
 import 'package:cd_mobile/pages/home/footer/news.dart';
 import 'package:cd_mobile/pages/home/footer/section.dart';
 import 'package:cd_mobile/pages/home/footer/tutorial.dart';
-import 'package:cd_mobile/pages/home/home.dart';
 import 'package:cd_mobile/utils/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -15,7 +14,7 @@ class Footer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (Get.find<HomeController>().isWebLayout.value) {
+    if (context.width >= context.height) {
       return Container(
           width: double.infinity,
           color: PanelStyles.color,
@@ -58,45 +57,42 @@ class Footer extends StatelessWidget {
       var mobilePanelWidth = PanelStyles.widthOnMobile;
       return Container(
           color: PanelStyles.color,
-          child: Column(
-              //crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                SizedBox(height: mobilePanelWidth * 0.05),
-                Column(mainAxisSize: MainAxisSize.min, children: [
-                  Section('about', 'section_about'.tr, const AboutContent()),
-                  Section('news', 'section_news'.tr, const NewsContent()),
-                  Section('how', 'section_how_to_play'.tr, const HowToPlayContent()),
-                ]),
-                Center(
-                    child: SizedBox(
-                        width: mobilePanelWidth * 0.6,
-                        child: const FittedBox(
-                            child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            _ContactLink(),
-                            SizedBox(width: 8),
-                            _TermsLink(),
-                            SizedBox(width: 8),
-                            _CreditsLink()
-                          ],
-                        )))),
-                Text('footer_caution'.tr,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                        fontSize: mobilePanelWidth * 0.03,
-                        fontWeight: FontWeight.w600,
-                        fontFamily: 'Nunito',
-                        color: const Color.fromRGBO(103, 122, 249, 1))),
-                SizedBox(height: mobilePanelWidth * 0.03)
-              ]));
+          child: Column(children: [
+            SizedBox(height: mobilePanelWidth * 0.05),
+            Column(mainAxisSize: MainAxisSize.min, children: [
+              Section('about', 'section_about'.tr, const AboutContent()),
+              Section('news', 'section_news'.tr, const NewsContent()),
+              Section('how', 'section_how_to_play'.tr, const HowToPlayContent()),
+            ]),
+            Center(
+                child: SizedBox(
+                    width: mobilePanelWidth * 0.6,
+                    child: const FittedBox(
+                        child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        _ContactLink(),
+                        SizedBox(width: 8),
+                        _TermsLink(),
+                        SizedBox(width: 8),
+                        _CreditsLink()
+                      ],
+                    )))),
+            Text('footer_caution'.tr,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    fontSize: mobilePanelWidth * 0.03,
+                    fontWeight: FontWeight.w600,
+                    fontFamily: 'Nunito',
+                    color: const Color.fromRGBO(103, 122, 249, 1))),
+            SizedBox(height: mobilePanelWidth * 0.03)
+          ]));
     }
   }
 }
 
 Widget _linkBuilder(String text, Function() onPressed) {
-  var isWeb = Get.find<HomeController>().isWebLayout.value;
   return MouseRegion(
       cursor: SystemMouseCursors.click,
       child: GestureDetector(
@@ -111,7 +107,7 @@ Widget _linkBuilder(String text, Function() onPressed) {
                   decoration: TextDecoration.underline,
                   decorationColor: const Color.fromRGBO(180, 186, 255, 1),
                   decorationStyle: TextDecorationStyle.solid,
-                  decorationThickness: isWeb ? 2 : 4))));
+                  decorationThickness: Get.width >= Get.height ? 2 : 4))));
 }
 
 class _ContactLink extends StatelessWidget {

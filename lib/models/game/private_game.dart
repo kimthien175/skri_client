@@ -197,8 +197,8 @@ class PrivateGame extends Game {
         }
       } else {
         // at gameplay page
-        if (!Get.find<GameplayController>().isLoading.value) {
-          Get.find<GameplayController>().isLoading.value = true;
+        if (!LoadingManager.inst.isLoading) {
+          LoadingManager.inst.show();
         }
 
         if (dialogOpenCount == 0) {

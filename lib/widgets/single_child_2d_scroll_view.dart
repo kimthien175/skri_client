@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
@@ -81,7 +80,6 @@ class _RenderTwoDimensionalViewport extends RenderTwoDimensionalViewport {
 
     parentDataOf(child).layoutOffset = Offset(-horizontalOffset.pixels, -verticalOffset.pixels);
 
-    // TODO: HOW TO MAKE THIS WIDGET DOESN'T KNOW THE CHILD SIZE YET,  CHECK THE SINGLECHILDWIDGET FOR THE TECHNIQUE
     verticalOffset.applyContentDimensions(0, child.size.height - viewportDimension.height);
     horizontalOffset.applyContentDimensions(0, child.size.width - viewportDimension.width);
   }
