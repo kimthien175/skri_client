@@ -27,50 +27,43 @@ class Mobile extends StatelessWidget {
             controller: scrollController,
             child: ConstrainedBox(
                 constraints: BoxConstraints(minHeight: context.height),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Column(
+                child: Column(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      SizedBox(height: PanelStyles.widthOnMobile * 0.06),
+                      SizedBox(
+                          width: min(0.9 * context.width, 0.65 * context.height),
+                          child: const FittedBox(
+                              child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [Logo(Logo.clearUrl), SizedBox(height: 10), RandomAvatars()],
+                          ))),
+                      SizedBox(height: 0.04 * context.width),
+                      SizedBox(
+                          width: PanelStyles.widthOnMobile,
+                          child: FittedBox(
+                              child: Container(
+                                  decoration: PanelStyles.mobileDecoration,
+                                  padding: PanelStyles.padding,
+                                  width: PanelStyles.width,
+                                  child: const Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Row(children: [NameInput(), LangSelector()]),
+                                      AvatarEditor(),
+                                      PlayButton(),
+                                      SizedBox(height: 10),
+                                      CreatePrivateRoomButton(),
+                                    ],
+                                  )))),
+                      SizedBox(height: context.height * 0.05),
+                    ],
+                  ),
+                  Column(
                       mainAxisSize: MainAxisSize.min,
-                      children: [
-                        SizedBox(height: PanelStyles.widthOnMobile * 0.06),
-                        SizedBox(
-                            width: min(0.9 * context.width, 0.65 * context.height),
-                            child: const FittedBox(
-                                child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Logo(Logo.clearUrl),
-                                SizedBox(height: 10),
-                                RandomAvatars()
-                              ],
-                            ))),
-                        SizedBox(height: 0.04 * context.width),
-                        SizedBox(
-                            width: PanelStyles.widthOnMobile,
-                            child: FittedBox(
-                                child: Container(
-                                    decoration: PanelStyles.mobileDecoration,
-                                    padding: PanelStyles.padding,
-                                    width: PanelStyles.width,
-                                    child: const Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Row(children: [NameInput(), LangSelector()]),
-                                        AvatarEditor(),
-                                        PlayButton(),
-                                        SizedBox(height: 10),
-                                        CreatePrivateRoomButton(),
-                                      ],
-                                    )))),
-                        SizedBox(height: context.height * 0.05),
-                      ],
-                    ),
-                    Column(
                       mainAxisAlignment: MainAxisAlignment.end,
-                      children: [Triangle(height: 0.02 * context.height), const Footer()],
-                    ),
-                  ],
-                ))));
+                      children: [Triangle(height: 0.02 * context.height), const Footer()])
+                ]))));
   }
 }

@@ -17,7 +17,6 @@ import 'package:get/get.dart';
 class Web extends StatelessWidget {
   const Web({super.key});
 
-  static double minHeight = 1070.0;
   static const double minWidth = 1040.0;
 
   @override
@@ -36,31 +35,36 @@ class Web extends StatelessWidget {
                 verticalDetails: verticalScrollDetails,
                 horizontalDetails: horizontalScrollDetails,
                 delegate: SingleChild2DDelegate(
-                    child: SizedBox(
-                        height: max(context.height, minHeight),
+                    child: Container(
+                        constraints: BoxConstraints(minHeight: context.height),
                         width: max(context.width, minWidth),
                         child: Column(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                          const SizedBox(height: 25),
-                          const Logo(Logo.clearUrl),
-                          const SizedBox(height: 10),
-                          const RandomAvatars(),
-                          const SizedBox(height: 40),
-                          Container(
-                              padding: PanelStyles.padding,
-                              decoration: PanelStyles.webDecoration,
-                              width: PanelStyles.width,
-                              child: const Column(
-                                children: [
-                                  Row(children: [NameInput(), LangSelector()]),
-                                  AvatarEditor(),
-                                  PlayButton(),
-                                  SizedBox(height: 10),
-                                  CreatePrivateRoomButton(),
-                                ],
-                              )),
-                          const Spacer(),
-                          const Triangle(),
-                          const Footer()
+                          Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const SizedBox(height: 25),
+                              const Logo(Logo.clearUrl),
+                              const SizedBox(height: 10),
+                              const RandomAvatars(),
+                              const SizedBox(height: 40),
+                              Container(
+                                  padding: PanelStyles.padding,
+                                  decoration: PanelStyles.webDecoration,
+                                  width: PanelStyles.width,
+                                  child: const Column(
+                                    children: [
+                                      Row(children: [NameInput(), LangSelector()]),
+                                      AvatarEditor(),
+                                      PlayButton(),
+                                      SizedBox(height: 10),
+                                      CreatePrivateRoomButton(),
+                                    ],
+                                  )),
+                              const SizedBox(height: 20)
+                            ],
+                          ),
+                          const Column(
+                              mainAxisSize: MainAxisSize.min, children: [Triangle(), Footer()])
                         ]))))));
   }
 }
