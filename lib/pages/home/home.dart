@@ -9,6 +9,13 @@ import 'package:cd_mobile/widgets/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+class HomeBindings implements Bindings {
+  @override
+  void dependencies() {
+    Get.put(HomeController());
+  }
+}
+
 class HomeController extends GetxController {
   HomeController() : super() {
     if (ResourcesController.inst.isLoaded.value) {
@@ -38,7 +45,6 @@ class HomePage extends GetView<HomeController> {
 
   @override
   Widget build(BuildContext context) {
-    Get.put(HomeController());
     return Scaffold(
       body: Container(
           constraints: const BoxConstraints.expand(),

@@ -3,10 +3,6 @@ import 'package:cd_mobile/models/gif/gif.dart';
 import 'package:cd_mobile/models/gif_manager.dart';
 import 'package:cd_mobile/pages/home/widgets/avatar_editor/jiggle_avatar.dart';
 import 'package:cd_mobile/utils/styles.dart';
-import 'package:cd_mobile/widgets/animated_button/builder.dart';
-import 'package:cd_mobile/widgets/animated_button/decorator.dart';
-import 'package:cd_mobile/widgets/animated_button/decorators/tooltip.dart';
-import 'package:cd_mobile/widgets/animated_button/decorators/tooltip/position.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -88,20 +84,6 @@ class _SwitchButtonController extends GetxController {
 class _RandomButton extends StatelessWidget {
   const _RandomButton();
   @override
-  Widget build(BuildContext context) {
-    var controller = Get.find<AvatarEditorController>();
-    return AnimatedButtonBuilder(
-        child: GifManager.inst.misc('randomize').builder.init().doFitSize(height: 36, width: 36),
-        onTap: controller.randomize,
-        decorators: [
-          AnimatedButtonScaleDecorator(),
-          AnimatedButtonTooltipDecorator(
-              tooltip: 'randomize_your_avatar'.tr,
-              position: TooltipPositionBottom(),
-              scale: () => context.width >= context.height
-                  ? 1.0
-                  : PanelStyles.widthOnMobile / PanelStyles.width),
-          AnimatedButtonOpacityDecorator(),
-        ]).build();
-  }
+  Widget build(BuildContext context) =>
+      Get.find<AvatarEditorController>().randomizeBtnBuilder.build();
 }

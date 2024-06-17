@@ -4,6 +4,11 @@ import 'package:cd_mobile/models/game/player.dart';
 import 'package:cd_mobile/models/gif/avatar/model.dart';
 import 'package:cd_mobile/models/gif_manager.dart';
 import 'package:cd_mobile/pages/home/widgets/avatar_editor/jiggle_avatar.dart';
+import 'package:cd_mobile/utils/styles.dart';
+import 'package:cd_mobile/widgets/animated_button/builder.dart';
+import 'package:cd_mobile/widgets/animated_button/decorator.dart';
+import 'package:cd_mobile/widgets/animated_button/decorators/tooltip.dart';
+import 'package:cd_mobile/widgets/animated_button/decorators/tooltip/position.dart';
 import 'package:get/get.dart';
 
 class AvatarEditorController extends GetxController {
@@ -14,6 +19,20 @@ class AvatarEditorController extends GetxController {
     mouth = rd.nextInt(GifManager.inst.mouthLength).obs;
 
     MePlayer.init(AvatarModel.init(color.value, eyes.value, mouth.value).builder.init());
+
+    randomizeBtnBuilder = AnimatedButtonBuilder(
+        child: GifManager.inst.misc('randomize').builder.init().doFitSize(height: 36, width: 36),
+        onTap: randomize,
+        decorators: [
+          AnimatedButtonScaleDecorator(),
+          AnimatedButtonTooltipDecorator(
+              tooltip: 'randomize_your_avatar'.tr,
+              position: TooltipPositionBottom(),
+              scale: () => Get.width >= Get.height
+                  ? 1.0
+                  : PanelStyles.widthOnMobile / PanelStyles.width),
+          AnimatedButtonOpacityDecorator(),
+        ]);
   }
 
   late final RxInt color;
@@ -92,6 +111,7 @@ class AvatarEditorController extends GetxController {
     MePlayer.inst.avatar.model.color = GifManager.inst.color(color.value);
   }
 
+  late final AnimatedButtonBuilder randomizeBtnBuilder;
   void randomize() {
     var rd = Random();
     color.value = rd.nextInt(GifManager.inst.colorLength);

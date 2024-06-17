@@ -19,7 +19,7 @@ void main() {
     title: 'Material App',
     initialRoute: '/',
     getPages: [
-      GetPage(name: '/', page: () => const HomePage(), transition: Transition.noTransition),
+      GetPage(name: '/', page: () => const HomePage(), transition: Transition.noTransition, binding: HomeBindings()),
       GetPage(name: '/terms', page: () => const TermsPage(), transition: Transition.noTransition),
       GetPage(
           name: '/credits', page: () => const CreditsPage(), transition: Transition.noTransition),
