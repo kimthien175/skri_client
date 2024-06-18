@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class JiggleController extends GetxController with GetSingleTickerProviderStateMixin {
+  JiggleController(){
+    print('jiggle avatar controller init');
+  }
   late final animController =
       AnimationController(duration: const Duration(milliseconds: 150), vsync: this);
   late final Animation<Offset> animation =

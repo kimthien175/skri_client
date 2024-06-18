@@ -1,4 +1,4 @@
-import 'package:cd_mobile/widgets/animated_button/decorators/tooltip.dart';
+import 'package:cd_mobile/widgets/animated_button/decorators/tooltip/tooltip.dart';
 import 'package:cd_mobile/widgets/animated_button/decorators/tooltip/controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';

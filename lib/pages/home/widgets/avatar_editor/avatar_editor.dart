@@ -78,6 +78,9 @@ class _SwitchButton extends StatelessWidget {
 }
 
 class _SwitchButtonController extends GetxController {
+  _SwitchButtonController(){
+    print('Switch button controller init');
+  }
   var isHover = false.obs;
 }
 

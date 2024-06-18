@@ -18,23 +18,27 @@ class _LikeAndDislikeButtonsState extends State<LikeAndDislikeButtons> {
           mainAxisSize: MainAxisSize.min,
           children: [
             AnimatedButtonBuilder(
-              child: Image.asset('assets/gif/thumbsup.gif'),
-              onTap: () {
-                setState(() {
-                  isVisible = false;
-                });
-                // TODO: SEND LIKE MSG
-              },
-            ).child,
+                child: Image.asset('assets/gif/thumbsup.gif'),
+                onTap: () {
+                  setState(() {
+                    isVisible = false;
+                  });
+                  // TODO: SEND LIKE MSG
+                },
+                decorators: [
+                  // TODO: ADD SCALE DECORATOR
+                ]).build(),
             AnimatedButtonBuilder(
-              child: Image.asset('assets/gif/thumbsdown.gif'),
-              onTap: () {
-                setState(() {
-                  isVisible = false;
-                });
+                child: Image.asset('assets/gif/thumbsdown.gif'),
+                onTap: () {
+                  setState(() {
+                    isVisible = false;
+                  });
 // TODO: SEND DISLIKE MSG
-              },
-            ).child
+                },
+                decorators: [
+                  // TODO: ADD SCALE DECORATOR
+                ]).build()
           ],
         ));
   }

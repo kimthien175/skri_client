@@ -25,27 +25,31 @@ class GameBar extends StatelessWidget {
               Positioned(
                   left: 60,
                   top: 13,
-                  child: Obx(() => Text(
-                      "gamebar_round_display".trParams({
-                        "currentRound": Game.inst.currentRound.value.toString(),
-                        "rounds": Game.inst.rounds.value.toString()
-                      }),
-                      style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w800))))
+                  child:
+                      //Obx(() =>
+                      Text(
+                          "gamebar_round_display".trParams({
+                            "currentRound": '0', //Game.inst.currentRound.value.toString(),
+                            "rounds": '0' //Game.inst.rounds.value.toString()
+                          }),
+                          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w800)))
+              //)
             ]),
-            Flexible(child: Center(child: Obx(() => Game.inst.state.value.middleStatusOnBar))),
-            Container(
-                width: 300,
-                alignment: Alignment.centerRight,
-                child: AnimatedButtonBuilder(
-                        child: namedGifs('settings')
-                            .builder
-                            .initShadowedOrigin()
-                            .doFitSize(height: 48, width: 48),
-                        decorators: [AnimatedButtonOpacityDecorator(minOpacity: 0.85)],
-                        onTap: () {
-                          // TODO: SETTINGS BUTTON
-                        })
-                    .child)
+            //Flexible(child: Center(child: Obx(() => Game.inst.state.value.middleStatusOnBar))),
+            // TODO: FIXING GAMEPLAY PAGE
+            // Container(
+            //     width: 300,
+            //     alignment: Alignment.centerRight,
+            //     child: AnimatedButtonBuilder(
+            //             child: namedGifs('settings')
+            //                 .builder
+            //                 .initShadowedOrigin()
+            //                 .doFitSize(height: 48, width: 48),
+            //             decorators: [AnimatedButtonOpacityDecorator(minOpacity: 0.85)],
+            //             onTap: () {
+            //               // TODO: SETTINGS BUTTON
+            //             })
+            //         .child)
           ],
         ));
   }
@@ -69,8 +73,11 @@ class GameClock extends StatelessWidget {
                 .doFitSize(width: 64, height: 64),
             Positioned(
                 top: 20,
-                child: Obx(() => Text(Game.inst.remainingTime.seconds.value.toString(),
-                    style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w900))))
+                child:
+                    //Obx(() =>
+                    Text('0', //Game.inst.remainingTime.seconds.value.toString(),
+                        style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w900)))
+            //)
           ],
         ));
   }

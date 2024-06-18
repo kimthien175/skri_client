@@ -7,31 +7,21 @@ class AnimatedButtonBuilder {
   AnimatedButtonBuilder({
     required this.child,
     this.onTap,
-    List<AnimatedButtonDecorator>? decorators,
+    required this.decorators,
   }) {
-    this.decorators = decorators ?? [];
-    controller = Get.put(AnimatedButtonController(this));
+    controller = AnimatedButtonController(this);
 
     // decorating
-    for (var decorator in this.decorators) {
+    for (var decorator in decorators) {
       decorator.decorate(this);
     }
-    // opacityDecorator?.decorate(this);
-    // scaleDecorator?.decorate(this);
-    // tooltipDecorator?.decorate(this);
   }
 
   Widget child;
   void Function()? onTap;
   late final List<AnimatedButtonDecorator> decorators;
 
-  void cleanUp() {
-    for (var callback in cleanUpCallbacks) {
-      callback();
-    }
-  }
-
-  final List<void Function()> cleanUpCallbacks = [];
+  final List<void Function()> disposeCallbacks = [];
 
   late final AnimatedButtonController controller;
 
@@ -81,13 +71,10 @@ class AnimatedButtonController extends GetxController with GetSingleTickerProvid
 
   @override
   void dispose() {
+    for (var callback in builder.disposeCallbacks){
+      callback();
+    }
     _controller.dispose();
     super.dispose();
-  }
-
-  @override
-  void onClose() {
-    builder.cleanUp();
-    super.onClose();
   }
 }

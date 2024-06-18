@@ -1,5 +1,6 @@
 import 'package:cd_mobile/generated/locales.g.dart';
 import 'package:cd_mobile/pages/credits/credits.dart';
+import 'package:cd_mobile/pages/gameplay/gameplay.dart';
 import 'package:cd_mobile/pages/home/home.dart';
 import 'package:cd_mobile/pages/terms/terms.dart';
 import 'package:flutter/material.dart';
@@ -19,11 +20,19 @@ void main() {
     title: 'Material App',
     initialRoute: '/',
     getPages: [
-      GetPage(name: '/', page: () => const HomePage(), transition: Transition.noTransition, binding: HomeBindings()),
+      GetPage(
+          name: '/',
+          page: () => const HomePage(),
+          transition: Transition.noTransition,
+          binding: HomeBindings()),
       GetPage(name: '/terms', page: () => const TermsPage(), transition: Transition.noTransition),
       GetPage(
           name: '/credits', page: () => const CreditsPage(), transition: Transition.noTransition),
-      // GetPage(name: '/gameplay', page: () => GameplayPage(), transition: Transition.noTransition)
+      GetPage(
+          name: '/gameplay',
+          page: () => const GameplayPage(),
+          transition: Transition.noTransition,
+          binding: GameplayBinding())
     ],
   ));
 }

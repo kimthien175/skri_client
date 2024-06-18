@@ -14,10 +14,7 @@ class NewsContent extends StatelessWidget {
     var controller = Get.find<NewsContentController>();
     return Obx(() {
       if (controller.content.isNotEmpty) {
-        // ignore: invalid_use_of_protected_member
-        var htmlString =
-            // ignore: invalid_use_of_protected_member
-            utf8.decode(base64Decode(controller.content.value[Get.locale.toString()]!));
+        var htmlString = utf8.decode(base64Decode(controller.content[Get.locale.toString()]!));
 
         return HtmlWidget(
           htmlString,
@@ -34,22 +31,34 @@ class NewsContent extends StatelessWidget {
               var scrollController = ScrollController();
               return Container(
                   constraints: const BoxConstraints(maxHeight: 400),
-                  child: Scrollbar(
+                  child: RawScrollbar(
+                      trackRadius: const Radius.circular(7),
+                      radius: const Radius.circular(7),
+                      trackColor: const Color.fromRGBO(7, 36, 131, 0.75),
+                      thumbColor: const Color(0xff1640c9),
+                      thickness: 14,
                       thumbVisibility: true,
                       trackVisibility: true,
                       controller: scrollController,
                       child: SingleChildScrollView(
                           controller: scrollController,
-                          child: HtmlWidget(element.outerHtml,
-                              textStyle: TextStyle(
-                                  color: PanelStyles.textColor,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w600),
-                              customStylesBuilder: (element) => {'font-size': '0.93em'}))));
+                          child: Padding(
+                              padding: const EdgeInsets.only(right: 17),
+                              child: HtmlWidget(element.outerHtml,
+                                  textStyle: TextStyle(
+                                      color: PanelStyles.textColor,
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w600),
+                                  customStylesBuilder: (element) => {'font-size': '0.93em'})))));
             }
             return null;
           },
         );
+      } else if (controller.error.value) {
+        return Center(
+            child: Text('news_error'.tr,
+                style: TextStyle(
+                    color: PanelStyles.textColor, fontWeight: FontWeight.w700, fontSize: 18)));
       }
 
       return Container();
@@ -65,7 +74,6 @@ class _Head extends StatelessWidget {
   Widget build(BuildContext context) {
     var color = PanelStyles.textColor;
 
-    //TODO: add baseline alignment, check this
     return Container(
         margin: const EdgeInsets.only(bottom: 8),
         decoration:
@@ -84,16 +92,19 @@ class _Head extends StatelessWidget {
 
 class NewsContentController extends GetxController {
   NewsContentController() {
+    print('NewsContent controller init');
     getLastestNews();
   }
   var content = <String, dynamic>{}.obs;
+  var error = false.obs;
 
   void getLastestNews() async {
     API.inst.get('news').then((res) {
       if (res.statusCode == 200) {
         content.value = jsonDecode(res.body);
       }
-      // ignore: avoid_print, invalid_return_type_for_catch_error
-    }).catchError((e) => print(e));
+    }).catchError((e) {
+      error.value = true;
+    });
   }
 }

@@ -1,28 +1,38 @@
 import 'package:cd_mobile/models/game/game.dart';
-import 'package:cd_mobile/pages/gameplay/mobile/mobile.dart';
 import 'package:cd_mobile/pages/gameplay/web/web.dart';
 import 'package:cd_mobile/pages/gameplay/widgets/main_content_footer/main_content_footer.dart';
+import 'package:cd_mobile/utils/start_up.dart';
+import 'package:cd_mobile/widgets/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class GameplayBinding implements Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<GameplayController>(() => GameplayController());
+    Get.put(GameplayController());
   }
 }
 
 class GameplayController extends GetxController {
   GameplayController() : super() {
+    if (ResourcesController.inst.isLoaded.value) {
+      loadChildrenControllers();
+    } else {
+      ResourcesController.inst.onDone.add(loadChildrenControllers);
+    }
+  }
+
+  void loadChildrenControllers() {
     Get.put(MainContentAndFooterController());
   }
+
   static Function()? setUp;
 
-  @override
-  void onReady() {
-    super.onReady();
-    Game.inst.state.value.setup();
-  }
+  // @override
+  // void onReady() {
+  //   super.onReady();
+  //   //  Game.inst.state.value.setup();
+  // }
 }
 
 class GameplayPage extends StatelessWidget {
@@ -43,6 +53,11 @@ class GameplayPage extends StatelessWidget {
                       scale: 1.2,
                       repeat: ImageRepeat.repeat,
                       image: AssetImage('assets/background.png'))),
-              child: SafeArea(
-                  child: context.width >= context.height ? const Web() : const Mobile()))));
+              child: SafeArea(child: Obx(
+                () {
+                  if (!ResourcesController.inst.isLoaded.value) return const LoadingOverlay();
+                  return const Web();
+                  //return context.width >= context.height ? const Web() : const Mobile();
+                },
+              )))));
 }

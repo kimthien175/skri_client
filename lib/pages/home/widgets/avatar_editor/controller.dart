@@ -6,8 +6,9 @@ import 'package:cd_mobile/models/gif_manager.dart';
 import 'package:cd_mobile/pages/home/widgets/avatar_editor/jiggle_avatar.dart';
 import 'package:cd_mobile/utils/styles.dart';
 import 'package:cd_mobile/widgets/animated_button/builder.dart';
-import 'package:cd_mobile/widgets/animated_button/decorator.dart';
-import 'package:cd_mobile/widgets/animated_button/decorators/tooltip.dart';
+import 'package:cd_mobile/widgets/animated_button/decorators/opacity.dart';
+import 'package:cd_mobile/widgets/animated_button/decorators/scale.dart';
+import 'package:cd_mobile/widgets/animated_button/decorators/tooltip/tooltip.dart';
 import 'package:cd_mobile/widgets/animated_button/decorators/tooltip/position.dart';
 import 'package:get/get.dart';
 
@@ -33,6 +34,7 @@ class AvatarEditorController extends GetxController {
                   : PanelStyles.widthOnMobile / PanelStyles.width),
           AnimatedButtonOpacityDecorator(),
         ]);
+        print('AvatarEditorController init');
   }
 
   late final RxInt color;
@@ -41,8 +43,10 @@ class AvatarEditorController extends GetxController {
 
   @override
   void dispose() {
+    print('avatar editor controller dispose');
     jiggleEyes.dispose();
     jiggleMouth.dispose();
+    randomizeBtnBuilder.controller.dispose();
     super.dispose();
   }
 

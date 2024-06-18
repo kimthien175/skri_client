@@ -66,5 +66,7 @@
     "round_noti": "Round @round",
     "player_choosing":"@playerName is choosing a word",
     "choose_a_word":"Choose a word",
-    "randomize_your_avatar":"Randomize your Avatar!"
+    "randomize_your_avatar":"Randomize your Avatar!",
+
+    "news_error":"Can't get any news!!"
 }
