@@ -1,5 +1,6 @@
 import 'package:cd_mobile/widgets/animated_button/builder.dart';
+import 'package:get/get.dart';
 
-class AnimatedButtonDecorator {
-  void decorate(AnimatedButtonBuilder builder) {}
+abstract class AnimatedButtonDecorator extends GetxController {
+  void decorate(AnimatedButtonBuilder builder);
 }

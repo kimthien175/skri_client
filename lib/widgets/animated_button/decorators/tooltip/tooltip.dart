@@ -69,11 +69,12 @@ class AnimatedButtonTooltipDecorator extends AnimatedButtonDecorator {
         removeOverlayEntry();
       });
     });
+  }
 
-    // removeOverlay on reverse end
-    builder.disposeCallbacks.add(() {
-      print('dispose tooltip');
-      removeOverlayEntry();
-    });
+  @override
+  void onClose() {
+    print('tool tip decorator clear');
+    removeOverlayEntry();
+    controller.dispose();
   }
 }

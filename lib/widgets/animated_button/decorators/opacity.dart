@@ -20,12 +20,7 @@ class AnimatedButtonOpacityDecorator extends AnimatedButtonDecorator {
     var widget = builder.child;
     builder.child = Obx(() => AnimatedOpacity(
         opacity: _visible.value ? 1 : minOpacity,
-        duration: AnimatedButtonController.duration,
+        duration: AnimatedButtonBuilder.duration,
         child: widget));
-
-    builder.disposeCallbacks.add(() {
-      print('dispose opacity obs');
-      _visible.close();
-    });
   }
 }
