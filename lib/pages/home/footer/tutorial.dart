@@ -44,7 +44,6 @@ class HowToPlayContent extends StatelessWidget {
 class HowToPlayContentController extends GetxController {
   HowToPlayContentController() {
     startTimer();
-    print('Howto controller init');
   }
   var _step = 1.obs;
   int get step => _step.value;

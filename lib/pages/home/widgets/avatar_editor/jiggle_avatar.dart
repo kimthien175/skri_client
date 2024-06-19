@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class JiggleController extends GetxController with GetSingleTickerProviderStateMixin {
-  JiggleController(){
+  JiggleController() {
     print('jiggle avatar controller init');
   }
   late final animController =
@@ -19,6 +19,7 @@ class JiggleController extends GetxController with GetSingleTickerProviderStateM
 
   @override
   void dispose() {
+    print('jiggle dispose');
     animController.dispose();
     super.dispose();
   }

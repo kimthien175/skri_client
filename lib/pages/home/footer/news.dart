@@ -92,7 +92,6 @@ class _Head extends StatelessWidget {
 
 class NewsContentController extends GetxController {
   NewsContentController() {
-    print('NewsContent controller init');
     getLastestNews();
   }
   var content = <String, dynamic>{}.obs;

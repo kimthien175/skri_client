@@ -21,14 +21,10 @@ class AnimatedButtonBuilder {
   void Function()? onTap;
   late final List<AnimatedButtonDecorator> decorators;
 
-  final List<void Function()> disposeCallbacks = [];
-
   late final AnimatedButtonController controller;
 
   final List<void Function(PointerEnterEvent)> onEnterCallbacks = [];
   final List<void Function(PointerExitEvent)> onExitCallbacks = [];
-
-  //final List<void Function()> onReverseEndCallbacks = [];
 
   final GlobalKey buttonKey = GlobalKey();
 
@@ -71,8 +67,8 @@ class AnimatedButtonController extends GetxController with GetSingleTickerProvid
 
   @override
   void dispose() {
-    for (var callback in builder.disposeCallbacks){
-      callback();
+    for (var decorator in builder.decorators){
+      decorator.dis
     }
     _controller.dispose();
     super.dispose();
