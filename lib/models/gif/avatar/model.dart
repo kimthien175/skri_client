@@ -1,10 +1,10 @@
-import 'package:cd_mobile/models/gif/gif.dart';
-import 'package:cd_mobile/models/gif/avatar/builder.dart';
-import 'package:cd_mobile/models/gif/avatar/custom_painter.dart';
-import 'package:cd_mobile/models/gif/single_gif/single_gif.dart';
-import 'package:cd_mobile/models/gif_manager.dart';
 import 'dart:ui' as ui;
 
+import 'package:cd_mobile/models/gif/avatar/controller.dart';
+import 'package:cd_mobile/models/gif/avatar/custom_painter.dart';
+import 'package:cd_mobile/models/gif/gif.dart';
+import 'package:cd_mobile/models/gif/single_gif/single_gif.dart';
+import 'package:cd_mobile/models/gif_manager.dart';
 import 'package:flutter/material.dart';
 
 typedef GifCustomPainterBuilder = CustomPainter Function(int frameIndex, Paint paint);
@@ -41,11 +41,7 @@ class AvatarModel extends GifModel<AvatarModel> {
   @override
   AvatarBuilder get builder => AvatarBuilder(this);
 
-  Map<String, dynamic> toJSON(){
-    return {
-      'color':color.index,
-      'eyes':eyes.index,
-      'mouth':mouth.index
-    };
+  Map<String, dynamic> toJSON() {
+    return {'color': color.index, 'eyes': eyes.index, 'mouth': mouth.index};
   }
 }
