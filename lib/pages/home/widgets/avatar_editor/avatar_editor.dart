@@ -6,12 +6,11 @@ import 'package:cd_mobile/utils/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class AvatarEditor extends StatelessWidget {
+class AvatarEditor extends GetView<AvatarEditorController> {
   const AvatarEditor({super.key});
 
   @override
   Widget build(BuildContext context) {
-    var controller = Get.find<AvatarEditorController>();
     return Stack(children: [
       Container(
         margin: const EdgeInsets.only(top: 10, bottom: 10),
@@ -49,13 +48,16 @@ class _SwitchButton extends StatelessWidget {
   _SwitchButton(String path, String onHoverPath, this.callback) {
     child = GifManager.inst.misc(path).builder.init();
     onHoverChild = GifManager.inst.misc(onHoverPath).builder.init();
+    tag = callback.hashCode.toString();
   }
 
   late final GifBuilder child;
   late final GifBuilder onHoverChild;
   final Function() callback;
 
-  final controller = _SwitchButtonController();
+  late final String tag;
+
+  SwitchButtonController get controller => GetInstance().find<SwitchButtonController>(tag: tag);
 
   @override
   Widget build(BuildContext context) {
@@ -72,15 +74,13 @@ class _SwitchButton extends StatelessWidget {
             child: SizedBox(
                 height: 34,
                 width: 34,
-                child:
-                    FittedBox(child: Obx(() => controller.isHover.value ? onHoverChild : child)))));
+                child: FittedBox(child: Obx(() => controller.isHover.value ? onHoverChild : child))
+                //   Obx(() => controller.isHover.value ? onHoverChild : child)
+                )));
   }
 }
 
-class _SwitchButtonController extends GetxController {
-  _SwitchButtonController(){
-    print('Switch button controller init');
-  }
+class SwitchButtonController extends GetxController {
   var isHover = false.obs;
 }
 

@@ -4,9 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class JiggleController extends GetxController with GetSingleTickerProviderStateMixin {
-  JiggleController(){
-    print('jiggle avatar controller init');
-  }
   late final animController =
       AnimationController(duration: const Duration(milliseconds: 150), vsync: this);
   late final Animation<Offset> animation =
@@ -22,14 +19,18 @@ class JiggleController extends GetxController with GetSingleTickerProviderStateM
     animController.dispose();
     super.dispose();
   }
+
+  @override
+  void onClose() {
+    throw Exception('Standalone');
+  }
 }
 
-class JiggleAvatar extends StatelessWidget {
+class JiggleAvatar extends GetView<AvatarEditorController> {
   const JiggleAvatar({super.key});
 
   @override
   Widget build(BuildContext context) {
-    var controller = Get.find<AvatarEditorController>();
     return Stack(
       children: [
         // Color
