@@ -1,14 +1,10 @@
-import 'package:cd_mobile/models/game/game.dart';
 import 'package:cd_mobile/models/game/player.dart';
-import 'package:cd_mobile/models/gif/avatar/builder.dart';
 import 'package:cd_mobile/models/gif/avatar/model.dart';
 import 'package:cd_mobile/models/gif_manager.dart';
 import 'package:cd_mobile/utils/styles.dart';
 import 'package:cd_mobile/widgets/animated_button/builder.dart';
-import 'package:cd_mobile/widgets/animated_button/decorator.dart';
 import 'package:cd_mobile/widgets/animated_button/decorators/scale.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 class GamePlayers extends StatelessWidget {
   const GamePlayers({super.key});

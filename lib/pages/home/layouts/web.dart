@@ -7,6 +7,7 @@ import 'package:cd_mobile/pages/home/widgets/create_private_room_button.dart';
 import 'package:cd_mobile/pages/home/widgets/lang_selector.dart';
 import 'package:cd_mobile/pages/home/widgets/name_input.dart';
 import 'package:cd_mobile/pages/home/widgets/play_button.dart';
+import 'package:cd_mobile/utils/navigator_observer.dart';
 import 'package:cd_mobile/utils/styles.dart';
 import 'package:cd_mobile/widgets/logo.dart';
 import 'package:cd_mobile/pages/home/widgets/random_avatars.dart';
@@ -43,7 +44,13 @@ class Web extends StatelessWidget {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               const SizedBox(height: 25),
-                              const Logo(Logo.clearUrl),
+                              Logo(() {
+                                if (MyNavigatorObserver.inst.lenght > 1) {
+                                  Get.back();
+                                } else {
+                                  Logo.clearUrl();
+                                }
+                              }),
                               const SizedBox(height: 10),
                               const RandomAvatars(),
                               const SizedBox(height: 40),

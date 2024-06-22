@@ -38,7 +38,6 @@ class RandomAvatarsController extends GetxController {
 
       avatars.add(avatar);
     }
-    print('RandomAvatars controller init');
   }
 
   late final List<GifBuilder> avatars;

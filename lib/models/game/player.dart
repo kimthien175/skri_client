@@ -1,14 +1,10 @@
-import 'package:cd_mobile/models/gif/avatar/builder.dart';
+import 'package:cd_mobile/models/gif/avatar/controller.dart';
 import 'package:cd_mobile/models/gif/avatar/model.dart';
 import 'package:get/get.dart';
 
 class Player {
   Player(
-      {required this.id,
-      required this.name,
-      required this.avatar,
-      this.isOwner,
-      this.points = 0});
+      {required this.id, required this.name, required this.avatar, this.isOwner, this.points = 0});
   final AvatarBuilder avatar;
   String name;
   String get nameForCard => name;

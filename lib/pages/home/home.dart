@@ -1,4 +1,5 @@
 import 'package:cd_mobile/pages/home/footer/news.dart';
+import 'package:cd_mobile/pages/home/footer/tutorial.dart';
 import 'package:cd_mobile/pages/home/layouts/mobile.dart';
 import 'package:cd_mobile/pages/home/layouts/web.dart';
 import 'package:cd_mobile/pages/home/widgets/avatar_editor/controller.dart';
@@ -35,8 +36,9 @@ class HomeController extends GetxController {
 
   void loadChildrenControllers() {
     Get.put(RandomAvatarsController());
-    Get.put(NewsContentController());
     Get.put(AvatarEditorController());
+    Get.put(NewsContentController());
+    Get.put(HowToPlayContentController());
   }
 }
 

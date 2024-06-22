@@ -3,13 +3,15 @@ import 'package:cd_mobile/pages/credits/credits.dart';
 import 'package:cd_mobile/pages/gameplay/gameplay.dart';
 import 'package:cd_mobile/pages/home/home.dart';
 import 'package:cd_mobile/pages/terms/terms.dart';
+import 'package:cd_mobile/utils/navigator_observer.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:url_strategy/url_strategy.dart';
+// ignore: depend_on_referenced_packages
+import 'package:flutter_web_plugins/url_strategy.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  setPathUrlStrategy();
+  usePathUrlStrategy();
   runApp(GetMaterialApp(
     theme: ThemeData(fontFamily: 'Nunito'),
     // Locales
@@ -34,5 +36,6 @@ void main() {
           transition: Transition.noTransition,
           binding: GameplayBinding())
     ],
+    navigatorObservers: [MyNavigatorObserver.inst],
   ));
 }

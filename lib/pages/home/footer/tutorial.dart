@@ -5,9 +5,8 @@ import 'package:cd_mobile/utils/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class HowToPlayContent extends StatelessWidget {
+class HowToPlayContent extends GetView<HowToPlayContentController> {
   const HowToPlayContent({super.key});
-  static final HowToPlayContentController controller = Get.put(HowToPlayContentController());
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -44,7 +43,6 @@ class HowToPlayContent extends StatelessWidget {
 class HowToPlayContentController extends GetxController {
   HowToPlayContentController() {
     startTimer();
-    print('Howto controller init');
   }
   var _step = 1.obs;
   int get step => _step.value;
@@ -53,34 +51,32 @@ class HowToPlayContentController extends GetxController {
 
   void jumpToStep(int step) {
     _step.value = step;
-    resetTimer();
+    timer.cancel();
+    startTimer();
   }
 
-  void switchToTheNextStep() {
+  void switchToTheNextStep(Timer timer) {
     if (step == 5) {
       _step.value = 1;
     } else {
       _step++;
     }
-    startTimer();
-  }
-
-  void resetTimer() {
-    timer.cancel();
-    startTimer();
   }
 
   void startTimer() {
-    timer = Timer(const Duration(seconds: 4), switchToTheNextStep);
+    timer = Timer.periodic(const Duration(seconds: 4), switchToTheNextStep);
+  }
+
+  @override
+  void onClose() {
+    timer.cancel();
   }
 }
 
-class _StepButton extends StatelessWidget {
+class _StepButton extends GetView<HowToPlayContentController> {
   const _StepButton(this.index);
 
   final int index;
-
-  static final controller = Get.find<HowToPlayContentController>();
 
   @override
   Widget build(BuildContext context) {

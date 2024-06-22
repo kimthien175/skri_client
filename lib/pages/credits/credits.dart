@@ -1,4 +1,5 @@
 import 'package:cd_mobile/pages/home/footer/about.dart';
+import 'package:cd_mobile/utils/navigator_observer.dart';
 import 'package:cd_mobile/utils/start_up.dart';
 import 'package:cd_mobile/utils/styles.dart';
 import 'package:cd_mobile/widgets/loading.dart';
@@ -37,7 +38,14 @@ class CreditsPage extends StatelessWidget {
                               MediaQuery.of(context).padding.right,
                           child: Column(children: [
                             SizedBox(height: 25, width: Get.width),
-                            Logo(() => Get.offAllNamed('/')),
+                            Logo(() {
+                              var homeStackIndex = MyNavigatorObserver.inst.indexOf('/');
+                              if (homeStackIndex != -1) {
+                                Get.close(MyNavigatorObserver.inst.lenght - homeStackIndex - 1);
+                              } else {
+                                Get.toNamed('/');
+                              }
+                            }),
                             const SizedBox(height: 50),
                             Container(
                                 width: 400,
