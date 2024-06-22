@@ -1,11 +1,10 @@
-import 'package:cd_mobile/widgets/animated_button/decorators/tooltip/tooltip.dart';
 import 'package:cd_mobile/widgets/animated_button/decorators/tooltip/controller.dart';
+import 'package:cd_mobile/widgets/animated_button/decorators/tooltip/tooltip.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 abstract class AnimatedButtonTooltipPosition {
-  // AnimatedButtonTooltipPosition(this.decorator);
-  // final AnimatedButtonTooltipDecorator decorator;
+  final ScaleTooltipController controller = ScaleTooltipController();
 
   Widget build({required Widget child, required RenderBox originalBox, required double scale}) =>
       _wrapWithZone(_buildWithAlign(child, scale), originalBox.localToGlobal(Offset.zero),
@@ -16,9 +15,7 @@ abstract class AnimatedButtonTooltipPosition {
   Widget _buildWithAlign(Widget child, double scale) {
     // put original child in tooltip 'background', wrap with ScaleTransition
     var newChild = ScaleTransition(
-        alignment: relativeAlignment,
-        scale: Get.find<ScaleTooltipController>(tag: hashCode.toString()).animation,
-        child: _build(child));
+        alignment: relativeAlignment, scale: controller.animation, child: _build(child));
     return Align(
         alignment: relativeAlignment,
         child: scale == 1.0
@@ -50,11 +47,13 @@ abstract class AnimatedButtonTooltipPosition {
   double get width;
   Alignment get relativeAlignment;
   Path Function(Size size) get arrowPath;
+
+  void clean() {
+    controller.dispose();
+  }
 }
 
 class TooltipPositionLeft extends AnimatedButtonTooltipPosition {
-  //TooltipPositionLeft(super.decorator);
-
   @override
   Widget _build(Widget rawChild) =>
       Row(mainAxisSize: MainAxisSize.min, children: [_wrapWithContainer(rawChild), arrow]);
@@ -98,8 +97,6 @@ class TooltipPositionLeft extends AnimatedButtonTooltipPosition {
 }
 
 class TooltipPositionTop extends AnimatedButtonTooltipPosition {
-  //TooltipPositionTop(super.decorator);
-
   @override
   Path Function(Size size) get arrowPath => (size) => Path()
     ..moveTo(0, 0)
@@ -141,8 +138,6 @@ class TooltipPositionTop extends AnimatedButtonTooltipPosition {
 }
 
 class TooltipPositionRight extends AnimatedButtonTooltipPosition {
-  //TooltipPositionRight(super.decorator);
-
   @override
   Path Function(Size size) get arrowPath => (size) => Path()
     ..moveTo(size.width, 0)
@@ -182,8 +177,6 @@ class TooltipPositionRight extends AnimatedButtonTooltipPosition {
 }
 
 class TooltipPositionBottom extends AnimatedButtonTooltipPosition {
-  //TooltipPositionBottom(super.decorator);
-
   @override
   Path Function(Size size) get arrowPath => (size) => Path()
     ..moveTo(0, size.height)

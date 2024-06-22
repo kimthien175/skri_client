@@ -1,22 +1,18 @@
 import 'package:cd_mobile/utils/overlay.dart';
 import 'package:cd_mobile/widgets/animated_button/builder.dart';
 import 'package:cd_mobile/widgets/animated_button/decorator.dart';
-import 'package:cd_mobile/widgets/animated_button/decorators/tooltip/controller.dart';
 import 'package:cd_mobile/widgets/animated_button/decorators/tooltip/position.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 class AnimatedButtonTooltipDecorator extends AnimatedButtonDecorator {
   AnimatedButtonTooltipDecorator(
       {required this.tooltip, AnimatedButtonTooltipPosition? position, double Function()? scale}) {
     _scale = scale ?? () => 1.0;
     this.position = position ?? TooltipPositionTop();
-    controller = Get.put(ScaleTooltipController(), tag: this.position.hashCode.toString());
   }
 
   final String tooltip;
   late final AnimatedButtonTooltipPosition position;
-  late final ScaleTooltipController controller;
   late final double Function() _scale;
 
   OverlayEntry? overlayEntry;
@@ -61,19 +57,19 @@ class AnimatedButtonTooltipDecorator extends AnimatedButtonDecorator {
       //#endregion
 
       // show tooltip
-      controller.animController.forward();
+      position.controller.animController.forward();
     });
 
     builder.onExitCallbacks.add((e) {
-      controller.animController.reverse().then((_) {
+      position.controller.animController.reverse().then((_) {
         removeOverlayEntry();
       });
     });
-
-    // removeOverlay on reverse end
-    builder.disposeCallbacks.add(() {
-      print('dispose tooltip');
-      removeOverlayEntry();
-    });
   }
+
+  @override
+  void Function() get clean => () {
+        removeOverlayEntry();
+        position.clean();
+      };
 }

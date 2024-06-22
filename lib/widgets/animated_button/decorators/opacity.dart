@@ -3,7 +3,7 @@ import 'package:cd_mobile/widgets/animated_button/decorator.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class AnimatedButtonOpacityDecorator extends AnimatedButtonDecorator {
+class AnimatedButtonOpacityDecorator extends GetxController implements AnimatedButtonDecorator {
   AnimatedButtonOpacityDecorator({this.minOpacity = 0.5});
 
   final RxBool _visible = false.obs;
@@ -20,12 +20,15 @@ class AnimatedButtonOpacityDecorator extends AnimatedButtonDecorator {
     var widget = builder.child;
     builder.child = Obx(() => AnimatedOpacity(
         opacity: _visible.value ? 1 : minOpacity,
-        duration: AnimatedButtonController.duration,
+        duration: AnimatedButtonBuilder.duration,
         child: widget));
-
-    builder.disposeCallbacks.add(() {
-      print('dispose opacity obs');
-      _visible.close();
-    });
   }
+
+  @override
+  void onClose() {
+    throw Exception('This controller is supposed to be standalone, not via Get.put');
+  }
+  
+  @override
+  void Function() get clean => dispose;
 }
