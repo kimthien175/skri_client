@@ -45,10 +45,9 @@ class Web extends StatelessWidget {
                             children: [
                               const SizedBox(height: 25),
                               Logo(() {
+                                Logo.clearUrl();
                                 if (MyNavigatorObserver.inst.lenght > 1) {
                                   Get.back();
-                                } else {
-                                  Logo.clearUrl();
                                 }
                               }),
                               const SizedBox(height: 10),

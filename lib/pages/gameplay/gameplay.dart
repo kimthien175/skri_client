@@ -1,5 +1,5 @@
 import 'package:cd_mobile/models/game/game.dart';
-import 'package:cd_mobile/pages/gameplay/web/web.dart';
+import 'package:cd_mobile/pages/gameplay/layouts/web.dart';
 import 'package:cd_mobile/pages/gameplay/widgets/main_content_footer/main_content_footer.dart';
 import 'package:cd_mobile/utils/start_up.dart';
 import 'package:cd_mobile/widgets/loading.dart';

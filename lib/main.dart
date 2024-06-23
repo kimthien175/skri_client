@@ -20,7 +20,7 @@ void main() {
     fallbackLocale: const Locale('en', 'US'),
     debugShowCheckedModeBanner: false,
     title: 'Material App',
-    initialRoute: '/',
+    initialRoute: '/gameplay',
     getPages: [
       GetPage(
           name: '/',

@@ -13,22 +13,28 @@ class GamePlayers extends StatelessWidget {
   Widget build(BuildContext context) {
     //return Obx(() {
     // var players = Game.inst.playersByList;
+    var players = List<Player>.generate(
+        5,
+        (index) => Player(
+            id: 'id',
+            name: 'wrath',
+            isOwner: false,
+            avatar: AvatarModel.init(0, 0, 0).builder.init()));
     List<PlayerCard> list = [];
 
-    for (int i = 1; i < 6; i++) {
-      list.add(PlayerCard(
-          index: i,
-          info: Player(
-              id: 'id',
-              name: 'wrath',
-              isOwner: false,
-              avatar: AvatarModel.init(0, 0, 0).builder.init())
-          //players[0]
-          ));
+    int maxPointPlayerIndex = 0;
+
+    for (int i = 0; i < players.length; i++) {
+      if (players[i].points > players[maxPointPlayerIndex].points) {
+        maxPointPlayerIndex = i;
+      }
+      list.add(PlayerCard(index: i, info: players[i]));
     }
 
-    return ClipRRect(borderRadius: BorderRadius.circular(10), child: Column(children: list));
-    //});
+    list[maxPointPlayerIndex].info.avatar.model.winner = true;
+    return Column(
+      children: list,
+    );
   }
 }
 
@@ -36,8 +42,12 @@ class PlayerCard extends StatelessWidget {
   const PlayerCard({required this.info, required this.index, super.key});
   final Player info;
   final int index;
+
+  static const double avatarMaxScale = 1.15;
   @override
   Widget build(BuildContext context) {
+    var lastIndex = 4;
+    var avatarScaleDecorator = AnimatedButtonScaleDecorator(minSize: 1 / avatarMaxScale);
     return GestureDetector(
         onTap: () => showDialog(
             context: context,
@@ -54,6 +64,13 @@ class PlayerCard extends StatelessWidget {
             child: Stack(clipBehavior: Clip.none, children: [
               Container(
                   decoration: BoxDecoration(
+                      borderRadius: index == 0
+                          ? (index == lastIndex
+                              ? BorderRadius.circular(3)
+                              : const BorderRadiusDirectional.vertical(top: Radius.circular(3)))
+                          : (index == lastIndex
+                              ? const BorderRadiusDirectional.vertical(bottom: Radius.circular(3))
+                              : const BorderRadius.all(Radius.zero)),
                       color: index % 2 == 0
                           ? GameplayStyles.colorPlayerBGBase
                           : GameplayStyles.colorPlayerBGBase_2),
@@ -76,15 +93,15 @@ class PlayerCard extends StatelessWidget {
                     ],
                   )),
               Positioned(
-                  top: -1,
-                  right: 0,
+                  top: -1 - 48 * (avatarMaxScale - 1) / 2,
+                  right: -48 * (avatarMaxScale - 1) / 2,
                   child: AnimatedButtonBuilder(
-                          child: info.avatar.doFitSize(height: 48, width: 48),
-                          onTap: () {
-                            // TODO: ADD OVERLAY FOR PLAYER INFO
-                          },
-                          decorators: [AnimatedButtonScaleDecorator(minSize: 1, maxSize: 1.2)])
-                      .build()),
+                      child: info.avatar
+                          .doFitSize(height: 48 * avatarMaxScale, width: 48 * avatarMaxScale),
+                      onTap: () {
+                        // TODO: ADD OVERLAY FOR PLAYER INFO
+                      },
+                      decorators: [avatarScaleDecorator]).build()),
               Positioned(
                   top: 5,
                   left: 6,
