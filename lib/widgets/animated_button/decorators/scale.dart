@@ -6,7 +6,7 @@ import 'package:get/get.dart';
 class AnimatedButtonScaleDecorator extends GetxController
     with GetSingleTickerProviderStateMixin
     implements AnimatedButtonDecorator {
-  AnimatedButtonScaleDecorator({double minSize = 0.8, double maxSize = 1}) {
+  AnimatedButtonScaleDecorator({double minSize = defaultMinSize, double maxSize = defaultMaxSIze}) {
     controller = AnimationController(
         duration: AnimatedButtonBuilder.duration,
         vsync: this,
@@ -17,6 +17,9 @@ class AnimatedButtonScaleDecorator extends GetxController
   }
   late final AnimationController controller;
   late final Animation<double> animation;
+
+  static const double defaultMinSize = 0.8;
+  static const double defaultMaxSIze = 1.0;
 
   @override
   void decorate(AnimatedButtonBuilder builder) {

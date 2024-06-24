@@ -1,7 +1,5 @@
-import 'dart:math';
-
 import 'package:cd_mobile/pages/gameplay/widgets/game_bar.dart';
-import 'package:cd_mobile/pages/gameplay/widgets/game_players.dart';
+import 'package:cd_mobile/pages/gameplay/widgets/players_list/players_list.dart';
 import 'package:cd_mobile/utils/styles.dart';
 import 'package:cd_mobile/widgets/logo.dart';
 import 'package:cd_mobile/widgets/single_child_2d_scroll_view.dart';
@@ -49,7 +47,7 @@ class Web extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                const GamePlayers(),
+                                const PlayersList(),
                                 GameplayStyles.layoutGap,
                                 // MainContentAndFooter(),
                                 GameplayStyles.layoutGap,
