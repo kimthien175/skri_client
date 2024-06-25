@@ -48,40 +48,36 @@ class _SwitchButton extends StatelessWidget {
   _SwitchButton(String path, String onHoverPath, this.callback) {
     child = GifManager.inst.misc(path).builder.init();
     onHoverChild = GifManager.inst.misc(onHoverPath).builder.init();
-    tag = callback.hashCode.toString();
   }
 
   late final GifBuilder child;
   late final GifBuilder onHoverChild;
   final Function() callback;
 
-  late final String tag;
-
-  SwitchButtonController get controller => GetInstance().find<SwitchButtonController>(tag: tag);
-
   @override
   Widget build(BuildContext context) {
-    return MouseRegion(
-        cursor: SystemMouseCursors.click,
-        onEnter: (event) {
-          controller.isHover.value = true;
-        },
-        onExit: (event) {
-          controller.isHover.value = false;
-        },
-        child: GestureDetector(
-            onTap: callback,
-            child: SizedBox(
-                height: 34,
-                width: 34,
-                child: FittedBox(child: Obx(() => controller.isHover.value ? onHoverChild : child))
-                //   Obx(() => controller.isHover.value ? onHoverChild : child)
-                )));
+    Widget widget = child;
+    return SizedBox(
+        height: 34,
+        width: 34,
+        child: FittedBox(
+            child: GestureDetector(
+                onTap: callback,
+                child: StatefulBuilder(
+                    builder: (ct, setState) => MouseRegion(
+                        cursor: SystemMouseCursors.click,
+                        onEnter: (_) {
+                          setState(() {
+                            widget = onHoverChild;
+                          });
+                        },
+                        onExit: (_) {
+                          setState(() {
+                            widget = child;
+                          });
+                        },
+                        child: widget)))));
   }
-}
-
-class SwitchButtonController extends GetxController {
-  var isHover = false.obs;
 }
 
 class _RandomButton extends StatelessWidget {

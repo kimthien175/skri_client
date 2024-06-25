@@ -6,6 +6,7 @@ import 'package:cd_mobile/widgets/animated_button/builder.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+// TODO: CLICK TO SHOW PLAYER INFO
 class PlayerController extends GetxController with GetSingleTickerProviderStateMixin {
   late final AnimationController animController = AnimationController(
       duration: AnimatedButtonBuilder.duration,
@@ -38,10 +39,10 @@ class PlayerCard extends StatelessWidget {
                 AlertDialog(title: Text(info.nameForCard), content: const Text('hello world'))),
         child: MouseRegion(
             onEnter: (_) {
-              Get.find<PlayerController>(tag: index.toString()).animController.forward();
+              controller.animController.forward();
             },
             onExit: (_) {
-              Get.find<PlayerController>(tag: index.toString()).animController.reverse();
+              controller.animController.reverse();
             },
             cursor: SystemMouseCursors.click,
             child: Stack(clipBehavior: Clip.none, children: [
@@ -53,7 +54,7 @@ class PlayerCard extends StatelessWidget {
                               : const BorderRadiusDirectional.vertical(top: Radius.circular(3)))
                           : (index == lastIndex
                               ? const BorderRadiusDirectional.vertical(bottom: Radius.circular(3))
-                              : const BorderRadius.all(Radius.zero)),
+                              : BorderRadius.zero),
                       color: index % 2 == 0
                           ? GameplayStyles.colorPlayerBGBase
                           : GameplayStyles.colorPlayerBGBase_2),

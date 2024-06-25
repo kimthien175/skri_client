@@ -1,5 +1,6 @@
 import 'package:cd_mobile/models/game/private_game.dart';
 import 'package:cd_mobile/utils/styles.dart';
+import 'package:cd_mobile/widgets/hover_button.dart';
 import 'package:cd_mobile/widgets/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -9,29 +10,23 @@ class CreatePrivateRoomButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MouseRegion(
-        cursor: SystemMouseCursors.click,
-        child: GestureDetector(
-            onTap: () {
-              // set home to loading state
-              LoadingManager.inst.show();
-              // init private room
-              PrivateGame.host();
-            },
-            child: Container(
-              alignment: Alignment.center,
-              decoration: const BoxDecoration(
-                color: Color(0xff2c8de7),
-                borderRadius: GlobalStyles.borderRadius,
-              ),
-              constraints: const BoxConstraints.expand(height: 40),
-              child: Text('create_private_room_button'.tr,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                      color: PanelStyles.textColor,
-                      fontSize: 19.2,
-                      fontWeight: FontWeight.w700,
-                      shadows: [GlobalStyles.textShadow])),
-            )));
+    return HoverButton(
+        height: 40,
+        onTap: () {
+          // set home to loading state
+          LoadingManager.inst.show();
+          // init private room
+          PrivateGame.host();
+        },
+        borderRadius: GlobalStyles.borderRadius,
+        color: const Color(0xff2c8de7),
+        hoverColor: const Color(0xff1671c5),
+        child: Text('create_private_room_button'.tr,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+                color: PanelStyles.textColor,
+                fontSize: 19.2,
+                fontWeight: FontWeight.w700,
+                shadows: [GlobalStyles.textShadow])));
   }
 }

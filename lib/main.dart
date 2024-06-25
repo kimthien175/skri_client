@@ -4,6 +4,7 @@ import 'package:cd_mobile/pages/gameplay/gameplay.dart';
 import 'package:cd_mobile/pages/home/home.dart';
 import 'package:cd_mobile/pages/terms/terms.dart';
 import 'package:cd_mobile/utils/navigator_observer.dart';
+import 'package:cd_mobile/utils/start_up.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 // ignore: depend_on_referenced_packages
@@ -11,6 +12,7 @@ import 'package:flutter_web_plugins/url_strategy.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
+  ResourcesController.inst;
   usePathUrlStrategy();
   runApp(GetMaterialApp(
     theme: ThemeData(fontFamily: 'Nunito'),
@@ -20,7 +22,7 @@ void main() {
     fallbackLocale: const Locale('en', 'US'),
     debugShowCheckedModeBanner: false,
     title: 'Material App',
-    initialRoute: '/gameplay',
+    initialRoute: '/ ',
     getPages: [
       GetPage(
           name: '/',

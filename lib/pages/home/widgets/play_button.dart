@@ -1,5 +1,6 @@
 import 'package:cd_mobile/models/game/private_game.dart';
 import 'package:cd_mobile/utils/styles.dart';
+import 'package:cd_mobile/widgets/hover_button.dart';
 import 'package:cd_mobile/widgets/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -11,36 +12,31 @@ class PlayButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MouseRegion(
-        cursor: SystemMouseCursors.click,
-        child: GestureDetector(
-            onTap: () {
-              if (roomCode == null) return;
+    return HoverButton(
+      onTap: () {
+        if (roomCode == null) return;
 
-              if (RegExp(r'^[a-z0-9]{4,}$').hasMatch(roomCode!)) {
-                LoadingManager.inst.show();
-                PrivateGame.join(roomCode!);
-              } else {
-                showDialog(
-                    context: Get.context!,
-                    builder: (context) => AlertDialog(
-                          title: Text('wrong_private_room_code'.tr),
-                        ));
-              }
-            },
-            child: Container(
-              alignment: Alignment.center,
-              decoration: const BoxDecoration(
-                color: Color(0xff53e237),
-                borderRadius: GlobalStyles.borderRadius,
-              ),
-              constraints: const BoxConstraints.expand(height: 54),
-              child: Text('play_button'.tr,
-                  style: TextStyle(
-                      fontSize: 32,
-                      color: PanelStyles.textColor,
-                      fontWeight: FontWeight.w800,
-                      shadows: [GlobalStyles.textShadow])),
-            )));
+        if (RegExp(r'^[a-z0-9]{4,}$').hasMatch(roomCode!)) {
+          LoadingManager.inst.show();
+          PrivateGame.join(roomCode!);
+        } else {
+          showDialog(
+              context: Get.context!,
+              builder: (context) => AlertDialog(
+                    title: Text('wrong_private_room_code'.tr),
+                  ));
+        }
+      },
+      color: const Color(0xff53e237),
+      hoverColor: const Color(0xff38c41c),
+      height: 54,
+      borderRadius: GlobalStyles.borderRadius,
+      child: Text('play_button'.tr,
+          style: TextStyle(
+              fontSize: 32,
+              color: PanelStyles.textColor,
+              fontWeight: FontWeight.w800,
+              shadows: [GlobalStyles.textShadow])),
+    );
   }
 }

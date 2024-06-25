@@ -55,7 +55,7 @@ class HowToPlayContentController extends GetxController {
     startTimer();
   }
 
-  void switchToTheNextStep(Timer timer) {
+  void switchToNextStep(Timer timer) {
     if (step == 5) {
       _step.value = 1;
     } else {
@@ -64,7 +64,7 @@ class HowToPlayContentController extends GetxController {
   }
 
   void startTimer() {
-    timer = Timer.periodic(const Duration(seconds: 4), switchToTheNextStep);
+    timer = Timer.periodic(const Duration(seconds: 4), switchToNextStep);
   }
 
   @override
@@ -80,18 +80,38 @@ class _StepButton extends GetView<HowToPlayContentController> {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
+    var isHover = false;
+    return Container(
+        alignment: Alignment.center,
         height: 25,
         width: 25,
-        child: IconButton(
-            padding: const EdgeInsets.all(0),
-            onPressed: () {
+        child: GestureDetector(
+            onTap: () {
               if (index != controller.step) {
                 controller.jumpToStep(index);
               }
             },
-            icon: Obx(() => index == controller.step
-                ? const Icon(Icons.circle, size: 18, color: Colors.white)
-                : Icon(Icons.circle, size: 14, color: Colors.white.withOpacity(0.3)))));
+            child: StatefulBuilder(
+                builder: (ct, setState) => MouseRegion(
+                    cursor: SystemMouseCursors.click,
+                    onEnter: (_) {
+                      setState(() {
+                        isHover = true;
+                      });
+                    },
+                    onExit: (_) {
+                      setState(() {
+                        isHover = false;
+                      });
+                    },
+                    child: Obx(() => AnimatedContainer(
+                        duration: const Duration(milliseconds: 80),
+                        decoration: BoxDecoration(
+                            color: (isHover || index == controller.step)
+                                ? Colors.white
+                                : Colors.white.withOpacity(0.3),
+                            shape: BoxShape.circle),
+                        width: index == controller.step ? 14.25 : 11,
+                        height: index == controller.step ? 14.25 : 11))))));
   }
 }

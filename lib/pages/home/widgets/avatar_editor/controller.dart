@@ -3,7 +3,6 @@ import 'dart:math';
 import 'package:cd_mobile/models/game/player.dart';
 import 'package:cd_mobile/models/gif/avatar/model.dart';
 import 'package:cd_mobile/models/gif_manager.dart';
-import 'package:cd_mobile/pages/home/widgets/avatar_editor/avatar_editor.dart';
 import 'package:cd_mobile/pages/home/widgets/avatar_editor/jiggle_avatar.dart';
 import 'package:cd_mobile/utils/styles.dart';
 import 'package:cd_mobile/widgets/animated_button/builder.dart';
@@ -34,13 +33,6 @@ class AvatarEditorController extends GetxController {
                   Get.width >= Get.height ? 1.0 : PanelStyles.widthOnMobile / PanelStyles.width),
           AnimatedButtonOpacityDecorator(),
         ]);
-
-    Get.put(SwitchButtonController(), tag: onPreviousEyes.hashCode.toString());
-    Get.put(SwitchButtonController(), tag: onPreviousMouth.hashCode.toString());
-    Get.put(SwitchButtonController(), tag: onPreviousColor.hashCode.toString());
-    Get.put(SwitchButtonController(), tag: onNextEyes.hashCode.toString());
-    Get.put(SwitchButtonController(), tag: onNextMouth.hashCode.toString());
-    Get.put(SwitchButtonController(), tag: onNextColor.hashCode.toString());
   }
 
   late final RxInt color;
