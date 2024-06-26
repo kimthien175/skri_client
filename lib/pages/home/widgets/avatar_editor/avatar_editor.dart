@@ -56,27 +56,23 @@ class _SwitchButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Widget widget = child;
+    FadeSwitcherController controller =
+        Get.put(FadeSwitcherController(child), tag: hashCode.toString());
     return SizedBox(
         height: 34,
         width: 34,
         child: FittedBox(
             child: GestureDetector(
                 onTap: callback,
-                child: StatefulBuilder(
-                    builder: (ct, setState) => MouseRegion(
-                        cursor: SystemMouseCursors.click,
-                        onEnter: (_) {
-                          setState(() {
-                            widget = onHoverChild;
-                          });
-                        },
-                        onExit: (_) {
-                          setState(() {
-                            widget = child;
-                          });
-                        },
-                        child: widget)))));
+                child: MouseRegion(
+                    cursor: SystemMouseCursors.click,
+                    onEnter: (_) {
+                      controller.change(onHoverChild);
+                    },
+                    onExit: (_) {
+                      controller.change(child);
+                    },
+                    child: Obx(() => controller.child.value)))));
   }
 }
 
@@ -85,4 +81,35 @@ class _RandomButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) =>
       Get.find<AvatarEditorController>().randomizeBtnBuilder.build();
+}
+
+class FadeSwitcherController extends GetxController with GetSingleTickerProviderStateMixin {
+  FadeSwitcherController(Widget child) {
+    this.child = child.obs;
+  }
+  late final AnimationController animController =
+      AnimationController(vsync: this, duration: duration);
+  late final Animation<double> animation =
+      CurvedAnimation(parent: animController, curve: Curves.linear);
+  static const Duration duration = Duration(milliseconds: 100);
+
+  late Rx<Widget> child;
+
+  void change(Widget newChild) {
+    child.value = Stack(
+      children: [
+        newChild,
+        FadeTransition(opacity: animation, child: child.value),
+      ],
+    );
+    animController.reverse(from: 1).then((_) {
+      child.value = newChild;
+    });
+  }
+
+  @override
+  void onClose() {
+    animController.dispose();
+    super.onClose();
+  }
 }
