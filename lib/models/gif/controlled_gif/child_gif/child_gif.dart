@@ -1,7 +1,7 @@
+import 'package:cd_mobile/models/gif/controlled_gif/builder.dart';
 import 'package:cd_mobile/models/gif/gif.dart';
-import 'package:cd_mobile/models/gif/single_gif/single_gif.dart';
-import 'package:cd_mobile/models/gif/single_gif/child_gif/controller.dart';
-import 'package:cd_mobile/models/gif/single_gif/child_gif/custom_painter.dart';
+import 'package:cd_mobile/models/gif/single_gif.dart';
+import 'package:cd_mobile/models/gif/controlled_gif/child_gif/custom_painter.dart';
 import 'package:cd_mobile/models/shadow_info.dart';
 import 'dart:ui' as ui;
 
@@ -23,12 +23,8 @@ class ChildGifModel extends SingleGifModel<ChildGifModel> {
 }
 
 // ignore: must_be_immutable
-class ChildGifBuilder extends GifBuilder<ChildGifModel> {
-  ChildGifBuilder(super.model, {super.key}) {
-    controller ??= ChildGifController(model.frames.length, model.frames[0].duration);
-  }
-
-  static ChildGifController? controller;
+class ChildGifBuilder extends ControlledGifBuilder<ChildGifModel> {
+  ChildGifBuilder(super.model, {super.key});
 
   @override
   GifBuilder<GifModel> doFitSize({double? height, double? width}) {
@@ -59,7 +55,7 @@ class ChildGifBuilder extends GifBuilder<ChildGifModel> {
                     opacity: info.opacity,
                     child: CustomPaint(
                         painter: model.getCustomPainter(
-                          controller!.currentFrameIndex.value,
+                          ControlledGifBuilder.controller.currentFrameIndex.value,
                           Paint()
                             ..colorFilter = const ColorFilter.mode(Colors.black, BlendMode.srcATop),
                         ),
@@ -72,7 +68,7 @@ class ChildGifBuilder extends GifBuilder<ChildGifModel> {
 
   Widget get _origin => Obx(()=>CustomPaint(
         painter: ChildGifCustomPainter(
-            model.rect, model.frames[controller!.currentFrameIndex.value].image, Paint()),
+            model.rect, model.frames[ControlledGifBuilder.controller.currentFrameIndex.value].image, Paint()),
         child: SizedBox(
             width: model.rect.width,
             height: model.rect.height), // to make gif animated, have to put SizedBox into this

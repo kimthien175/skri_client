@@ -1,16 +1,14 @@
-part of 'controller.dart';
+// ignore: must_be_immutable
+import 'package:cd_mobile/models/gif/controlled_gif/avatar/custom_painter.dart';
+import 'package:cd_mobile/models/gif/controlled_gif/avatar/model.dart';
+import 'package:cd_mobile/models/gif/controlled_gif/builder.dart';
+import 'package:cd_mobile/models/shadow_info.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 // ignore: must_be_immutable
-class AvatarBuilder extends GifBuilder<AvatarModel> {
-  AvatarBuilder(super.model, {super.key}) {
-    var standardFrames = model.color.frames;
-    if (AvatarController.isEmpty) {
-      AvatarController._inst =
-          AvatarController._internal(standardFrames.length, standardFrames[0].duration);
-    }
-  }
-
-  AvatarController get controller => AvatarController.inst;
+class AvatarBuilder extends ControlledGifBuilder<AvatarModel> {
+  AvatarBuilder(super.model, {super.key});
 
   @override
   AvatarBuilder doFitSize({double? height, double? width}) {
@@ -27,7 +25,8 @@ class AvatarBuilder extends GifBuilder<AvatarModel> {
   @override
   AvatarBuilder init({Color? color}) {
     widget = Obx(() => CustomPaint(
-        painter: AvatarCustomPainter(model, controller.currentFrameIndex.value, Paint()),
+        painter: AvatarCustomPainter(
+            model, ControlledGifBuilder.controller.currentFrameIndex.value, Paint()),
         child: SizedBox(height: model.height, width: model.width)));
     return this;
   }
@@ -42,13 +41,14 @@ class AvatarBuilder extends GifBuilder<AvatarModel> {
                   child: CustomPaint(
                       painter: AvatarCustomPainter(
                           model,
-                          controller.currentFrameIndex.value,
+                          ControlledGifBuilder.controller.currentFrameIndex.value,
                           Paint()
                             ..colorFilter =
                                 const ColorFilter.mode(Colors.black, BlendMode.srcATop)),
                       child: SizedBox(height: model.height, width: model.width)))),
           CustomPaint(
-              painter: AvatarCustomPainter(model, controller.currentFrameIndex.value, Paint()))
+              painter: AvatarCustomPainter(
+                  model, ControlledGifBuilder.controller.currentFrameIndex.value, Paint()))
         ]));
     return this;
   }

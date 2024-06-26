@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:cd_mobile/models/game/player.dart';
-import 'package:cd_mobile/models/gif/avatar/model.dart';
+import 'package:cd_mobile/models/gif/controlled_gif/avatar/model.dart';
 import 'package:cd_mobile/models/gif_manager.dart';
 import 'package:cd_mobile/pages/home/widgets/avatar_editor/jiggle_avatar.dart';
 import 'package:cd_mobile/utils/styles.dart';

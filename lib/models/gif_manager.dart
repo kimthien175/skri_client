@@ -1,7 +1,7 @@
 import 'dart:core';
-import 'package:cd_mobile/models/gif/single_gif/child_gif/child_gif.dart';
-import 'package:cd_mobile/models/gif/single_gif/full_gif/full_gif.dart';
-import 'package:cd_mobile/models/gif/single_gif/single_gif.dart';
+import 'package:cd_mobile/models/gif/controlled_gif/child_gif/child_gif.dart';
+import 'package:cd_mobile/models/gif/full_gif/full_gif.dart';
+import 'package:cd_mobile/models/gif/single_gif.dart';
 import 'package:cd_mobile/utils/read_json.dart';
 import 'package:flutter/services.dart';
 import 'dart:ui' as ui;

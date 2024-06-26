@@ -1,4 +1,4 @@
-import 'package:cd_mobile/models/gif/avatar/model.dart';
+import 'package:cd_mobile/models/gif/controlled_gif/avatar/model.dart';
 import 'package:flutter/material.dart';
 
 class AvatarCustomPainter extends CustomPainter {

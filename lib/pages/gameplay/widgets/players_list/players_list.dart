@@ -1,5 +1,5 @@
 import 'package:cd_mobile/models/game/player.dart';
-import 'package:cd_mobile/models/gif/avatar/model.dart';
+import 'package:cd_mobile/models/gif/controlled_gif/avatar/model.dart';
 import 'package:cd_mobile/pages/gameplay/widgets/players_list/player_card.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';

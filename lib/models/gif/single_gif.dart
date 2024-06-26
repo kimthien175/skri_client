@@ -1,4 +1,4 @@
-import '../gif.dart';
+import 'gif.dart';
 import 'dart:ui' as ui;
 
 abstract class SingleGifModel<MODEL_TYPE extends GifModel<MODEL_TYPE>> extends GifModel<MODEL_TYPE>{

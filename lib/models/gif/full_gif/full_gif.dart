@@ -1,6 +1,6 @@
 import 'package:cd_mobile/models/gif/gif.dart';
-import 'package:cd_mobile/models/gif/single_gif/single_gif.dart';
-import 'package:cd_mobile/models/gif/single_gif/full_gif/custom_painter.dart';
+import 'package:cd_mobile/models/gif/single_gif.dart';
+import 'package:cd_mobile/models/gif/full_gif/custom_painter.dart';
 import 'package:cd_mobile/models/shadow_info.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -37,9 +37,6 @@ class FullGifModel extends SingleGifModel<FullGifModel> {
 
   @override
   FullGifBuilder get builder => FullGifBuilder(this);
-
-  // @override
-  // FullGifBuilder get builder => FullGifBuilder(this);
 }
 
 // ignore: must_be_immutable
