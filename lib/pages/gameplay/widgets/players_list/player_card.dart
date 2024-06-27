@@ -1,12 +1,12 @@
 import 'package:cd_mobile/models/game/player.dart';
 import 'package:cd_mobile/models/gif_manager.dart';
 import 'package:cd_mobile/pages/gameplay/widgets/players_list/players_list.dart';
+import 'package:cd_mobile/utils/dialog.dart';
 import 'package:cd_mobile/utils/styles.dart';
 import 'package:cd_mobile/widgets/animated_button/builder.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-// TODO: CLICK TO SHOW PLAYER INFO
 class PlayerController extends GetxController with GetSingleTickerProviderStateMixin {
   late final AnimationController animController = AnimationController(
       duration: AnimatedButtonBuilder.duration,
@@ -14,6 +14,7 @@ class PlayerController extends GetxController with GetSingleTickerProviderStateM
       lowerBound: 1 / PlayerCard.avatarMaxScale);
   late final Animation<double> animation =
       CurvedAnimation(parent: animController, curve: Curves.linear);
+
   @override
   void onClose() {
     animController.dispose();
@@ -26,17 +27,18 @@ class PlayerCard extends StatelessWidget {
   final Player info;
   final int index;
 
-  static const double avatarMaxScale = 1.15;
+  static const double avatarMaxScale = 1.2;
+
+  void showInfo(){
+    GameDialog(title: info.nameForCard).show();
+  }
 
   @override
   Widget build(BuildContext context) {
     var lastIndex = Get.find<PlayersListController>().players.length - 1;
     var controller = Get.find<PlayerController>(tag: index.toString());
     return GestureDetector(
-        onTap: () => showDialog(
-            context: context,
-            builder: (ctx) =>
-                AlertDialog(title: Text(info.nameForCard), content: const Text('hello world'))),
+        onTap: showInfo,
         child: MouseRegion(
             onEnter: (_) {
               controller.animController.forward();
