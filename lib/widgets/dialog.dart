@@ -1,24 +1,34 @@
-import 'package:cd_mobile/utils/overlay.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-// ignore: must_be_immutable
-class GameDialog extends StatefulWidget {
-  GameDialog({required this.title, super.key});
+mixin GameOverlay on Widget {
+  OverlayEntry? _entry;
 
-  OverlayEntry? entry;
-  final String title;
+  bool get isShowing => _entry != null;
 
   show() {
-    entry = OverlayEntry(builder: (ct) => this);
-    addOverlay(entry!);
+    if (_entry != null) return;
+
+    _entry = OverlayEntry(builder: (ct) => this);
+    final overlayState = Navigator.of(Get.overlayContext!, rootNavigator: false).overlay!;
+
+    overlayState.insert(_entry!);
   }
 
-  onClose() {
-    entry?.remove();
-    entry?.dispose();
-    entry = null;
+  hide() {
+    if (_entry == null) return;
+
+    _entry?.remove();
+    _entry?.dispose();
+    _entry = null;
   }
+}
+
+// ignore: must_be_immutable
+class GameDialog extends StatefulWidget with GameOverlay {
+  GameDialog({required this.title, super.key});
+
+  final String title;
 
   @override
   State<GameDialog> createState() => _GameDialogState();
@@ -76,7 +86,7 @@ class _GameDialogState extends State<GameDialog> with SingleTickerProviderStateM
                           children: [
                             // title
                             Padding(
-                                padding: const EdgeInsets.only(top: 13.5, left: 13.5, right: 13.5),
+                                padding: const EdgeInsets.only(top: 13.5, left: 13.5, right: 40),
                                 child: Text(widget.title,
                                     style: const TextStyle(
                                         color: Colors.white,
@@ -91,7 +101,7 @@ class _GameDialogState extends State<GameDialog> with SingleTickerProviderStateM
                         child: GestureDetector(
                             onTap: () {
                               animController.reverse().then((_) {
-                                widget.onClose();
+                                widget.hide();
                               });
                             },
                             child: StatefulBuilder(
@@ -109,7 +119,6 @@ class _GameDialogState extends State<GameDialog> with SingleTickerProviderStateM
                                                 ? Colors.white
                                                 : const Color.fromRGBO(170, 170, 170, 1),
                                             height: 1,
-                                            // fontWeight: FontWeight.w800
                                             fontVariations: const [FontVariation('wght', 850)]))))))
                   ])),
             )));

@@ -57,7 +57,7 @@ class GameplayPage extends StatelessWidget {
                       image: AssetImage('assets/background.png'))),
               child: SafeArea(child: Obx(
                 () {
-                  if (!ResourcesController.inst.isLoaded.value) return const LoadingOverlay();
+                  if (!ResourcesController.inst.isLoaded.value) return LoadingOverlay.inst;
                   return const Web();
                   //return context.width >= context.height ? const Web() : const Mobile();
                 },

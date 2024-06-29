@@ -17,7 +17,7 @@ class PlayButton extends StatelessWidget {
         if (roomCode == null) return;
 
         if (RegExp(r'^[a-z0-9]{4,}$').hasMatch(roomCode!)) {
-          LoadingManager.inst.show();
+          LoadingOverlay.inst.show();
           PrivateGame.join(roomCode!);
         } else {
           showDialog(

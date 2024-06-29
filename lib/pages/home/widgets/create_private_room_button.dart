@@ -14,7 +14,7 @@ class CreatePrivateRoomButton extends StatelessWidget {
         height: 40,
         onTap: () {
           // set home to loading state
-          LoadingManager.inst.show();
+          LoadingOverlay.inst.show();
           // init private room
           PrivateGame.host();
         },

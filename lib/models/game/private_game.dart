@@ -85,7 +85,7 @@ class PrivateGame extends Game {
                   content: Text(requestedRoomResult['data'].toString())));
         }
 
-        LoadingManager.inst.hide();
+        LoadingOverlay.inst.hide();
         inst.eventHandlers.onConnect = SessionEventHandlers.emptyOnConnect;
       });
     };
@@ -167,7 +167,7 @@ class PrivateGame extends Game {
                   content: Text(requestedJoiningRoomResult['data'].toString())));
         }
 
-        LoadingManager.inst.hide();
+        LoadingOverlay.inst.hide();
         inst.eventHandlers.onConnect = SessionEventHandlers.emptyOnConnect;
       });
     };
@@ -189,7 +189,7 @@ class PrivateGame extends Game {
               title: title,
               middleText: '${"create_private_room_error_content".tr}\n${error.toString()}',
               onCancel: () {
-                LoadingManager.inst.hide();
+                LoadingOverlay.inst.hide();
 
                 dialogOpenCount = 0;
               },
@@ -197,8 +197,8 @@ class PrivateGame extends Game {
         }
       } else {
         // at gameplay page
-        if (!LoadingManager.inst.isLoading) {
-          LoadingManager.inst.show();
+        if (!LoadingOverlay.inst.isShowing) {
+          LoadingOverlay.inst.show();
         }
 
         if (dialogOpenCount == 0) {

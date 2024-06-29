@@ -24,7 +24,7 @@ class CreditsPage extends StatelessWidget {
                   image: AssetImage('assets/background.png'),
                 )),
                 child: Obx(() {
-                  if (!ResourcesController.inst.isLoaded.value) return const LoadingOverlay();
+                  if (!ResourcesController.inst.isLoaded.value) return LoadingOverlay.inst;
 
                   return SafeArea(
                       child: SizedBox(

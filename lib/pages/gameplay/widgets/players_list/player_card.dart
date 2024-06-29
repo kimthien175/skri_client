@@ -1,7 +1,7 @@
 import 'package:cd_mobile/models/game/player.dart';
 import 'package:cd_mobile/models/gif_manager.dart';
 import 'package:cd_mobile/pages/gameplay/widgets/players_list/players_list.dart';
-import 'package:cd_mobile/utils/dialog.dart';
+import 'package:cd_mobile/widgets/dialog.dart';
 import 'package:cd_mobile/utils/styles.dart';
 import 'package:cd_mobile/widgets/animated_button/builder.dart';
 import 'package:flutter/material.dart';
@@ -29,7 +29,7 @@ class PlayerCard extends StatelessWidget {
 
   static const double avatarMaxScale = 1.2;
 
-  void showInfo(){
+  void showInfo() {
     GameDialog(title: info.nameForCard).show();
   }
 
