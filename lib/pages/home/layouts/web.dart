@@ -7,7 +7,6 @@ import 'package:cd_mobile/pages/home/widgets/create_private_room_button.dart';
 import 'package:cd_mobile/pages/home/widgets/lang_selector.dart';
 import 'package:cd_mobile/pages/home/widgets/name_input.dart';
 import 'package:cd_mobile/pages/home/widgets/play_button.dart';
-import 'package:cd_mobile/utils/navigator_observer.dart';
 import 'package:cd_mobile/utils/styles.dart';
 import 'package:cd_mobile/widgets/logo.dart';
 import 'package:cd_mobile/pages/home/widgets/random_avatars.dart';
@@ -22,8 +21,10 @@ class Web extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final verticalScrollDetails = ScrollableDetails.vertical(controller: ScrollController());
-    final horizontalScrollDetails = ScrollableDetails.horizontal(controller: ScrollController());
+    final verticalScrollDetails =
+        ScrollableDetails.vertical(controller: ScrollController());
+    final horizontalScrollDetails =
+        ScrollableDetails.horizontal(controller: ScrollController());
     return Scrollbar(
         thumbVisibility: true,
         trackVisibility: true,
@@ -36,41 +37,40 @@ class Web extends StatelessWidget {
                 verticalDetails: verticalScrollDetails,
                 horizontalDetails: horizontalScrollDetails,
                 delegate: SingleChild2DDelegate(
-                    child: Container(
-                        constraints: BoxConstraints(minHeight: context.height),
+                    child: SizedBox(
                         width: max(context.width, minWidth),
-                        child: Column(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                          Column(
-                            mainAxisSize: MainAxisSize.min,
+                        child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              const SizedBox(height: 25),
-                              Logo(() {
-                                Logo.clearUrl();
-                                if (MyNavigatorObserver.inst.lenght > 1) {
-                                  Get.back();
-                                }
-                              }),
-                              const SizedBox(height: 10),
-                              const RandomAvatars(),
-                              const SizedBox(height: 40),
-                              Container(
-                                  padding: PanelStyles.padding,
-                                  decoration: PanelStyles.webDecoration,
-                                  width: PanelStyles.width,
-                                  child: const Column(
-                                    children: [
-                                      Row(children: [NameInput(), LangSelector()]),
-                                      AvatarEditor(),
-                                      PlayButton(),
-                                      SizedBox(height: 10),
-                                      CreatePrivateRoomButton(),
-                                    ],
-                                  )),
-                              const SizedBox(height: 20)
-                            ],
-                          ),
-                          const Column(
-                              mainAxisSize: MainAxisSize.min, children: [Triangle(), Footer()])
-                        ]))))));
+                              Column(
+                                children: [
+                                  const SizedBox(height: 25),
+                                  const Logo(Logo.clearUrl),
+                                  const SizedBox(height: 10),
+                                  const RandomAvatars(),
+                                  const SizedBox(height: 40),
+                                  Container(
+                                      padding: PanelStyles.padding,
+                                      decoration: PanelStyles.webDecoration,
+                                      width: PanelStyles.width,
+                                      child: const Column(
+                                        children: [
+                                          Row(children: [
+                                            NameInput(),
+                                            LangSelector()
+                                          ]),
+                                          AvatarEditor(),
+                                          PlayButton(),
+                                          SizedBox(height: 10),
+                                          CreatePrivateRoomButton(),
+                                        ],
+                                      )),
+                                  const SizedBox(height: 20)
+                                ],
+                              ),
+                              const Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [Triangle(), Footer()])
+                            ]))))));
   }
 }

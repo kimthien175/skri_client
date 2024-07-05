@@ -7,7 +7,8 @@ import 'package:cd_mobile/widgets/animated_button/builder.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class PlayerController extends GetxController with GetSingleTickerProviderStateMixin {
+class PlayerController extends GetxController
+    with GetSingleTickerProviderStateMixin {
   late final AnimationController animController = AnimationController(
       duration: AnimatedButtonBuilder.duration,
       vsync: this,
@@ -26,6 +27,8 @@ class PlayerCard extends StatelessWidget {
   const PlayerCard({required this.info, required this.index, super.key});
   final Player info;
   final int index;
+
+  static const double width = 200.0;
 
   static const double avatarMaxScale = 1.2;
 
@@ -53,16 +56,17 @@ class PlayerCard extends StatelessWidget {
                       borderRadius: index == 0
                           ? (index == lastIndex
                               ? BorderRadius.circular(3)
-                              : const BorderRadiusDirectional.vertical(top: Radius.circular(3)))
+                              : const BorderRadiusDirectional.vertical(
+                                  top: Radius.circular(3)))
                           : (index == lastIndex
-                              ? const BorderRadiusDirectional.vertical(bottom: Radius.circular(3))
+                              ? const BorderRadiusDirectional.vertical(
+                                  bottom: Radius.circular(3))
                               : BorderRadius.zero),
                       color: index % 2 == 0
                           ? GameplayStyles.colorPlayerBGBase
                           : GameplayStyles.colorPlayerBGBase_2),
                   height: 48,
-                  width: 200,
-                  //alignment: Alignment.center,
+                  width: width,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -71,13 +75,16 @@ class PlayerCard extends StatelessWidget {
                               fontSize: 14,
                               fontWeight: FontWeight.w800,
                               color:
-                                  // false //info.id == MePlayer.inst.id
+                                  //info.id == MePlayer.inst.id
                                   //     ? GameplayStyles.colorPlayerMe
                                   //     :
                                   Colors.black,
                               height: 1.1)),
                       const Text('0 points',
-                          style: TextStyle(fontSize: 12.6, height: 1, fontWeight: FontWeight.w700))
+                          style: TextStyle(
+                              fontSize: 12.6,
+                              height: 1,
+                              fontWeight: FontWeight.w600))
                     ],
                   )),
               Positioned(
@@ -85,21 +92,24 @@ class PlayerCard extends StatelessWidget {
                   right: -48 * (avatarMaxScale - 1) / 2,
                   child: ScaleTransition(
                       scale: controller.animation,
-                      child: info.avatar
-                          .doFitSize(height: 48 * avatarMaxScale, width: 48 * avatarMaxScale))),
+                      child: info.avatar.doFitSize(
+                          height: 48 * avatarMaxScale,
+                          width: 48 * avatarMaxScale))),
               Positioned(
                   top: 5,
                   left: 6,
                   child: Text(
                     '#${index + 1}',
-                    style: const TextStyle(fontSize: 15.4, fontWeight: FontWeight.w900),
+                    style: const TextStyle(
+                        fontSize: 15.4, fontWeight: FontWeight.w700),
                   )),
               if (info.isOwner == true)
                 Positioned(
                     bottom: 0,
                     left: 4,
-                    child:
-                        Opacity(opacity: 0.7, child: GifManager.inst.misc('owner').builder.init()))
+                    child: Opacity(
+                        opacity: 0.7,
+                        child: GifManager.inst.misc('owner').builder.init()))
             ])));
   }
 }

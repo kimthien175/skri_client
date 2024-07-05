@@ -76,7 +76,7 @@ class _RenderTwoDimensionalViewport extends RenderTwoDimensionalViewport {
   void layoutChildSequence() {
     var child = buildOrObtainChildFor(const ChildVicinity(xIndex: 0, yIndex: 0))!;
 
-    child.layout(const BoxConstraints(), parentUsesSize: true);
+    child.layout(BoxConstraints(minHeight: viewportDimension.height, minWidth: viewportDimension.width), parentUsesSize: true);
 
     parentDataOf(child).layoutOffset = Offset(-horizontalOffset.pixels, -verticalOffset.pixels);
 

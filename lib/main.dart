@@ -23,21 +23,20 @@ void main() {
     debugShowCheckedModeBanner: false,
     title: 'Material App',
     initialRoute: '/gameplay ',
+    defaultTransition: Transition.noTransition,
     getPages: [
+      GetPage(name: '/', page: () => const HomePage(), binding: HomeBindings()),
       GetPage(
-          name: '/',
-          page: () => const HomePage(),
-          transition: Transition.noTransition,
-          binding: HomeBindings()),
-      GetPage(name: '/terms', page: () => const TermsPage(), transition: Transition.noTransition),
+        name: '/terms',
+        page: () => const TermsPage(),
+      ),
       GetPage(
-          name: '/credits', page: () => const CreditsPage(), transition: Transition.noTransition),
+        name: '/credits',
+        page: () => const CreditsPage(),
+      ),
       GetPage(
-          name: '/gameplay',
-          page: () => const GameplayPage(),
-          transition: Transition.noTransition,
-          binding: GameplayBinding())
+          name: '/gameplay', page: () => const GameplayPage(), binding: GameplayBinding())
     ],
-    navigatorObservers: [MyNavigatorObserver.inst],
+    navigatorObservers: [NavObserver],
   ));
 }

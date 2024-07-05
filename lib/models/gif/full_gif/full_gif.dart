@@ -22,8 +22,8 @@ class FullGifModel extends SingleGifModel<FullGifModel> {
     }
     //#endregion
 
-    return FullGifModel(
-        path, frames, frames[0].image.width.toDouble(), frames[0].image.height.toDouble());
+    return FullGifModel(path, frames, frames[0].image.width.toDouble(),
+        frames[0].image.height.toDouble());
   }
 
   FullGifModel(this.path, super.frames, super._width, super._height);
@@ -31,7 +31,8 @@ class FullGifModel extends SingleGifModel<FullGifModel> {
   final String path;
 
   @override
-  CustomPainter getCustomPainter(int frameIndex, Paint paint, {Offset offset = Offset.zero}) {
+  CustomPainter getCustomPainter(int frameIndex, Paint paint,
+      {Offset offset = Offset.zero}) {
     return FullGifCustomPainter(frames[frameIndex].image, paint, offset: offset);
   }
 
@@ -51,7 +52,8 @@ class FullGifBuilder extends GifBuilder<FullGifModel> {
   }
 
   @override
-  GifBuilder<GifModel> initShadowedOrigin({Color? color, ShadowInfo info = const ShadowInfo()}) {
+  GifBuilder<GifModel> initShadowedOrigin(
+      {Color? color, ShadowInfo info = const ShadowInfo()}) {
     this.color = color;
     widget = Stack(clipBehavior: Clip.none, children: [
       Transform.translate(
@@ -75,7 +77,7 @@ class FullGifBuilder extends GifBuilder<FullGifModel> {
   }
 
   Widget get _origin => Image.asset(model.path, color: color);
-  
+
   @override
   GifBuilder<GifModel> doFreezeSize() {
     widget = SizedBox(height: model.height, width: model.width, child: widget);

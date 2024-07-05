@@ -24,7 +24,9 @@ class CreditsPage extends StatelessWidget {
                   image: AssetImage('assets/background.png'),
                 )),
                 child: Obx(() {
-                  if (!ResourcesController.inst.isLoaded.value) return LoadingOverlay.inst;
+                  if (!ResourcesController.inst.isLoaded.value) {
+                    return LoadingOverlay.inst;
+                  }
 
                   return SafeArea(
                       child: SizedBox(
@@ -38,14 +40,7 @@ class CreditsPage extends StatelessWidget {
                               MediaQuery.of(context).padding.right,
                           child: Column(children: [
                             SizedBox(height: 25, width: Get.width),
-                            Logo(() {
-                              var homeStackIndex = MyNavigatorObserver.inst.indexOf('/');
-                              if (homeStackIndex != -1) {
-                                Get.close(MyNavigatorObserver.inst.lenght - homeStackIndex - 1);
-                              } else {
-                                Get.toNamed('/');
-                              }
-                            }),
+                            Logo(() => Get.safelyToNamed('/')),
                             const SizedBox(height: 50),
                             Container(
                                 width: 400,
@@ -57,17 +52,24 @@ class CreditsPage extends StatelessWidget {
                                 child: HtmlWidget("credits_content".tr,
                                     customStylesBuilder: (element) {
                                   if (element.localName == 'h1') {
-                                    return {'font-size': '2em', 'font-weight': 'bold'};
+                                    return {
+                                      'font-size': '2em',
+                                      'font-weight': 'bold'
+                                    };
                                   } else if (element.localName == 'a') {
                                     return {
                                       'color': '#b4baff',
                                       'cursor': 'pointer',
                                       'text-decoration': 'underline',
                                       'text-decoration-color':
-                                          const Color.fromRGBO(180, 186, 255, 1).toHex()
+                                          const Color.fromRGBO(180, 186, 255, 1)
+                                              .toHex()
                                     };
                                   } else if (element.localName == 'b') {
-                                    return {'font-weight': 'bold', 'color': '#fff'};
+                                    return {
+                                      'font-weight': 'bold',
+                                      'color': '#fff'
+                                    };
                                   }
                                   return null;
                                 }, onTapUrl: (String? url) async {

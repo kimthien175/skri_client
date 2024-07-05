@@ -1,41 +1,50 @@
-import 'package:cd_mobile/models/game/game.dart';
 import 'package:cd_mobile/models/gif_manager.dart';
 import 'package:cd_mobile/utils/styles.dart';
-import 'package:cd_mobile/widgets/animated_button/builder.dart';
-import 'package:cd_mobile/widgets/animated_button/decorator.dart';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import 'players_list/player_card.dart';
+
 class GameBar extends StatelessWidget {
   const GameBar({super.key});
+  static const double height = 48.0;
   @override
   Widget build(BuildContext context) {
-    var namedGifs = GifManager.inst.misc;
     return Container(
-        height: 48,
-        width: 1312,
-        // constraints:  BoxConstraints.expand(height:_height),
+        constraints: const BoxConstraints.expand(height: height),
         decoration: BoxDecoration(
-            color: GameplayStyles.colorPlayerBGBase, borderRadius: GlobalStyles.borderRadius),
+            color: GameplayStyles.colorPlayerBGBase,
+            borderRadius: GlobalStyles.borderRadius),
         child: Row(
           children: [
-            Stack(alignment: Alignment.centerLeft, clipBehavior: Clip.none, children: [
-              const SizedBox(width: 200, height: 48),
-              const Positioned(top: -10, left: -8, child: GameClock()),
-              Positioned(
-                  left: 60,
-                  top: 13,
-                  child:
-                      //Obx(() =>
-                      Text(
-                          "gamebar_round_display".trParams({
-                            "currentRound": '0', //Game.inst.currentRound.value.toString(),
-                            "rounds": '0' //Game.inst.rounds.value.toString()
-                          }),
-                          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w800)))
-              //)
-            ]),
-            //Flexible(child: Center(child: Obx(() => Game.inst.state.value.middleStatusOnBar))),
+            Stack(
+                alignment: Alignment.centerLeft,
+                clipBehavior: Clip.none,
+                children: [
+                  const SizedBox(width: PlayerCard.width, height: height),
+                  const Positioned(top: -10, left: -8, child: GameClock()),
+                  Positioned(
+                      left: 60,
+                      top: 13,
+                      child:
+                          //Obx(() =>
+                          Text(
+                              "gamebar_round_display".trParams({
+                                "currentRound":
+                                    '1', //Game.inst.currentRound.value.toString(),
+                                "rounds":
+                                    '3' //Game.inst.rounds.value.toString()
+                              }),
+                              style: const TextStyle(
+                                  fontFamily: 'Nunito-var',
+                                  fontSize: 19.6,
+                                  //   letterSpacing: 0.01,
+                                  //   wordSpacing: 0,
+                                  fontVariations: [FontVariation.weight(720)])))
+                  //)
+                ]),
+            //  Flexible(child: Center(child: Obx(() => Game.inst.state.value.middleStatusOnBar))),
             // TODO: FIXING GAMEPLAY PAGE
             // Container(
             //     width: 300,
@@ -55,30 +64,29 @@ class GameBar extends StatelessWidget {
   }
 }
 
+// TODO: ADD EFFECT WHEN ALMOST RUN OUT OF TIME
 class GameClock extends StatelessWidget {
   const GameClock({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-        height: 64,
-        width: 64,
-        child: Stack(
-          alignment: Alignment.center,
-          children: [
-            GifManager.inst
-                .misc('clock')
-                .builder
-                .initShadowedOrigin()
-                .doFitSize(width: 64, height: 64),
-            Positioned(
-                top: 20,
-                child:
-                    //Obx(() =>
-                    Text('0', //Game.inst.remainingTime.seconds.value.toString(),
-                        style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w900)))
-            //)
-          ],
-        ));
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        GifManager.inst
+            .misc('clock')
+            .builder
+            .initShadowedOrigin()
+            .doFitSize(width: 64, height: 64),
+        const Positioned(
+            top: 20,
+            child:
+                //Obx(() =>
+                Text('0', //Game.inst.remainingTime.seconds.value.toString(),
+                    style:
+                        TextStyle(fontSize: 22, fontWeight: FontWeight.w800)))
+        //)
+      ],
+    );
   }
 }
