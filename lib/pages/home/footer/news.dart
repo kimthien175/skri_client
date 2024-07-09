@@ -45,7 +45,7 @@ class NewsContent extends StatelessWidget {
                           child: Padding(
                               padding: const EdgeInsets.only(right: 17),
                               child: HtmlWidget(element.outerHtml,
-                                  textStyle: TextStyle(
+                                  textStyle: const TextStyle(
                                       color: PanelStyles.textColor,
                                       fontSize: 18,
                                       fontWeight: FontWeight.w600),
@@ -57,7 +57,7 @@ class NewsContent extends StatelessWidget {
       } else if (controller.error.value) {
         return Center(
             child: Text('news_error'.tr,
-                style: TextStyle(
+                style: const TextStyle(
                     color: PanelStyles.textColor, fontWeight: FontWeight.w700, fontSize: 18)));
       }
 

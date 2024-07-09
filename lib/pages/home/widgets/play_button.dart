@@ -32,7 +32,7 @@ class PlayButton extends StatelessWidget {
       height: 54,
       borderRadius: GlobalStyles.borderRadius,
       child: Text('play_button'.tr,
-          style: TextStyle(
+          style: const TextStyle(
               fontSize: 32,
               color: PanelStyles.textColor,
               fontWeight: FontWeight.w800,

@@ -1,3 +1,4 @@
+import 'package:cd_mobile/utils/styles.dart';
 import 'package:flutter/material.dart';
 
 class HoverButton extends StatelessWidget {
@@ -7,9 +8,9 @@ class HoverButton extends StatelessWidget {
       required this.color,
       required this.hoverColor,
       this.onTap,
-      this.borderRadius = BorderRadius.zero,
-      this.height = double.infinity,
-      this.width = double.infinity});
+      this.borderRadius = GlobalStyles.borderRadius,
+      this.height,
+      this.width});
 
   final Widget child;
   final Color color;
@@ -17,8 +18,8 @@ class HoverButton extends StatelessWidget {
   final void Function()? onTap;
   final BorderRadius borderRadius;
 
-  final double width;
-  final double height;
+  final double? width;
+  final double? height;
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +40,7 @@ class HoverButton extends StatelessWidget {
             child: GestureDetector(
                 onTap: onTap,
                 child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 80),
+                    duration: const Duration(milliseconds: 80),
                     height: height,
                     width: width,
                     alignment: Alignment.center,

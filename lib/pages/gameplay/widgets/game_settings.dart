@@ -88,7 +88,7 @@ class GameSettings extends StatelessWidget {
                               borderRadius: GlobalStyles.borderRadius,
                             ),
                             child: Text('start'.tr,
-                                style: TextStyle(
+                                style: const TextStyle(
                                     fontSize: 32,
                                     color: PanelStyles.textColor,
                                     fontWeight: FontWeight.w800,
@@ -328,7 +328,7 @@ class _UseCustomWordsOnlyCheckbox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Obx(() => Checkbox(
-      // TODO: CHANGED FROM MATERIALSTATEPROPERTY TO THIS, TEST AGAIN
+        // TODO: CHANGED FROM MATERIALSTATEPROPERTY TO THIS, TEST AGAIN
         fillColor: WidgetStateProperty.resolveWith((states) {
           // TODO: CHANGED FROM MATERIALSTATE TO THIS, TEST AGAIN
           if (states.contains(WidgetState.selected)) {

@@ -23,7 +23,7 @@ class HowToPlayContent extends GetView<HowToPlayContentController> {
             height: 48,
             child: Obx(() => Text('section_how_to_play_step${controller.step}'.tr,
                 textAlign: TextAlign.center,
-                style: TextStyle(
+                style: const TextStyle(
                     color: PanelStyles.textColor, fontSize: 16, fontWeight: FontWeight.w500)))),
         const Row(
           mainAxisAlignment: MainAxisAlignment.center,

@@ -25,7 +25,7 @@ class Section extends StatelessWidget {
               children: [
                 Center(
                     child: Text(title,
-                        style: TextStyle(
+                        style: const TextStyle(
                             color: PanelStyles.textColor,
                             fontWeight: FontWeight.bold,
                             fontSize: 24))),
@@ -56,7 +56,7 @@ class Section extends StatelessWidget {
                 children: [
                   Center(
                       child: Text(title,
-                          style: TextStyle(
+                          style: const TextStyle(
                               color: PanelStyles.textColor,
                               fontWeight: FontWeight.w800,
                               fontSize: 22))),

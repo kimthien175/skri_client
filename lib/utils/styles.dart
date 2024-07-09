@@ -32,8 +32,7 @@ import 'package:get/get.dart';
 //   --COLOR_PANEL_TEXT:#f0f0f0;
 //   --COLOR_PANEL_TEXT_FOCUS:white;
 //   --COLOR_PANEL_TEXT_PLACEHOLDER:#9b9b9b;
-//   --COLOR_PANEL_BUTTON:#2a51d1;
-//   --COLOR_PANEL_BUTTON_HOVER:#1e44be;
+
 //   --COLOR_PANEL_BUTTON_ACTIVE:#1d40b4;
 //   --COLOR_TOOL_BASE:white;
 //   --COLOR_TOOL_HOVER:#c5c5c5;
@@ -170,7 +169,7 @@ import 'package:get/get.dart';
 //};
 //}
 class PanelStyles {
-  static Color textColor = const Color(0xfff0f0f0);
+  static const Color textColor = Color(0xfff0f0f0);
   static const EdgeInsetsGeometry padding = EdgeInsets.all(15);
   static const BoxDecoration webDecoration =
       BoxDecoration(color: PanelStyles.color, borderRadius: GlobalStyles.borderRadius);
@@ -192,7 +191,9 @@ class InputStyles {
 
 class GlobalStyles {
   static const BorderRadius borderRadius = BorderRadius.all(Radius.circular(3));
-  static Shadow textShadow = const Shadow(color: Color(0x2b000000), offset: Offset(2, 2));
+  static const Shadow textShadow = Shadow(color: Color(0x2b000000), offset: Offset(2, 2));
+  static const Color colorPanelButton = Color(0xff2a51d1);
+  static const Color colorPanelButtonHover = Color(0xff1e44be);
 }
 
 class GameplayStyles {
