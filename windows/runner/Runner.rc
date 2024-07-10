@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "com.example" "\0"
-            VALUE "FileDescription", "cd_mobile" "\0"
+            VALUE "FileDescription", "skribbl_client" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "cd_mobile" "\0"
+            VALUE "InternalName", "skribbl_client" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2023 com.example. All rights reserved." "\0"
-            VALUE "OriginalFilename", "cd_mobile.exe" "\0"
-            VALUE "ProductName", "cd_mobile" "\0"
+            VALUE "OriginalFilename", "skribbl_client.exe" "\0"
+            VALUE "ProductName", "skribbl_client" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

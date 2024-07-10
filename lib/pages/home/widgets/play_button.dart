@@ -1,7 +1,7 @@
-import 'package:cd_mobile/models/game/private_game.dart';
-import 'package:cd_mobile/utils/styles.dart';
-import 'package:cd_mobile/widgets/hover_button.dart';
-import 'package:cd_mobile/widgets/loading.dart';
+import 'package:skribbl_client/models/game/private_game.dart';
+import 'package:skribbl_client/utils/styles.dart';
+import 'package:skribbl_client/widgets/hover_button.dart';
+import 'package:skribbl_client/widgets/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 

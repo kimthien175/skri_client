@@ -2,8 +2,8 @@
 
 import 'dart:ui';
 
-import 'package:cd_mobile/pages/gameplay/widgets/draw/step/fill.dart';
-import 'package:cd_mobile/utils/socket_io.dart';
+import 'package:skribbl_client/pages/gameplay/widgets/draw/step/fill.dart';
+import 'package:skribbl_client/utils/socket_io.dart';
 
 import '../manager.dart';
 import 'step.dart';

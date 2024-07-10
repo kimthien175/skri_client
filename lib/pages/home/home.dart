@@ -1,12 +1,12 @@
-import 'package:cd_mobile/pages/home/footer/news.dart';
-import 'package:cd_mobile/pages/home/footer/tutorial.dart';
-import 'package:cd_mobile/pages/home/layouts/mobile.dart';
-import 'package:cd_mobile/pages/home/layouts/web.dart';
-import 'package:cd_mobile/pages/home/widgets/avatar_editor/controller.dart';
-import 'package:cd_mobile/pages/home/widgets/play_button.dart';
-import 'package:cd_mobile/pages/home/widgets/random_avatars.dart';
-import 'package:cd_mobile/utils/start_up.dart';
-import 'package:cd_mobile/widgets/loading.dart';
+import 'package:skribbl_client/pages/home/footer/news.dart';
+import 'package:skribbl_client/pages/home/footer/tutorial.dart';
+import 'package:skribbl_client/pages/home/layouts/mobile.dart';
+import 'package:skribbl_client/pages/home/layouts/web.dart';
+import 'package:skribbl_client/pages/home/widgets/avatar_editor/controller.dart';
+import 'package:skribbl_client/pages/home/widgets/play_button.dart';
+import 'package:skribbl_client/pages/home/widgets/random_avatars.dart';
+import 'package:skribbl_client/utils/start_up.dart';
+import 'package:skribbl_client/widgets/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 

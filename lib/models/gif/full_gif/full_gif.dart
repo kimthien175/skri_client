@@ -1,7 +1,7 @@
-import 'package:cd_mobile/models/gif/gif.dart';
-import 'package:cd_mobile/models/gif/single_gif.dart';
-import 'package:cd_mobile/models/gif/full_gif/custom_painter.dart';
-import 'package:cd_mobile/models/shadow_info.dart';
+import 'package:skribbl_client/models/gif/gif.dart';
+import 'package:skribbl_client/models/gif/single_gif.dart';
+import 'package:skribbl_client/models/gif/full_gif/custom_painter.dart';
+import 'package:skribbl_client/models/shadow_info.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:ui' as ui;

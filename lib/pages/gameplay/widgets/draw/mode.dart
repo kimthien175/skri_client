@@ -1,4 +1,4 @@
-import 'package:cd_mobile/pages/gameplay/widgets/draw/step/brush.dart';
+import 'package:skribbl_client/pages/gameplay/widgets/draw/step/brush.dart';
 import 'package:flutter/material.dart';
 
 import 'step/fill.dart';

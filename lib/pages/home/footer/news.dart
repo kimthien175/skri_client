@@ -1,5 +1,5 @@
-import 'package:cd_mobile/utils/api.dart';
-import 'package:cd_mobile/utils/styles.dart';
+import 'package:skribbl_client/utils/api.dart';
+import 'package:skribbl_client/utils/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:get/get.dart';

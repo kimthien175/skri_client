@@ -1,6 +1,6 @@
 {
-    "name": "cd_mobile",
-    "short_name": "cd_mobile",
+    "name": "skribbl_client",
+    "short_name": "skribbl_client",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

@@ -1,4 +1,4 @@
-import 'package:cd_mobile/widgets/animated_button/decorator.dart';
+import 'package:skribbl_client/widgets/animated_button/decorator.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 

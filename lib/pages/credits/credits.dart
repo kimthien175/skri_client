@@ -1,9 +1,9 @@
-import 'package:cd_mobile/pages/home/footer/about.dart';
-import 'package:cd_mobile/utils/navigator_observer.dart';
-import 'package:cd_mobile/utils/start_up.dart';
-import 'package:cd_mobile/utils/styles.dart';
-import 'package:cd_mobile/widgets/loading.dart';
-import 'package:cd_mobile/widgets/logo.dart';
+import 'package:skribbl_client/pages/home/footer/about.dart';
+import 'package:skribbl_client/utils/navigator_observer.dart';
+import 'package:skribbl_client/utils/start_up.dart';
+import 'package:skribbl_client/utils/styles.dart';
+import 'package:skribbl_client/widgets/loading.dart';
+import 'package:skribbl_client/widgets/logo.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart';
 import 'package:get/get.dart';

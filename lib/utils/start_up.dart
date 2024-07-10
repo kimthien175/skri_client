@@ -1,4 +1,4 @@
-import 'package:cd_mobile/models/gif_manager.dart';
+import 'package:skribbl_client/models/gif_manager.dart';
 import 'package:get/get.dart';
 
 class ResourcesController extends GetxController {

@@ -1,4 +1,4 @@
-import 'package:cd_mobile/models/shadow_info.dart';
+import 'package:skribbl_client/models/shadow_info.dart';
 import 'package:flutter/material.dart';
 
 abstract class GifModel<MODEL_TYPE extends GifModel<MODEL_TYPE>> {

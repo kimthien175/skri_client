@@ -1,8 +1,8 @@
-import 'package:cd_mobile/pages/home/footer/about.dart';
-import 'package:cd_mobile/pages/home/footer/news.dart';
-import 'package:cd_mobile/pages/home/footer/section.dart';
-import 'package:cd_mobile/pages/home/footer/tutorial.dart';
-import 'package:cd_mobile/utils/styles.dart';
+import 'package:skribbl_client/pages/home/footer/about.dart';
+import 'package:skribbl_client/pages/home/footer/news.dart';
+import 'package:skribbl_client/pages/home/footer/section.dart';
+import 'package:skribbl_client/pages/home/footer/tutorial.dart';
+import 'package:skribbl_client/utils/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';

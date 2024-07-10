@@ -1,16 +1,16 @@
 import 'dart:math';
 
-import 'package:cd_mobile/pages/home/widgets/avatar_editor/avatar_editor.dart';
-import 'package:cd_mobile/pages/home/footer/footer.dart';
-import 'package:cd_mobile/pages/home/footer/triangle.dart';
-import 'package:cd_mobile/pages/home/widgets/create_private_room_button.dart';
-import 'package:cd_mobile/pages/home/widgets/lang_selector.dart';
-import 'package:cd_mobile/pages/home/widgets/name_input.dart';
-import 'package:cd_mobile/pages/home/widgets/play_button.dart';
-import 'package:cd_mobile/utils/styles.dart';
-import 'package:cd_mobile/widgets/logo.dart';
-import 'package:cd_mobile/pages/home/widgets/random_avatars.dart';
-import 'package:cd_mobile/widgets/single_child_2d_scroll_view.dart';
+import 'package:skribbl_client/pages/home/widgets/avatar_editor/avatar_editor.dart';
+import 'package:skribbl_client/pages/home/footer/footer.dart';
+import 'package:skribbl_client/pages/home/footer/triangle.dart';
+import 'package:skribbl_client/pages/home/widgets/create_private_room_button.dart';
+import 'package:skribbl_client/pages/home/widgets/lang_selector.dart';
+import 'package:skribbl_client/pages/home/widgets/name_input.dart';
+import 'package:skribbl_client/pages/home/widgets/play_button.dart';
+import 'package:skribbl_client/utils/styles.dart';
+import 'package:skribbl_client/widgets/logo.dart';
+import 'package:skribbl_client/pages/home/widgets/random_avatars.dart';
+import 'package:skribbl_client/widgets/single_child_2d_scroll_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 

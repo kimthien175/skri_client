@@ -1,6 +1,6 @@
 import 'dart:typed_data';
 
-import 'package:cd_mobile/utils/socket_io.dart';
+import 'package:skribbl_client/utils/socket_io.dart';
 import 'package:flutter/material.dart';
 
 import '../draw/manager.dart';

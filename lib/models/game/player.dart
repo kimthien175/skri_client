@@ -1,5 +1,5 @@
-import 'package:cd_mobile/models/gif/controlled_gif/avatar/builder.dart';
-import 'package:cd_mobile/models/gif/controlled_gif/avatar/model.dart';
+import 'package:skribbl_client/models/gif/controlled_gif/avatar/builder.dart';
+import 'package:skribbl_client/models/gif/controlled_gif/avatar/model.dart';
 import 'package:get/get.dart';
 
 class Player {

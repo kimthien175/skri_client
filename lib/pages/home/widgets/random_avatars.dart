@@ -1,7 +1,7 @@
 import 'dart:math';
-import 'package:cd_mobile/models/gif/controlled_gif/avatar/model.dart';
-import 'package:cd_mobile/models/gif/gif.dart';
-import 'package:cd_mobile/models/gif_manager.dart';
+import 'package:skribbl_client/models/gif/controlled_gif/avatar/model.dart';
+import 'package:skribbl_client/models/gif/gif.dart';
+import 'package:skribbl_client/models/gif_manager.dart';
 
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';

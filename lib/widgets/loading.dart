@@ -1,6 +1,6 @@
 import 'dart:ui';
 
-import 'package:cd_mobile/widgets/dialog.dart';
+import 'package:skribbl_client/widgets/dialog.dart';
 import 'package:flutter/material.dart';
 
 class LoadingIndicator extends StatefulWidget {

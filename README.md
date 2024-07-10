@@ -1,4 +1,4 @@
-# cd_mobile
+# skribbl_client
 
 A new Flutter project.
 

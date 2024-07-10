@@ -1,7 +1,7 @@
-import 'package:cd_mobile/widgets/animated_button/builder.dart';
-import 'package:cd_mobile/widgets/animated_button/decorator.dart';
-import 'package:cd_mobile/widgets/animated_button/decorators/tooltip/position.dart';
-import 'package:cd_mobile/widgets/dialog.dart';
+import 'package:skribbl_client/widgets/animated_button/builder.dart';
+import 'package:skribbl_client/widgets/animated_button/decorator.dart';
+import 'package:skribbl_client/widgets/animated_button/decorators/tooltip/position.dart';
+import 'package:skribbl_client/widgets/dialog.dart';
 import 'package:flutter/material.dart';
 
 // ignore: must_be_immutable

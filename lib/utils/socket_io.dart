@@ -1,10 +1,10 @@
-import 'package:cd_mobile/models/game/game.dart';
-import 'package:cd_mobile/models/game/message.dart';
-import 'package:cd_mobile/models/game/player.dart';
-import 'package:cd_mobile/models/game/private_game.dart';
-import 'package:cd_mobile/models/game/state/wait_for_setup.dart';
-import 'package:cd_mobile/pages/gameplay/widgets/game_settings.dart';
-import 'package:cd_mobile/utils/api.dart';
+import 'package:skribbl_client/models/game/game.dart';
+import 'package:skribbl_client/models/game/message.dart';
+import 'package:skribbl_client/models/game/player.dart';
+import 'package:skribbl_client/models/game/private_game.dart';
+import 'package:skribbl_client/models/game/state/wait_for_setup.dart';
+import 'package:skribbl_client/pages/gameplay/widgets/game_settings.dart';
+import 'package:skribbl_client/utils/api.dart';
 import 'package:get/get.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 

@@ -1,4 +1,4 @@
-import 'package:cd_mobile/widgets/animated_button/builder.dart';
+import 'package:skribbl_client/widgets/animated_button/builder.dart';
 import 'package:flutter/material.dart';
 
 class LikeAndDislikeButtons extends StatefulWidget {

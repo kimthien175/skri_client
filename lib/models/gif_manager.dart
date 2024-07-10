@@ -1,8 +1,8 @@
 import 'dart:core';
-import 'package:cd_mobile/models/gif/controlled_gif/child_gif/child_gif.dart';
-import 'package:cd_mobile/models/gif/full_gif/full_gif.dart';
-import 'package:cd_mobile/models/gif/single_gif.dart';
-import 'package:cd_mobile/utils/read_json.dart';
+import 'package:skribbl_client/models/gif/controlled_gif/child_gif/child_gif.dart';
+import 'package:skribbl_client/models/gif/full_gif/full_gif.dart';
+import 'package:skribbl_client/models/gif/single_gif.dart';
+import 'package:skribbl_client/utils/read_json.dart';
 import 'package:flutter/services.dart';
 import 'dart:ui' as ui;
 

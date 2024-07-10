@@ -1,6 +1,6 @@
-import 'package:cd_mobile/models/game/state/draw.dart';
-import 'package:cd_mobile/models/game/state/start_round.dart';
-import 'package:cd_mobile/models/game/state/wait_for_setup.dart';
+import 'package:skribbl_client/models/game/state/draw.dart';
+import 'package:skribbl_client/models/game/state/start_round.dart';
+import 'package:skribbl_client/models/game/state/wait_for_setup.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 

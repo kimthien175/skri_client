@@ -1,8 +1,8 @@
-import 'package:cd_mobile/models/game/game.dart';
-import 'package:cd_mobile/models/game/message.dart';
-import 'package:cd_mobile/models/game/player.dart';
-import 'package:cd_mobile/utils/socket_io.dart';
-import 'package:cd_mobile/utils/styles.dart';
+import 'package:skribbl_client/models/game/game.dart';
+import 'package:skribbl_client/models/game/message.dart';
+import 'package:skribbl_client/models/game/player.dart';
+import 'package:skribbl_client/utils/socket_io.dart';
+import 'package:skribbl_client/utils/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 

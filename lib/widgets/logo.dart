@@ -1,4 +1,4 @@
-import 'package:cd_mobile/models/gif_manager.dart';
+import 'package:skribbl_client/models/gif_manager.dart';
 import 'package:flutter/material.dart';
 // ignore: avoid_web_libraries_in_flutter
 import 'dart:html' as html;

@@ -1,15 +1,15 @@
 import 'dart:math';
 
-import 'package:cd_mobile/models/game/player.dart';
-import 'package:cd_mobile/models/gif/controlled_gif/avatar/model.dart';
-import 'package:cd_mobile/models/gif_manager.dart';
-import 'package:cd_mobile/pages/home/widgets/avatar_editor/jiggle_avatar.dart';
-import 'package:cd_mobile/utils/styles.dart';
-import 'package:cd_mobile/widgets/animated_button/builder.dart';
-import 'package:cd_mobile/widgets/animated_button/decorators/opacity.dart';
-import 'package:cd_mobile/widgets/animated_button/decorators/scale.dart';
-import 'package:cd_mobile/widgets/animated_button/decorators/tooltip/tooltip.dart';
-import 'package:cd_mobile/widgets/animated_button/decorators/tooltip/position.dart';
+import 'package:skribbl_client/models/game/player.dart';
+import 'package:skribbl_client/models/gif/controlled_gif/avatar/model.dart';
+import 'package:skribbl_client/models/gif_manager.dart';
+import 'package:skribbl_client/pages/home/widgets/avatar_editor/jiggle_avatar.dart';
+import 'package:skribbl_client/utils/styles.dart';
+import 'package:skribbl_client/widgets/animated_button/builder.dart';
+import 'package:skribbl_client/widgets/animated_button/decorators/opacity.dart';
+import 'package:skribbl_client/widgets/animated_button/decorators/scale.dart';
+import 'package:skribbl_client/widgets/animated_button/decorators/tooltip/tooltip.dart';
+import 'package:skribbl_client/widgets/animated_button/decorators/tooltip/position.dart';
 import 'package:get/get.dart';
 
 class AvatarEditorController extends GetxController {

@@ -1,5 +1,5 @@
-import 'package:cd_mobile/models/game/player.dart';
-import 'package:cd_mobile/utils/styles.dart';
+import 'package:skribbl_client/models/game/player.dart';
+import 'package:skribbl_client/utils/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';

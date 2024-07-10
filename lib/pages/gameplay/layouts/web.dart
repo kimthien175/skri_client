@@ -1,8 +1,8 @@
-import 'package:cd_mobile/pages/gameplay/widgets/game_bar.dart';
-import 'package:cd_mobile/pages/gameplay/widgets/players_list/players_list.dart';
-import 'package:cd_mobile/utils/styles.dart';
-import 'package:cd_mobile/widgets/logo.dart';
-import 'package:cd_mobile/widgets/single_child_2d_scroll_view.dart';
+import 'package:skribbl_client/pages/gameplay/widgets/game_bar.dart';
+import 'package:skribbl_client/pages/gameplay/widgets/players_list/players_list.dart';
+import 'package:skribbl_client/utils/styles.dart';
+import 'package:skribbl_client/widgets/logo.dart';
+import 'package:skribbl_client/widgets/single_child_2d_scroll_view.dart';
 import 'package:flutter/material.dart';
 
 class Web extends StatelessWidget {

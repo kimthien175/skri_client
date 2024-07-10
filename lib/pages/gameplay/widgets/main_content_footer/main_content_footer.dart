@@ -1,10 +1,10 @@
-import 'package:cd_mobile/models/game/game.dart';
-import 'package:cd_mobile/models/game/private_game.dart';
-import 'package:cd_mobile/pages/gameplay/widgets/game_settings.dart';
-import 'package:cd_mobile/pages/gameplay/widgets/invite_section.dart';
-import 'package:cd_mobile/pages/gameplay/widgets/main_content_footer/overlay.dart';
-import 'package:cd_mobile/pages/gameplay/widgets/main_content_footer/top_widget.dart';
-import 'package:cd_mobile/utils/styles.dart';
+import 'package:skribbl_client/models/game/game.dart';
+import 'package:skribbl_client/models/game/private_game.dart';
+import 'package:skribbl_client/pages/gameplay/widgets/game_settings.dart';
+import 'package:skribbl_client/pages/gameplay/widgets/invite_section.dart';
+import 'package:skribbl_client/pages/gameplay/widgets/main_content_footer/overlay.dart';
+import 'package:skribbl_client/pages/gameplay/widgets/main_content_footer/top_widget.dart';
+import 'package:skribbl_client/utils/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 

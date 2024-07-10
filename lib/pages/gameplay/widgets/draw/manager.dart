@@ -1,6 +1,6 @@
-import 'package:cd_mobile/pages/gameplay/widgets/draw/step/clear.dart';
-import 'package:cd_mobile/pages/gameplay/widgets/draw/widgets/stroke_value_item.dart';
-import 'package:cd_mobile/utils/socket_io.dart';
+import 'package:skribbl_client/pages/gameplay/widgets/draw/step/clear.dart';
+import 'package:skribbl_client/pages/gameplay/widgets/draw/widgets/stroke_value_item.dart';
+import 'package:skribbl_client/utils/socket_io.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 

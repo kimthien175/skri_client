@@ -1,13 +1,13 @@
 import 'dart:math';
 
-import 'package:cd_mobile/models/game/game.dart';
-import 'package:cd_mobile/models/game/player.dart';
-import 'package:cd_mobile/models/game/state/draw.dart';
-import 'package:cd_mobile/models/game/state/game_state.dart';
-import 'package:cd_mobile/pages/gameplay/widgets/main_content_footer/main_content_footer.dart';
-import 'package:cd_mobile/pages/gameplay/widgets/main_content_footer/overlay.dart';
-import 'package:cd_mobile/pages/gameplay/widgets/main_content_footer/top_widget.dart';
-import 'package:cd_mobile/utils/datetime.dart';
+import 'package:skribbl_client/models/game/game.dart';
+import 'package:skribbl_client/models/game/player.dart';
+import 'package:skribbl_client/models/game/state/draw.dart';
+import 'package:skribbl_client/models/game/state/game_state.dart';
+import 'package:skribbl_client/pages/gameplay/widgets/main_content_footer/main_content_footer.dart';
+import 'package:skribbl_client/pages/gameplay/widgets/main_content_footer/overlay.dart';
+import 'package:skribbl_client/pages/gameplay/widgets/main_content_footer/top_widget.dart';
+import 'package:skribbl_client/utils/datetime.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 

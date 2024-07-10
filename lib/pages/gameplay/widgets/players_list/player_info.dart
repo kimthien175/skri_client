@@ -1,6 +1,6 @@
-import 'package:cd_mobile/models/game/player.dart';
-import 'package:cd_mobile/utils/styles.dart';
-import 'package:cd_mobile/widgets/hover_button.dart';
+import 'package:skribbl_client/models/game/player.dart';
+import 'package:skribbl_client/utils/styles.dart';
+import 'package:skribbl_client/widgets/hover_button.dart';
 import 'package:flutter/material.dart';
 
 class PlayerInfo extends StatelessWidget {

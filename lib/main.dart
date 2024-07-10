@@ -1,10 +1,10 @@
-import 'package:cd_mobile/generated/locales.g.dart';
-import 'package:cd_mobile/pages/credits/credits.dart';
-import 'package:cd_mobile/pages/gameplay/gameplay.dart';
-import 'package:cd_mobile/pages/home/home.dart';
-import 'package:cd_mobile/pages/terms/terms.dart';
-import 'package:cd_mobile/utils/navigator_observer.dart';
-import 'package:cd_mobile/utils/start_up.dart';
+import 'package:skribbl_client/generated/locales.g.dart';
+import 'package:skribbl_client/pages/credits/credits.dart';
+import 'package:skribbl_client/pages/gameplay/gameplay.dart';
+import 'package:skribbl_client/pages/home/home.dart';
+import 'package:skribbl_client/pages/terms/terms.dart';
+import 'package:skribbl_client/utils/navigator_observer.dart';
+import 'package:skribbl_client/utils/start_up.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 // ignore: depend_on_referenced_packages
