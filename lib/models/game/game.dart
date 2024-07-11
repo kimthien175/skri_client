@@ -6,7 +6,11 @@ import 'package:skribbl_client/models/game/player.dart';
 import 'package:skribbl_client/pages/gameplay/widgets/main_content_footer/top_widget.dart';
 import 'package:skribbl_client/utils/socket_io.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+
+// ignore: avoid_web_libraries_in_flutter
+import 'dart:html' as html;
 
 abstract class Game extends GetxController {
   Game(
@@ -15,8 +19,7 @@ abstract class Game extends GetxController {
       required this.state,
       required this.playersByList,
       required this.roomCode,
-      required this.settings
-      }) {
+      required this.settings}) {
     for (int i = 0; i < playersByList.length; i++) {
       var rxPlayer = playersByList[i];
       playersByMap[rxPlayer.id] = rxPlayer;
@@ -26,13 +29,20 @@ abstract class Game extends GetxController {
   static Game get inst => _inst!;
   static set inst(Game game) => _inst = game;
 
+  String roomCode;
+  String get inviteLink => '${html.window.location.host}/?$roomCode';
+
+  copyLink() {
+    Clipboard.setData(ClipboardData(text: Game.inst.inviteLink)).then(
+        (value) => Game.inst.addMessage((color) => LinkCopiedMessage(backgroundColor: color)));
+  }
+
   GameTimer remainingTime = GameTimer(0);
   RxInt rounds;
   RxInt currentRound;
   RxList<Player> playersByList;
   Map<String, Player> playersByMap = {};
-  String roomCode;
-    RxMap<String, dynamic> settings;
+  RxMap<String, dynamic> settings;
 
   /// edit on this won't cause emiting to socketio
   RxList<Message> messages = List<Message>.empty().obs;

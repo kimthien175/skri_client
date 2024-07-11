@@ -28,45 +28,35 @@
     "custom_words_input_placeholder": "Minimum of @min_words words. @min_char_per_word-@max_char_per_word characters per word! @max_char characters maximum. Separated by a , (comma)",
     "start": "Start!",
     "custom_words": "Custom words",
-    "use_custom_words_only":"Use custom words only",
-    "invite_your_friends":"Invite your friends!",
-    "hover_over_me_to_see_the_invite_link":"Hover over me to see the invite link!",
-
-    "custom_words_input_validate_words_count":"Please put in more words, at least @min_words in total",
-
-    "custom_words_input_validate_ignore_title":"Invalid words, they will get ignored:",
-    "custom_words_input_validate_not_words":"Not words: @specialCharsWords",
-    "custom_words_input_validate_invalid_word_length":"Invalid word length: @invalidLengthWords!, must be @min_char_per_word-@max_char_per_word characters",
-    "custom_words_input_validate_duplicated_words":"Duplicated words: @duplicatedWords",
-
-    "guess_input_placeholder":"Type your guess here...",
-
-    "message_room_owner_statement":"@room_owner is now the room owner!",
-    "message_new_player_joined":"@player_name joined the room!",
+    "use_custom_words_only": "Use custom words only",
+    "invite_your_friends": "Invite your friends!",
+    "hover_over_me_to_see_the_invite_link": "Hover over me to see the invite link!",
+    "custom_words_input_validate_words_count": "Please put in more words, at least @min_words in total",
+    "custom_words_input_validate_ignore_title": "Invalid words, they will get ignored:",
+    "custom_words_input_validate_not_words": "Not words: @specialCharsWords",
+    "custom_words_input_validate_invalid_word_length": "Invalid word length: @invalidLengthWords!, must be @min_char_per_word-@max_char_per_word characters",
+    "custom_words_input_validate_duplicated_words": "Duplicated words: @duplicatedWords",
+    "guess_input_placeholder": "Type your guess here...",
+    "message_room_owner_statement": "@room_owner is now the room owner!",
+    "message_new_player_joined": "@player_name joined the room!",
     "message_player_leave": "@player_name left the room!",
-    "message_you_need_at_least_2_players":"You need at least 2 players to start the game!",
-    "message_link_copied":"Copied room link to clipboard!",
-    "message_player_won":"@playerName won with a score of @score!",
-    "message_player_draw":"@playerName is drawing now!",
-
-    "WORD_HIDDEN":"WORD HIDDEN",
-    "GUESS_THIS":"GUESS THIS",
-    "DRAW_THIS":"DRAW THIS",
-
-    "create_private_room_error_title":"Connection Error: can't create private room right now",
-    "create_private_room_error_content":"Press Cancel to abort trying to connect",
-
-    "join_private_room_error_title":"Connection Error: can't join private room right now",
-    "wrong_private_room_code":"Can't connect to room, pls check the link again",
-    
-    "gameplay_connection_error":"If you want to keep trying to reconnect, please hold, or press Cancel to disconnect",
-
-    "gamebar_round_display":"Round @currentRound of @rounds",
-
+    "message_you_need_at_least_2_players": "You need at least 2 players to start the game!",
+    "message_link_copied": "Copied room link to clipboard!",
+    "message_player_won": "@playerName won with a score of @score!",
+    "message_player_draw": "@playerName is drawing now!",
+    "WORD_HIDDEN": "WORD HIDDEN",
+    "GUESS_THIS": "GUESS THIS",
+    "DRAW_THIS": "DRAW THIS",
+    "create_private_room_error_title": "Connection Error: can't create private room right now",
+    "create_private_room_error_content": "Press Cancel to abort trying to connect",
+    "join_private_room_error_title": "Connection Error: can't join private room right now",
+    "wrong_private_room_code": "Can't connect to room, pls check the link again",
+    "gameplay_connection_error": "If you want to keep trying to reconnect, please hold, or press Cancel to disconnect",
+    "gamebar_round_display": "Round @currentRound of @rounds",
     "round_noti": "Round @round",
-    "player_choosing":"@playerName is choosing a word",
-    "choose_a_word":"Choose a word",
-    "randomize_your_avatar":"Randomize your Avatar!",
-
-    "news_error":"Can't get any news!!"
+    "player_choosing": "@playerName is choosing a word",
+    "choose_a_word": "Choose a word",
+    "randomize_your_avatar": "Randomize your Avatar!",
+    "news_error": "Can't get any news!!",
+    "click_to_copy_invite": "Click to copy Invite"
 }

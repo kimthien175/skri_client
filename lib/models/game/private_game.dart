@@ -10,8 +10,6 @@ import 'package:skribbl_client/utils/socket_io.dart';
 import 'package:skribbl_client/widgets/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-// ignore: avoid_web_libraries_in_flutter
-import 'dart:html' as html;
 
 class PrivateGame extends Game {
   PrivateGame._internal(
@@ -32,8 +30,6 @@ class PrivateGame extends Game {
     settings[key] = value;
     SocketIO.inst.socket.emit('change_settings', {key: value});
   }
-
-  String get inviteLink => '${html.window.location.host}/?$roomCode';
 
   static Future<void> host() async {
     // set up me player

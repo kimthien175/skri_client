@@ -34,27 +34,30 @@ class PlayerCard extends StatelessWidget {
 
   void showInfo() {
     GameDialog(
+        exitTap: true,
         title: info.nameForCard,
         content: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
             info.avatar.doFitSize(height: 150, width: 150),
-            const Column(
+            Column(
               children: [
-                Text('Invite your friends!',
-                    style: TextStyle(
+                Text('invite_your_friends'.tr,
+                    style: const TextStyle(
                         fontSize: 19.5,
                         color: Colors.white,
                         fontVariations: [FontVariation.weight(500)])),
-                SizedBox(height: 7.5),
+                const SizedBox(height: 7.5),
                 HoverButton(
+                    // TODO: WHEN GAME LOGIC DONE, UNCOMMENT THIS
+                    //onTap: Game.inst.copyLink,
                     height: 34.5,
                     width: 200,
                     color: GlobalStyles.colorPanelButton,
                     hoverColor: GlobalStyles.colorPanelButtonHover,
                     child: Text(
-                      'Click to copy Invite',
-                      style: TextStyle(
+                      'click_to_copy_invite'.tr,
+                      style: const TextStyle(
                           fontSize: 15,
                           fontVariations: [FontVariation.weight(800)],
                           color: PanelStyles.textColor,

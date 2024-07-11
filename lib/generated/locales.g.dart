@@ -80,6 +80,7 @@ class LocaleKeys {
   static const choose_a_word = 'choose_a_word';
   static const randomize_your_avatar = 'randomize_your_avatar';
   static const news_error = 'news_error';
+  static const click_to_copy_invite = 'click_to_copy_invite';
   static const You = 'You';
   static const Normal = 'Normal';
   static const Hidden = 'Hidden';
@@ -170,6 +171,7 @@ class Locales {
     'choose_a_word': 'Choose a word',
     'randomize_your_avatar': 'Randomize your Avatar!',
     'news_error': 'Can\'t get any news!!',
+    'click_to_copy_invite': 'Click to copy Invite',
   };
   static const vi_VN = {
     'displayName': 'Tiếng Việt',
@@ -253,5 +255,6 @@ class Locales {
     'choose_a_word': 'Chọn 1 từ',
     'randomize_your_avatar': 'Ngẫu nhiên Avatar của bạn!',
     'news_error': 'Không tìm thấy tin tức nào hết!!',
+    'click_to_copy_invite': 'Bấm để sao chép lời mời',
   };
 }

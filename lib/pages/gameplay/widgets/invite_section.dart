@@ -1,68 +1,61 @@
 import 'package:skribbl_client/models/game/game.dart';
-import 'package:skribbl_client/models/game/message.dart';
-import 'package:skribbl_client/models/game/private_game.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:skribbl_client/widgets/animated_button/builder.dart';
 
-class InviteSection extends StatelessWidget{
+class InviteSection extends StatelessWidget {
   const InviteSection({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              'invite_your_friends'.tr,
-              style:
-                  const TextStyle(color: Colors.white, fontSize: 28, fontWeight: FontWeight.w800),
-            ),
-            SizedBox(
-                height: 33,
-                child: Row(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-                  Expanded(flex: 85, child: _InviteLink()),
-                  const Expanded(
-                    flex: 15,
-                    child: _CopyButton(),
-                  )
-                ]))
-          ],
-        );
+    return Column(mainAxisSize: MainAxisSize.min, children: [
+      Text(
+        'invite_your_friends'.tr,
+        style: const TextStyle(color: Colors.white, fontSize: 28, fontWeight: FontWeight.w800),
+      ),
+      const SizedBox(
+          height: 33,
+          child: Row(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+            Expanded(flex: 85, child: _InviteLink()),
+            Expanded(
+              flex: 15,
+              child: _CopyButton(),
+            )
+          ]))
+    ]);
   }
 }
 
 class _InviteLink extends StatelessWidget {
-  _InviteLink();
-  final controller = _InviteLinkController();
+  const _InviteLink();
   @override
   Widget build(BuildContext context) {
-    return MouseRegion(
-        onEnter: (event) => controller.isHover.value = true,
-        onExit: (event) => controller.isHover.value = false,
-        child: Container(
-            decoration: BoxDecoration(
-                color: Colors.white,
-                border: Border.all(color: const Color.fromRGBO(112, 112, 112, 1)),
-                borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(3), bottomLeft: Radius.circular(3))),
-            alignment: Alignment.center,
-            child: Obx(() => controller.isHover.value
-                ? Text((Game.inst as PrivateGame).inviteLink,
-                    style: const TextStyle(
-                        fontSize: 18.2,
-                        color: Color.fromRGBO(44, 44, 44, 1),
-                        fontWeight: FontWeight.w400))
-                : Text('hover_over_me_to_see_the_invite_link'.tr,
-                    style: const TextStyle(
-                        color: Color.fromRGBO(44, 141, 231, 1),
-                        fontWeight: FontWeight.w800,
-                        fontSize: 18.2)))));
+    bool isHover = false;
+    return StatefulBuilder(
+        builder: (ct, setState) => MouseRegion(
+            onEnter: (event) => setState(() => isHover = true),
+            onExit: (event) => setState(() => isHover = false),
+            child: Container(
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    border: Border.all(color: const Color.fromRGBO(112, 112, 112, 1)),
+                    borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(3), bottomLeft: Radius.circular(3))),
+                alignment: Alignment.center,
+                child: AnimatedSwitcher(
+                    duration: AnimatedButtonBuilder.duration,
+                    child: isHover
+                        ? Text(Game.inst.inviteLink,
+                            style: const TextStyle(
+                                fontSize: 18.2,
+                                color: Color.fromRGBO(44, 44, 44, 1),
+                                fontWeight: FontWeight.w400))
+                        : Text('hover_over_me_to_see_the_invite_link'.tr,
+                            style: const TextStyle(
+                                color: Color.fromRGBO(44, 141, 231, 1),
+                                fontWeight: FontWeight.w800,
+                                fontSize: 18.2))))));
   }
-}
-
-class _InviteLinkController extends GetxController {
-  RxBool isHover = false.obs;
 }
 
 class _CopyButton extends StatelessWidget {
@@ -73,10 +66,7 @@ class _CopyButton extends StatelessWidget {
     return MouseRegion(
         cursor: SystemMouseCursors.click,
         child: GestureDetector(
-            onTap: () {
-              Clipboard.setData(ClipboardData(text: (Game.inst as PrivateGame).inviteLink)).then(
-                  (value) => Game.inst.addMessage((color) => LinkCopiedMessage(backgroundColor: color)));
-            },
+            onTap: Game.inst.copyLink,
             child: Container(
                 decoration: const BoxDecoration(
                     color: Color.fromRGBO(44, 141, 231, 1),
