@@ -2,7 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:skribbl_client/widgets/animated_button/builder.dart';
+import 'package:skribbl_client/widgets/animated_button/animated_button.dart';
 
 mixin GameOverlay on Widget {
   OverlayEntry? _entry;
@@ -139,7 +139,7 @@ class _CloseIcon extends StatefulWidget {
 
 class _CloseIconState extends State<_CloseIcon> with SingleTickerProviderStateMixin {
   late final AnimationController controller =
-      AnimationController(duration: AnimatedButtonBuilder.duration, vsync: this);
+      AnimationController(duration: AnimatedButton.duration, vsync: this);
   late final Animation<Color?> colorAnim =
       ColorTween(begin: const Color.fromRGBO(170, 170, 170, 1), end: Colors.white)
           .animate(controller);

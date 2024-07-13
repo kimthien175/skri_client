@@ -22,7 +22,7 @@ void main() {
     fallbackLocale: const Locale('en', 'US'),
     debugShowCheckedModeBanner: false,
     title: 'Material App',
-    initialRoute: '/gameplay ',
+    initialRoute: '/gameplay',
     defaultTransition: Transition.noTransition,
     getPages: [
       GetPage(name: '/', page: () => const HomePage(), binding: HomeBindings()),

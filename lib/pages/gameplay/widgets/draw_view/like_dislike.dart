@@ -1,4 +1,4 @@
-import 'package:skribbl_client/widgets/animated_button/builder.dart';
+import 'package:skribbl_client/widgets/animated_button/animated_button.dart';
 import 'package:flutter/material.dart';
 
 class LikeAndDislikeButtons extends StatefulWidget {
@@ -17,28 +17,28 @@ class _LikeAndDislikeButtonsState extends State<LikeAndDislikeButtons> {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            AnimatedButtonBuilder(
-                child: Image.asset('assets/gif/thumbsup.gif'),
+            AnimatedButton(
                 onTap: () {
                   setState(() {
                     isVisible = false;
                   });
                   // TODO: SEND LIKE MSG
                 },
-                decorators: [
+                decorators: const [
                   // TODO: ADD SCALE DECORATOR
-                ]).build(),
-            AnimatedButtonBuilder(
-                child: Image.asset('assets/gif/thumbsdown.gif'),
+                ],
+                child: Image.asset('assets/gif/thumbsup.gif')),
+            AnimatedButton(
                 onTap: () {
                   setState(() {
                     isVisible = false;
                   });
-// TODO: SEND DISLIKE MSG
+                  // TODO: SEND DISLIKE MSG
                 },
-                decorators: [
+                decorators: const [
                   // TODO: ADD SCALE DECORATOR
-                ]).build()
+                ],
+                child: Image.asset('assets/gif/thumbsdown.gif'))
           ],
         ));
   }

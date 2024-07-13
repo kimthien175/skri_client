@@ -1,7 +1,8 @@
-import 'package:skribbl_client/widgets/animated_button/decorators/tooltip/controller.dart';
-import 'package:skribbl_client/widgets/animated_button/decorators/tooltip/tooltip.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
+import './controller.dart';
+import 'tooltip.dart';
 
 abstract class AnimatedButtonTooltipPosition {
   final ScaleTooltipController controller = ScaleTooltipController();

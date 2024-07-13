@@ -1,8 +1,10 @@
-import 'package:skribbl_client/widgets/animated_button/builder.dart';
-import 'package:skribbl_client/widgets/animated_button/decorator.dart';
-import 'package:skribbl_client/widgets/animated_button/decorators/tooltip/position.dart';
-import 'package:skribbl_client/widgets/dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:skribbl_client/widgets/dialog.dart';
+
+import '../../animated_button.dart';
+import '../../decorator.dart';
+
+export './position.dart';
 
 // ignore: must_be_immutable
 class AnimatedButtonTooltipDecorator extends StatelessWidget
@@ -23,18 +25,18 @@ class AnimatedButtonTooltipDecorator extends StatelessWidget
 
   static Color tooltipBackgroundColor = const Color.fromRGBO(69, 113, 255, 1.0);
 
-  AnimatedButtonBuilder? _builder;
+  AnimatedButtonState? _state;
 
   @override
-  void decorate(AnimatedButtonBuilder builder) {
-    _builder = builder;
+  void decorate(AnimatedButtonState state) {
+    _state = state;
 
-    builder.onEnterCallbacks.add((e) {
+    state.onEnterCallbacks.add((e) {
       show();
       position.controller.animController.forward();
     });
 
-    builder.onExitCallbacks.add((e) {
+    state.onExitCallbacks.add((e) {
       position.controller.animController.reverse().then((_) {
         hide();
       });
@@ -47,7 +49,7 @@ class AnimatedButtonTooltipDecorator extends StatelessWidget
   @override
   Widget build(BuildContext context) {
     return position.build(
-      originalBox: _builder!.buttonKey.currentContext!.findRenderObject() as RenderBox,
+      originalBox: _state!.buttonKey.currentContext!.findRenderObject() as RenderBox,
       scale: _scale(),
       child: DefaultTextStyle(
         style: const TextStyle(

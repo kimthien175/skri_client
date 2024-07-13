@@ -1,17 +1,15 @@
-import 'package:skribbl_client/widgets/animated_button/builder.dart';
-import 'package:skribbl_client/widgets/animated_button/decorator.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
+import '../animated_button.dart';
+import '../decorator.dart';
 
 class AnimatedButtonScaleDecorator extends GetxController
     with GetSingleTickerProviderStateMixin
     implements AnimatedButtonDecorator {
   AnimatedButtonScaleDecorator({double minSize = defaultMinSize, double maxSize = defaultMaxSIze}) {
     controller = AnimationController(
-        duration: AnimatedButtonBuilder.duration,
-        vsync: this,
-        lowerBound: minSize,
-        upperBound: maxSize);
+        duration: AnimatedButton.duration, vsync: this, lowerBound: minSize, upperBound: maxSize);
 
     animation = CurvedAnimation(parent: controller, curve: Curves.linear);
   }
@@ -22,16 +20,20 @@ class AnimatedButtonScaleDecorator extends GetxController
   static const double defaultMaxSIze = 1.0;
 
   @override
-  void decorate(AnimatedButtonBuilder builder) {
+  void decorate(AnimatedButtonState state) {
     // wrap the widget with ScaleTransition
-    var widget = builder.child;
-    builder.child = ScaleTransition(scale: animation, child: widget);
 
-    builder.onEnterCallbacks.add((_) {
+    state.child = ScaleTransition(
+      scale: animation,
+      filterQuality: FilterQuality.high,
+      child: state.child,
+    );
+
+    state.onEnterCallbacks.add((_) {
       controller.forward();
     });
 
-    builder.onExitCallbacks.add((_) {
+    state.onExitCallbacks.add((_) {
       controller.reverse();
     });
   }

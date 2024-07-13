@@ -4,12 +4,7 @@ import 'package:skribbl_client/models/game/player.dart';
 import 'package:skribbl_client/models/gif/controlled_gif/avatar/model.dart';
 import 'package:skribbl_client/models/gif_manager.dart';
 import 'package:skribbl_client/pages/home/widgets/avatar_editor/jiggle_avatar.dart';
-import 'package:skribbl_client/utils/styles.dart';
-import 'package:skribbl_client/widgets/animated_button/builder.dart';
-import 'package:skribbl_client/widgets/animated_button/decorators/opacity.dart';
-import 'package:skribbl_client/widgets/animated_button/decorators/scale.dart';
-import 'package:skribbl_client/widgets/animated_button/decorators/tooltip/tooltip.dart';
-import 'package:skribbl_client/widgets/animated_button/decorators/tooltip/position.dart';
+
 import 'package:get/get.dart';
 
 class AvatarEditorController extends GetxController {
@@ -20,19 +15,6 @@ class AvatarEditorController extends GetxController {
     mouth = rd.nextInt(GifManager.inst.mouthLength).obs;
 
     MePlayer.init(AvatarModel.init(color.value, eyes.value, mouth.value).builder.init());
-
-    randomizeBtnBuilder = AnimatedButtonBuilder(
-        child: GifManager.inst.misc('randomize').builder.init().doFitSize(height: 36, width: 36),
-        onTap: randomize,
-        decorators: [
-          AnimatedButtonScaleDecorator(),
-          AnimatedButtonTooltipDecorator(
-              tooltip: 'randomize_your_avatar'.tr,
-              position: TooltipPositionBottom(),
-              scale: () =>
-                  Get.width >= Get.height ? 1.0 : PanelStyles.widthOnMobile / PanelStyles.width),
-          AnimatedButtonOpacityDecorator(),
-        ]);
   }
 
   late final RxInt color;
@@ -43,7 +25,7 @@ class AvatarEditorController extends GetxController {
   void onClose() {
     jiggleEyes.dispose();
     jiggleMouth.dispose();
-    randomizeBtnBuilder.dispose();
+
     super.onClose();
   }
 
@@ -112,7 +94,6 @@ class AvatarEditorController extends GetxController {
     MePlayer.inst.avatar.model.color = GifManager.inst.color(color.value);
   }
 
-  late final AnimatedButtonBuilder randomizeBtnBuilder;
   void randomize() {
     var rd = Random();
     color.value = rd.nextInt(GifManager.inst.colorLength);

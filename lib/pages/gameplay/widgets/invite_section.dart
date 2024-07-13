@@ -1,7 +1,7 @@
 import 'package:skribbl_client/models/game/game.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:skribbl_client/widgets/animated_button/builder.dart';
+import 'package:skribbl_client/widgets/animated_button/animated_button.dart';
 
 class InviteSection extends StatelessWidget {
   const InviteSection({super.key});
@@ -43,7 +43,7 @@ class _InviteLink extends StatelessWidget {
                         topLeft: Radius.circular(3), bottomLeft: Radius.circular(3))),
                 alignment: Alignment.center,
                 child: AnimatedSwitcher(
-                    duration: AnimatedButtonBuilder.duration,
+                    duration: AnimatedButton.duration,
                     child: isHover
                         ? Text(Game.inst.inviteLink,
                             style: const TextStyle(

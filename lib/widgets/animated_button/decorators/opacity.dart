@@ -1,7 +1,8 @@
-import 'package:skribbl_client/widgets/animated_button/builder.dart';
-import 'package:skribbl_client/widgets/animated_button/decorator.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
+import '../animated_button.dart';
+import '../decorator.dart';
 
 class AnimatedButtonOpacityDecorator extends GetxController implements AnimatedButtonDecorator {
   AnimatedButtonOpacityDecorator({this.minOpacity = 0.5});
@@ -10,17 +11,17 @@ class AnimatedButtonOpacityDecorator extends GetxController implements AnimatedB
   final double minOpacity;
 
   @override
-  void decorate(AnimatedButtonBuilder builder) {
+  void decorate(AnimatedButtonState state) {
     // modify onEnter and onExit behavior
-    builder.onEnterCallbacks.add((e) => _visible.value = true);
-    builder.onExitCallbacks.add((e) => _visible.value = false);
+    state.onEnterCallbacks.add((e) => _visible.value = true);
+    state.onExitCallbacks.add((e) => _visible.value = false);
 
     // modify widget: wrap widget with AnimatedOpacity
 
-    var widget = builder.child;
-    builder.child = Obx(() => AnimatedOpacity(
+    var widget = state.child;
+    state.child = Obx(() => AnimatedOpacity(
         opacity: _visible.value ? 1 : minOpacity,
-        duration: AnimatedButtonBuilder.duration,
+        duration: AnimatedButton.duration,
         child: widget));
   }
 
@@ -28,7 +29,7 @@ class AnimatedButtonOpacityDecorator extends GetxController implements AnimatedB
   void onClose() {
     throw Exception('This controller is supposed to be standalone, not via Get.put');
   }
-  
+
   @override
   void Function() get clean => dispose;
 }

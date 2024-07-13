@@ -1,7 +1,6 @@
 import 'package:skribbl_client/models/gif/gif.dart';
-import 'package:skribbl_client/models/gif/single_gif.dart';
+
 import 'package:skribbl_client/models/gif/full_gif/custom_painter.dart';
-import 'package:skribbl_client/models/shadow_info.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:ui' as ui;
@@ -22,8 +21,8 @@ class FullGifModel extends SingleGifModel<FullGifModel> {
     }
     //#endregion
 
-    return FullGifModel(path, frames, frames[0].image.width.toDouble(),
-        frames[0].image.height.toDouble());
+    return FullGifModel(
+        path, frames, frames[0].image.width.toDouble(), frames[0].image.height.toDouble());
   }
 
   FullGifModel(this.path, super.frames, super._width, super._height);
@@ -31,8 +30,7 @@ class FullGifModel extends SingleGifModel<FullGifModel> {
   final String path;
 
   @override
-  CustomPainter getCustomPainter(int frameIndex, Paint paint,
-      {Offset offset = Offset.zero}) {
+  CustomPainter getCustomPainter(int frameIndex, Paint paint, {Offset offset = Offset.zero}) {
     return FullGifCustomPainter(frames[frameIndex].image, paint, offset: offset);
   }
 
@@ -47,19 +45,22 @@ class FullGifBuilder extends GifBuilder<FullGifModel> {
   @override
   GifBuilder<GifModel> init({Color? color}) {
     this.color = color;
-    widget = _origin;
+    widget = _origin();
     return this;
   }
 
   @override
   GifBuilder<GifModel> initShadowedOrigin(
-      {Color? color, ShadowInfo info = const ShadowInfo()}) {
+      {Color? color,
+      ShadowInfo info = const ShadowInfo(),
+      FilterQuality filterQuality = FilterQuality.low}) {
     this.color = color;
     widget = Stack(clipBehavior: Clip.none, children: [
       Transform.translate(
-          offset: Offset(info.offsetLeft, info.offsetTop),
-          child: Image.asset(model.path, color: Colors.black.withOpacity(info.opacity))),
-      _origin
+          offset: info.offset,
+          child: Image.asset(model.path,
+              color: Colors.black.withOpacity(info.opacity), filterQuality: filterQuality)),
+      _origin(filterQuality: filterQuality)
     ]);
     return this;
   }
@@ -76,7 +77,11 @@ class FullGifBuilder extends GifBuilder<FullGifModel> {
     return this;
   }
 
-  Widget get _origin => Image.asset(model.path, color: color);
+  Widget _origin({FilterQuality filterQuality = FilterQuality.low}) => Image.asset(
+        model.path,
+        color: color,
+        filterQuality: filterQuality,
+      );
 
   @override
   GifBuilder<GifModel> doFreezeSize() {

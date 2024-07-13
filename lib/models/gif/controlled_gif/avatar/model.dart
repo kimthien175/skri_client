@@ -2,8 +2,6 @@ import 'dart:ui' as ui;
 
 import 'package:skribbl_client/models/gif/controlled_gif/avatar/builder.dart';
 import 'package:skribbl_client/models/gif/controlled_gif/avatar/custom_painter.dart';
-import 'package:skribbl_client/models/gif/gif.dart';
-import 'package:skribbl_client/models/gif/single_gif.dart';
 import 'package:skribbl_client/models/gif_manager.dart';
 import 'package:flutter/material.dart';
 

@@ -9,12 +9,14 @@ import 'package:get/get.dart';
 class GameChat extends StatelessWidget {
   const GameChat({super.key});
 
+  static const double width = 300;
+
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
         borderRadius: GlobalStyles.borderRadius,
         child: Container(
-            width: 300,
+            width: width,
             height: 600,
             color: Colors.white,
             child: Column(

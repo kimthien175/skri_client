@@ -1,5 +1,13 @@
+library gif;
+
 import 'package:skribbl_client/models/shadow_info.dart';
 import 'package:flutter/material.dart';
+
+export 'package:skribbl_client/models/shadow_info.dart';
+export 'package:skribbl_client/models/gif/controlled_gif/child_gif/child_gif.dart';
+export 'package:skribbl_client/models/gif/controlled_gif/avatar/avatar.dart';
+export 'package:skribbl_client/models/gif/full_gif/full_gif.dart';
+export 'package:skribbl_client/models/gif/single_gif.dart';
 
 abstract class GifModel<MODEL_TYPE extends GifModel<MODEL_TYPE>> {
   GifModel(this._width, this._height);
@@ -23,7 +31,9 @@ abstract class GifBuilder<MODEL_TYPE extends GifModel<MODEL_TYPE>> extends State
   Widget? widget;
   Color? color;
 
-  GifBuilder initShadowedOrigin({Color? color, ShadowInfo info = const ShadowInfo()});
+  GifBuilder initShadowedOrigin(
+      {Color? color, ShadowInfo info = const ShadowInfo(), FilterQuality filterQuality});
+
   GifBuilder init({Color? color});
 
   GifBuilder doScale(double ratio);

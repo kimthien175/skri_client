@@ -28,8 +28,6 @@ class GameplayController extends GetxController {
     Get.put(MainContentAndFooterController());
   }
 
-  static Function()? setUp;
-
   // @override
   // void onReady() {
   //   super.onReady();

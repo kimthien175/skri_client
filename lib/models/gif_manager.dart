@@ -1,10 +1,13 @@
+library gif_manager;
+
 import 'dart:core';
-import 'package:skribbl_client/models/gif/controlled_gif/child_gif/child_gif.dart';
-import 'package:skribbl_client/models/gif/full_gif/full_gif.dart';
-import 'package:skribbl_client/models/gif/single_gif.dart';
 import 'package:skribbl_client/utils/read_json.dart';
 import 'package:flutter/services.dart';
 import 'dart:ui' as ui;
+
+import 'gif/gif.dart';
+
+export 'gif/gif.dart';
 
 class GifManager {
   //#region Singleton

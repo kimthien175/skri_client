@@ -3,16 +3,14 @@ import 'package:skribbl_client/models/gif_manager.dart';
 import 'package:skribbl_client/pages/gameplay/widgets/players_list/players_list.dart';
 import 'package:skribbl_client/widgets/dialog.dart';
 import 'package:skribbl_client/utils/styles.dart';
-import 'package:skribbl_client/widgets/animated_button/builder.dart';
+import 'package:skribbl_client/widgets/animated_button/animated_button.dart';
 import 'package:skribbl_client/widgets/hover_button.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class PlayerController extends GetxController with GetSingleTickerProviderStateMixin {
   late final AnimationController animController = AnimationController(
-      duration: AnimatedButtonBuilder.duration,
-      vsync: this,
-      lowerBound: 1 / PlayerCard.avatarMaxScale);
+      duration: AnimatedButton.duration, vsync: this, lowerBound: 1 / PlayerCard.avatarMaxScale);
   late final Animation<double> animation =
       CurvedAnimation(parent: animController, curve: Curves.linear);
 
@@ -32,6 +30,7 @@ class PlayerCard extends StatelessWidget {
 
   static const double avatarMaxScale = 1.2;
 
+  // TODO: DIALOG CONTENT DIFFERENT DEPENDS ON STATE
   void showInfo() {
     GameDialog(
         exitTap: true,

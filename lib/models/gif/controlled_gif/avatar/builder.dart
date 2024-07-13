@@ -1,4 +1,3 @@
-// ignore: must_be_immutable
 import 'package:skribbl_client/models/gif/controlled_gif/avatar/custom_painter.dart';
 import 'package:skribbl_client/models/gif/controlled_gif/avatar/model.dart';
 import 'package:skribbl_client/models/gif/controlled_gif/builder.dart';
@@ -32,10 +31,13 @@ class AvatarBuilder extends ControlledGifBuilder<AvatarModel> {
   }
 
   @override
-  AvatarBuilder initShadowedOrigin({Color? color, ShadowInfo info = const ShadowInfo()}) {
+  AvatarBuilder initShadowedOrigin(
+      {Color? color,
+      ShadowInfo info = const ShadowInfo(),
+      FilterQuality filterQuality = FilterQuality.low}) {
     widget = Obx(() => Stack(clipBehavior: Clip.none, children: [
           Transform.translate(
-              offset: Offset(info.offsetLeft, info.offsetTop),
+              offset: info.offset,
               child: Opacity(
                   opacity: info.opacity,
                   child: CustomPaint(

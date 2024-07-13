@@ -1,6 +1,6 @@
 import 'package:skribbl_client/utils/styles.dart';
 import 'package:flutter/material.dart';
-import 'package:skribbl_client/widgets/animated_button/builder.dart';
+import 'package:skribbl_client/widgets/animated_button/animated_button.dart';
 
 class HoverButton extends StatelessWidget {
   const HoverButton(
@@ -41,7 +41,7 @@ class HoverButton extends StatelessWidget {
             child: GestureDetector(
                 onTap: onTap,
                 child: AnimatedContainer(
-                    duration: AnimatedButtonBuilder.duration,
+                    duration: AnimatedButton.duration,
                     height: height,
                     width: width,
                     alignment: Alignment.center,

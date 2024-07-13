@@ -1,6 +1,4 @@
 import 'dart:math';
-import 'package:skribbl_client/models/gif/controlled_gif/avatar/model.dart';
-import 'package:skribbl_client/models/gif/gif.dart';
 import 'package:skribbl_client/models/gif_manager.dart';
 
 import 'package:flutter/widgets.dart';

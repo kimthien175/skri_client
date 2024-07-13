@@ -1,6 +1,6 @@
-import 'package:skribbl_client/widgets/animated_button/builder.dart';
+import 'animated_button.dart';
 
 abstract class AnimatedButtonDecorator {
-  void decorate(AnimatedButtonBuilder builder);
+  void decorate(AnimatedButtonState state);
   void Function() get clean;
 }

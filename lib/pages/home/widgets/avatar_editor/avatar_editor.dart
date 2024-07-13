@@ -1,10 +1,15 @@
+library avatar_editor;
+
 import 'package:skribbl_client/pages/home/widgets/avatar_editor/controller.dart';
-import 'package:skribbl_client/models/gif/gif.dart';
 import 'package:skribbl_client/models/gif_manager.dart';
 import 'package:skribbl_client/pages/home/widgets/avatar_editor/jiggle_avatar.dart';
 import 'package:skribbl_client/utils/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:skribbl_client/widgets/animated_button/animated_button.dart';
+
+export 'package:skribbl_client/pages/home/widgets/avatar_editor/jiggle_avatar.dart';
+export 'package:skribbl_client/pages/home/widgets/avatar_editor/controller.dart';
 
 class AvatarEditor extends GetView<AvatarEditorController> {
   const AvatarEditor({super.key});
@@ -76,11 +81,21 @@ class _SwitchButton extends StatelessWidget {
   }
 }
 
-class _RandomButton extends StatelessWidget {
+class _RandomButton extends GetView<AvatarEditorController> {
   const _RandomButton();
   @override
-  Widget build(BuildContext context) =>
-      Get.find<AvatarEditorController>().randomizeBtnBuilder.build();
+  Widget build(BuildContext context) => AnimatedButton(
+      onTap: controller.randomize,
+      decorators: [
+        AnimatedButtonScaleDecorator(),
+        AnimatedButtonTooltipDecorator(
+            tooltip: 'randomize_your_avatar'.tr,
+            position: TooltipPositionBottom(),
+            scale: () =>
+                Get.width >= Get.height ? 1.0 : PanelStyles.widthOnMobile / PanelStyles.width),
+        AnimatedButtonOpacityDecorator(),
+      ],
+      child: GifManager.inst.misc('randomize').builder.init().doFitSize(height: 36, width: 36));
 }
 
 class FadeSwitcherController extends GetxController with GetSingleTickerProviderStateMixin {
