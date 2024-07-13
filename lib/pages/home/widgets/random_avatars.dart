@@ -32,7 +32,7 @@ class RandomAvatarsController extends GetxController {
               i, rd.nextInt(GifManager.inst.eyesLength), rd.nextInt(GifManager.inst.mouthLength),
               winner: winnerId == i)
           .builder
-          .initShadowedOrigin();
+          .initWithShadow();
 
       avatars.add(avatar);
     }

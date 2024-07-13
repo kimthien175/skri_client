@@ -52,17 +52,25 @@ class FullGifBuilder extends GifBuilder<FullGifModel> {
   }
 
   @override
-  GifBuilder<GifModel> initShadowedOrigin(
+  GifBuilder<GifModel> initWithShadow(
       {Color? color,
       ShadowInfo info = const ShadowInfo(),
+      double? height,
+      double? width,
       FilterQuality filterQuality = FilterQuality.low}) {
+    var finalHeight = height ?? model.height;
+    var finalWidth = width ?? model.width;
     this.color = color;
     widget = Stack(clipBehavior: Clip.none, children: [
       Transform.translate(
           offset: info.offset,
           child: Image.asset(model.path,
-              color: Colors.black.withOpacity(info.opacity), filterQuality: filterQuality)),
-      _origin(filterQuality: filterQuality)
+              color: Colors.black.withOpacity(info.opacity),
+              filterQuality: filterQuality,
+              fit: BoxFit.contain,
+              width: finalWidth,
+              height: finalHeight)),
+      _origin(filterQuality: filterQuality, width: finalWidth, height: finalHeight)
     ]);
     return this;
   }
@@ -79,11 +87,14 @@ class FullGifBuilder extends GifBuilder<FullGifModel> {
     return this;
   }
 
-  Widget _origin({FilterQuality filterQuality = FilterQuality.low}) => Image.asset(
-        model.path,
-        color: color,
-        filterQuality: filterQuality,
-      );
+  Widget _origin(
+          {FilterQuality filterQuality = FilterQuality.low, double? width, double? height}) =>
+      Image.asset(model.path,
+          fit: BoxFit.contain,
+          color: color,
+          filterQuality: filterQuality,
+          width: width,
+          height: height);
 
   @override
   GifBuilder<GifModel> doFreezeSize() {

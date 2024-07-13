@@ -24,7 +24,7 @@ class StrokeValueSelector extends StatelessWidget {
             return GifManager.inst
                 .misc('stroke_size')
                 .builder
-                .initShadowedOrigin(color: DrawTools.inst.currentColor)
+                .initWithShadow(color: DrawTools.inst.currentColor)
                 .doFitSize(height: size, width: size);
           }
               // Text(controller.value.value.toStringAsFixed(2)),
@@ -57,7 +57,7 @@ class StrokeValueList extends StatelessWidget {
           child: GifManager.inst
               .misc('stroke_size')
               .builder
-              .initShadowedOrigin(color: DrawTools.inst.currentColor)
+              .initWithShadow(color: DrawTools.inst.currentColor)
               .doFitSize(height: size, width: size)));
     }
 

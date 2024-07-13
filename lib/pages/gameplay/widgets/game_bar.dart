@@ -24,19 +24,7 @@ class GameBar extends StatelessWidget {
               style: const TextStyle(
                   fontFamily: 'Inconsolata', fontWeight: FontWeight.w700, fontSize: 16),
             ),
-            Container(
-                width: GameChat.width,
-                alignment: Alignment.centerRight,
-                child: AnimatedButton(
-                    decorators: [
-                      AnimatedButtonOpacityDecorator(minOpacity: 0.9),
-                      AnimatedButtonScaleDecorator(minSize: 1 / 1.1)
-                    ],
-                    child: GifManager.inst
-                        .misc('settings')
-                        .builder
-                        .initShadowedOrigin(filterQuality: FilterQuality.none)
-                        .doFitSize(height: 42 * 1.1, width: 42 * 1.1)))
+            const SizedBox(width: GameChat.width)
           ])),
       const Positioned(top: -10, left: -8, child: GameClock()),
       Positioned(
@@ -52,7 +40,18 @@ class GameBar extends StatelessWidget {
                   style: const TextStyle(
                       fontFamily: 'Nunito-var',
                       fontSize: 19.6,
-                      fontVariations: [FontVariation.weight(720)])))
+                      fontVariations: [FontVariation.weight(720)]))),
+      Positioned(
+        right: 0,
+        top: 0,
+        child: AnimatedButton(
+            decorators: [
+              AnimatedButtonOpacityDecorator(minOpacity: 0.9),
+              AnimatedButtonScaleDecorator(minSize: 1 / 1.1)
+            ],
+            child: GifManager.inst.misc('settings').builder.initWithShadow(
+                filterQuality: FilterQuality.none, height: 42 * 1.1, width: 42 * 1.1)),
+      )
       //)
     ]);
 
@@ -62,7 +61,7 @@ class GameBar extends StatelessWidget {
     //     child: AnimatedButtonBuilder(
     //             child: namedGifs('settings')
     //                 .builder
-    //                 .initShadowedOrigin()
+    //                 .initWithShadow()
     //                 .doFitSize(height: 48, width: 48),
     //             decorators: [AnimatedButtonOpacityDecorator(minOpacity: 0.85)],
     //             onTap: () {
@@ -81,7 +80,7 @@ class GameClock extends StatelessWidget {
     return Stack(
       alignment: Alignment.center,
       children: [
-        GifManager.inst.misc('clock').builder.initShadowedOrigin().doFitSize(width: 64, height: 64),
+        GifManager.inst.misc('clock').builder.initWithShadow().doFitSize(width: 64, height: 64),
         const Positioned(
             top: 20,
             child:

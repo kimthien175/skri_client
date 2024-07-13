@@ -23,15 +23,19 @@ class AvatarBuilder extends ControlledGifBuilder<AvatarModel> {
     widget = Obx(() => CustomPaint(
         painter: AvatarCustomPainter(
             model, ControlledGifBuilder.controller.currentFrameIndex.value, Paint()),
-        child: SizedBox(height: model.height, width: model.width)));
+        size: Size(model.width, model.height)));
     return this;
   }
 
   @override
-  AvatarBuilder initShadowedOrigin(
+  AvatarBuilder initWithShadow(
       {Color? color,
       ShadowInfo info = const ShadowInfo(),
+      double? height,
+      double? width,
       FilterQuality filterQuality = FilterQuality.low}) {
+    var size = Size(width ?? model.width, height ?? model.height);
+
     widget = Obx(() => Stack(clipBehavior: Clip.none, children: [
           Transform.translate(
               offset: info.offset,
@@ -44,10 +48,11 @@ class AvatarBuilder extends ControlledGifBuilder<AvatarModel> {
                           Paint()
                             ..colorFilter =
                                 const ColorFilter.mode(Colors.black, BlendMode.srcATop)),
-                      child: SizedBox(height: model.height, width: model.width)))),
+                      size: size))),
           CustomPaint(
               painter: AvatarCustomPainter(
-                  model, ControlledGifBuilder.controller.currentFrameIndex.value, Paint()))
+                  model, ControlledGifBuilder.controller.currentFrameIndex.value, Paint()),
+              size: size)
         ]));
     return this;
   }

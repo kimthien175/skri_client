@@ -17,7 +17,7 @@ class HowToPlayContent extends GetView<HowToPlayContentController> {
             child: Obx(() => GifManager.inst
                 .misc('tutorial_${controller.step}')
                 .builder
-                .initShadowedOrigin()
+                .initWithShadow()
                 .doFreezeSize())),
         SizedBox(
             height: 48,

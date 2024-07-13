@@ -29,8 +29,12 @@ abstract class GifBuilder<MODEL_TYPE extends GifModel<MODEL_TYPE>> extends State
   Widget? widget;
   Color? color;
 
-  GifBuilder initShadowedOrigin(
-      {Color? color, ShadowInfo info = const ShadowInfo(), FilterQuality filterQuality});
+  GifBuilder initWithShadow(
+      {Color? color,
+      ShadowInfo info = const ShadowInfo(),
+      FilterQuality filterQuality,
+      double? height,
+      double? width});
 
   GifBuilder init({Color? color});
 

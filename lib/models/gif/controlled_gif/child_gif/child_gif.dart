@@ -41,42 +41,45 @@ class ChildGifBuilder extends ControlledGifBuilder<ChildGifModel> {
 
   @override
   GifBuilder<GifModel> init({Color? color}) {
-    widget = _origin;
-    return this;
-  }
-
-  @override
-  GifBuilder<GifModel> initShadowedOrigin(
-      {Color? color,
-      ShadowInfo info = const ShadowInfo(),
-      FilterQuality filterQuality = FilterQuality.low}) {
-    widget = Obx(() => Stack(
-          clipBehavior: Clip.none,
-          children: [
-            Transform.translate(
-                offset: info.offset,
-                child: Opacity(
-                    opacity: info.opacity,
-                    child: CustomPaint(
-                        painter: model.getCustomPainter(
-                          ControlledGifBuilder.controller.currentFrameIndex.value,
-                          Paint()
-                            ..colorFilter = const ColorFilter.mode(Colors.black, BlendMode.srcATop),
-                        ),
-                        size: Size(model.width, model.height)))),
-            _origin
-          ],
+    widget = Obx(() => CustomPaint(
+        painter: ChildGifCustomPainter(model.rect,
+            model.frames[ControlledGifBuilder.controller.currentFrameIndex.value].image, Paint()),
+        size:
+            Size(model.width, model.height) // to make gif animated, have to put SizedBox into this
         ));
     return this;
   }
 
-  Widget get _origin => Obx(() => CustomPaint(
-        painter: ChildGifCustomPainter(model.rect,
-            model.frames[ControlledGifBuilder.controller.currentFrameIndex.value].image, Paint()),
-        child: SizedBox(
-            width: model.rect.width,
-            height: model.rect.height), // to make gif animated, have to put SizedBox into this
-      ));
+  @override
+  GifBuilder<GifModel> initWithShadow(
+      {Color? color,
+      ShadowInfo info = const ShadowInfo(),
+      double? height,
+      double? width,
+      FilterQuality filterQuality = FilterQuality.low}) {
+    var size = Size(width ?? model.width, height ?? model.height);
+
+    widget = Obx(() => Stack(clipBehavior: Clip.none, children: [
+          Transform.translate(
+              offset: info.offset,
+              child: Opacity(
+                  opacity: info.opacity,
+                  child: CustomPaint(
+                      painter: model.getCustomPainter(
+                        ControlledGifBuilder.controller.currentFrameIndex.value,
+                        Paint()
+                          ..colorFilter = const ColorFilter.mode(Colors.black, BlendMode.srcATop),
+                      ),
+                      size: size))),
+          CustomPaint(
+              painter: ChildGifCustomPainter(
+                  model.rect,
+                  model.frames[ControlledGifBuilder.controller.currentFrameIndex.value].image,
+                  Paint()),
+              size: size)
+        ]));
+    return this;
+  }
 
   @override
   GifBuilder<GifModel> doFreezeSize() {

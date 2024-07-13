@@ -44,8 +44,8 @@ class DrawWidget extends StatelessWidget {
                               children: [
                                 CustomPaint(
                                     size: const Size(DrawManager.width, DrawManager.height),
-                                    painter: LastStepCustomPainter(
-                                        repaint: drawInst.lastStepRepaint)),
+                                    painter:
+                                        LastStepCustomPainter(repaint: drawInst.lastStepRepaint)),
                                 CustomPaint(
                                     size: const Size(DrawManager.width, DrawManager.height),
                                     painter: CurrentStepCustomPainter(repaint: drawInst))
@@ -99,7 +99,7 @@ class BrushButton extends StatelessWidget {
             child: GifManager.inst
                 .misc('pen')
                 .builder
-                .initShadowedOrigin()
+                .initWithShadow()
                 .doFitSize(height: 48, width: 48))));
   }
 }
@@ -124,7 +124,7 @@ class FillButton extends StatelessWidget {
             child: GifManager.inst
                 .misc('fill')
                 .builder
-                .initShadowedOrigin()
+                .initWithShadow()
                 .doFitSize(height: 48, width: 48))));
   }
 }
@@ -161,7 +161,7 @@ class _UndoButtonState extends State<UndoButton> {
                     child: GifManager.inst
                         .misc('undo')
                         .builder
-                        .initShadowedOrigin()
+                        .initWithShadow()
                         .doFitSize(height: 48, width: 48)))));
   }
 }
@@ -198,7 +198,7 @@ class _ClearButtonState extends State<ClearButton> {
                     child: GifManager.inst
                         .misc('clear')
                         .builder
-                        .initShadowedOrigin()
+                        .initWithShadow()
                         .doFitSize(height: 48, width: 48)))));
   }
 }
