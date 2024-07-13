@@ -1,7 +1,12 @@
-import 'package:skribbl_client/pages/home/footer/about.dart';
-import 'package:skribbl_client/pages/home/footer/news.dart';
-import 'package:skribbl_client/pages/home/footer/section.dart';
-import 'package:skribbl_client/pages/home/footer/tutorial.dart';
+library home_footer;
+
+export 'about.dart';
+export 'news.dart';
+export 'section.dart';
+export 'tutorial.dart';
+export 'triangle.dart';
+
+import 'package:skribbl_client/pages/pages.dart';
 import 'package:skribbl_client/utils/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';

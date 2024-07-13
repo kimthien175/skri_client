@@ -1,10 +1,12 @@
-import 'package:skribbl_client/pages/home/footer/news.dart';
-import 'package:skribbl_client/pages/home/footer/tutorial.dart';
-import 'package:skribbl_client/pages/home/layouts/mobile.dart';
-import 'package:skribbl_client/pages/home/layouts/web.dart';
-import 'package:skribbl_client/pages/home/widgets/avatar_editor/controller.dart';
-import 'package:skribbl_client/pages/home/widgets/play_button.dart';
-import 'package:skribbl_client/pages/home/widgets/random_avatars.dart';
+library home;
+
+export 'footer/footer.dart';
+export 'layouts/web.dart';
+export 'layouts/mobile.dart';
+export 'widgets/widgets.dart';
+export 'widgets/avatar_editor/avatar_editor.dart';
+
+import 'package:skribbl_client/pages/pages.dart';
 import 'package:skribbl_client/utils/start_up.dart';
 import 'package:skribbl_client/widgets/loading.dart';
 import 'package:flutter/material.dart';
@@ -58,7 +60,7 @@ class HomePage extends GetView<HomeController> {
           child: SafeArea(child: Obx(() {
             if (!ResourcesController.inst.isLoaded.value) return LoadingOverlay.inst;
 
-            return context.width >= context.height ? const Web() : const Mobile();
+            return context.width >= context.height ? const HomeWeb() : const HomeMobile();
           }))),
     );
   }

@@ -1,5 +1,5 @@
 import 'dart:math';
-import 'package:skribbl_client/models/gif_manager.dart';
+import 'package:skribbl_client/models/models.dart';
 
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';

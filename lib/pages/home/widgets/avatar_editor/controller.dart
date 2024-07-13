@@ -1,11 +1,10 @@
 import 'dart:math';
 
-import 'package:skribbl_client/models/game/player.dart';
-import 'package:skribbl_client/models/gif/controlled_gif/avatar/model.dart';
-import 'package:skribbl_client/models/gif_manager.dart';
-import 'package:skribbl_client/pages/home/widgets/avatar_editor/jiggle_avatar.dart';
+import 'package:skribbl_client/models/models.dart';
 
 import 'package:get/get.dart';
+
+import 'jiggle_avatar.dart';
 
 class AvatarEditorController extends GetxController {
   AvatarEditorController() {

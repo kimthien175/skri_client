@@ -1,8 +1,5 @@
 import 'package:skribbl_client/models/game/game.dart';
-import 'package:skribbl_client/models/game/message.dart';
-import 'package:skribbl_client/models/game/player.dart';
-import 'package:skribbl_client/models/game/private_game.dart';
-import 'package:skribbl_client/models/game/state/wait_for_setup.dart';
+
 import 'package:skribbl_client/pages/gameplay/widgets/game_settings.dart';
 import 'package:skribbl_client/utils/api.dart';
 import 'package:get/get.dart';

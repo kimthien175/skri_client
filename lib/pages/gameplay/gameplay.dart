@@ -1,7 +1,12 @@
-import 'package:skribbl_client/models/game/game.dart';
-import 'package:skribbl_client/pages/gameplay/layouts/web.dart';
-import 'package:skribbl_client/pages/gameplay/widgets/main_content_footer/main_content_footer.dart';
-import 'package:skribbl_client/pages/gameplay/widgets/players_list/players_list.dart';
+library game_play;
+
+export 'layouts/web.dart';
+export 'layouts/mobile.dart';
+export 'widgets/widgets.dart';
+
+import 'package:skribbl_client/models/models.dart';
+import 'package:skribbl_client/pages/pages.dart';
+
 import 'package:skribbl_client/utils/start_up.dart';
 import 'package:skribbl_client/widgets/loading.dart';
 import 'package:flutter/material.dart';
@@ -56,7 +61,7 @@ class GameplayPage extends StatelessWidget {
               child: SafeArea(child: Obx(
                 () {
                   if (!ResourcesController.inst.isLoaded.value) return LoadingOverlay.inst;
-                  return const Web();
+                  return const GameplayWeb();
                   //return context.width >= context.height ? const Web() : const Mobile();
                 },
               )))));

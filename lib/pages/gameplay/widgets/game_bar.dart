@@ -1,11 +1,10 @@
 import 'package:skribbl_client/models/gif_manager.dart';
-import 'package:skribbl_client/pages/gameplay/widgets/game_chat.dart';
+import 'package:skribbl_client/pages/pages.dart';
 import 'package:skribbl_client/utils/styles.dart';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:skribbl_client/widgets/animated_button/animated_button.dart';
-import 'players_list/player_card.dart';
 
 // TODO: SYNC TO GAME
 class GameBar extends StatelessWidget {

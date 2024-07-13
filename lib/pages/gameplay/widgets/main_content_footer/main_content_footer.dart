@@ -1,9 +1,10 @@
+library game_play_main_content_footer;
+
+export 'overlay.dart';
+export 'top_widget.dart';
+
 import 'package:skribbl_client/models/game/game.dart';
-import 'package:skribbl_client/models/game/private_game.dart';
-import 'package:skribbl_client/pages/gameplay/widgets/game_settings.dart';
-import 'package:skribbl_client/pages/gameplay/widgets/invite_section.dart';
-import 'package:skribbl_client/pages/gameplay/widgets/main_content_footer/overlay.dart';
-import 'package:skribbl_client/pages/gameplay/widgets/main_content_footer/top_widget.dart';
+import 'package:skribbl_client/pages/gameplay/gameplay.dart';
 import 'package:skribbl_client/utils/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';

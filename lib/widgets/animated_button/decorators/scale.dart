@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../animated_button.dart';
-import '../decorator.dart';
 
 class AnimatedButtonScaleDecorator extends GetxController
     with GetSingleTickerProviderStateMixin

@@ -1,8 +1,5 @@
-import 'package:skribbl_client/models/game/player.dart';
-import 'package:skribbl_client/models/game/state/game_state.dart';
-import 'package:skribbl_client/models/game/state/start_round.dart';
-import 'package:skribbl_client/pages/gameplay/widgets/draw/draw_widget.dart';
-import 'package:skribbl_client/pages/gameplay/widgets/main_content_footer/main_content_footer.dart';
+import 'package:skribbl_client/models/models.dart';
+import 'package:skribbl_client/pages/gameplay/gameplay.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 

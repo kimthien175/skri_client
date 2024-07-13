@@ -1,10 +1,11 @@
+library animated_button_tooltip;
+
+export 'position.dart';
+export 'controller.dart';
+
 import 'package:flutter/material.dart';
+import 'package:skribbl_client/widgets/animated_button/animated_button.dart';
 import 'package:skribbl_client/widgets/dialog.dart';
-
-import '../../animated_button.dart';
-import '../../decorator.dart';
-
-export './position.dart';
 
 // ignore: must_be_immutable
 class AnimatedButtonTooltipDecorator extends StatelessWidget

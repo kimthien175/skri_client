@@ -1,8 +1,13 @@
-import 'package:skribbl_client/models/game/player.dart';
-import 'package:skribbl_client/models/gif/controlled_gif/avatar/model.dart';
-import 'package:skribbl_client/pages/gameplay/widgets/players_list/player_card.dart';
+library player_list;
+
+export 'player_card.dart';
+export 'player_info.dart';
+
+import 'package:skribbl_client/models/models.dart';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:skribbl_client/pages/pages.dart';
 
 class PlayersListController extends GetxController {
   PlayersListController() {
@@ -15,7 +20,7 @@ class PlayersListController extends GetxController {
             avatar: AvatarModel.init(0, 0, 0).builder.init()));
 
     // init items controller
-    for (int i=0; i<players.length; i++){
+    for (int i = 0; i < players.length; i++) {
       Get.put(PlayerController(), tag: i.toString());
     }
 
@@ -53,12 +58,10 @@ class PlayersList extends StatelessWidget {
   Widget build(BuildContext context) {
     List<PlayerCard> children = [];
     var players = Get.find<PlayersListController>().players;
-    for (int i=0; i<players.length; i++){
-      children.add(PlayerCard(info: players[i], index:i));
+    for (int i = 0; i < players.length; i++) {
+      children.add(PlayerCard(info: players[i], index: i));
     }
 
-    return Column(
-      children: children
-    );
+    return Column(children: children);
   }
 }

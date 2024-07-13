@@ -1,8 +1,6 @@
 import 'dart:ui' as ui;
 
-import 'package:skribbl_client/models/gif/controlled_gif/avatar/builder.dart';
-import 'package:skribbl_client/models/gif/controlled_gif/avatar/custom_painter.dart';
-import 'package:skribbl_client/models/gif_manager.dart';
+import 'package:skribbl_client/models/models.dart';
 import 'package:flutter/material.dart';
 
 typedef GifCustomPainterBuilder = CustomPainter Function(int frameIndex, Paint paint);

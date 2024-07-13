@@ -1,14 +1,12 @@
 import 'package:skribbl_client/generated/locales.g.dart';
-import 'package:skribbl_client/pages/credits/credits.dart';
-import 'package:skribbl_client/pages/gameplay/gameplay.dart';
-import 'package:skribbl_client/pages/home/home.dart';
-import 'package:skribbl_client/pages/terms/terms.dart';
-import 'package:skribbl_client/utils/navigator_observer.dart';
-import 'package:skribbl_client/utils/start_up.dart';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 // ignore: depend_on_referenced_packages
 import 'package:flutter_web_plugins/url_strategy.dart';
+
+import 'pages/pages.dart';
+import 'utils/utils.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();

@@ -1,10 +1,7 @@
-import 'package:skribbl_client/models/game/player.dart';
-import 'package:skribbl_client/models/gif_manager.dart';
-import 'package:skribbl_client/pages/gameplay/widgets/players_list/players_list.dart';
-import 'package:skribbl_client/widgets/dialog.dart';
+import 'package:skribbl_client/models/models.dart';
+import 'package:skribbl_client/pages/pages.dart';
 import 'package:skribbl_client/utils/styles.dart';
-import 'package:skribbl_client/widgets/animated_button/animated_button.dart';
-import 'package:skribbl_client/widgets/hover_button.dart';
+import 'package:skribbl_client/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 

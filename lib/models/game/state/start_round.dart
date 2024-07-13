@@ -1,12 +1,7 @@
 import 'dart:math';
 
 import 'package:skribbl_client/models/game/game.dart';
-import 'package:skribbl_client/models/game/player.dart';
-import 'package:skribbl_client/models/game/state/draw.dart';
-import 'package:skribbl_client/models/game/state/game_state.dart';
-import 'package:skribbl_client/pages/gameplay/widgets/main_content_footer/main_content_footer.dart';
-import 'package:skribbl_client/pages/gameplay/widgets/main_content_footer/overlay.dart';
-import 'package:skribbl_client/pages/gameplay/widgets/main_content_footer/top_widget.dart';
+import 'package:skribbl_client/pages/pages.dart';
 import 'package:skribbl_client/utils/datetime.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -133,7 +128,8 @@ class StartRoundState extends GameState {
     Game.inst.remainingTime.seconds.value = 0;
     await Get.find<CanvasOverlayController>().controller.reverse();
 
-    return DrawState.afterChooseWord(startedAt: data['started_at'], playerId: playerId, word: data['word']);
+    return DrawState.afterChooseWord(
+        startedAt: data['started_at'], playerId: playerId, word: data['word']);
   }
 
   @override

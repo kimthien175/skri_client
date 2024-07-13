@@ -1,6 +1,8 @@
-import 'package:skribbl_client/models/gif/gif.dart';
+library full_gif;
 
-import 'package:skribbl_client/models/gif/full_gif/custom_painter.dart';
+export 'custom_painter.dart';
+
+import 'package:skribbl_client/models/models.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:ui' as ui;

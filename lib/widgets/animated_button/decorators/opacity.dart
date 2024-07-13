@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../animated_button.dart';
-import '../decorator.dart';
 
 class AnimatedButtonOpacityDecorator extends GetxController implements AnimatedButtonDecorator {
   AnimatedButtonOpacityDecorator({this.minOpacity = 0.5});

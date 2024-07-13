@@ -1,13 +1,11 @@
 library gif;
 
+export 'full_gif/full_gif.dart';
+export 'controlled_gif/controlled_gif.dart';
+export 'single_gif.dart';
+
 import 'package:skribbl_client/models/shadow_info.dart';
 import 'package:flutter/material.dart';
-
-export 'package:skribbl_client/models/shadow_info.dart';
-export 'package:skribbl_client/models/gif/controlled_gif/child_gif/child_gif.dart';
-export 'package:skribbl_client/models/gif/controlled_gif/avatar/avatar.dart';
-export 'package:skribbl_client/models/gif/full_gif/full_gif.dart';
-export 'package:skribbl_client/models/gif/single_gif.dart';
 
 abstract class GifModel<MODEL_TYPE extends GifModel<MODEL_TYPE>> {
   GifModel(this._width, this._height);

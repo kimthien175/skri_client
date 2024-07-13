@@ -4,9 +4,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:skribbl_client/widgets/animated_button/decorator.dart';
 
-export 'decorators/opacity.dart';
-export 'decorators/scale.dart';
-export 'decorators/tooltip/tooltip.dart';
+export 'decorator.dart';
 
 class AnimatedButton extends StatefulWidget {
   const AnimatedButton({super.key, required this.child, required this.decorators, this.onTap});

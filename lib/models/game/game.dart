@@ -1,9 +1,14 @@
+library game;
+
+export 'private_game.dart';
+export 'package:skribbl_client/models/game/message.dart';
+export 'package:skribbl_client/models/game/player.dart';
+export 'state/game_state.dart';
+
 import 'dart:async';
 
-import 'package:skribbl_client/models/game/state/game_state.dart';
-import 'package:skribbl_client/models/game/message.dart';
-import 'package:skribbl_client/models/game/player.dart';
-import 'package:skribbl_client/pages/gameplay/widgets/main_content_footer/top_widget.dart';
+import 'package:skribbl_client/models/models.dart';
+import 'package:skribbl_client/pages/pages.dart';
 import 'package:skribbl_client/utils/socket_io.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

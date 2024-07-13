@@ -1,6 +1,11 @@
-import 'package:skribbl_client/models/game/state/draw.dart';
-import 'package:skribbl_client/models/game/state/start_round.dart';
-import 'package:skribbl_client/models/game/state/wait_for_setup.dart';
+library game_state;
+
+export 'package:skribbl_client/models/game/state/draw.dart';
+export 'package:skribbl_client/models/game/state/start_round.dart';
+export 'package:skribbl_client/models/game/state/wait_for_setup.dart';
+
+import 'package:skribbl_client/models/models.dart';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -44,7 +49,7 @@ abstract class GameState {
 
   Future<void> setup();
 
-  void clear(){}
+  void clear() {}
 }
 
 class ChooseWordState extends GameState {
@@ -62,8 +67,6 @@ class ChooseWordState extends GameState {
     // TODO: implement next
     throw UnimplementedError();
   }
-  
-
 }
 
 class DrawResultState extends GameState {
@@ -80,8 +83,6 @@ class DrawResultState extends GameState {
     // TODO: implement next
     throw UnimplementedError();
   }
-  
-
 }
 
 class GameResultState extends GameState {
@@ -96,8 +97,6 @@ class GameResultState extends GameState {
     // TODO: implement setup
     throw UnimplementedError();
   }
-  
-
 }
 
 class MatchMakingState extends GameState {
@@ -116,5 +115,4 @@ class MatchMakingState extends GameState {
     // TODO: implement next
     throw UnimplementedError();
   }
-
 }

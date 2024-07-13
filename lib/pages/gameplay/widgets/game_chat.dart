@@ -1,10 +1,8 @@
 import 'package:skribbl_client/models/game/game.dart';
-import 'package:skribbl_client/models/game/message.dart';
-import 'package:skribbl_client/models/game/player.dart';
-import 'package:skribbl_client/utils/socket_io.dart';
-import 'package:skribbl_client/utils/styles.dart';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:skribbl_client/utils/utils.dart';
 
 class GameChat extends StatelessWidget {
   const GameChat({super.key});

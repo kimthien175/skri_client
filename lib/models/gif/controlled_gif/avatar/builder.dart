@@ -1,7 +1,4 @@
-import 'package:skribbl_client/models/gif/controlled_gif/avatar/custom_painter.dart';
-import 'package:skribbl_client/models/gif/controlled_gif/avatar/model.dart';
-import 'package:skribbl_client/models/gif/controlled_gif/builder.dart';
-import 'package:skribbl_client/models/shadow_info.dart';
+import 'package:skribbl_client/models/models.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 

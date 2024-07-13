@@ -1,11 +1,5 @@
 import 'package:skribbl_client/models/game/game.dart';
-import 'package:skribbl_client/models/game/state/game_state.dart';
-import 'package:skribbl_client/models/game/message.dart';
-import 'package:skribbl_client/models/game/player.dart';
-import 'package:skribbl_client/models/game/state/wait_for_setup.dart';
 import 'package:skribbl_client/pages/gameplay/gameplay.dart';
-import 'package:skribbl_client/pages/gameplay/widgets/game_settings.dart';
-import 'package:skribbl_client/pages/gameplay/widgets/main_content_footer/main_content_footer.dart';
 import 'package:skribbl_client/utils/socket_io.dart';
 import 'package:skribbl_client/widgets/loading.dart';
 import 'package:flutter/material.dart';
