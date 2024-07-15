@@ -89,10 +89,4 @@ class FullGifBuilder extends GifBuilder<FullGifModel> {
           filterQuality: filterQuality,
           width: width,
           height: height);
-
-  @override
-  GifBuilder<GifModel> doFreezeSize() {
-    widget = SizedBox(height: model.height, width: model.width, child: widget);
-    return this;
-  }
 }

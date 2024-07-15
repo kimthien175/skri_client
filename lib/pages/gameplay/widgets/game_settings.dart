@@ -291,7 +291,7 @@ class _SettingsItem extends StatelessWidget {
       Expanded(
           flex: 55,
           child: Row(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-            FittedBox(child: GifManager.inst.misc(gif).builder.initWithShadow().doFreezeSize()),
+            FittedBox(child: GifManager.inst.misc(gif).builder.initWithShadow()),
             const SizedBox(width: 7),
             Align(
                 alignment: Alignment.centerLeft,

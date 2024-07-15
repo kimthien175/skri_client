@@ -50,9 +50,4 @@ class AvatarBuilder extends ControlledGifBuilder<AvatarModel> {
         ]));
     return this;
   }
-
-  @override
-  AvatarBuilder doFreezeSize() {
-    return this;
-  }
 }

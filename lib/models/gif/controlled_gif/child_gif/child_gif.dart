@@ -74,9 +74,4 @@ class ChildGifBuilder extends ControlledGifBuilder<ChildGifModel> {
         ]));
     return this;
   }
-
-  @override
-  GifBuilder<GifModel> doFreezeSize() {
-    return this;
-  }
 }

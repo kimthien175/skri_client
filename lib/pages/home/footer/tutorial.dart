@@ -14,11 +14,8 @@ class HowToPlayContent extends GetView<HowToPlayContentController> {
       mainAxisSize: MainAxisSize.min,
       children: [
         FittedBox(
-            child: Obx(() => GifManager.inst
-                .misc('tutorial_${controller.step}')
-                .builder
-                .initWithShadow()
-                .doFreezeSize())),
+            child: Obx(() =>
+                GifManager.inst.misc('tutorial_${controller.step}').builder.initWithShadow())),
         SizedBox(
             height: 48,
             child: Obx(() => Text('section_how_to_play_step${controller.step}'.tr,

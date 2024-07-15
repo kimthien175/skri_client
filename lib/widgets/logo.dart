@@ -11,8 +11,7 @@ class Logo extends StatelessWidget {
     return MouseRegion(
         cursor: SystemMouseCursors.click,
         child: GestureDetector(
-            onTap: onPressed,
-            child: GifManager.inst.misc('logo').builder.initWithShadow().doFreezeSize()));
+            onTap: onPressed, child: GifManager.inst.misc('logo').builder.initWithShadow()));
   }
 
   static void clearUrl() {
