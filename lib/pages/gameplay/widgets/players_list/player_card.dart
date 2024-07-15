@@ -25,7 +25,7 @@ class PlayerCard extends StatelessWidget {
 
   static const double width = 200.0;
 
-  static const double avatarMaxScale = 1.2;
+  static const double avatarMaxScale = 1.1;
 
   // TODO: DIALOG CONTENT DIFFERENT DEPENDS ON STATE
   void showInfo() {
@@ -111,13 +111,13 @@ class PlayerCard extends StatelessWidget {
                           style: TextStyle(fontSize: 12.6, height: 1, fontWeight: FontWeight.w600))
                     ],
                   )),
-              // TODO: SCALETRANSITION WITH MIN =1.0
               Positioned(
-                  top: -1 - 48 * (avatarMaxScale - 1) / 2,
-                  right: -48 * (avatarMaxScale - 1) / 2,
-                  child: ScaleTransition(
-                      scale: controller.animation,
-                      child: info.avatar.fit(width: 48 * avatarMaxScale))),
+                  top: -1,
+                  right: 0,
+                  child: Transform.scale(
+                      scale: avatarMaxScale,
+                      child: ScaleTransition(
+                          scale: controller.animation, child: info.avatar.fit(width: 48)))),
               Positioned(
                   top: 5,
                   left: 6,

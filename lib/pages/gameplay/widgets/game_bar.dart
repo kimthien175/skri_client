@@ -42,15 +42,17 @@ class GameBar extends StatelessWidget {
                       fontSize: 19.6,
                       fontVariations: [FontVariation.weight(720)]))),
       Positioned(
-        right: 0,
-        top: 0,
+        right: 3,
         child: AnimatedButton(
             decorators: [
               AnimatedButtonOpacityDecorator(minOpacity: 0.9),
-              AnimatedButtonScaleDecorator(minSize: 1 / 1.1)
+              AnimatedButtonScaleDecorator.max(scale: 1.1),
+              AnimatedButtonTooltipDecorator(tooltip: 'Settings', position: TooltipPositionLeft())
             ],
-            child: GifManager.inst.misc('settings').builder.initWithShadow(
-                filterQuality: FilterQuality.none, height: 42 * 1.1, width: 42 * 1.1)),
+            child: GifManager.inst
+                .misc('settings')
+                .builder
+                .initWithShadow(filterQuality: FilterQuality.none, height: 42, width: 42)),
       )
       //)
     ]);

@@ -4,6 +4,7 @@ export 'position.dart';
 export 'controller.dart';
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:skribbl_client/widgets/animated_button/animated_button.dart';
 import 'package:skribbl_client/widgets/dialog.dart';
 
@@ -11,6 +12,9 @@ import 'package:skribbl_client/widgets/dialog.dart';
 class AnimatedButtonTooltipDecorator extends StatelessWidget
     with GameOverlay
     implements AnimatedButtonDecorator {
+  //
+  /// `tooltip` is raw text, no `.tr`, the widget will translate it <br>
+  /// `position` is top for default
   AnimatedButtonTooltipDecorator(
       {super.key,
       required this.tooltip,
@@ -58,9 +62,7 @@ class AnimatedButtonTooltipDecorator extends StatelessWidget
             fontWeight: FontWeight.w700,
             fontSize: 13.0,
             fontFamily: 'Nunito'),
-        child: Text(
-          tooltip,
-        ),
+        child: Text(tooltip.tr),
       ),
     );
   }

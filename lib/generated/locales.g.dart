@@ -88,6 +88,7 @@ class LocaleKeys {
   static const Copy = 'Copy';
   static const No = 'No';
   static const WAITING = 'WAITING';
+  static const Settings = 'Settings';
 }
 
 class Locales {
@@ -256,5 +257,6 @@ class Locales {
     'randomize_your_avatar': 'Ngẫu nhiên Avatar của bạn!',
     'news_error': 'Không tìm thấy tin tức nào hết!!',
     'click_to_copy_invite': 'Bấm để sao chép lời mời',
+    'Settings': 'Cài đặt',
   };
 }

@@ -57,7 +57,7 @@ class FullGifBuilder extends GifBuilder<FullGifModel> {
       ShadowInfo info = const ShadowInfo(),
       double? height,
       double? width,
-      FilterQuality filterQuality = FilterQuality.low}) {
+      FilterQuality filterQuality = FilterQuality.none}) {
     var finalHeight = height ?? model.height;
     var finalWidth = width ?? model.width;
     this.color = color;
@@ -82,7 +82,7 @@ class FullGifBuilder extends GifBuilder<FullGifModel> {
   }
 
   Widget _origin(
-          {FilterQuality filterQuality = FilterQuality.low, double? width, double? height}) =>
+          {FilterQuality filterQuality = FilterQuality.none, double? width, double? height}) =>
       Image.asset(model.path,
           fit: BoxFit.contain,
           color: color,

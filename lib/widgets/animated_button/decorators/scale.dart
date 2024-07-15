@@ -6,27 +6,43 @@ import '../animated_button.dart';
 class AnimatedButtonScaleDecorator extends GetxController
     with GetSingleTickerProviderStateMixin
     implements AnimatedButtonDecorator {
-  AnimatedButtonScaleDecorator({double minSize = defaultMinSize, double maxSize = defaultMaxSIze}) {
-    controller = AnimationController(
-        duration: AnimatedButton.duration, vsync: this, lowerBound: minSize, upperBound: maxSize);
+  AnimatedButtonScaleDecorator.min({double scale = 0.8}) {
+    controller =
+        AnimationController(duration: AnimatedButton.duration, vsync: this, lowerBound: scale);
 
     animation = CurvedAnimation(parent: controller, curve: Curves.linear);
+
+    _decorateWidget = (Widget widget) => ScaleTransition(
+          scale: animation,
+          // filterQuality: FilterQuality.high,
+          child: widget,
+        );
   }
+
+  AnimatedButtonScaleDecorator.max({double scale = 1.1}) {
+    controller =
+        AnimationController(duration: AnimatedButton.duration, vsync: this, lowerBound: 1 / scale);
+    animation = CurvedAnimation(parent: controller, curve: Curves.linear);
+
+    _decorateWidget = (Widget widget) => Transform.scale(
+        scale: scale,
+        child: ScaleTransition(
+          scale: animation,
+          filterQuality: FilterQuality.none,
+          child: widget,
+        ));
+  }
+
+  late final Widget Function(Widget widget) _decorateWidget;
+
   late final AnimationController controller;
   late final Animation<double> animation;
-
-  static const double defaultMinSize = 0.8;
-  static const double defaultMaxSIze = 1.0;
 
   @override
   void decorate(AnimatedButtonState state) {
     // wrap the widget with ScaleTransition
 
-    state.child = ScaleTransition(
-      scale: animation,
-      filterQuality: FilterQuality.high,
-      child: state.child,
-    );
+    state.child = _decorateWidget(state.child);
 
     state.onEnterCallbacks.add((_) {
       controller.forward();

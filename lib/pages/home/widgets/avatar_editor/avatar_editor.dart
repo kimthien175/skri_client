@@ -17,33 +17,32 @@ class AvatarEditor extends GetView<AvatarEditorController> {
   Widget build(BuildContext context) {
     return Stack(children: [
       Container(
-        margin: const EdgeInsets.only(top: 10, bottom: 10),
-        decoration: BoxDecoration(
-            color: Colors.black.withOpacity(0.1), borderRadius: GlobalStyles.borderRadius),
-        padding: const EdgeInsets.all(8),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Column(
-              children: [
-                _SwitchButton('left_arrow', 'chosen_left_arrow', controller.onPreviousEyes),
-                _SwitchButton('left_arrow', 'chosen_left_arrow', controller.onPreviousMouth),
-                _SwitchButton('left_arrow', 'chosen_left_arrow', controller.onPreviousColor),
-              ],
-            ),
-            const SizedBox(height: 96, width: 96, child: FittedBox(child: JiggleAvatar())),
-            Column(
-              children: [
-                _SwitchButton('right_arrow', 'chosen_right_arrow', controller.onNextEyes),
-                _SwitchButton('right_arrow', 'chosen_right_arrow', controller.onNextMouth),
-                _SwitchButton('right_arrow', 'chosen_right_arrow', controller.onNextColor),
-              ],
-            ),
-          ],
-        ),
-      ),
-      const Positioned(right: 3, top: 15, child: _RandomButton())
+          margin: const EdgeInsets.only(top: 10, bottom: 10),
+          decoration: BoxDecoration(
+              color: Colors.black.withOpacity(0.1), borderRadius: GlobalStyles.borderRadius),
+          padding: const EdgeInsets.all(8),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Column(
+                children: [
+                  _SwitchButton('left_arrow', 'chosen_left_arrow', controller.onPreviousEyes),
+                  _SwitchButton('left_arrow', 'chosen_left_arrow', controller.onPreviousMouth),
+                  _SwitchButton('left_arrow', 'chosen_left_arrow', controller.onPreviousColor),
+                ],
+              ),
+              const SizedBox(height: 96, width: 96, child: FittedBox(child: JiggleAvatar())),
+              Column(
+                children: [
+                  _SwitchButton('right_arrow', 'chosen_right_arrow', controller.onNextEyes),
+                  _SwitchButton('right_arrow', 'chosen_right_arrow', controller.onNextMouth),
+                  _SwitchButton('right_arrow', 'chosen_right_arrow', controller.onNextColor),
+                ],
+              ),
+            ],
+          )),
+      const Positioned(right: 4, top: 14, child: _RandomButton())
     ]);
   }
 }
@@ -86,15 +85,15 @@ class _RandomButton extends GetView<AvatarEditorController> {
   Widget build(BuildContext context) => AnimatedButton(
       onTap: controller.randomize,
       decorators: [
-        AnimatedButtonScaleDecorator(),
+        AnimatedButtonScaleDecorator.max(scale: 1.2),
         AnimatedButtonTooltipDecorator(
-            tooltip: 'randomize_your_avatar'.tr,
+            tooltip: 'randomize_your_avatar',
             position: TooltipPositionBottom(),
             scale: () =>
                 Get.width >= Get.height ? 1.0 : PanelStyles.widthOnMobile / PanelStyles.width),
-        AnimatedButtonOpacityDecorator(),
+        AnimatedButtonOpacityDecorator(minOpacity: 0.6),
       ],
-      child: GifManager.inst.misc('randomize').builder.init(height: 36, width: 36));
+      child: GifManager.inst.misc('randomize').builder.init(height: 32, width: 32));
 }
 
 class FadeSwitcherController extends GetxController with GetSingleTickerProviderStateMixin {
