@@ -36,10 +36,7 @@ class Section extends StatelessWidget {
         Positioned(
             left: 28,
             top: 28,
-            child: SizedBox(
-                width: 32,
-                height: 32,
-                child: FittedBox(child: GifManager.inst.misc(icon).builder.initWithShadow())))
+            child: GifManager.inst.misc(icon).builder.initWithShadow().fit(width: 32))
       ]);
     }
     return SizedBox(
@@ -67,10 +64,7 @@ class Section extends StatelessWidget {
           Positioned(
               left: 16,
               top: 16,
-              child: SizedBox(
-                  width: 30,
-                  height: 30,
-                  child: FittedBox(child: GifManager.inst.misc(icon).builder.initWithShadow())))
+              child: GifManager.inst.misc(icon).builder.initWithShadow().fit(width: 30))
         ])));
   }
 }

@@ -45,9 +45,9 @@ class FullGifBuilder extends GifBuilder<FullGifModel> {
   FullGifBuilder(super.model, {super.key});
 
   @override
-  GifBuilder<GifModel> init({Color? color}) {
+  GifBuilder<GifModel> init({Color? color, double? width, double? height}) {
     this.color = color;
-    widget = _origin();
+    widget = _origin(width: width ?? model.width, height: height ?? model.height);
     return this;
   }
 
@@ -72,12 +72,6 @@ class FullGifBuilder extends GifBuilder<FullGifModel> {
               height: finalHeight)),
       _origin(filterQuality: filterQuality, width: finalWidth, height: finalHeight)
     ]);
-    return this;
-  }
-
-  @override
-  GifBuilder<GifModel> doFitSize({double? height, double? width}) {
-    widget = SizedBox(height: height, width: width, child: FittedBox(child: widget));
     return this;
   }
 

@@ -5,9 +5,7 @@ import 'package:flutter/material.dart';
 
 class PlayerInfo extends StatelessWidget {
   const PlayerInfo({super.key, required this.info});
-  static show(PlayerInfo info){
-    
-  }
+  static show(PlayerInfo info) {}
   final Player info;
   @override
   Widget build(BuildContext context) {
@@ -27,14 +25,18 @@ class PlayerInfo extends StatelessWidget {
                 padding: const EdgeInsets.only(top: 7.5, left: 15, right: 15, bottom: 15),
                 child: Row(
                   children: [
-                    info.avatar.doFitSize(height: 150, width: 150),
+                    info.avatar.fit(width: 150),
                     Column(
-                      mainAxisSize: MainAxisSize.min,
+                        mainAxisSize: MainAxisSize.min,
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
                           const Text('Invite your friend!'),
-                          HoverButton(color: const Color(0xff2a51d1), hoverColor: const Color(0xff1e44be), borderRadius: BorderRadius.circular(3.0),child: const Text('Click to copy Invite') )
+                          HoverButton(
+                              color: const Color(0xff2a51d1),
+                              hoverColor: const Color(0xff1e44be),
+                              borderRadius: BorderRadius.circular(3.0),
+                              child: const Text('Click to copy Invite'))
                         ])
                   ],
                 ))

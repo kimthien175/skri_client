@@ -36,11 +36,14 @@ abstract class GifBuilder<MODEL_TYPE extends GifModel<MODEL_TYPE>> extends State
       double? height,
       double? width});
 
-  GifBuilder init({Color? color});
+  GifBuilder init({Color? color, double? width, double? height});
 
   GifBuilder doScale(double ratio);
-  GifBuilder doFitSize({double? height, double? width});
   GifBuilder doFreezeSize();
+
+  Widget fit({double? height, double? width}) {
+    return SizedBox(height: height, width: width, child: FittedBox(child: this));
+  }
 
   @override
   Widget build(BuildContext context) {

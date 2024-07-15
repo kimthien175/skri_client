@@ -7,10 +7,9 @@ export 'widgets/widgets.dart';
 export 'widgets/avatar_editor/avatar_editor.dart';
 
 import 'package:skribbl_client/pages/pages.dart';
-import 'package:skribbl_client/utils/start_up.dart';
-import 'package:skribbl_client/widgets/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:skribbl_client/widgets/resources_ensurance.dart';
 
 class HomeBindings implements Bindings {
   @override
@@ -49,19 +48,7 @@ class HomePage extends GetView<HomeController> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-          constraints: const BoxConstraints.expand(),
-          decoration: const BoxDecoration(
-              image: DecorationImage(
-                  scale: 1.2,
-                  repeat: ImageRepeat.repeat,
-                  image: AssetImage('assets/background.png'))),
-          child: SafeArea(child: Obx(() {
-            if (!ResourcesController.inst.isLoaded.value) return LoadingOverlay.inst;
-
-            return context.width >= context.height ? const HomeWeb() : const HomeMobile();
-          }))),
-    );
+    return ResourcesEnsurance(
+        child: context.width >= context.height ? const HomeWeb() : const HomeMobile());
   }
 }

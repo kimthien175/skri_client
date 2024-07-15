@@ -94,7 +94,7 @@ class _RandomButton extends GetView<AvatarEditorController> {
                 Get.width >= Get.height ? 1.0 : PanelStyles.widthOnMobile / PanelStyles.width),
         AnimatedButtonOpacityDecorator(),
       ],
-      child: GifManager.inst.misc('randomize').builder.init().doFitSize(height: 36, width: 36));
+      child: GifManager.inst.misc('randomize').builder.init(height: 36, width: 36));
 }
 
 class FadeSwitcherController extends GetxController with GetSingleTickerProviderStateMixin {

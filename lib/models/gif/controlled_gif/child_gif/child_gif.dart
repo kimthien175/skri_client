@@ -28,24 +28,18 @@ class ChildGifBuilder extends ControlledGifBuilder<ChildGifModel> {
   ChildGifBuilder(super.model, {super.key});
 
   @override
-  GifBuilder<GifModel> doFitSize({double? height, double? width}) {
-    widget = SizedBox(height: height, width: width, child: FittedBox(child: widget));
-    return this;
-  }
-
-  @override
   GifBuilder<GifModel> doScale(double ratio) {
     widget = Transform.scale(scale: ratio, child: widget);
     return this;
   }
 
   @override
-  GifBuilder<GifModel> init({Color? color}) {
+  GifBuilder<GifModel> init({Color? color, double? width, double? height}) {
     widget = Obx(() => CustomPaint(
         painter: ChildGifCustomPainter(model.rect,
             model.frames[ControlledGifBuilder.controller.currentFrameIndex.value].image, Paint()),
-        size:
-            Size(model.width, model.height) // to make gif animated, have to put SizedBox into this
+        size: Size(width ?? model.width,
+            height ?? model.height) // to make gif animated, have to put SizedBox into this
         ));
     return this;
   }

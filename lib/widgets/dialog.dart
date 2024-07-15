@@ -145,6 +145,12 @@ class _CloseIconState extends State<_CloseIcon> with SingleTickerProviderStateMi
           .animate(controller);
 
   @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return MouseRegion(
         onEnter: (_) => controller.forward(),

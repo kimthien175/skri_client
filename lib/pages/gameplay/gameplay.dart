@@ -7,10 +7,9 @@ export 'widgets/widgets.dart';
 import 'package:skribbl_client/models/models.dart';
 import 'package:skribbl_client/pages/pages.dart';
 
-import 'package:skribbl_client/utils/start_up.dart';
-import 'package:skribbl_client/widgets/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:skribbl_client/widgets/resources_ensurance.dart';
 
 class GameplayBinding implements Bindings {
   @override
@@ -44,25 +43,13 @@ class GameplayPage extends StatelessWidget {
   const GameplayPage({super.key});
 
   @override
-  Widget build(BuildContext context) => PopScope(
-      canPop: false,
-      onPopInvoked: (didPop) async {
-        if (didPop) return;
-        Game.inst.leave();
-      },
-      child: Scaffold(
-          body: Container(
-              constraints: const BoxConstraints.expand(),
-              decoration: const BoxDecoration(
-                  image: DecorationImage(
-                      scale: 1.2,
-                      repeat: ImageRepeat.repeat,
-                      image: AssetImage('assets/background.png'))),
-              child: SafeArea(child: Obx(
-                () {
-                  if (!ResourcesController.inst.isLoaded.value) return LoadingOverlay.inst;
-                  return const GameplayWeb();
-                  //return context.width >= context.height ? const Web() : const Mobile();
-                },
-              )))));
+  Widget build(BuildContext context) => ResourcesEnsurance(
+      child: PopScope(
+          canPop: false,
+          onPopInvoked: (didPop) async {
+            if (didPop) return;
+            Game.inst.leave();
+          },
+          child: const GameplayWeb()));
+  //return context.width >= context.height ? const Web() : const Mobile();
 }

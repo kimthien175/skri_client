@@ -196,7 +196,7 @@ class PlayerChooseWordWidget extends StatelessWidget {
           Text('player_choosing'.trParams({'playerName': currentState.playerName}),
               style:
                   const TextStyle(color: Colors.white, fontSize: 28, fontWeight: FontWeight.w800)),
-          Game.inst.playersByMap[currentState.playerId]!.avatar.doFitSize(height: 80, width: 80)
+          Game.inst.playersByMap[currentState.playerId]!.avatar.fit(height: 80)
         ],
       );
     }

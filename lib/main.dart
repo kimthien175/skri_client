@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 // ignore: depend_on_referenced_packages
 import 'package:flutter_web_plugins/url_strategy.dart';
+import 'package:skribbl_client/widgets/resources_ensurance.dart';
 
 import 'pages/pages.dart';
 import 'utils/utils.dart';
@@ -20,7 +21,7 @@ void main() {
     fallbackLocale: const Locale('en', 'US'),
     debugShowCheckedModeBanner: false,
     title: 'Material App',
-    initialRoute: '/gameplay',
+    initialRoute: '/',
     defaultTransition: Transition.noTransition,
     getPages: [
       GetPage(name: '/', page: () => const HomePage(), binding: HomeBindings()),

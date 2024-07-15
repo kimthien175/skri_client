@@ -80,7 +80,7 @@ class GameClock extends StatelessWidget {
     return Stack(
       alignment: Alignment.center,
       children: [
-        GifManager.inst.misc('clock').builder.initWithShadow().doFitSize(width: 64, height: 64),
+        GifManager.inst.misc('clock').builder.initWithShadow(width: 64, height: 64),
         const Positioned(
             top: 20,
             child:
