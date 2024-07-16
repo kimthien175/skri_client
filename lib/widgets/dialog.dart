@@ -31,7 +31,7 @@ mixin GameOverlay on Widget {
 class GameDialog extends StatefulWidget with GameOverlay {
   GameDialog({required this.title, required this.content, super.key, this.exitTap = false});
 
-  final String title;
+  final String Function() title;
   final Widget content;
 
   final bool exitTap;
@@ -93,7 +93,7 @@ class _GameDialogState extends State<GameDialog> with SingleTickerProviderStateM
                                 Padding(
                                     padding:
                                         const EdgeInsets.only(top: 13.5, left: 13.5, right: 40),
-                                    child: Text(widget.title,
+                                    child: Text(widget.title(),
                                         style: const TextStyle(
                                             color: Colors.white,
                                             fontSize: 27,

@@ -6,13 +6,9 @@ import '../animated_button.dart';
 class AnimatedButtonScaleDecorator extends GetxController
     with GetSingleTickerProviderStateMixin
     implements AnimatedButtonDecorator {
-  AnimatedButtonScaleDecorator.min({double scale = 0.8}) {
-    animation = CurvedAnimation(parent: controller, curve: Curves.linear);
-  }
-
-  AnimatedButtonScaleDecorator.max({double scale = 1.1}) {
+  AnimatedButtonScaleDecorator({double min = 1.0, double max = 1.1}) {
     animation = CurvedAnimation(parent: controller, curve: Curves.linear)
-        .drive(Tween<double>(begin: 1.0, end: scale));
+        .drive(Tween<double>(begin: min, end: max));
   }
 
   late final AnimationController controller =

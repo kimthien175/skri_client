@@ -105,6 +105,8 @@ flutter:
     - assets/gif/clear.gif
     - assets/gif/thumbsup.gif
     - assets/gif/thumbsdown.gif
+    - assets/gif/audio.gif
+    - assets/gif/key.gif
 
 
 

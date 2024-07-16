@@ -10,7 +10,7 @@ class PlayerController extends GetxController with GetSingleTickerProviderStateM
       AnimationController(duration: AnimatedButton.duration, vsync: this);
   late final Animation<double> animation =
       CurvedAnimation(parent: animController, curve: Curves.linear)
-          .drive(Tween<double>(begin: 1.0, end: PlayerCard.avatarMaxScale));
+          .drive(Tween<double>(begin: 1.0, end: 1.1));
 
   @override
   void onClose() {
@@ -26,13 +26,11 @@ class PlayerCard extends StatelessWidget {
 
   static const double width = 200.0;
 
-  static const double avatarMaxScale = 1.1;
-
   // TODO: DIALOG CONTENT DIFFERENT DEPENDS ON STATE
   void showInfo() {
     GameDialog(
         exitTap: true,
-        title: info.nameForCard,
+        title: () => info.nameForCard,
         content: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
