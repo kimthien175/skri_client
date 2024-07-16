@@ -85,7 +85,7 @@ class _RandomButton extends GetView<AvatarEditorController> {
   Widget build(BuildContext context) => AnimatedButton(
       onTap: controller.randomize,
       decorators: [
-        AnimatedButtonScaleDecorator.max(scale: 1.2),
+        AnimatedButtonScaleDecorator(max: 1.2),
         AnimatedButtonTooltipDecorator(
             tooltip: 'randomize_your_avatar',
             position: TooltipPositionBottom(),

@@ -1,7 +1,6 @@
 library animated_button_tooltip;
 
 export 'position.dart';
-export 'controller.dart';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -38,32 +37,28 @@ class AnimatedButtonTooltipDecorator extends StatelessWidget
 
     state.onEnterCallbacks.add((e) {
       show();
-      position.controller.animController.forward();
     });
 
-    state.onExitCallbacks.add((e) {
-      position.controller.animController.reverse().then((_) {
-        hide();
-      });
+    state.onReverseEnd.add(() {
+      hide();
     });
   }
 
   @override
-  void Function() get clean => position.clean;
+  void clean() {}
 
   @override
-  Widget build(BuildContext context) {
-    return position.build(
-      originalBox: _state!.buttonKey.currentContext!.findRenderObject() as RenderBox,
-      scale: _scale(),
-      child: DefaultTextStyle(
-        style: const TextStyle(
-            color: Color.fromRGBO(240, 240, 240, 1),
-            fontWeight: FontWeight.w700,
-            fontSize: 13.0,
-            fontFamily: 'Nunito'),
-        child: Text(tooltip.tr),
-      ),
-    );
-  }
+  Widget build(BuildContext context) => position.build(
+        scaleAnimation: _state!.curvedAnimation,
+        originalBox: _state!.buttonKey.currentContext!.findRenderObject() as RenderBox,
+        scale: _scale(),
+        child: DefaultTextStyle(
+          style: const TextStyle(
+              color: Color.fromRGBO(240, 240, 240, 1),
+              fontWeight: FontWeight.w700,
+              fontSize: 13.0,
+              fontFamily: 'Nunito'),
+          child: Text(tooltip.tr),
+        ),
+      );
 }

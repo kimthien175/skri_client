@@ -1,56 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 import '../animated_button.dart';
 
-class AnimatedButtonScaleDecorator extends GetxController
-    with GetSingleTickerProviderStateMixin
-    implements AnimatedButtonDecorator {
-  AnimatedButtonScaleDecorator.min({double scale = 0.8}) {
-    animation = CurvedAnimation(parent: controller, curve: Curves.linear);
-  }
+class AnimatedButtonScaleDecorator extends AnimatedButtonDecorator {
+  AnimatedButtonScaleDecorator({this.min = 1.0, this.max = 1.1});
 
-  AnimatedButtonScaleDecorator.max({double scale = 1.1}) {
-    animation = CurvedAnimation(parent: controller, curve: Curves.linear)
-        .drive(Tween<double>(begin: 1.0, end: scale));
-  }
-
-  late final AnimationController controller =
-      AnimationController(duration: AnimatedButton.duration, vsync: this);
-  late final Animation<double> animation;
+  final double min;
+  final double max;
 
   @override
   void decorate(AnimatedButtonState state) {
     // wrap the widget with ScaleTransition
-
     state.child = ScaleTransition(
-      scale: animation,
+      scale: state.curvedAnimation.drive(Tween<double>(begin: min, end: max)),
       filterQuality: FilterQuality.none,
       child: state.child,
     );
-
-    state.onEnterCallbacks.add((_) {
-      controller.forward();
-    });
-
-    state.onExitCallbacks.add((_) {
-      controller.reverse();
-    });
   }
-
-  @override
-  void onClose() {
-    throw Exception('This controller is supposed to be standalone, not via Get.put');
-    // controller.dispose();
-    // super.onClose();
-  }
-
-  @override
-  void dispose() {
-    controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  void Function() get clean => dispose;
 }

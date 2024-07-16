@@ -18,7 +18,7 @@ class AnimatedButton extends StatefulWidget {
   State<AnimatedButton> createState() => AnimatedButtonState();
 }
 
-class AnimatedButtonState extends State<AnimatedButton> {
+class AnimatedButtonState extends State<AnimatedButton> with SingleTickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
@@ -29,6 +29,11 @@ class AnimatedButtonState extends State<AnimatedButton> {
     }
   }
 
+  late final AnimationController controller =
+      AnimationController(vsync: this, duration: AnimatedButton.duration);
+  late final CurvedAnimation curvedAnimation =
+      CurvedAnimation(curve: Curves.linear, parent: controller);
+
   final GlobalKey _buttonKey = GlobalKey();
   GlobalKey get buttonKey => _buttonKey;
 
@@ -36,12 +41,15 @@ class AnimatedButtonState extends State<AnimatedButton> {
 
   final List<void Function(PointerEnterEvent)> onEnterCallbacks = [];
   final List<void Function(PointerExitEvent)> onExitCallbacks = [];
+  final List<void Function()> onReverseEnd = [];
 
   @override
   void dispose() {
     for (var decorator in widget.decorators) {
       decorator.clean();
     }
+    curvedAnimation.dispose();
+    controller.dispose();
     super.dispose();
   }
 
@@ -56,11 +64,17 @@ class AnimatedButtonState extends State<AnimatedButton> {
               for (var callback in onEnterCallbacks) {
                 callback(e);
               }
+              controller.forward();
             },
             onExit: (e) {
               for (var callback in onExitCallbacks) {
                 callback(e);
               }
+              controller.reverse().then((_) {
+                for (var callback in onReverseEnd) {
+                  callback();
+                }
+              });
             },
             child: child));
   }

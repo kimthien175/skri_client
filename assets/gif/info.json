@@ -181,6 +181,14 @@
             {
                 "name":"clear",
                 "source":"assets/gif/clear.gif"
+            },
+            {
+                "name":"audio",
+                "source":"assets/gif/audio.gif"
+            },
+            {
+                "name":"key",
+                "source":"assets/gif/key.gif"
             }
         ]
     }
