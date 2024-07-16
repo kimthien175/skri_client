@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:skribbl_client/models/gif_manager.dart';
 import 'package:skribbl_client/pages/pages.dart';
 import 'package:skribbl_client/utils/styles.dart';
@@ -42,19 +44,17 @@ class GameBar extends StatelessWidget {
                       fontSize: 19.6,
                       fontVariations: [FontVariation.weight(720)]))),
       Positioned(
-        right: 3,
-        child: AnimatedButton(
-            decorators: [
-              AnimatedButtonOpacityDecorator(minOpacity: 0.9),
-              AnimatedButtonScaleDecorator.max(scale: 1.1),
-              AnimatedButtonTooltipDecorator(tooltip: 'Settings', position: TooltipPositionLeft())
-            ],
-            child: GifManager.inst
-                .misc('settings')
-                .builder
-                .initWithShadow(filterQuality: FilterQuality.none, height: 42, width: 42)),
-      )
-      //)
+          right: 3,
+          child: AnimatedButton(
+              decorators: [
+                AnimatedButtonOpacityDecorator(minOpacity: 0.9),
+                AnimatedButtonScaleDecorator.max(scale: 1.1),
+                AnimatedButtonTooltipDecorator(tooltip: 'Settings', position: TooltipPositionLeft())
+              ],
+              child: GifManager.inst
+                  .misc('settings')
+                  .builder
+                  .initWithShadow(filterQuality: FilterQuality.none, height: 42, width: 42)))
     ]);
 
     // Container(
@@ -73,24 +73,75 @@ class GameBar extends StatelessWidget {
   }
 }
 
-// TODO: ADD EFFECT WHEN ALMOST RUN OUT OF TIME
-class GameClock extends StatelessWidget {
+// TODO: ADD EFFECT WHEN ALMOST RUN OUT OF TIME, start at 9, as soon as the new number shows, the animation starts
+
+class GameClock extends GetView<GameClockController> {
   const GameClock({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      alignment: Alignment.center,
-      children: [
-        GifManager.inst.misc('clock').builder.initWithShadow(width: 64, height: 64),
-        const Positioned(
-            top: 20,
-            child:
-                //Obx(() =>
-                Text('0', //Game.inst.remainingTime.seconds.value.toString(),
-                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.w800)))
-        //)
-      ],
+    return ScaleTransition(
+        scale: controller.scaleAnimation,
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            GifManager.inst.misc('clock').builder.initWithShadow(width: 64, height: 64),
+            Positioned(
+                top: 20,
+                child: Obx(() => Text(
+                    controller.remainingTime.value
+                        .toString(), //Game.inst.remainingTime.seconds.value.toString(),
+                    style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w800))))
+          ],
+        ));
+  }
+}
+
+class GameClockController extends GetxController with GetSingleTickerProviderStateMixin {
+  @override
+  onInit() {
+    super.onInit();
+    controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 50),
+      reverseDuration: const Duration(milliseconds: 250),
     );
+
+    scaleAnimation = CurvedAnimation(parent: controller, curve: Curves.easeInOut)
+        .drive(Tween<double>(begin: 1.0, end: scale));
+
+    timer = Timer.periodic(const Duration(seconds: 1), decreaseSeconds);
+  }
+
+  late final Timer timer;
+
+  void decreaseSeconds(Timer timer) {
+    if (remainingTime.value == 0) {
+      timer.cancel();
+      return;
+    }
+    remainingTime--;
+    controller.forward().then((value) {
+      controller.reverse();
+    });
+  }
+
+  var remainingTime = 20.obs;
+
+  late final AnimationController controller;
+
+  late final Animation<double> scaleAnimation;
+
+//   late final Animation<double> rotationAnimation = Tween<double>(
+//     begin: 0,
+//     end: 1,
+//   ).animate(controller);
+
+  static const double scale = 1.4;
+
+  @override
+  void onClose() {
+    controller.dispose();
+    super.onClose();
   }
 }

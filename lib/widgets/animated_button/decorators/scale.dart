@@ -7,42 +7,27 @@ class AnimatedButtonScaleDecorator extends GetxController
     with GetSingleTickerProviderStateMixin
     implements AnimatedButtonDecorator {
   AnimatedButtonScaleDecorator.min({double scale = 0.8}) {
-    controller =
-        AnimationController(duration: AnimatedButton.duration, vsync: this, lowerBound: scale);
-
     animation = CurvedAnimation(parent: controller, curve: Curves.linear);
-
-    _decorateWidget = (Widget widget) => ScaleTransition(
-          scale: animation,
-          // filterQuality: FilterQuality.high,
-          child: widget,
-        );
   }
 
   AnimatedButtonScaleDecorator.max({double scale = 1.1}) {
-    controller =
-        AnimationController(duration: AnimatedButton.duration, vsync: this, lowerBound: 1 / scale);
-    animation = CurvedAnimation(parent: controller, curve: Curves.linear);
-
-    _decorateWidget = (Widget widget) => Transform.scale(
-        scale: scale,
-        child: ScaleTransition(
-          scale: animation,
-          filterQuality: FilterQuality.none,
-          child: widget,
-        ));
+    animation = CurvedAnimation(parent: controller, curve: Curves.linear)
+        .drive(Tween<double>(begin: 1.0, end: scale));
   }
 
-  late final Widget Function(Widget widget) _decorateWidget;
-
-  late final AnimationController controller;
+  late final AnimationController controller =
+      AnimationController(duration: AnimatedButton.duration, vsync: this);
   late final Animation<double> animation;
 
   @override
   void decorate(AnimatedButtonState state) {
     // wrap the widget with ScaleTransition
 
-    state.child = _decorateWidget(state.child);
+    state.child = ScaleTransition(
+      scale: animation,
+      filterQuality: FilterQuality.none,
+      child: state.child,
+    );
 
     state.onEnterCallbacks.add((_) {
       controller.forward();

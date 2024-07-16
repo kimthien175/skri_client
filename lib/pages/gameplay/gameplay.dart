@@ -30,6 +30,7 @@ class GameplayController extends GetxController {
   void loadChildrenControllers() {
     Get.put(PlayersListController());
     Get.put(MainContentAndFooterController());
+    Get.put(GameClockController());
   }
 
   // @override

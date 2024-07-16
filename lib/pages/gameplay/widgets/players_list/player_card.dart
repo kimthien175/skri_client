@@ -6,10 +6,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class PlayerController extends GetxController with GetSingleTickerProviderStateMixin {
-  late final AnimationController animController = AnimationController(
-      duration: AnimatedButton.duration, vsync: this, lowerBound: 1 / PlayerCard.avatarMaxScale);
+  late final AnimationController animController =
+      AnimationController(duration: AnimatedButton.duration, vsync: this);
   late final Animation<double> animation =
-      CurvedAnimation(parent: animController, curve: Curves.linear);
+      CurvedAnimation(parent: animController, curve: Curves.linear)
+          .drive(Tween<double>(begin: 1.0, end: PlayerCard.avatarMaxScale));
 
   @override
   void onClose() {
@@ -114,10 +115,8 @@ class PlayerCard extends StatelessWidget {
               Positioned(
                   top: -1,
                   right: 0,
-                  child: Transform.scale(
-                      scale: avatarMaxScale,
-                      child: ScaleTransition(
-                          scale: controller.animation, child: info.avatar.fit(width: 48)))),
+                  child: ScaleTransition(
+                      scale: controller.animation, child: info.avatar.fit(width: 48))),
               Positioned(
                   top: 5,
                   left: 6,
