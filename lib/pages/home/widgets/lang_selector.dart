@@ -25,7 +25,7 @@ class LangSelector extends StatelessWidget {
         margin: const EdgeInsets.only(left: 4),
         child: DropdownButtonHideUnderline(
             child: DropdownButton(
-                icon: Icon(Icons.keyboard_arrow_down_rounded, color: InputStyles.color),
+                icon: const Icon(Icons.keyboard_arrow_down_rounded, color: InputStyles.color),
                 padding: const EdgeInsets.only(left: 7),
                 isExpanded: true,
                 value: Get.locale.toString(),

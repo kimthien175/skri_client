@@ -178,11 +178,11 @@ class PanelStyles {
   static const Color color = Color.fromRGBO(12, 44, 150, 0.75);
   static double get widthOnMobile => min(0.9 * Get.width, 0.55 * Get.height);
   static const double width = 400;
-  static Color borderFocusColor = const Color(0xff56b2fd);
+  static const Color borderFocusColor = Color(0xff56b2fd);
 }
 
 class InputStyles {
-  static Color color = const Color(0xff2c2c2c);
+  static const Color color = Color(0xff2c2c2c);
   static BoxDecoration decoration = BoxDecoration(
       color: Colors.white,
       borderRadius: GlobalStyles.borderRadius,
@@ -197,8 +197,8 @@ class GlobalStyles {
 }
 
 class GameplayStyles {
-  static SizedBox layoutGap = const SizedBox(height: 6, width: 6);
-  static Color colorPlayerBGBase = Colors.white;
-  static Color colorPlayerBGBase_2 = const Color(0xffececec);
-  static Color colorPlayerMe = const Color(0xff4998ff);
+  static const SizedBox layoutGap = SizedBox(height: 6, width: 6);
+  static const Color colorPlayerBGBase = Colors.white;
+  static const Color colorPlayerBGBase_2 = Color(0xffececec);
+  static const Color colorPlayerMe = Color(0xff4998ff);
 }

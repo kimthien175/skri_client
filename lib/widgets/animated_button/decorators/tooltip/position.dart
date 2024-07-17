@@ -4,23 +4,21 @@ import 'package:get/get.dart';
 import 'tooltip.dart';
 
 abstract class AnimatedButtonTooltipPosition {
-  Animation<double>? scaleAnimation;
   Widget build(
       {required Widget child,
       required RenderBox originalBox,
       required double scale,
       required Animation<double> scaleAnimation}) {
-    this.scaleAnimation = scaleAnimation;
-    return _wrapWithZone(_buildWithAlign(child, scale), originalBox.localToGlobal(Offset.zero),
-        originalBox.size * scale);
+    return _wrapWithZone(_buildWithAlign(child, scale, scaleAnimation),
+        originalBox.localToGlobal(Offset.zero), originalBox.size * scale);
   }
 
   Widget _wrapWithZone(Widget aligned, Offset offset, Size size);
 
-  Widget _buildWithAlign(Widget child, double scale) {
+  Widget _buildWithAlign(Widget child, double scale, Animation<double> scaleAnimation) {
     // put original child in tooltip 'background', wrap with ScaleTransition
     var newChild =
-        ScaleTransition(alignment: relativeAlignment, scale: scaleAnimation!, child: _build(child));
+        ScaleTransition(alignment: relativeAlignment, scale: scaleAnimation, child: _build(child));
     return Align(
         alignment: relativeAlignment,
         child: scale == 1.0

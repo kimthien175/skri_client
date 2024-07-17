@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:skribbl_client/utils/utils.dart';
 import 'package:skribbl_client/widgets/widgets.dart';
 
 import '../../../../models/models.dart';
@@ -17,7 +18,24 @@ class SettingsButton extends StatelessWidget {
                 _ItemTittle(title: "Volume 100%".tr, icon: 'audio'),
 
 // volume slider
-                Row(children: [_ItemTittle(title: "Hotkeys".tr, icon: 'key')])
+                Row(children: [
+                  _ItemTittle(title: "Hotkeys".tr, icon: 'key'),
+                  AnimatedButton(
+                    decorators: [
+                      AnimatedButtonBackgroundColorDecorator(
+                          colorTween: ColorTween(
+                        begin: GlobalStyles.colorPanelButton,
+                        end: GlobalStyles.colorPanelButtonHover,
+                      ))
+                    ],
+                    child: Text(
+                      'Reset'.tr,
+                      style: const TextStyle(
+                          color: PanelStyles.textColor,
+                          fontVariations: [FontVariation.weight(800)]),
+                    ),
+                  )
+                ])
               ],
             ))).show();
   }

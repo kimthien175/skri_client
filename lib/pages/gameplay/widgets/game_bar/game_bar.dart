@@ -18,7 +18,7 @@ class GameBar extends StatelessWidget {
     return Stack(alignment: Alignment.centerLeft, clipBehavior: Clip.none, children: [
       Container(
           constraints: const BoxConstraints.expand(height: height),
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
               color: GameplayStyles.colorPlayerBGBase, borderRadius: GlobalStyles.borderRadius),
           child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
             const SizedBox(width: PlayerCard.width),

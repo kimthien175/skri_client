@@ -38,15 +38,16 @@ class GameplayWeb extends StatelessWidget {
                               GameplayStyles.layoutGap,
                               const GameBar(),
                               GameplayStyles.layoutGap,
-                              Row(
+                              const Row(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
-                                    const PlayersList(),
+                                    PlayersList(),
                                     GameplayStyles.layoutGap,
                                     // MainContentAndFooter(),
                                     GameplayStyles.layoutGap,
-                                    //const GameChat()
+                                    //const GameChat(),
+                                    LangSelector()
                                   ])
                             ])))))));
   }

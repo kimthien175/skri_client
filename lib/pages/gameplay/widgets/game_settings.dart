@@ -307,7 +307,7 @@ class _SettingsItem extends StatelessWidget {
               decoration: InputStyles.decoration,
               child: Obx(() => DropdownButtonHideUnderline(
                   child: DropdownButton(
-                      icon: Icon(Icons.keyboard_arrow_down_rounded, color: InputStyles.color),
+                      icon: const Icon(Icons.keyboard_arrow_down_rounded, color: InputStyles.color),
                       padding: const EdgeInsets.only(left: 7),
                       // isExpanded: true,
                       value: getSetting(),

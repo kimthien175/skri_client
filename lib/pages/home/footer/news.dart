@@ -76,8 +76,8 @@ class _Head extends StatelessWidget {
 
     return Container(
         margin: const EdgeInsets.only(bottom: 8),
-        decoration:
-            BoxDecoration(border: Border(bottom: BorderSide(color: PanelStyles.borderFocusColor))),
+        decoration: const BoxDecoration(
+            border: Border(bottom: BorderSide(color: PanelStyles.borderFocusColor))),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.baseline,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
