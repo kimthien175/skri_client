@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:skribbl_client/utils/utils.dart';
 import 'package:skribbl_client/widgets/widgets.dart';
 
 import '../../../../models/models.dart';
@@ -13,31 +12,18 @@ class SettingsButton extends StatelessWidget {
         title: () => 'Settings'.tr,
         content: SizedBox(
             width: 500,
-            child: Column(
-              children: [
-                _ItemTittle(title: "Volume 100%".tr, icon: 'audio'),
+            child: Column(children: [
+              _ItemTittle(title: "Volume 100%".tr, icon: 'audio'),
 
 // volume slider
-                Row(children: [
-                  _ItemTittle(title: "Hotkeys".tr, icon: 'key'),
-                  AnimatedButton(
-                    decorators: [
-                      AnimatedButtonBackgroundColorDecorator(
-                          colorTween: ColorTween(
-                        begin: GlobalStyles.colorPanelButton,
-                        end: GlobalStyles.colorPanelButtonHover,
-                      ))
-                    ],
-                    child: Text(
-                      'Reset'.tr,
-                      style: const TextStyle(
-                          color: PanelStyles.textColor,
-                          fontVariations: [FontVariation.weight(800)]),
-                    ),
-                  )
-                ])
-              ],
-            ))).show();
+              Row(children: [
+                _ItemTittle(title: "Hotkeys".tr, icon: 'key'),
+                AnimatedButton(
+                  decorators: const [AnimatedButtonBackgroundColorDecorator()],
+                  child: Text('Reset'.tr),
+                )
+              ])
+            ]))).show();
   }
 
   @override
@@ -45,9 +31,9 @@ class SettingsButton extends StatelessWidget {
     return AnimatedButton(
         onTap: showSettings,
         decorators: [
-          AnimatedButtonOpacityDecorator(minOpacity: 0.9),
-          AnimatedButtonScaleDecorator(max: 1.1),
-          AnimatedButtonTooltipDecorator(tooltip: 'Settings', position: TooltipPositionLeft())
+          const AnimatedButtonOpacityDecorator(minOpacity: 0.9),
+          const AnimatedButtonScaleDecorator(max: 1.1),
+          AnimatedButtonTooltipDecorator(tooltip: 'Settings', position: const TooltipPositionLeft())
         ],
         child: GifManager.inst
             .misc('settings')

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../animated_button.dart';
 
 class AnimatedButtonScaleDecorator extends AnimatedButtonDecorator {
-  AnimatedButtonScaleDecorator({this.min = 1.0, this.max = 1.1});
+  const AnimatedButtonScaleDecorator({this.min = 1.0, this.max = 1.1});
 
   final double min;
   final double max;

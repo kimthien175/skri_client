@@ -47,15 +47,9 @@ class PlayerCard extends StatelessWidget {
                     //onTap: Game.inst.copyLink,
                     height: 34.5,
                     width: 200,
-                    color: GlobalStyles.colorPanelButton,
-                    hoverColor: GlobalStyles.colorPanelButtonHover,
                     child: Text(
                       'click_to_copy_invite'.tr,
-                      style: const TextStyle(
-                          fontSize: 15,
-                          fontVariations: [FontVariation.weight(800)],
-                          color: PanelStyles.textColor,
-                          shadows: [GlobalStyles.textShadow]),
+                      style: const TextStyle(fontSize: 15),
                     ))
               ],
             )

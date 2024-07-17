@@ -1,7 +1,6 @@
 library player_list;
 
 export 'player_card.dart';
-export 'player_info.dart';
 
 import 'package:skribbl_client/models/models.dart';
 

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../animated_button.dart';
 
 class AnimatedButtonOpacityDecorator extends AnimatedButtonDecorator {
-  AnimatedButtonOpacityDecorator({this.minOpacity = 0.5});
+  const AnimatedButtonOpacityDecorator({this.minOpacity = 0.5});
 
   final double minOpacity;
 

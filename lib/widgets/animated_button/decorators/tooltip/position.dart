@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'tooltip.dart';
 
 abstract class AnimatedButtonTooltipPosition {
+  const AnimatedButtonTooltipPosition();
   Widget build(
       {required Widget child,
       required RenderBox originalBox,
@@ -53,6 +54,7 @@ abstract class AnimatedButtonTooltipPosition {
 }
 
 class TooltipPositionLeft extends AnimatedButtonTooltipPosition {
+  const TooltipPositionLeft();
   @override
   Widget _build(Widget rawChild) =>
       Row(mainAxisSize: MainAxisSize.min, children: [_wrapWithContainer(rawChild), arrow]);
@@ -96,6 +98,7 @@ class TooltipPositionLeft extends AnimatedButtonTooltipPosition {
 }
 
 class TooltipPositionTop extends AnimatedButtonTooltipPosition {
+  const TooltipPositionTop();
   @override
   Path Function(Size size) get arrowPath => (size) => Path()
     ..moveTo(0, 0)
@@ -137,6 +140,7 @@ class TooltipPositionTop extends AnimatedButtonTooltipPosition {
 }
 
 class TooltipPositionRight extends AnimatedButtonTooltipPosition {
+  const TooltipPositionRight();
   @override
   Path Function(Size size) get arrowPath => (size) => Path()
     ..moveTo(size.width, 0)
@@ -176,6 +180,7 @@ class TooltipPositionRight extends AnimatedButtonTooltipPosition {
 }
 
 class TooltipPositionBottom extends AnimatedButtonTooltipPosition {
+  const TooltipPositionBottom();
   @override
   Path Function(Size size) get arrowPath => (size) => Path()
     ..moveTo(0, size.height)

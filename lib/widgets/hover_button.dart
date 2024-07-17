@@ -6,8 +6,8 @@ class HoverButton extends StatelessWidget {
   const HoverButton(
       {super.key,
       required this.child,
-      required this.color,
-      required this.hoverColor,
+      this.color = GlobalStyles.colorPanelButton,
+      this.hoverColor = GlobalStyles.colorPanelButtonHover,
       this.onTap,
       this.borderRadius = GlobalStyles.borderRadius,
       this.height,
@@ -47,6 +47,13 @@ class HoverButton extends StatelessWidget {
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
                         color: isHover ? hoverColor : color, borderRadius: borderRadius),
-                    child: child))));
+                    child: DefaultTextStyle(
+                        style: const TextStyle(
+                            shadows: [GlobalStyles.textShadow],
+                            fontFamily: 'Nunito-var',
+                            fontVariations: [FontVariation.weight(800)],
+                            color: PanelStyles.textColor,
+                            fontSize: 19.5),
+                        child: child)))));
   }
 }

@@ -1,5 +1,4 @@
 import 'package:skribbl_client/models/game/private_game.dart';
-import 'package:skribbl_client/utils/styles.dart';
 import 'package:skribbl_client/widgets/hover_button.dart';
 import 'package:skribbl_client/widgets/loading.dart';
 import 'package:flutter/material.dart';
@@ -30,13 +29,7 @@ class PlayButton extends StatelessWidget {
       color: const Color(0xff53e237),
       hoverColor: const Color(0xff38c41c),
       height: 54,
-      borderRadius: GlobalStyles.borderRadius,
-      child: Text('play_button'.tr,
-          style: const TextStyle(
-              fontSize: 32,
-              color: PanelStyles.textColor,
-              fontWeight: FontWeight.w800,
-              shadows: [GlobalStyles.textShadow])),
+      child: Text('play_button'.tr, style: const TextStyle(fontSize: 32)),
     );
   }
 }
