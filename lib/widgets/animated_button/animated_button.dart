@@ -7,6 +7,7 @@ import 'package:skribbl_client/widgets/animated_button/decorator.dart';
 export 'decorator.dart';
 
 class AnimatedButton extends StatefulWidget {
+  /// if you only use `AnimatedButtonBackgroundColorDecorator`, use `HoverButton` instead for lightweight
   const AnimatedButton({super.key, required this.child, required this.decorators, this.onTap});
   final Widget child;
   final List<AnimatedButtonDecorator> decorators;

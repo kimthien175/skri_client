@@ -19,7 +19,7 @@ class AnimatedButtonBackgroundColorDecorator extends AnimatedButtonDecorator {
   final Color hoverColor;
   @override
   void decorate(AnimatedButtonState state) {
-    state.child = _BackgroundColorTransition(
+    state.child = BackgroundColorTransition(
         listenable: state.curvedAnimation.drive(ColorTween(begin: color, end: hoverColor)),
         height: height,
         width: width,
@@ -28,34 +28,38 @@ class AnimatedButtonBackgroundColorDecorator extends AnimatedButtonDecorator {
   }
 }
 
-class _BackgroundColorTransition extends AnimatedWidget {
-  const _BackgroundColorTransition(
-      {required this.child,
+class BackgroundColorTransition extends AnimatedWidget {
+  const BackgroundColorTransition(
+      {super.key,
+      this.child,
       this.height,
       this.width,
-      required this.borderRadius,
+      this.borderRadius,
       required super.listenable});
   final double? height;
   final double? width;
-  final BorderRadius borderRadius;
+  final BorderRadius? borderRadius;
 
-  final Widget child;
+  final Widget? child;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        height: height,
-        width: width,
-        alignment: Alignment.center,
-        decoration:
-            BoxDecoration(color: (listenable as Animation).value, borderRadius: borderRadius),
-        child: DefaultTextStyle(
-            style: const TextStyle(
-                shadows: [GlobalStyles.textShadow],
-                fontFamily: 'Nunito-var',
-                fontVariations: [FontVariation.weight(800)],
-                color: PanelStyles.textColor,
-                fontSize: 19.5),
+    return DefaultTextStyle(
+        style: const TextStyle(
+            shadows: [GlobalStyles.textShadow],
+            fontFamily: 'Nunito-var',
+            fontVariations: [FontVariation.weight(800)],
+            color: PanelStyles.textColor,
+            fontSize: 19.5),
+        child: Container(
+            height: height,
+            width: width,
+            padding: height == null && width == null
+                ? const EdgeInsets.symmetric(horizontal: 5.85)
+                : null,
+            alignment: Alignment.center,
+            decoration:
+                BoxDecoration(color: (listenable as Animation).value, borderRadius: borderRadius),
             child: child));
   }
 }

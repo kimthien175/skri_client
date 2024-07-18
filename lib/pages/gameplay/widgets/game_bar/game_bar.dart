@@ -2,7 +2,7 @@ library game_bar;
 
 export 'clock.dart';
 
-import 'package:skribbl_client/pages/gameplay/widgets/game_bar/settings.dart';
+import 'package:skribbl_client/pages/gameplay/widgets/game_bar/settings/settings.dart';
 import 'package:skribbl_client/pages/pages.dart';
 import 'package:skribbl_client/utils/styles.dart';
 

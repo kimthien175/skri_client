@@ -81,6 +81,7 @@ class LocaleKeys {
   static const randomize_your_avatar = 'randomize_your_avatar';
   static const news_error = 'news_error';
   static const click_to_copy_invite = 'click_to_copy_invite';
+  static const reset_hotkeys_tooltip = 'reset_hotkeys_tooltip';
   static const You = 'You';
   static const Normal = 'Normal';
   static const Hidden = 'Hidden';
@@ -89,6 +90,10 @@ class LocaleKeys {
   static const No = 'No';
   static const WAITING = 'WAITING';
   static const Settings = 'Settings';
+  static const Volume = 'Volume';
+  static const Hotkeys = 'Hotkeys';
+  static const Reset = 'Reset';
+  static const Miscellaneous = 'Miscellaneous';
 }
 
 class Locales {
@@ -173,6 +178,7 @@ class Locales {
     'randomize_your_avatar': 'Randomize your Avatar!',
     'news_error': 'Can\'t get any news!!',
     'click_to_copy_invite': 'Click to copy Invite',
+    'reset_hotkeys_tooltip': 'Reset hotkeys to default',
   };
   static const vi_VN = {
     'displayName': 'Tiếng Việt',
@@ -258,5 +264,10 @@ class Locales {
     'news_error': 'Không tìm thấy tin tức nào hết!!',
     'click_to_copy_invite': 'Bấm để sao chép lời mời',
     'Settings': 'Cài đặt',
+    'Volume': 'Âm lượng',
+    'Hotkeys': 'Phím tắt',
+    'Reset': 'Đặt lại',
+    'reset_hotkeys_tooltip': 'Đặt lại mặc định phím tắt',
+    'Miscellaneous': 'Tùy chọn khác',
   };
 }

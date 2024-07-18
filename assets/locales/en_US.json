@@ -58,5 +58,6 @@
     "choose_a_word": "Choose a word",
     "randomize_your_avatar": "Randomize your Avatar!",
     "news_error": "Can't get any news!!",
-    "click_to_copy_invite": "Click to copy Invite"
+    "click_to_copy_invite": "Click to copy Invite",
+    "reset_hotkeys_tooltip": "Reset hotkeys to default"
 }

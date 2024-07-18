@@ -29,7 +29,9 @@ class PlayButton extends StatelessWidget {
       color: const Color(0xff53e237),
       hoverColor: const Color(0xff38c41c),
       height: 54,
-      child: Text('play_button'.tr, style: const TextStyle(fontSize: 32)),
+      child: Text('play_button'.tr,
+          style: const TextStyle(
+              fontSize: 32, shadows: [Shadow(color: Color(0x2b000000), offset: Offset(2, 2))])),
     );
   }
 }
