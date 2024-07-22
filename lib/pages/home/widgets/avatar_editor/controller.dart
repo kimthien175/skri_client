@@ -7,13 +7,10 @@ import 'package:get/get.dart';
 import 'jiggle_avatar.dart';
 
 class AvatarEditorController extends GetxController {
-  AvatarEditorController() {
-    var rd = Random();
-    color = rd.nextInt(GifManager.inst.colorLength).obs;
-    eyes = rd.nextInt(GifManager.inst.eyesLength).obs;
-    mouth = rd.nextInt(GifManager.inst.mouthLength).obs;
-
-    MePlayer.init(AvatarModel.init(color.value, eyes.value, mouth.value).builder.init());
+  AvatarEditorController(int color, int eyes, int mouth) {
+    this.color = color.obs;
+    this.eyes = eyes.obs;
+    this.mouth = mouth.obs;
   }
 
   late final RxInt color;

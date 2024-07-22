@@ -2,6 +2,7 @@ import 'package:skribbl_client/generated/locales.g.dart';
 import 'package:skribbl_client/utils/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:skribbl_client/widgets/input_container.dart';
 
 class LangSelector extends StatelessWidget {
   const LangSelector({super.key});
@@ -18,13 +19,15 @@ class LangSelector extends StatelessWidget {
                   const TextStyle(fontFamily: 'Nunito', fontWeight: FontWeight.w500, fontSize: 16),
             )))
         .toList();
-    return Container(
+    var focusNode = FocusNode();
+    return InputContainer(
         height: 34,
         width: 120,
-        decoration: InputStyles.decoration,
+        focusNode: focusNode,
         margin: const EdgeInsets.only(left: 4),
         child: DropdownButtonHideUnderline(
             child: DropdownButton(
+                focusNode: focusNode,
                 icon: const Icon(Icons.keyboard_arrow_down_rounded, color: InputStyles.color),
                 padding: const EdgeInsets.only(left: 7),
                 isExpanded: true,

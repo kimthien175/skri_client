@@ -3,6 +3,7 @@ import 'package:skribbl_client/models/models.dart';
 import 'package:skribbl_client/utils/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:skribbl_client/widgets/input_container.dart';
 
 class GameSettingsController extends GetxController {
   GameSettingsController() {
@@ -222,10 +223,9 @@ class CustomWordsInput extends StatelessWidget {
     var maxLength = fetchedRules['max_char'];
     return Obx(() {
       if (Get.find<GameSettingsController>().isCovered.value) {
-        return Container(decoration: InputStyles.decoration);
+        return const InputContainer();
       }
-      return Container(
-          decoration: InputStyles.decoration,
+      return InputContainer(
           child: Form(
               key: formKey,
               child: TextFormField(
@@ -303,8 +303,7 @@ class _SettingsItem extends StatelessWidget {
           ])),
       Expanded(
           flex: 45,
-          child: Container(
-              decoration: InputStyles.decoration,
+          child: InputContainer(
               child: Obx(() => DropdownButtonHideUnderline(
                   child: DropdownButton(
                       icon: const Icon(Icons.keyboard_arrow_down_rounded, color: InputStyles.color),

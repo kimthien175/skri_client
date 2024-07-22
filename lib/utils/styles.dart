@@ -183,10 +183,10 @@ class PanelStyles {
 
 class InputStyles {
   static const Color color = Color(0xff2c2c2c);
-  static BoxDecoration decoration = BoxDecoration(
-      color: Colors.white,
-      borderRadius: GlobalStyles.borderRadius,
-      border: Border.all(color: const Color(0xff707070)));
+//   static BoxDecoration decoration = BoxDecoration(
+//       color: Colors.white,
+//       borderRadius: GlobalStyles.borderRadius,
+//       border: Border.all(color: const Color(0xff707070)));
 }
 
 class GlobalStyles {

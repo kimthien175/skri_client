@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:skribbl_client/pages/gameplay/widgets/game_bar/settings/slider.dart';
 import 'package:skribbl_client/widgets/widgets.dart';
@@ -16,10 +17,10 @@ class SettingsButton extends StatelessWidget {
             child: Column(children: [
               Obx(() => _TittleItem(
                   icon: 'audio', title: "${'Volume'.tr} ${SystemSettings.inst.volumeToString}%")),
-
-// volume slider
               const SettingsSlider(),
+              //
               const SizedBox(height: 15),
+              //
               Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
                 _TittleItem(title: "Hotkeys".tr, icon: 'key'),
                 AnimatedButton(
@@ -30,7 +31,14 @@ class SettingsButton extends StatelessWidget {
                   child: Text('Reset'.tr),
                 )
               ]),
-              // hot keys
+              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                _KeyBinding(act: 'Brush'.tr, actKey: SystemSettings.inst.brushKey),
+                _KeyBinding(act: 'Fill'.tr, actKey: SystemSettings.inst.fillKey),
+                _KeyBinding(act: 'Undo'.tr, actKey: SystemSettings.inst.undoKey),
+                _KeyBinding(act: 'Clear'.tr, actKey: SystemSettings.inst.clearKey),
+                _KeyBinding(act: 'Swap'.tr, actKey: SystemSettings.inst.swapKey),
+              ]),
+              //
               const SizedBox(height: 15),
               _TittleItem(title: 'Miscellaneous'.tr, icon: 'questionmark')
             ]))).show();
@@ -73,6 +81,24 @@ class _TittleItem extends StatelessWidget {
   }
 }
 
+class _KeyBinding extends StatelessWidget {
+  const _KeyBinding({required this.act, required this.actKey});
+  final String act;
+  final LogicalKeyboardKey actKey;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(act,
+            style: const TextStyle(fontSize: 15, fontVariations: [FontVariation.weight(440)])),
+        Text(actKey.keyLabel)
+      ],
+    );
+  }
+}
+
 class SystemSettings extends GetxController {
   SystemSettings._internal();
   static final SystemSettings _inst = SystemSettings._internal();
@@ -81,4 +107,10 @@ class SystemSettings extends GetxController {
   RxDouble volume = 0.01.obs;
 
   String get volumeToString => (volume * 100).toStringAsFixed(0);
+
+  LogicalKeyboardKey brushKey = LogicalKeyboardKey.keyB;
+  LogicalKeyboardKey fillKey = LogicalKeyboardKey.keyF;
+  LogicalKeyboardKey undoKey = LogicalKeyboardKey.keyU;
+  LogicalKeyboardKey clearKey = LogicalKeyboardKey.keyC;
+  LogicalKeyboardKey swapKey = LogicalKeyboardKey.keyS;
 }

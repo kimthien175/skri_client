@@ -33,7 +33,7 @@ class _SettingsSliderState extends State<SettingsSlider> with SingleTickerProvid
 
   static const _sliderHeight = 7.0;
 
-  static const Color _borderColor = Color(0x66ffffff);
+  static const Color _borderColor = Color(0x69ffffff);
 
   static const double _thumbSize = 16;
 

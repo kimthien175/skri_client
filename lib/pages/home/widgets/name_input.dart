@@ -1,55 +1,40 @@
 import 'package:skribbl_client/models/game/player.dart';
-import 'package:skribbl_client/utils/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:visibility_detector/visibility_detector.dart';
+import 'package:skribbl_client/utils/styles.dart';
+import 'package:skribbl_client/widgets/input_container.dart';
+//import 'package:visibility_detector/visibility_detector.dart';
 
 class NameInput extends StatelessWidget {
   const NameInput({super.key});
 
   @override
   Widget build(BuildContext context) {
+    var focusNode = FocusNode();
     return Expanded(
-        child: Container(
+        child: InputContainer(
+            focusNode: focusNode,
             alignment: Alignment.centerLeft,
-            padding: const EdgeInsets.only(left: 10, right: 10),
-            decoration: InputStyles.decoration,
             height: 34,
-            child: _TextField()));
-  }
-}
-
-class _TextField extends StatelessWidget {
-  _TextField() {
-    if (MePlayer.isCreated) {
-      textController.text = MePlayer.inst.name;
-    }
-  }
-  final textController = TextEditingController();
-  @override
-  Widget build(BuildContext context) {
-    return VisibilityDetector(
-        key: const Key(''),
-        onVisibilityChanged: (visibilityInfo) {
-          textController.text = MePlayer.inst.name;
-        },
-        child: TextField(
-          controller: textController,
-          onChanged: (String text) => MePlayer.inst.name = text,
-          inputFormatters: [
-            LengthLimitingTextInputFormatter(20),
-            _NoLeadingSpaceFormatter(),
-            _NoMultipleSpacesFormatter()
-          ],
-          style: const TextStyle(fontWeight: FontWeight.w800),
-          decoration: InputDecoration(
-              isDense: true,
-              constraints: const BoxConstraints.tightForFinite(),
-              border: InputBorder.none,
-              hintText: 'name_input_placeholder'.tr,
-              hintStyle: const TextStyle(fontWeight: FontWeight.w800, color: Colors.black38)),
-        ));
+            child: TextField(
+              focusNode: focusNode,
+              cursorColor: PanelStyles.color,
+              controller: TextEditingController(text: MePlayer.inst.name),
+              onChanged: (String text) => MePlayer.inst.name = text,
+              inputFormatters: [
+                LengthLimitingTextInputFormatter(20),
+                _NoLeadingSpaceFormatter(),
+                _NoMultipleSpacesFormatter()
+              ],
+              style: const TextStyle(fontWeight: FontWeight.w800),
+              decoration: InputDecoration(
+                  isDense: true,
+                  constraints: const BoxConstraints.tightForFinite(),
+                  border: InputBorder.none,
+                  hintText: 'name_input_placeholder'.tr,
+                  hintStyle: const TextStyle(fontWeight: FontWeight.w800, color: Colors.black38)),
+            )));
   }
 }
 

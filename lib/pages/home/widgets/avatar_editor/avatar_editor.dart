@@ -47,35 +47,72 @@ class AvatarEditor extends GetView<AvatarEditorController> {
   }
 }
 
-class _SwitchButton extends StatelessWidget {
-  _SwitchButton(String path, String onHoverPath, this.callback) {
-    child = GifManager.inst.misc(path).builder.init();
-    onHoverChild = GifManager.inst.misc(onHoverPath).builder.init();
-  }
+class _SwitchButton extends StatefulWidget {
+  const _SwitchButton(this.path, this.onHoverPath, this.callback);
 
-  late final GifBuilder child;
-  late final GifBuilder onHoverChild;
+  final String path;
+  final String onHoverPath;
   final Function() callback;
 
   @override
+  State<_SwitchButton> createState() => _SwitchButtonState();
+}
+
+class _SwitchButtonState extends State<_SwitchButton> with SingleTickerProviderStateMixin {
+  late final GifBuilder child = GifManager.inst.misc(widget.path).builder.init();
+  late final GifBuilder onHoverChild = GifManager.inst.misc(widget.onHoverPath).builder.init();
+
+  late final AnimationController animController =
+      AnimationController(vsync: this, duration: duration);
+  late final Animation<double> animation =
+      CurvedAnimation(parent: animController, curve: Curves.linear);
+  static const Duration duration = Duration(milliseconds: 100);
+
+  late Widget visual;
+
+  @override
+  void initState() {
+    super.initState();
+    visual = child;
+  }
+
+  @override
+  void dispose() {
+    animController.dispose();
+    super.dispose();
+  }
+
+  change(Widget newWidget) {
+    setState(() {
+      visual = Stack(
+        children: [
+          newWidget,
+          FadeTransition(opacity: animation, child: visual),
+        ],
+      );
+    });
+    animController.reverse(from: 1).then((_) {
+      visual = newWidget;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    FadeSwitcherController controller =
-        Get.put(FadeSwitcherController(child), tag: hashCode.toString());
     return SizedBox(
         height: 34,
         width: 34,
         child: FittedBox(
             child: GestureDetector(
-                onTap: callback,
+                onTap: widget.callback,
                 child: MouseRegion(
                     cursor: SystemMouseCursors.click,
                     onEnter: (_) {
-                      controller.change(onHoverChild);
+                      change(onHoverChild);
                     },
                     onExit: (_) {
-                      controller.change(child);
+                      change(child);
                     },
-                    child: Obx(() => controller.child.value)))));
+                    child: visual))));
   }
 }
 
@@ -97,35 +134,4 @@ class _RandomButton extends GetView<AvatarEditorController> {
         const AnimatedButtonOpacityDecorator(minOpacity: 0.6)
       ],
       child: GifManager.inst.misc('randomize').builder.init(height: 32, width: 32));
-}
-
-class FadeSwitcherController extends GetxController with GetSingleTickerProviderStateMixin {
-  FadeSwitcherController(Widget child) {
-    this.child = child.obs;
-  }
-  late final AnimationController animController =
-      AnimationController(vsync: this, duration: duration);
-  late final Animation<double> animation =
-      CurvedAnimation(parent: animController, curve: Curves.linear);
-  static const Duration duration = Duration(milliseconds: 100);
-
-  late Rx<Widget> child;
-
-  void change(Widget newChild) {
-    child.value = Stack(
-      children: [
-        newChild,
-        FadeTransition(opacity: animation, child: child.value),
-      ],
-    );
-    animController.reverse(from: 1).then((_) {
-      child.value = newChild;
-    });
-  }
-
-  @override
-  void onClose() {
-    animController.dispose();
-    super.onClose();
-  }
 }

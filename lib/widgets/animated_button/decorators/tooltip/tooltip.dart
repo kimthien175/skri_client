@@ -20,7 +20,7 @@ class AnimatedButtonTooltipDecorator extends StatelessWidget
       AnimatedButtonTooltipPosition? position,
       double Function()? scale}) {
     _scale = scale ?? () => 1.0;
-    this.position = position ?? TooltipPositionTop();
+    this.position = position ?? const TooltipPositionTop();
   }
 
   final String tooltip;

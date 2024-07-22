@@ -1,6 +1,10 @@
+import 'dart:math';
+
 import 'package:skribbl_client/models/gif/controlled_gif/avatar/builder.dart';
 import 'package:skribbl_client/models/gif/controlled_gif/avatar/model.dart';
 import 'package:get/get.dart';
+import 'package:skribbl_client/models/gif_manager.dart';
+import 'package:skribbl_client/pages/home/home.dart';
 
 class Player {
   Player(
@@ -25,17 +29,21 @@ class Player {
 }
 
 class MePlayer extends Player {
-  static MePlayer? _inst;
-  static MePlayer get inst => _inst!;
-  static void init(AvatarBuilder avatarBuilder) =>
-      _inst = MePlayer._internal(name: '', avatar: avatarBuilder, id: 'empty id');
+  static final MePlayer inst = _freshInit();
 
-  MePlayer._internal({super.name = '', required super.avatar, required super.id});
+  static MePlayer _freshInit() {
+    var rd = Random();
+    var color = rd.nextInt(GifManager.inst.colorLength);
+    var eyes = rd.nextInt(GifManager.inst.eyesLength);
+    var mouth = rd.nextInt(GifManager.inst.mouthLength);
+    Get.lazyPut<AvatarEditorController>(() => AvatarEditorController(color, eyes, mouth));
+    return MePlayer._internal(avatar: AvatarModel.init(color, eyes, mouth).builder);
+  }
+
+  MePlayer._internal({super.name = '', required super.avatar, super.id = ''});
 
   @override
   String get nameForCard => '$name (${'you'.tr})';
-
-  static bool get isCreated => _inst != null;
 
   Map<String, dynamic> toJSON() {
     return {'name': name, 'avatar': avatar.model.toJSON(), 'id': id};

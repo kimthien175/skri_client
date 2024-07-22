@@ -6,6 +6,7 @@ export 'layouts/mobile.dart';
 export 'widgets/widgets.dart';
 export 'widgets/avatar_editor/avatar_editor.dart';
 
+import 'package:skribbl_client/models/game/player.dart';
 import 'package:skribbl_client/pages/pages.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -36,8 +37,8 @@ class HomeController extends GetxController {
   }
 
   void loadChildrenControllers() {
+    MePlayer.inst;
     Get.put(RandomAvatarsController());
-    Get.put(AvatarEditorController());
     Get.put(NewsContentController());
     Get.put(HowToPlayContentController());
   }
