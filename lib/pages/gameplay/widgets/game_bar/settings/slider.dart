@@ -1,4 +1,6 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:skribbl_client/pages/gameplay/widgets/game_bar/settings/settings.dart';
 
@@ -16,9 +18,43 @@ class SettingsSlider extends StatefulWidget {
 class _SettingsSliderState extends State<SettingsSlider> with SingleTickerProviderStateMixin {
   late final AnimationController controller =
       AnimationController(vsync: this, duration: AnimatedButton.duration);
+
+  late FocusNode focusNode;
+
+  @override
+  void initState() {
+    super.initState();
+    focusNode = FocusNode(
+      onKeyEvent: (node, event) {
+        if (event is KeyDownEvent || event is KeyRepeatEvent) {
+          if (event.logicalKey == LogicalKeyboardKey.arrowLeft) {
+            // decrease volume
+            SystemSettings.inst.volume.value = clampDouble(volume - 0.01, 0.0, 1.0);
+            return KeyEventResult.handled;
+          } else if (event.logicalKey == LogicalKeyboardKey.arrowRight) {
+            // increase volume
+            SystemSettings.inst.volume.value = clampDouble(volume + 0.01, 0.0, 1.0);
+            return KeyEventResult.handled;
+          }
+        }
+        return KeyEventResult.ignored;
+      },
+    );
+    focusNode.addListener(() {
+      if (inArea) return;
+      if (onInteracting) return;
+      if (focusNode.hasFocus) {
+        controller.forward();
+      } else {
+        controller.reverse();
+      }
+    });
+  }
+
   @override
   void dispose() {
     controller.dispose();
+    focusNode.dispose();
     super.dispose();
   }
 
@@ -44,63 +80,70 @@ class _SettingsSliderState extends State<SettingsSlider> with SingleTickerProvid
   Widget build(BuildContext context) {
     var activeTweenColor =
         controller.drive(ColorTween(begin: const Color(0xff0075ff), end: const Color(0xff005cc8)));
-    return LayoutBuilder(builder: (ct, constraints) {
-      var maxWidth = constraints.maxWidth;
-      return GestureDetector(
-          onPanStart: (details) {
-            onInteracting = true;
-          },
-          onPanUpdate: (details) {
-            SystemSettings.inst.volume.value = newVolume(details.localPosition.dx, maxWidth);
-          },
-          onPanEnd: (details) {
-            onInteracting = false;
-            if (inArea) return;
-            controller.reverse();
-          },
-          onTapDown: (details) =>
-              SystemSettings.inst.volume.value = newVolume(details.localPosition.dx, maxWidth),
-          child: Container(
-              margin: const EdgeInsets.symmetric(vertical: 12),
-              height: _thumbSize,
-              child: MouseRegion(
-                  cursor: SystemMouseCursors.click,
-                  onEnter: (event) {
-                    inArea = true;
-                    if (onInteracting) return;
-                    controller.forward();
-                  },
-                  onExit: (event) {
-                    inArea = false;
-                    if (onInteracting) return;
-                    controller.reverse();
-                  },
-                  child: Obx(() =>
-                      Stack(alignment: Alignment.centerLeft, clipBehavior: Clip.none, children: [
-                        Container(
-                            foregroundDecoration: BoxDecoration(
-                                borderRadius: _borderRadius,
-                                border: Border.all(color: _borderColor, width: 0.35)),
-                            constraints: const BoxConstraints.expand(height: _sliderHeight),
-                            child: Row(children: [
-                              _BackgroundColorTransition(
-                                width: _thumbSize / 2 + (maxWidth - _thumbSize) * volume,
-                                listenable: activeTweenColor,
-                              ),
-                              Expanded(
-                                  child: _BackgroundColorTransition(
-                                      listenable: controller.drive(ColorTween(
-                                          begin: const Color(0xffefefef),
-                                          end: const Color(0xffe0e0e0)))))
-                            ])),
-                        Positioned(
-                            left: volume * (maxWidth - _thumbSize),
-                            child: _BackgroundColorTransition(
-                                listenable: activeTweenColor,
-                                width: _thumbSize,
-                                shape: BoxShape.circle))
-                      ])))));
-    });
+    return Focus(
+        focusNode: focusNode,
+        child: LayoutBuilder(builder: (ct, constraints) {
+          var maxWidth = constraints.maxWidth;
+          return GestureDetector(
+              onPanStart: (details) {
+                onInteracting = true;
+              },
+              onPanUpdate: (details) {
+                SystemSettings.inst.volume.value = newVolume(details.localPosition.dx, maxWidth);
+              },
+              onPanEnd: (details) {
+                onInteracting = false;
+                if (inArea) return;
+                if (focusNode.hasFocus) return;
+                controller.reverse();
+              },
+              onTapDown: (details) =>
+                  SystemSettings.inst.volume.value = newVolume(details.localPosition.dx, maxWidth),
+              child: Container(
+                  margin: const EdgeInsets.symmetric(vertical: 12),
+                  height: _thumbSize,
+                  child: MouseRegion(
+                      cursor: SystemMouseCursors.click,
+                      onEnter: (event) {
+                        inArea = true;
+                        if (onInteracting) return;
+                        if (focusNode.hasFocus) return;
+                        controller.forward();
+                      },
+                      onExit: (event) {
+                        inArea = false;
+                        if (onInteracting) return;
+                        if (focusNode.hasFocus) return;
+                        controller.reverse();
+                      },
+                      child: Obx(() => Stack(
+                              alignment: Alignment.centerLeft,
+                              clipBehavior: Clip.none,
+                              children: [
+                                Container(
+                                    foregroundDecoration: BoxDecoration(
+                                        borderRadius: _borderRadius,
+                                        border: Border.all(color: _borderColor, width: 0.35)),
+                                    constraints: const BoxConstraints.expand(height: _sliderHeight),
+                                    child: Row(children: [
+                                      _BackgroundColorTransition(
+                                        width: _thumbSize / 2 + (maxWidth - _thumbSize) * volume,
+                                        listenable: activeTweenColor,
+                                      ),
+                                      Expanded(
+                                          child: _BackgroundColorTransition(
+                                              listenable: controller.drive(ColorTween(
+                                                  begin: const Color(0xffefefef),
+                                                  end: const Color(0xffe0e0e0)))))
+                                    ])),
+                                Positioned(
+                                    left: volume * (maxWidth - _thumbSize),
+                                    child: _BackgroundColorTransition(
+                                        listenable: activeTweenColor,
+                                        width: _thumbSize,
+                                        shape: BoxShape.circle))
+                              ])))));
+        }));
   }
 }
 

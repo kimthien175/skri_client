@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:skribbl_client/widgets/animated_button/animated_button.dart';
 
@@ -50,15 +51,31 @@ class _GameDialogState extends State<GameDialog> with SingleTickerProviderStateM
   late final Animation<Offset> dialogAnimation =
       Tween<Offset>(begin: const Offset(0, -1), end: Offset.zero).animate(bgAnimation);
 
+  late FocusNode focusNode;
+
   @override
   void initState() {
     super.initState();
+    focusNode = FocusNode(
+      onKeyEvent: (node, event) {
+        if (event is KeyDownEvent) {
+          if (event.logicalKey == LogicalKeyboardKey.escape) {
+            focusNode.unfocus();
+            close();
+            return KeyEventResult.handled;
+          }
+        }
+        return KeyEventResult.ignored;
+      },
+    );
+    focusNode.requestFocus();
     animController.forward();
   }
 
   @override
   void dispose() {
     animController.dispose();
+    focusNode.dispose();
     super.dispose();
   }
 
@@ -107,27 +124,30 @@ class _GameDialogState extends State<GameDialog> with SingleTickerProviderStateM
                   top: 0, right: 8, child: GestureDetector(onTap: close, child: _CloseIcon()))
             ])));
 
-    return FadeTransition(
-        opacity: bgAnimation,
-        child: widget.exitTap
-            ? Stack(
-                alignment: Alignment.center,
-                children: [
-                  GestureDetector(
-                      onTap: close,
-                      child: Container(
+    return FocusScope(
+        child: Focus(
+            focusNode: focusNode,
+            child: FadeTransition(
+                opacity: bgAnimation,
+                child: widget.exitTap
+                    ? Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          GestureDetector(
+                              onTap: close,
+                              child: Container(
+                                constraints: const BoxConstraints.expand(),
+                                alignment: Alignment.center,
+                                color: const Color.fromRGBO(0, 0, 0, 0.55),
+                              )),
+                          dialog
+                        ],
+                      )
+                    : Container(
                         constraints: const BoxConstraints.expand(),
                         alignment: Alignment.center,
                         color: const Color.fromRGBO(0, 0, 0, 0.55),
-                      )),
-                  dialog
-                ],
-              )
-            : Container(
-                constraints: const BoxConstraints.expand(),
-                alignment: Alignment.center,
-                color: const Color.fromRGBO(0, 0, 0, 0.55),
-                child: dialog));
+                        child: dialog))));
   }
 }
 

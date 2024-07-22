@@ -41,7 +41,9 @@ class AnimatedButtonTooltipDecorator extends StatelessWidget
   }
 
   @override
-  void clean() {}
+  void clean() {
+    hide();
+  }
 
   @override
   Widget build(BuildContext context) => position.build(

@@ -104,7 +104,7 @@ class SystemSettings extends GetxController {
   static final SystemSettings _inst = SystemSettings._internal();
   static SystemSettings get inst => _inst;
 
-  RxDouble volume = 0.01.obs;
+  RxDouble volume = 0.4.obs;
 
   String get volumeToString => (volume * 100).toStringAsFixed(0);
 
