@@ -1,7 +1,7 @@
 library animated_button;
 
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:skribbl_client/widgets/animated_button/decorator.dart';
 
 export 'decorator.dart';
@@ -20,6 +20,8 @@ class AnimatedButton extends StatefulWidget {
 }
 
 class AnimatedButtonState extends State<AnimatedButton> with SingleTickerProviderStateMixin {
+  late FocusNode focusNode;
+  bool isHovered = false;
   @override
   void initState() {
     super.initState();
@@ -28,6 +30,29 @@ class AnimatedButtonState extends State<AnimatedButton> with SingleTickerProvide
     for (var decorator in widget.decorators) {
       decorator.decorate(this);
     }
+
+    focusNode = FocusNode(
+      onKeyEvent: (node, event) {
+        if (event is KeyDownEvent) {
+          if (event.logicalKey == LogicalKeyboardKey.enter) {
+            if (widget.onTap != null) {
+              widget.onTap!();
+              return KeyEventResult.handled;
+            }
+          }
+        }
+        return KeyEventResult.ignored;
+      },
+    );
+
+    focusNode.addListener(() {
+      if (isHovered) return;
+      if (focusNode.hasFocus) {
+        active();
+      } else {
+        unactive();
+      }
+    });
   }
 
   late final AnimationController controller =
@@ -40,8 +65,8 @@ class AnimatedButtonState extends State<AnimatedButton> with SingleTickerProvide
 
   late Widget child;
 
-  final List<void Function(PointerEnterEvent)> onEnterCallbacks = [];
-  final List<void Function(PointerExitEvent)> onExitCallbacks = [];
+  final List<void Function()> onEnterCallbacks = [];
+  final List<void Function()> onExitCallbacks = [];
   final List<void Function()> onReverseEnd = [];
 
   @override
@@ -51,32 +76,47 @@ class AnimatedButtonState extends State<AnimatedButton> with SingleTickerProvide
     }
     curvedAnimation.dispose();
     controller.dispose();
+    focusNode.dispose();
     super.dispose();
+  }
+
+  active() {
+    for (var callback in onEnterCallbacks) {
+      callback();
+    }
+    controller.forward();
+  }
+
+  unactive() {
+    for (var callback in onExitCallbacks) {
+      callback();
+    }
+    controller.reverse().then((_) {
+      for (var callback in onReverseEnd) {
+        callback();
+      }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-        key: _buttonKey,
-        onTap: widget.onTap,
-        child: MouseRegion(
-            cursor: SystemMouseCursors.click,
-            onEnter: (e) {
-              for (var callback in onEnterCallbacks) {
-                callback(e);
-              }
-              controller.forward();
-            },
-            onExit: (e) {
-              for (var callback in onExitCallbacks) {
-                callback(e);
-              }
-              controller.reverse().then((_) {
-                for (var callback in onReverseEnd) {
-                  callback();
-                }
-              });
-            },
-            child: child));
+    return Focus(
+        focusNode: focusNode,
+        child: GestureDetector(
+            key: _buttonKey,
+            onTap: widget.onTap,
+            child: MouseRegion(
+                cursor: SystemMouseCursors.click,
+                onEnter: (e) {
+                  isHovered = true;
+                  if (focusNode.hasFocus) return;
+                  active();
+                },
+                onExit: (e) {
+                  isHovered = false;
+                  if (focusNode.hasFocus) return;
+                  unactive();
+                },
+                child: child)));
   }
 }

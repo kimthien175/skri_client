@@ -35,13 +35,9 @@ class AnimatedButtonTooltipDecorator extends StatelessWidget
   void decorate(AnimatedButtonState state) {
     _state = state;
 
-    state.onEnterCallbacks.add((e) {
-      show();
-    });
+    state.onEnterCallbacks.add(show);
 
-    state.onReverseEnd.add(() {
-      hide();
-    });
+    state.onReverseEnd.add(hide);
   }
 
   @override

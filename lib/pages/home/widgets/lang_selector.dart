@@ -21,6 +21,7 @@ class LangSelector extends StatelessWidget {
         .toList();
     var focusNode = FocusNode();
     return InputContainer(
+        padding: const EdgeInsets.only(left: 10),
         height: 34,
         width: 120,
         focusNode: focusNode,
@@ -29,7 +30,8 @@ class LangSelector extends StatelessWidget {
             child: DropdownButton(
                 focusNode: focusNode,
                 icon: const Icon(Icons.keyboard_arrow_down_rounded, color: InputStyles.color),
-                padding: const EdgeInsets.only(left: 7),
+                // padding: const EdgeInsets.only(left: 7),
+                isDense: true,
                 isExpanded: true,
                 value: Get.locale.toString(),
                 items: items,

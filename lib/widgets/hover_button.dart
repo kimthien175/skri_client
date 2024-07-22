@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart';
 import 'package:skribbl_client/utils/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:skribbl_client/widgets/animated_button/animated_button.dart';
@@ -28,30 +29,70 @@ class HoverButton extends StatefulWidget {
 
 class _HoverButtonState extends State<HoverButton> with SingleTickerProviderStateMixin {
   late final controller = AnimationController(vsync: this, duration: AnimatedButton.duration);
+  late final FocusNode focusNode;
+
+  bool isHovered = false;
+
+  @override
+  void initState() {
+    super.initState();
+
+    focusNode = FocusNode(
+      onKeyEvent: (node, event) {
+        if (event is KeyDownEvent) {
+          if (event.logicalKey == LogicalKeyboardKey.enter) {
+            if (widget.onTap != null) {
+              widget.onTap!();
+              return KeyEventResult.handled;
+            }
+          }
+        }
+
+        return KeyEventResult.ignored;
+      },
+    );
+
+    focusNode.addListener(() {
+      if (isHovered) return;
+      if (focusNode.hasFocus) {
+        controller.forward();
+      } else {
+        controller.reverse();
+      }
+    });
+  }
+
   @override
   void dispose() {
     controller.dispose();
+    focusNode.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return MouseRegion(
-        cursor: SystemMouseCursors.click,
-        onEnter: (_) {
-          controller.forward();
-        },
-        onExit: (_) {
-          controller.reverse();
-        },
-        child: GestureDetector(
-            onTap: widget.onTap,
-            child: BackgroundColorTransition(
-                height: widget.height,
-                width: widget.width,
-                borderRadius: widget.borderRadius,
-                listenable:
-                    ColorTween(begin: widget.color, end: widget.hoverColor).animate(controller),
-                child: widget.child)));
+    return Focus(
+        focusNode: focusNode,
+        child: MouseRegion(
+            cursor: SystemMouseCursors.click,
+            onEnter: (_) {
+              isHovered = true;
+              if (focusNode.hasFocus) return;
+              controller.forward();
+            },
+            onExit: (_) {
+              isHovered = false;
+              if (focusNode.hasFocus) return;
+              controller.reverse();
+            },
+            child: GestureDetector(
+                onTap: widget.onTap,
+                child: BackgroundColorTransition(
+                    height: widget.height,
+                    width: widget.width,
+                    borderRadius: widget.borderRadius,
+                    listenable:
+                        ColorTween(begin: widget.color, end: widget.hoverColor).animate(controller),
+                    child: widget.child))));
   }
 }

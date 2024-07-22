@@ -3,6 +3,7 @@ library avatar_editor;
 export 'controller.dart';
 export 'jiggle_avatar.dart';
 
+import 'package:flutter/services.dart';
 import 'package:skribbl_client/pages/pages.dart';
 import 'package:skribbl_client/models/models.dart';
 import 'package:skribbl_client/utils/styles.dart';
@@ -63,22 +64,46 @@ class _SwitchButtonState extends State<_SwitchButton> with SingleTickerProviderS
   late final GifBuilder onHoverChild = GifManager.inst.misc(widget.onHoverPath).builder.init();
 
   late final AnimationController animController =
-      AnimationController(vsync: this, duration: duration);
+      AnimationController(vsync: this, duration: const Duration(milliseconds: 100));
   late final Animation<double> animation =
       CurvedAnimation(parent: animController, curve: Curves.linear);
-  static const Duration duration = Duration(milliseconds: 100);
 
   late Widget visual;
+
+  late final FocusNode focusNode;
+  bool isHovered = false;
 
   @override
   void initState() {
     super.initState();
     visual = child;
+
+    focusNode = FocusNode(onKeyEvent: (node, event) {
+      if (event is KeyDownEvent) {
+        if (event.logicalKey == LogicalKeyboardKey.enter) {
+          widget.callback();
+          return KeyEventResult.handled;
+        }
+      }
+      return KeyEventResult.ignored;
+    });
+
+    focusNode.addListener(() {
+      if (isHovered) return;
+      if (focusNode.hasFocus) {
+        change(onHoverChild);
+      } else {
+        change(child);
+      }
+    });
+
+    if (focusNode.hasFocus) change(onHoverChild);
   }
 
   @override
   void dispose() {
     animController.dispose();
+    focusNode.dispose();
     super.dispose();
   }
 
@@ -98,21 +123,30 @@ class _SwitchButtonState extends State<_SwitchButton> with SingleTickerProviderS
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-        height: 34,
-        width: 34,
-        child: FittedBox(
-            child: GestureDetector(
-                onTap: widget.callback,
-                child: MouseRegion(
-                    cursor: SystemMouseCursors.click,
-                    onEnter: (_) {
-                      change(onHoverChild);
+    return Focus(
+        focusNode: focusNode,
+        child: SizedBox(
+            height: 34,
+            width: 34,
+            child: FittedBox(
+                child: GestureDetector(
+                    onTap: () {
+                      focusNode.requestFocus();
+                      widget.callback();
                     },
-                    onExit: (_) {
-                      change(child);
-                    },
-                    child: visual))));
+                    child: MouseRegion(
+                        cursor: SystemMouseCursors.click,
+                        onEnter: (_) {
+                          isHovered = true;
+                          if (focusNode.hasFocus) return;
+                          change(onHoverChild);
+                        },
+                        onExit: (_) {
+                          isHovered = false;
+                          if (focusNode.hasFocus) return;
+                          change(child);
+                        },
+                        child: visual)))));
   }
 }
 

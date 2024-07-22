@@ -11,6 +11,7 @@ class InputContainer extends StatefulWidget {
       this.constraints,
       this.margin,
       this.focusNode,
+      this.padding = const EdgeInsets.symmetric(vertical: 2.0, horizontal: 10.0),
       super.key});
 
   final Widget? child;
@@ -21,6 +22,7 @@ class InputContainer extends StatefulWidget {
   final Alignment? alignment;
   final EdgeInsets? margin;
   final FocusNode? focusNode;
+  final EdgeInsetsGeometry? padding;
 
   @override
   State<InputContainer> createState() => _InputContainerState();
@@ -36,7 +38,6 @@ class _InputContainerState extends State<InputContainer> with SingleTickerProvid
     var focusNode = widget.focusNode;
     if (focusNode != null) {
       focusNode.addListener(() {
-        print('changed');
         if (isHovered) return;
         if (focusNode.hasFocus) {
           controller.forward();
@@ -75,7 +76,7 @@ class _InputContainerState extends State<InputContainer> with SingleTickerProvid
         child: _BorderTransition(
             listenable: controller
                 .drive(ColorTween(begin: const Color(0xff707070), end: const Color(0xff56b2fd))),
-            //
+            padding: widget.padding,
             height: widget.height,
             width: widget.width,
             constraints: widget.constraints,
@@ -93,6 +94,7 @@ class _BorderTransition extends AnimatedWidget {
       this.alignment,
       this.constraints,
       this.margin,
+      this.padding,
       required super.listenable});
   final Widget? child;
   final double? height;
@@ -100,6 +102,7 @@ class _BorderTransition extends AnimatedWidget {
   final BoxConstraints? constraints;
   final Alignment? alignment;
   final EdgeInsets? margin;
+  final EdgeInsetsGeometry? padding;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -108,11 +111,11 @@ class _BorderTransition extends AnimatedWidget {
         constraints: constraints,
         alignment: alignment,
         margin: margin,
-        padding: const EdgeInsets.symmetric(vertical: 2.0, horizontal: 10.0),
+        padding: padding,
         decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: GlobalStyles.borderRadius,
-            border: Border.all(color: (listenable as Animation).value)),
+            border: Border.all(color: (listenable as Animation).value, width: 2.0)),
         child: child);
   }
 }
