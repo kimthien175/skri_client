@@ -6,12 +6,30 @@ import 'package:skribbl_client/utils/styles.dart';
 import 'package:skribbl_client/widgets/input_container.dart';
 //import 'package:visibility_detector/visibility_detector.dart';
 
-class NameInput extends StatelessWidget {
+class NameInput extends StatefulWidget {
   const NameInput({super.key});
 
   @override
+  State<NameInput> createState() => _NameInputState();
+}
+
+class _NameInputState extends State<NameInput> {
+  late FocusNode focusNode;
+
+  @override
+  void initState() {
+    super.initState();
+    focusNode = FocusNode();
+  }
+
+  @override
+  void dispose() {
+    focusNode.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    var focusNode = FocusNode();
     return Expanded(
         child: InputContainer(
             focusNode: focusNode,

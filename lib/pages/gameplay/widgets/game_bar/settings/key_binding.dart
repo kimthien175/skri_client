@@ -6,7 +6,6 @@ import 'package:skribbl_client/widgets/widgets.dart';
 
 import 'settings.dart';
 
-// TODO: DISPOSE FOCUSNODE
 class KeyBinding extends StatefulWidget {
   const KeyBinding({super.key, required this.title, required this.actKey});
   final String title;
@@ -96,7 +95,7 @@ class _KeyBindingState extends State<KeyBinding> with SingleTickerProviderStateM
 
   @override
   void dispose() {
-    // focusNode.dispose();
+    focusNode.dispose();
     controller.dispose();
     super.dispose();
   }

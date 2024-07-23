@@ -4,8 +4,26 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:skribbl_client/widgets/input_container.dart';
 
-class LangSelector extends StatelessWidget {
+class LangSelector extends StatefulWidget {
   const LangSelector({super.key});
+
+  @override
+  State<LangSelector> createState() => _LangSelectorState();
+}
+
+class _LangSelectorState extends State<LangSelector> {
+  late FocusNode focusNode;
+  @override
+  void initState() {
+    super.initState();
+    focusNode = FocusNode();
+  }
+
+  @override
+  void dispose() {
+    focusNode.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +37,6 @@ class LangSelector extends StatelessWidget {
                   const TextStyle(fontFamily: 'Nunito', fontWeight: FontWeight.w500, fontSize: 16),
             )))
         .toList();
-    var focusNode = FocusNode();
     return InputContainer(
         padding: const EdgeInsets.only(left: 10),
         height: 34,

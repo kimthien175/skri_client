@@ -80,6 +80,7 @@ class _GameDialogState extends State<GameDialog> with SingleTickerProviderStateM
   @override
   void dispose() {
     animController.dispose();
+    focusNode.dispose();
     super.dispose();
   }
 

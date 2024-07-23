@@ -56,7 +56,6 @@ class _InputContainerState extends State<InputContainer> with SingleTickerProvid
   @override
   void dispose() {
     controller.dispose();
-    widget.focusNode?.dispose();
     super.dispose();
   }
 
