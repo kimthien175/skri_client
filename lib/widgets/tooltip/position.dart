@@ -1,10 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import 'tooltip.dart';
+enum GameTooltipBackgroundColor {
+  notify(),
+  warining(value: Color.fromRGBO(229, 115, 115, 1.0));
 
-abstract class AnimatedButtonTooltipPosition {
-  const AnimatedButtonTooltipPosition();
+  const GameTooltipBackgroundColor({this.value = _default});
+  final Color value;
+
+  static const Color _default = Color.fromRGBO(69, 113, 255, 1.0);
+}
+
+abstract class GameTooltipPosition {
+  const GameTooltipPosition({this.backgroundColor = GameTooltipBackgroundColor.notify});
+  final GameTooltipBackgroundColor backgroundColor;
+
   Widget build(
       {required Widget child,
       required RenderBox originalBox,
@@ -36,16 +46,12 @@ abstract class AnimatedButtonTooltipPosition {
   Container _wrapWithContainer(Widget child) => Container(
       padding: const EdgeInsets.all(7),
       decoration: BoxDecoration(
-          color: AnimatedButtonTooltipDecorator.tooltipBackgroundColor,
-          borderRadius: const BorderRadius.all(Radius.circular(3))),
+          color: backgroundColor.value, borderRadius: const BorderRadius.all(Radius.circular(3))),
       child: child);
 
   Widget get arrow => ClipPath(
       clipper: _ArrowClip(arrowPath),
-      child: Container(
-          height: height,
-          width: width,
-          color: AnimatedButtonTooltipDecorator.tooltipBackgroundColor));
+      child: Container(height: height, width: width, color: backgroundColor.value));
 
   double get height;
   double get width;
@@ -53,8 +59,8 @@ abstract class AnimatedButtonTooltipPosition {
   Path Function(Size size) get arrowPath;
 }
 
-class TooltipPositionLeft extends AnimatedButtonTooltipPosition {
-  const TooltipPositionLeft();
+class GameTooltipPositionLeft extends GameTooltipPosition {
+  const GameTooltipPositionLeft({super.backgroundColor});
   @override
   Widget _build(Widget rawChild) =>
       Row(mainAxisSize: MainAxisSize.min, children: [_wrapWithContainer(rawChild), arrow]);
@@ -97,8 +103,8 @@ class TooltipPositionLeft extends AnimatedButtonTooltipPosition {
                   child: aligned));
 }
 
-class TooltipPositionTop extends AnimatedButtonTooltipPosition {
-  const TooltipPositionTop();
+class GameTooltipPositionTop extends GameTooltipPosition {
+  const GameTooltipPositionTop({super.backgroundColor});
   @override
   Path Function(Size size) get arrowPath => (size) => Path()
     ..moveTo(0, 0)
@@ -139,8 +145,8 @@ class TooltipPositionTop extends AnimatedButtonTooltipPosition {
                   child: aligned));
 }
 
-class TooltipPositionRight extends AnimatedButtonTooltipPosition {
-  const TooltipPositionRight();
+class GameTooltipPositionRight extends GameTooltipPosition {
+  const GameTooltipPositionRight({super.backgroundColor});
   @override
   Path Function(Size size) get arrowPath => (size) => Path()
     ..moveTo(size.width, 0)
@@ -179,8 +185,8 @@ class TooltipPositionRight extends AnimatedButtonTooltipPosition {
                   child: aligned));
 }
 
-class TooltipPositionBottom extends AnimatedButtonTooltipPosition {
-  const TooltipPositionBottom();
+class GameTooltipPositionBottom extends GameTooltipPosition {
+  const GameTooltipPositionBottom({super.backgroundColor});
   @override
   Path Function(Size size) get arrowPath => (size) => Path()
     ..moveTo(0, size.height)

@@ -162,8 +162,8 @@ class _RandomButton extends GetView<AvatarEditorController> {
       decorators: [
         const AnimatedButtonScaleDecorator(max: 1.2),
         AnimatedButtonTooltipDecorator(
-            tooltip: 'randomize_your_avatar',
-            position: const TooltipPositionBottom(),
+            tooltip: () => 'randomize_your_avatar'.tr,
+            position: const GameTooltipPositionBottom(),
             scale: _scale),
         const AnimatedButtonOpacityDecorator(minOpacity: 0.6)
       ],

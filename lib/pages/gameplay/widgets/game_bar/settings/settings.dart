@@ -5,6 +5,7 @@ import 'package:skribbl_client/pages/gameplay/widgets/game_bar/settings/slider.d
 import 'package:skribbl_client/widgets/widgets.dart';
 
 import '../../../../../models/models.dart';
+import 'key_binding.dart';
 
 class SettingsButton extends StatelessWidget {
   const SettingsButton({super.key});
@@ -26,19 +27,18 @@ class SettingsButton extends StatelessWidget {
                 AnimatedButton(
                   decorators: [
                     const AnimatedButtonBackgroundColorDecorator(),
-                    AnimatedButtonTooltipDecorator(tooltip: 'reset_hotkeys_tooltip'.tr)
+                    AnimatedButtonTooltipDecorator(tooltip: () => 'reset_hotkeys_tooltip'.tr)
                   ],
                   child: Text('Reset'.tr),
                 )
               ]),
-              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                _KeyBinding(act: 'Brush'.tr, actKey: SystemSettings.inst.brushKey),
-                _KeyBinding(act: 'Fill'.tr, actKey: SystemSettings.inst.fillKey),
-                _KeyBinding(act: 'Undo'.tr, actKey: SystemSettings.inst.undoKey),
-                _KeyBinding(act: 'Clear'.tr, actKey: SystemSettings.inst.clearKey),
-                _KeyBinding(act: 'Swap'.tr, actKey: SystemSettings.inst.swapKey),
-              ]),
-              //
+              Obx(() => Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: (SystemSettings.inst.keyMaps.entries.toList()
+                        ..sort((a, b) => a.value.order.compareTo(b.value.order)))
+                      .map((e) => KeyBinding(title: e.value.title.tr, actKey: e.key))
+                      .toList())),
+
               const SizedBox(height: 15),
               _TittleItem(title: 'Miscellaneous'.tr, icon: 'questionmark')
             ]))).show();
@@ -51,7 +51,8 @@ class SettingsButton extends StatelessWidget {
         decorators: [
           const AnimatedButtonOpacityDecorator(minOpacity: 0.9),
           const AnimatedButtonScaleDecorator(max: 1.1),
-          AnimatedButtonTooltipDecorator(tooltip: 'Settings', position: const TooltipPositionLeft())
+          AnimatedButtonTooltipDecorator(
+              tooltip: () => 'Settings'.tr, position: const GameTooltipPositionLeft())
         ],
         child: GifManager.inst
             .misc('settings')
@@ -81,24 +82,6 @@ class _TittleItem extends StatelessWidget {
   }
 }
 
-class _KeyBinding extends StatelessWidget {
-  const _KeyBinding({required this.act, required this.actKey});
-  final String act;
-  final LogicalKeyboardKey actKey;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(act,
-            style: const TextStyle(fontSize: 15, fontVariations: [FontVariation.weight(440)])),
-        Text(actKey.keyLabel)
-      ],
-    );
-  }
-}
-
 class SystemSettings extends GetxController {
   SystemSettings._internal();
   static final SystemSettings _inst = SystemSettings._internal();
@@ -108,9 +91,28 @@ class SystemSettings extends GetxController {
 
   String get volumeToString => (volume * 100).toStringAsFixed(0);
 
-  LogicalKeyboardKey brushKey = LogicalKeyboardKey.keyB;
-  LogicalKeyboardKey fillKey = LogicalKeyboardKey.keyF;
-  LogicalKeyboardKey undoKey = LogicalKeyboardKey.keyU;
-  LogicalKeyboardKey clearKey = LogicalKeyboardKey.keyC;
-  LogicalKeyboardKey swapKey = LogicalKeyboardKey.keyS;
+  static Map<LogicalKeyboardKey, KeyMap> get defaultKeyMaps => {
+        LogicalKeyboardKey.keyB: KeyMap(title: 'Brush', act: () {}, order: 0),
+        LogicalKeyboardKey.keyF: KeyMap(title: 'Fill', act: () {}, order: 1),
+        LogicalKeyboardKey.keyU: KeyMap(title: 'Undo', act: () {}, order: 2),
+        LogicalKeyboardKey.keyC: KeyMap(title: 'Clear', act: () {}, order: 3),
+        LogicalKeyboardKey.keyS: KeyMap(title: 'Swap', act: () {}, order: 4),
+      };
+
+  late RxMap<LogicalKeyboardKey, KeyMap> keyMaps = defaultKeyMaps.obs;
+  bool changeKey(LogicalKeyboardKey oldKey, LogicalKeyboardKey newKey) {
+    if (oldKey == newKey) return true;
+    if (keyMaps[newKey] != null) return false;
+
+    keyMaps[newKey] = keyMaps.remove(oldKey)!;
+
+    return true;
+  }
+}
+
+class KeyMap {
+  KeyMap({required this.title, required this.act, required this.order});
+  final String title;
+  void Function() act;
+  int order;
 }

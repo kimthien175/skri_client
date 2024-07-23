@@ -82,6 +82,7 @@ class LocaleKeys {
   static const news_error = 'news_error';
   static const click_to_copy_invite = 'click_to_copy_invite';
   static const reset_hotkeys_tooltip = 'reset_hotkeys_tooltip';
+  static const key_binding_warning = 'key_binding_warning';
   static const You = 'You';
   static const Normal = 'Normal';
   static const Hidden = 'Hidden';
@@ -94,6 +95,11 @@ class LocaleKeys {
   static const Hotkeys = 'Hotkeys';
   static const Reset = 'Reset';
   static const Miscellaneous = 'Miscellaneous';
+  static const Brush = 'Brush';
+  static const Fill = 'Fill';
+  static const Undo = 'Undo';
+  static const Clear = 'Clear';
+  static const Swap = 'Swap';
 }
 
 class Locales {
@@ -179,6 +185,7 @@ class Locales {
     'news_error': 'Can\'t get any news!!',
     'click_to_copy_invite': 'Click to copy Invite',
     'reset_hotkeys_tooltip': 'Reset hotkeys to default',
+    'key_binding_warning': 'Must be different with [@duplicated]',
   };
   static const vi_VN = {
     'displayName': 'Tiếng Việt',
@@ -269,5 +276,11 @@ class Locales {
     'Reset': 'Đặt lại',
     'reset_hotkeys_tooltip': 'Đặt lại mặc định phím tắt',
     'Miscellaneous': 'Tùy chọn khác',
+    'key_binding_warning': 'Phím phải khác với [@duplicated]',
+    'Brush': 'Cọ',
+    'Fill': 'Đổ màu',
+    'Undo': 'Hoàn tác',
+    'Clear': 'Xóa sạch',
+    'Swap': 'Đổi màu',
   };
 }

@@ -42,44 +42,49 @@ class GameDialog extends StatefulWidget with GameOverlay {
 }
 
 class _GameDialogState extends State<GameDialog> with SingleTickerProviderStateMixin {
-  late final AnimationController animController =
-      AnimationController(vsync: this, duration: const Duration(milliseconds: 210));
+  late final AnimationController animController;
 
-  late final Animation<double> bgAnimation =
-      CurvedAnimation(parent: animController, curve: Curves.easeInOut);
+  late final Animation<double> bgAnimation;
 
-  late final Animation<Offset> dialogAnimation =
-      Tween<Offset>(begin: const Offset(0, -1), end: Offset.zero).animate(bgAnimation);
+  late final Animation<Offset> dialogAnimation;
 
-  late FocusNode focusNode;
+  late final FocusScopeNode focusNode;
 
   @override
   void initState() {
     super.initState();
-    focusNode = FocusNode(
-      onKeyEvent: (node, event) {
-        if (event is KeyDownEvent) {
-          if (event.logicalKey == LogicalKeyboardKey.escape) {
-            focusNode.unfocus();
-            close();
-            return KeyEventResult.handled;
-          }
-        }
-        return KeyEventResult.ignored;
-      },
-    );
-    focusNode.requestFocus();
-    animController.forward();
+    animController = AnimationController(vsync: this, duration: const Duration(milliseconds: 210));
+
+    bgAnimation = CurvedAnimation(parent: animController, curve: Curves.easeInOut);
+
+    dialogAnimation =
+        Tween<Offset>(begin: const Offset(0, -1), end: Offset.zero).animate(bgAnimation);
+
+    focusNode = FocusScopeNode(onKeyEvent: _keyHandler);
+
+    animController.forward().then((_) {
+      focusNode.requestFocus();
+    });
+  }
+
+  KeyEventResult _keyHandler(FocusNode node, KeyEvent event) {
+    if (event is KeyDownEvent) {
+      if (event.logicalKey == LogicalKeyboardKey.escape) {
+        close();
+        return KeyEventResult.handled;
+      }
+    }
+    return KeyEventResult.ignored;
   }
 
   @override
   void dispose() {
     animController.dispose();
-    focusNode.dispose();
     super.dispose();
   }
 
   close() {
+    focusNode.unfocus();
     animController.reverse().then((_) {
       widget.hide();
     });
@@ -125,29 +130,28 @@ class _GameDialogState extends State<GameDialog> with SingleTickerProviderStateM
             ])));
 
     return FocusScope(
-        child: Focus(
-            focusNode: focusNode,
-            child: FadeTransition(
-                opacity: bgAnimation,
-                child: widget.exitTap
-                    ? Stack(
-                        alignment: Alignment.center,
-                        children: [
-                          GestureDetector(
-                              onTap: close,
-                              child: Container(
-                                constraints: const BoxConstraints.expand(),
-                                alignment: Alignment.center,
-                                color: const Color.fromRGBO(0, 0, 0, 0.55),
-                              )),
-                          dialog
-                        ],
-                      )
-                    : Container(
-                        constraints: const BoxConstraints.expand(),
-                        alignment: Alignment.center,
-                        color: const Color.fromRGBO(0, 0, 0, 0.55),
-                        child: dialog))));
+        node: focusNode,
+        child: FadeTransition(
+            opacity: bgAnimation,
+            child: widget.exitTap
+                ? Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      GestureDetector(
+                          onTap: close,
+                          child: Container(
+                            constraints: const BoxConstraints.expand(),
+                            alignment: Alignment.center,
+                            color: const Color.fromRGBO(0, 0, 0, 0.55),
+                          )),
+                      dialog
+                    ],
+                  )
+                : Container(
+                    constraints: const BoxConstraints.expand(),
+                    alignment: Alignment.center,
+                    color: const Color.fromRGBO(0, 0, 0, 0.55),
+                    child: dialog)));
   }
 }
 

@@ -66,10 +66,16 @@
     "randomize_your_avatar": "Ngẫu nhiên Avatar của bạn!",
     "news_error": "Không tìm thấy tin tức nào hết!!",
     "click_to_copy_invite": "Bấm để sao chép lời mời",
-    "Settings":"Cài đặt",
-    "Volume":"Âm lượng",
-    "Hotkeys":"Phím tắt",
-    "Reset":"Đặt lại",
-    "reset_hotkeys_tooltip":"Đặt lại mặc định phím tắt",
-    "Miscellaneous": "Tùy chọn khác"
+    "Settings": "Cài đặt",
+    "Volume": "Âm lượng",
+    "Hotkeys": "Phím tắt",
+    "Reset": "Đặt lại",
+    "reset_hotkeys_tooltip": "Đặt lại mặc định phím tắt",
+    "Miscellaneous": "Tùy chọn khác",
+    "key_binding_warning": "Phím phải khác với [@duplicated]",
+    "Brush":"Cọ",
+    "Fill":"Đổ màu",
+    "Undo":"Hoàn tác",
+    "Clear":"Xóa sạch",
+    "Swap":"Đổi màu"
 }
