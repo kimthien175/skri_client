@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:skribbl_client/models/gif_manager.dart';
 
-import 'loading.dart';
+import 'overlay/loading.dart';
 
 class ResourcesEnsurance extends StatelessWidget {
   const ResourcesEnsurance({required this.child, super.key});
@@ -20,8 +20,9 @@ class ResourcesEnsurance extends StatelessWidget {
                     repeat: ImageRepeat.repeat,
                     image: AssetImage('assets/background.png'))),
             child: SafeArea(
-                child: Obx(
-                    () => ResourcesController.inst.isLoaded.value ? child : LoadingOverlay.inst))));
+                child: Obx(() => ResourcesController.inst.isLoaded.value
+                    ? child
+                    : LoadingOverlay.inst.builder()))));
   }
 }
 

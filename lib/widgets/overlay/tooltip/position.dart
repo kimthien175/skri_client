@@ -3,15 +3,22 @@ import 'package:get/get.dart';
 
 enum GameTooltipBackgroundColor {
   notify(),
-  warining(value: Color.fromRGBO(229, 115, 115, 1.0));
+  warining(value: Color.fromRGBO(229, 115, 115, 1.0)),
+  input(value: Color(0xffffffff));
 
-  const GameTooltipBackgroundColor({this.value = _default});
+  const GameTooltipBackgroundColor({this.value = const Color.fromRGBO(69, 113, 255, 1.0)});
   final Color value;
-
-  static const Color _default = Color.fromRGBO(69, 113, 255, 1.0);
 }
 
 abstract class GameTooltipPosition {
+  const factory GameTooltipPosition.centerLeft({GameTooltipBackgroundColor backgroundColor}) =
+      _CenterLeft;
+  const factory GameTooltipPosition.centerRight({GameTooltipBackgroundColor backgroundColor}) =
+      _CenterRight;
+  const factory GameTooltipPosition.centerTop({GameTooltipBackgroundColor backgroundColor}) =
+      _CenterTop;
+  const factory GameTooltipPosition.centerBottom({GameTooltipBackgroundColor backgroundColor}) =
+      _CenterBottom;
   const GameTooltipPosition({this.backgroundColor = GameTooltipBackgroundColor.notify});
   final GameTooltipBackgroundColor backgroundColor;
 
@@ -19,27 +26,29 @@ abstract class GameTooltipPosition {
       {required Widget child,
       required RenderBox originalBox,
       required double scale,
-      required Animation<double> scaleAnimation}) {
-    return _wrapWithZone(_buildWithAlign(child, scale, scaleAnimation),
-        originalBox.localToGlobal(Offset.zero), originalBox.size * scale);
+      Animation<double>? scaleAnimation}) {
+    var newChild = _build(child);
+
+    if (scaleAnimation != null) {
+      newChild =
+          ScaleTransition(alignment: relativeAlignment, scale: scaleAnimation, child: newChild);
+    }
+
+    return _wrapWithZone(
+        Align(
+            alignment: relativeAlignment,
+            child: scale == 1.0
+                ? newChild
+                : Transform.scale(
+                    scale: scale,
+                    alignment: relativeAlignment,
+                    child: newChild,
+                  )),
+        originalBox.localToGlobal(Offset.zero),
+        originalBox.size * scale);
   }
 
   Widget _wrapWithZone(Widget aligned, Offset offset, Size size);
-
-  Widget _buildWithAlign(Widget child, double scale, Animation<double> scaleAnimation) {
-    // put original child in tooltip 'background', wrap with ScaleTransition
-    var newChild =
-        ScaleTransition(alignment: relativeAlignment, scale: scaleAnimation, child: _build(child));
-    return Align(
-        alignment: relativeAlignment,
-        child: scale == 1.0
-            ? newChild
-            : Transform.scale(
-                scale: scale,
-                alignment: relativeAlignment,
-                child: newChild,
-              ));
-  }
 
   Widget _build(Widget rawChild);
 
@@ -59,8 +68,8 @@ abstract class GameTooltipPosition {
   Path Function(Size size) get arrowPath;
 }
 
-class GameTooltipPositionLeft extends GameTooltipPosition {
-  const GameTooltipPositionLeft({super.backgroundColor});
+class _CenterLeft extends GameTooltipPosition {
+  const _CenterLeft({super.backgroundColor});
   @override
   Widget _build(Widget rawChild) =>
       Row(mainAxisSize: MainAxisSize.min, children: [_wrapWithContainer(rawChild), arrow]);
@@ -103,8 +112,8 @@ class GameTooltipPositionLeft extends GameTooltipPosition {
                   child: aligned));
 }
 
-class GameTooltipPositionTop extends GameTooltipPosition {
-  const GameTooltipPositionTop({super.backgroundColor});
+class _CenterTop extends GameTooltipPosition {
+  const _CenterTop({super.backgroundColor});
   @override
   Path Function(Size size) get arrowPath => (size) => Path()
     ..moveTo(0, 0)
@@ -145,8 +154,8 @@ class GameTooltipPositionTop extends GameTooltipPosition {
                   child: aligned));
 }
 
-class GameTooltipPositionRight extends GameTooltipPosition {
-  const GameTooltipPositionRight({super.backgroundColor});
+class _CenterRight extends GameTooltipPosition {
+  const _CenterRight({super.backgroundColor});
   @override
   Path Function(Size size) get arrowPath => (size) => Path()
     ..moveTo(size.width, 0)
@@ -185,8 +194,8 @@ class GameTooltipPositionRight extends GameTooltipPosition {
                   child: aligned));
 }
 
-class GameTooltipPositionBottom extends GameTooltipPosition {
-  const GameTooltipPositionBottom({super.backgroundColor});
+class _CenterBottom extends GameTooltipPosition {
+  const _CenterBottom({super.backgroundColor});
   @override
   Path Function(Size size) get arrowPath => (size) => Path()
     ..moveTo(0, size.height)

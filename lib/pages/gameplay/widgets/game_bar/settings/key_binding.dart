@@ -24,8 +24,8 @@ class _KeyBindingState extends State<KeyBinding> with SingleTickerProviderStateM
       controller: controller,
       anchorKey: globalKey,
       tooltip: () => 'key_binding_warning'.trParams({'duplicated': duplicatedKey.tr}),
-      position:
-          const GameTooltipPositionBottom(backgroundColor: GameTooltipBackgroundColor.warining));
+      position: const GameTooltipPosition.centerBottom(
+          backgroundColor: GameTooltipBackgroundColor.warining));
 
   String duplicatedKey = "none";
 
@@ -54,7 +54,7 @@ class _KeyBindingState extends State<KeyBinding> with SingleTickerProviderStateM
             if (key == LogicalKeyboardKey.space || key.keyLabel.length == 1) {
               if (!SystemSettings.inst.changeKey(widget.actKey, key)) {
                 duplicatedKey = SystemSettings.inst.keyMaps[key]!.title;
-                tooltip.showWithController();
+                tooltip.show();
                 return KeyEventResult.handled;
               }
 
@@ -87,7 +87,7 @@ class _KeyBindingState extends State<KeyBinding> with SingleTickerProviderStateM
   }
 
   void submit() {
-    if (tooltip.isShowing) tooltip.hideWithController();
+    if (tooltip.isShowing) tooltip.hide();
     setState(() {
       isModifying = false;
     });

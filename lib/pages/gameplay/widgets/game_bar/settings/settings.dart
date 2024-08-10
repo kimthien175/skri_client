@@ -10,49 +10,51 @@ import 'key_binding.dart';
 class SettingsButton extends StatelessWidget {
   const SettingsButton({super.key});
 
-  void showSettings() {
-    GameDialog(
-        title: () => 'Settings'.tr,
-        content: SizedBox(
-            width: 500,
-            child: Column(children: [
-              Obx(() => _TittleItem(
-                  icon: 'audio', title: "${'Volume'.tr} ${SystemSettings.inst.volumeToString}%")),
-              const SettingsSlider(),
-              //
-              const SizedBox(height: 15),
-              //
-              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                _TittleItem(title: "Hotkeys".tr, icon: 'key'),
-                AnimatedButton(
-                  decorators: [
-                    const AnimatedButtonBackgroundColorDecorator(),
-                    AnimatedButtonTooltipDecorator(tooltip: () => 'reset_hotkeys_tooltip'.tr)
-                  ],
-                  child: Text('Reset'.tr),
-                )
-              ]),
-              Obx(() => Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: (SystemSettings.inst.keyMaps.entries.toList()
-                        ..sort((a, b) => a.value.order.compareTo(b.value.order)))
-                      .map((e) => KeyBinding(title: e.value.title.tr, actKey: e.key))
-                      .toList())),
+  static final settingDialog = GameDialog(
+      title: () => 'Settings'.tr,
+      content: SizedBox(
+          width: 500,
+          child: Column(children: [
+            Obx(() => _TittleItem(
+                icon: 'audio', title: "${'Volume'.tr} ${SystemSettings.inst.volumeToString}%")),
+            const SettingsSlider(),
+            //
+            const SizedBox(height: 15),
+            //
+            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+              _TittleItem(title: "Hotkeys".tr, icon: 'key'),
+              AnimatedButton(
+                onTap: SystemSettings.inst.resetKeyMaps,
+                decorators: [
+                  const AnimatedButtonBackgroundColorDecorator(),
+                  AnimatedButtonTooltipDecorator(tooltip: () => 'reset_hotkeys_tooltip'.tr)
+                ],
+                child: Text('Reset'.tr),
+              )
+            ]),
+            Obx(() => Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: (SystemSettings.inst.keyMaps.entries.toList()
+                      ..sort((a, b) => a.value.order.compareTo(b.value.order)))
+                    .map((e) => KeyBinding(title: e.value.title.tr, actKey: e.key))
+                    .toList())),
 
-              const SizedBox(height: 15),
-              _TittleItem(title: 'Miscellaneous'.tr, icon: 'questionmark')
-            ]))).show();
-  }
+            const SizedBox(height: 15),
+            _TittleItem(title: 'Miscellaneous'.tr, icon: 'questionmark')
+          ])));
 
   @override
   Widget build(BuildContext context) {
     return AnimatedButton(
-        onTap: showSettings,
+        onTap: () {
+          if (settingDialog.isShowing) return;
+          settingDialog.show();
+        },
         decorators: [
           const AnimatedButtonOpacityDecorator(minOpacity: 0.9),
           const AnimatedButtonScaleDecorator(max: 1.1),
           AnimatedButtonTooltipDecorator(
-              tooltip: () => 'Settings'.tr, position: const GameTooltipPositionLeft())
+              tooltip: () => 'Settings'.tr, position: const GameTooltipPosition.centerLeft())
         ],
         child: GifManager.inst
             .misc('settings')
@@ -91,15 +93,19 @@ class SystemSettings extends GetxController {
 
   String get volumeToString => (volume * 100).toStringAsFixed(0);
 
-  static Map<LogicalKeyboardKey, KeyMap> get defaultKeyMaps => {
-        LogicalKeyboardKey.keyB: KeyMap(title: 'Brush', act: () {}, order: 0),
-        LogicalKeyboardKey.keyF: KeyMap(title: 'Fill', act: () {}, order: 1),
-        LogicalKeyboardKey.keyU: KeyMap(title: 'Undo', act: () {}, order: 2),
-        LogicalKeyboardKey.keyC: KeyMap(title: 'Clear', act: () {}, order: 3),
-        LogicalKeyboardKey.keyS: KeyMap(title: 'Swap', act: () {}, order: 4),
-      };
+  final Map<LogicalKeyboardKey, KeyMap> _defaultKeyMaps = {
+    LogicalKeyboardKey.keyB: KeyMap(title: 'Brush', act: () {}, order: 0),
+    LogicalKeyboardKey.keyF: KeyMap(title: 'Fill', act: () {}, order: 1),
+    LogicalKeyboardKey.keyU: KeyMap(title: 'Undo', act: () {}, order: 2),
+    LogicalKeyboardKey.keyC: KeyMap(title: 'Clear', act: () {}, order: 3),
+    LogicalKeyboardKey.keyS: KeyMap(title: 'Swap', act: () {}, order: 4),
+  };
 
-  late RxMap<LogicalKeyboardKey, KeyMap> keyMaps = defaultKeyMaps.obs;
+  resetKeyMaps() {
+    keyMaps.value = _defaultKeyMaps;
+  }
+
+  late RxMap<LogicalKeyboardKey, KeyMap> keyMaps = _defaultKeyMaps.obs;
   bool changeKey(LogicalKeyboardKey oldKey, LogicalKeyboardKey newKey) {
     if (oldKey == newKey) return true;
     if (keyMaps[newKey] != null) return false;

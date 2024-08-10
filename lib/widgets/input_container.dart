@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:skribbl_client/utils/styles.dart';
-import 'package:skribbl_client/widgets/animated_button/animated_button.dart';
+
+import 'widgets.dart';
 
 class InputContainer extends StatefulWidget {
   const InputContainer(
       {this.child,
+      this.builder,
       this.height,
       this.width,
       this.alignment,
@@ -12,9 +14,12 @@ class InputContainer extends StatefulWidget {
       this.margin,
       this.focusNode,
       this.padding = const EdgeInsets.symmetric(vertical: 2.0, horizontal: 10.0),
-      super.key});
+      super.key})
+      : assert(child == null || builder == null,
+            'child and builder can\'t be assigned at the same time!');
 
   final Widget? child;
+  final Widget Function(AnimationController controller)? builder;
 
   final double? height;
   final double? width;
@@ -23,6 +28,8 @@ class InputContainer extends StatefulWidget {
   final EdgeInsets? margin;
   final FocusNode? focusNode;
   final EdgeInsetsGeometry? padding;
+
+  static const Color activeColor = Color(0xff56b2fd);
 
   @override
   State<InputContainer> createState() => _InputContainerState();
@@ -72,49 +79,21 @@ class _InputContainerState extends State<InputContainer> with SingleTickerProvid
           if (_hasFocus) return;
           controller.reverse();
         },
-        child: _BorderTransition(
+        child: ColorTransition(
             listenable: controller
-                .drive(ColorTween(begin: const Color(0xff707070), end: const Color(0xff56b2fd))),
-            padding: widget.padding,
-            height: widget.height,
-            width: widget.width,
-            constraints: widget.constraints,
-            alignment: widget.alignment,
-            margin: widget.margin,
-            child: widget.child));
-  }
-}
-
-class _BorderTransition extends AnimatedWidget {
-  const _BorderTransition(
-      {this.child,
-      this.height,
-      this.width,
-      this.alignment,
-      this.constraints,
-      this.margin,
-      this.padding,
-      required super.listenable});
-  final Widget? child;
-  final double? height;
-  final double? width;
-  final BoxConstraints? constraints;
-  final Alignment? alignment;
-  final EdgeInsets? margin;
-  final EdgeInsetsGeometry? padding;
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-        height: height,
-        width: width,
-        constraints: constraints,
-        alignment: alignment,
-        margin: margin,
-        padding: padding,
-        decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: GlobalStyles.borderRadius,
-            border: Border.all(color: (listenable as Animation).value, width: 2.0)),
-        child: child);
+                .drive(ColorTween(begin: const Color(0xff707070), end: InputContainer.activeColor)),
+            builder: (color) => Container(
+                height: widget.height,
+                width: widget.width,
+                constraints: widget.constraints,
+                alignment: widget.alignment,
+                margin: widget.margin,
+                padding: widget.padding,
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: GlobalStyles.borderRadius,
+                    border: Border.all(color: color, width: 2.0)),
+                child: widget.child ??
+                    (widget.builder != null ? widget.builder!(controller) : null))));
   }
 }

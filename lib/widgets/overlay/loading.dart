@@ -1,7 +1,7 @@
 import 'dart:ui';
 
-import 'package:skribbl_client/widgets/dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:skribbl_client/widgets/overlay/overlay.dart';
 
 class LoadingIndicator extends StatefulWidget {
   const LoadingIndicator({super.key});
@@ -49,13 +49,15 @@ class _LoadingState extends State<LoadingIndicator> with TickerProviderStateMixi
   }
 }
 
-// ignore: must_be_immutable
-class LoadingOverlay extends StatelessWidget with GameOverlay {
-  LoadingOverlay._internal();
-
+class LoadingOverlay extends OverlayController {
   static final LoadingOverlay _inst = LoadingOverlay._internal();
   static LoadingOverlay get inst => _inst;
 
+  LoadingOverlay._internal() : super(() => const _LoadingWidget());
+}
+
+class _LoadingWidget extends StatelessWidget {
+  const _LoadingWidget();
   @override
   Widget build(BuildContext context) {
     return Stack(children: [

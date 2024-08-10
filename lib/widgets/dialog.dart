@@ -4,44 +4,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:skribbl_client/widgets/animated_button/animated_button.dart';
+import 'package:skribbl_client/widgets/overlay/overlay.dart';
 
-mixin GameOverlay on Widget {
-  OverlayEntry? _entry;
-
-  bool get isShowing => _entry != null;
-
-  show() {
-    if (_entry != null) return;
-
-    _entry = OverlayEntry(builder: (ct) => this);
-    final overlayState = Navigator.of(Get.overlayContext!, rootNavigator: false).overlay!;
-
-    overlayState.insert(_entry!);
-  }
-
-  hide() {
-    if (_entry == null) return;
-
-    _entry?.remove();
-    _entry?.dispose();
-    _entry = null;
-  }
-}
-
-// ignore: must_be_immutable
-class GameDialog extends StatefulWidget with GameOverlay {
-  GameDialog({required this.title, required this.content, super.key, this.exitTap = false});
+class GameDialog extends OverlayController with GetSingleTickerProviderStateMixin {
+  GameDialog({required this.title, required this.content, this.exitTap = true})
+      : super(() => const _Dialog());
 
   final String Function() title;
   final Widget content;
 
   final bool exitTap;
 
-  @override
-  State<GameDialog> createState() => _GameDialogState();
-}
-
-class _GameDialogState extends State<GameDialog> with SingleTickerProviderStateMixin {
   late final AnimationController animController;
 
   late final Animation<double> bgAnimation;
@@ -51,8 +24,8 @@ class _GameDialogState extends State<GameDialog> with SingleTickerProviderStateM
   late final FocusScopeNode focusNode;
 
   @override
-  void initState() {
-    super.initState();
+  void onInit() {
+    super.onInit();
     animController = AnimationController(vsync: this, duration: const Duration(milliseconds: 210));
 
     bgAnimation = CurvedAnimation(parent: animController, curve: Curves.easeInOut);
@@ -61,16 +34,19 @@ class _GameDialogState extends State<GameDialog> with SingleTickerProviderStateM
         Tween<Offset>(begin: const Offset(0, -1), end: Offset.zero).animate(bgAnimation);
 
     focusNode = FocusScopeNode(onKeyEvent: _keyHandler);
+  }
 
-    animController.forward().then((_) {
-      focusNode.requestFocus();
-    });
+  @override
+  void onClose() {
+    animController.dispose();
+    focusNode.dispose();
+    super.onClose();
   }
 
   KeyEventResult _keyHandler(FocusNode node, KeyEvent event) {
     if (event is KeyDownEvent) {
       if (event.logicalKey == LogicalKeyboardKey.escape) {
-        close();
+        hide();
         return KeyEventResult.handled;
       }
     }
@@ -78,23 +54,33 @@ class _GameDialogState extends State<GameDialog> with SingleTickerProviderStateM
   }
 
   @override
-  void dispose() {
-    animController.dispose();
-    focusNode.dispose();
-    super.dispose();
-  }
-
-  close() {
-    focusNode.unfocus();
-    animController.reverse().then((_) {
-      widget.hide();
-    });
+  bool show() {
+    if (super.show()) {
+      animController.forward().then((_) {
+        focusNode.requestFocus();
+      });
+      return true;
+    }
+    return false;
   }
 
   @override
+  void hide() {
+    focusNode.unfocus();
+    animController.reverse().then((_) {
+      super.hide();
+    });
+  }
+}
+
+class _Dialog extends StatelessWidget with OverlayWidgetMixin<GameDialog> {
+  const _Dialog();
+
+  @override
   Widget build(BuildContext context) {
+    var c = controller;
     final dialog = SlideTransition(
-        position: dialogAnimation,
+        position: c.dialogAnimation,
         child: DefaultTextStyle(
             style: const TextStyle(fontFamily: 'Nunito-var', color: Colors.white),
             child: Stack(children: [
@@ -116,7 +102,7 @@ class _GameDialogState extends State<GameDialog> with SingleTickerProviderStateM
                                 Padding(
                                     padding:
                                         const EdgeInsets.only(top: 13.5, left: 13.5, right: 40),
-                                    child: Text(widget.title(),
+                                    child: Text(c.title(),
                                         style: const TextStyle(
                                             fontSize: 27,
                                             fontVariations: [FontVariation('wght', 750)]))),
@@ -124,22 +110,22 @@ class _GameDialogState extends State<GameDialog> with SingleTickerProviderStateM
                                 Padding(
                                     padding: const EdgeInsets.only(
                                         top: 7.5, left: 15, right: 15, bottom: 15),
-                                    child: widget.content)
+                                    child: c.content)
                               ])))),
               Positioned(
-                  top: 0, right: 8, child: GestureDetector(onTap: close, child: _CloseIcon()))
+                  top: 0, right: 8, child: GestureDetector(onTap: c.hide, child: _CloseIcon()))
             ])));
 
     return FocusScope(
-        node: focusNode,
+        node: c.focusNode,
         child: FadeTransition(
-            opacity: bgAnimation,
-            child: widget.exitTap
+            opacity: c.bgAnimation,
+            child: c.exitTap
                 ? Stack(
                     alignment: Alignment.center,
                     children: [
                       GestureDetector(
-                          onTap: close,
+                          onTap: c.hide,
                           child: Container(
                             constraints: const BoxConstraints.expand(),
                             alignment: Alignment.center,

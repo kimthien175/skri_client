@@ -1,7 +1,7 @@
 import 'package:skribbl_client/models/game/game.dart';
 import 'package:skribbl_client/pages/gameplay/gameplay.dart';
 import 'package:skribbl_client/utils/socket_io.dart';
-import 'package:skribbl_client/widgets/loading.dart';
+import 'package:skribbl_client/widgets/overlay/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 

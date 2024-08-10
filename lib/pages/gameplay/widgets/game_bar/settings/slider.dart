@@ -67,7 +67,7 @@ class _SettingsSliderState extends State<SettingsSlider> with SingleTickerProvid
     return (dx - _thumbSize / 2) / (maxWidth - _thumbSize);
   }
 
-  static const _sliderHeight = 7.0;
+  static const _sliderHeight = 7.5;
 
   static const Color _borderColor = Color(0x69ffffff);
 
@@ -87,6 +87,7 @@ class _SettingsSliderState extends State<SettingsSlider> with SingleTickerProvid
           return GestureDetector(
               onPanStart: (details) {
                 onInteracting = true;
+                focusNode.requestFocus();
               },
               onPanUpdate: (details) {
                 SystemSettings.inst.volume.value = newVolume(details.localPosition.dx, maxWidth);
@@ -97,10 +98,12 @@ class _SettingsSliderState extends State<SettingsSlider> with SingleTickerProvid
                 if (focusNode.hasFocus) return;
                 controller.reverse();
               },
-              onTapDown: (details) =>
-                  SystemSettings.inst.volume.value = newVolume(details.localPosition.dx, maxWidth),
+              onTapDown: (details) {
+                focusNode.requestFocus();
+                SystemSettings.inst.volume.value = newVolume(details.localPosition.dx, maxWidth);
+              },
               child: Container(
-                  margin: const EdgeInsets.symmetric(vertical: 12),
+                  margin: const EdgeInsets.symmetric(vertical: 10),
                   height: _thumbSize,
                   child: MouseRegion(
                       cursor: SystemMouseCursors.click,

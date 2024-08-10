@@ -47,7 +47,7 @@ class GameplayWeb extends StatelessWidget {
                                     // MainContentAndFooter(),
                                     GameplayStyles.layoutGap,
                                     //const GameChat(),
-                                    LangSelector()
+                                    //LangSelector()
                                   ])
                             ])))))));
   }
