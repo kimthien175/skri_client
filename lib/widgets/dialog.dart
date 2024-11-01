@@ -8,7 +8,7 @@ import 'package:skribbl_client/widgets/overlay/overlay.dart';
 
 class GameDialog extends OverlayController with GetSingleTickerProviderStateMixin {
   GameDialog({required this.title, required this.content, this.exitTap = true})
-      : super(() => const _Dialog());
+      : super(builder: () => const _Dialog());
 
   final String Function() title;
   final Widget content;
@@ -54,22 +54,21 @@ class GameDialog extends OverlayController with GetSingleTickerProviderStateMixi
   }
 
   @override
-  bool show() {
-    if (super.show()) {
-      animController.forward().then((_) {
-        focusNode.requestFocus();
-      });
+  Future<bool> show() async {
+    if (await super.show()) {
+      await animController.forward();
+      focusNode.requestFocus();
+
       return true;
     }
     return false;
   }
 
   @override
-  void hide() {
+  Future<bool> hide() async {
     focusNode.unfocus();
-    animController.reverse().then((_) {
-      super.hide();
-    });
+    await animController.reverse();
+    return super.hide();
   }
 }
 

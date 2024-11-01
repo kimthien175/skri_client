@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:skribbl_client/widgets/overlay/position.dart';
 
 enum GameTooltipBackgroundColor {
   notify(),
@@ -10,7 +10,7 @@ enum GameTooltipBackgroundColor {
   final Color value;
 }
 
-abstract class GameTooltipPosition {
+abstract class GameTooltipPosition extends OverlayWidgetPosition {
   const factory GameTooltipPosition.centerLeft({GameTooltipBackgroundColor backgroundColor}) =
       _CenterLeft;
   const factory GameTooltipPosition.centerRight({GameTooltipBackgroundColor backgroundColor}) =
@@ -22,33 +22,15 @@ abstract class GameTooltipPosition {
   const GameTooltipPosition({this.backgroundColor = GameTooltipBackgroundColor.notify});
   final GameTooltipBackgroundColor backgroundColor;
 
-  Widget build(
+  Widget buildAnimation(
       {required Widget child,
       required RenderBox originalBox,
       required double scale,
-      Animation<double>? scaleAnimation}) {
-    var newChild = _build(child);
-
-    if (scaleAnimation != null) {
-      newChild =
-          ScaleTransition(alignment: relativeAlignment, scale: scaleAnimation, child: newChild);
-    }
-
-    return _wrapWithZone(
-        Align(
-            alignment: relativeAlignment,
-            child: scale == 1.0
-                ? newChild
-                : Transform.scale(
-                    scale: scale,
-                    alignment: relativeAlignment,
-                    child: newChild,
-                  )),
-        originalBox.localToGlobal(Offset.zero),
-        originalBox.size * scale);
+      required Animation<double> scaleAnimation}) {
+    var newChild =
+        ScaleTransition(alignment: relativeAlignment, scale: scaleAnimation, child: _build(child));
+    return super.build(child: newChild, originalBox: originalBox, scale: scale);
   }
-
-  Widget _wrapWithZone(Widget aligned, Offset offset, Size size);
 
   Widget _build(Widget rawChild);
 
@@ -64,11 +46,11 @@ abstract class GameTooltipPosition {
 
   double get height;
   double get width;
-  Alignment get relativeAlignment;
+
   Path Function(Size size) get arrowPath;
 }
 
-class _CenterLeft extends GameTooltipPosition {
+class _CenterLeft extends GameTooltipPosition with CenterLeftMixin {
   const _CenterLeft({super.backgroundColor});
   @override
   Widget _build(Widget rawChild) =>
@@ -85,34 +67,9 @@ class _CenterLeft extends GameTooltipPosition {
 
   @override
   double get width => 10;
-
-  @override
-  Alignment get relativeAlignment => Alignment.centerRight;
-
-  @override
-  Widget _wrapWithZone(Widget aligned, Offset offset, Size size) =>
-      // knowing the button stay on the top half or bottom half
-      offset.dy + size.height / 2 <= Get.height / 2
-          ?
-          // top half
-          Positioned(
-              top: 0,
-              left: 0,
-              child:
-                  SizedBox(width: offset.dx, height: offset.dy * 2 + size.height, child: aligned),
-            )
-          :
-          // bottom half
-          Positioned(
-              left: 0,
-              bottom: 0,
-              child: SizedBox(
-                  width: offset.dx,
-                  height: (Get.height - offset.dy) * 2 - size.height,
-                  child: aligned));
 }
 
-class _CenterTop extends GameTooltipPosition {
+class _CenterTop extends GameTooltipPosition with CenterTopMixin {
   const _CenterTop({super.backgroundColor});
   @override
   Path Function(Size size) get arrowPath => (size) => Path()
@@ -129,32 +86,9 @@ class _CenterTop extends GameTooltipPosition {
   @override
   Widget _build(Widget rawChild) =>
       Column(mainAxisSize: MainAxisSize.min, children: [_wrapWithContainer(rawChild), arrow]);
-
-  @override
-  Alignment get relativeAlignment => Alignment.bottomCenter;
-
-  @override
-  Widget _wrapWithZone(Widget aligned, Offset offset, Size size) =>
-      // know left half or right half
-      offset.dx + size.width / 2 <= Get.width / 2
-          ?
-          // left half
-          Positioned(
-              top: 0,
-              left: 0,
-              child: SizedBox(width: offset.dx * 2 + size.width, height: offset.dy, child: aligned))
-          :
-          // right half
-          Positioned(
-              top: 0,
-              right: 0,
-              child: SizedBox(
-                  width: (Get.width - offset.dx) * 2 - size.width,
-                  height: offset.dy,
-                  child: aligned));
 }
 
-class _CenterRight extends GameTooltipPosition {
+class _CenterRight extends GameTooltipPosition with CenterRightMixin {
   const _CenterRight({super.backgroundColor});
   @override
   Path Function(Size size) get arrowPath => (size) => Path()
@@ -171,30 +105,9 @@ class _CenterRight extends GameTooltipPosition {
   @override
   Widget _build(Widget rawChild) =>
       Row(mainAxisSize: MainAxisSize.min, children: [arrow, _wrapWithContainer(rawChild)]);
-
-  @override
-  Alignment get relativeAlignment => Alignment.centerLeft;
-
-  @override
-  Widget _wrapWithZone(Widget aligned, Offset offset, Size size) =>
-      offset.dy + size.height / 2 <= Get.height / 2
-          ? Positioned(
-              top: 0,
-              right: 0,
-              child: SizedBox(
-                  height: offset.dy * 2 + size.height,
-                  width: Get.width - offset.dx - size.width,
-                  child: aligned))
-          : Positioned(
-              bottom: 0,
-              right: 0,
-              child: SizedBox(
-                  height: (Get.height - offset.dy) * 2 - size.height,
-                  width: Get.width - offset.dx - size.width,
-                  child: aligned));
 }
 
-class _CenterBottom extends GameTooltipPosition {
+class _CenterBottom extends GameTooltipPosition with CenterBottomMixin {
   const _CenterBottom({super.backgroundColor});
   @override
   Path Function(Size size) get arrowPath => (size) => Path()
@@ -211,27 +124,6 @@ class _CenterBottom extends GameTooltipPosition {
   @override
   Widget _build(Widget rawChild) =>
       Column(mainAxisSize: MainAxisSize.min, children: [arrow, _wrapWithContainer(rawChild)]);
-
-  @override
-  Alignment get relativeAlignment => Alignment.topCenter;
-
-  @override
-  Widget _wrapWithZone(Widget aligned, Offset offset, Size size) =>
-      offset.dx + size.width / 2 <= Get.width / 2
-          ? Positioned(
-              left: 0,
-              bottom: 0,
-              child: SizedBox(
-                  width: offset.dx * 2 + size.width,
-                  height: Get.height - offset.dy - size.height,
-                  child: aligned))
-          : Positioned(
-              right: 0,
-              bottom: 0,
-              child: SizedBox(
-                  width: (Get.width - offset.dx) * 2 - size.width,
-                  height: Get.height - offset.dy - size.height,
-                  child: aligned));
 }
 
 class _ArrowClip extends CustomClipper<Path> {

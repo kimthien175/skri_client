@@ -53,7 +53,7 @@ class LoadingOverlay extends OverlayController {
   static final LoadingOverlay _inst = LoadingOverlay._internal();
   static LoadingOverlay get inst => _inst;
 
-  LoadingOverlay._internal() : super(() => const _LoadingWidget());
+  LoadingOverlay._internal() : super(builder: () => const _LoadingWidget());
 }
 
 class _LoadingWidget extends StatelessWidget {
