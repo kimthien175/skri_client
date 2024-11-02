@@ -43,9 +43,7 @@ class HomeWeb extends StatelessWidget {
                                   width: PanelStyles.width,
                                   child: const Column(
                                     children: [
-                                      Row(children: [
-                                        NameInput(), //LangSelector()
-                                      ]),
+                                      Row(children: [NameInput(), LangSelector()]),
                                       AvatarEditor(),
                                       PlayButton(),
                                       SizedBox(height: 10),

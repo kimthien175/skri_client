@@ -24,7 +24,7 @@ class OverlayController extends GetxController {
 
     _tag = child.hashCode.toString();
 
-    Get.put(this, tag: _tag);
+    Get.lazyPut(() => this, tag: _tag);
     _entry = OverlayEntry(builder: (ct) => child);
 
     final overlayState = Navigator.of(Get.overlayContext!, rootNavigator: false).overlay!;
@@ -61,6 +61,12 @@ mixin OverlayWidgetMixin<T extends OverlayController> on Widget {
   T get controller => Get.find<OverlayController>(tag: hashCode.toString()) as T;
 }
 
+abstract class PositionedOverlayWidget<T extends OverlayController> extends StatelessWidget {
+  const PositionedOverlayWidget(this.tag, {super.key});
+  final String tag;
+  T get controller => Get.find<OverlayController>(tag: tag) as T;
+}
+
 class PositionedOverlayController<T extends OverlayWidgetPosition> extends OverlayController {
   PositionedOverlayController(
       {required this.childBuilder,
@@ -70,7 +76,7 @@ class PositionedOverlayController<T extends OverlayWidgetPosition> extends Overl
       this.tapOutsideToClose = false});
 
   @override
-  Widget Function() get builder => () => const PositionedOverlayWidget();
+  Widget Function() get builder => () => const _PositionedOverlayWidgetWrapper();
 
   final Widget Function(String tag) childBuilder;
   final T position;
@@ -84,9 +90,9 @@ class PositionedOverlayController<T extends OverlayWidgetPosition> extends Overl
   bool tapOutsideToClose;
 }
 
-class PositionedOverlayWidget<T extends OverlayWidgetPosition> extends StatelessWidget
+class _PositionedOverlayWidgetWrapper<T extends OverlayWidgetPosition> extends StatelessWidget
     with OverlayWidgetMixin<PositionedOverlayController> {
-  const PositionedOverlayWidget({super.key});
+  const _PositionedOverlayWidgetWrapper({super.key});
 
   @override
   Widget build(BuildContext context) {
