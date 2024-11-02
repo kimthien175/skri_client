@@ -23,15 +23,17 @@ class _DropdownItemController<T> extends GetxController {
 
   late FocusNode focusNode;
 
-  Color get color => focusNode.hasFocus ? Colors.amber : Colors.white;
+  Color get color => focusNode.hasFocus
+      ? Colors.blue
+      : isHovered
+          ? Colors.amber
+          : Colors.white;
 
   late Rx<Color> backgroundColor;
 
   @override
   void onInit() {
     super.onInit();
-
-    print('item controller on init');
 
     focusNode = FocusNode(
       onKeyEvent: (node, event) {
@@ -74,6 +76,20 @@ class _DropdownItemController<T> extends GetxController {
       }
     }
   }
+
+  bool isHovered = false;
+
+  void onEnter(PointerEnterEvent event) {
+    isHovered = true;
+    if (focusNode.hasFocus) return;
+    backgroundColor.value = color;
+  }
+
+  void onExit(PointerExitEvent event) {
+    isHovered = false;
+    if (focusNode.hasFocus) return;
+    backgroundColor.value = color;
+  }
 }
 
 class _DropdownItemWidget<T> extends StatelessWidget {
@@ -83,13 +99,16 @@ class _DropdownItemWidget<T> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var c = item.controller;
-    return GestureDetector(
-        onTap: c.onTap,
-        child: Focus(
-            focusNode: c.focusNode,
-            child: Obx(() => Container(
-                color: c.backgroundColor.value,
-                padding: const EdgeInsets.only(left: 12),
-                child: c.item.child))));
+    return MouseRegion(
+        onEnter: c.onEnter,
+        onExit: c.onExit,
+        child: GestureDetector(
+            onTap: c.onTap,
+            child: Focus(
+                focusNode: c.focusNode,
+                child: Obx(() => Container(
+                    color: c.backgroundColor.value,
+                    padding: const EdgeInsets.only(left: 12),
+                    child: c.item.child)))));
   }
 }

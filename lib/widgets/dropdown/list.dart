@@ -59,6 +59,10 @@ class _DropdownList<T> extends PositionedOverlayController<OverlayWidgetPosition
   @override
   Future<bool> hide() async {
     await parent.controller.reverse();
+
+    // unfocus scope by focus parent again
+    parent.focusNode.requestFocus();
+
     return super.hide();
   }
 }
@@ -74,7 +78,7 @@ class _DropdownListWidget<T> extends PositionedOverlayWidget<_DropdownList<T>> {
             position: c.parent.controller
                 .drive(Tween<Offset>(begin: const Offset(0, -1), end: Offset.zero)),
             child: FocusScope(
-                //  parentNode: c.parent.focusNode,
+                parentNode: c.parent.focusNode,
                 autofocus: true,
                 node: c.focusScopeNode,
                 child: Material(
