@@ -23,11 +23,14 @@ class _DropdownItemController<T> extends GetxController {
 
   late FocusNode focusNode;
 
-  Color get color => focusNode.hasFocus
-      ? Colors.blue
-      : isHovered
-          ? Colors.amber
-          : Colors.white;
+  Color get color {
+    if (list.parent.value.value == item) return Colors.blue.shade100;
+    if (focusNode.hasFocus) return Colors.amber;
+    if (isHovered) return Colors.pink;
+    return defaultColor;
+  }
+
+  Color get defaultColor => Colors.white;
 
   late Rx<Color> backgroundColor;
 
@@ -48,7 +51,7 @@ class _DropdownItemController<T> extends GetxController {
       backgroundColor.value = color;
     });
 
-    backgroundColor = color.obs;
+    backgroundColor = defaultColor.obs;
   }
 
   @override
@@ -57,10 +60,13 @@ class _DropdownItemController<T> extends GetxController {
     super.onClose();
   }
 
-  void onTap() {
-    // get current focus scope
+  _DropdownList<T> get list {
     String? tag = focusNode.enclosingScope?.debugLabel;
-    var menuController = Get.find<OverlayController>(tag: tag) as _DropdownList<T>;
+    return Get.find<OverlayController>(tag: tag) as _DropdownList<T>;
+  }
+
+  void onTap() {
+    var menuController = list;
 
     // close menu
     menuController.hide();
@@ -68,6 +74,10 @@ class _DropdownItemController<T> extends GetxController {
     // make changes
     var parent = menuController.parent;
     if (parent.value.value != item) {
+      // change color of current item
+      var currentItemController = parent.value.value.controller;
+      currentItemController.backgroundColor.value = currentItemController.color;
+
       parent.value.value = item;
 
       var onChange = parent.widget.onChange;
@@ -81,8 +91,7 @@ class _DropdownItemController<T> extends GetxController {
 
   void onEnter(PointerEnterEvent event) {
     isHovered = true;
-    if (focusNode.hasFocus) return;
-    backgroundColor.value = color;
+    focusNode.requestFocus();
   }
 
   void onExit(PointerExitEvent event) {

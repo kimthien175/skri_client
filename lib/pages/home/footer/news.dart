@@ -6,6 +6,7 @@ import 'dart:convert';
 
 import 'package:skribbl_client/utils/utils.dart';
 
+// TODO: test scrollcontroller
 class NewsContent extends StatelessWidget {
   const NewsContent({super.key});
 
@@ -28,7 +29,7 @@ class NewsContent extends StatelessWidget {
               return _Head(title: texts[0], date: texts[1]);
             }
             if (element.classes.contains('content')) {
-              var scrollController = ScrollController();
+              var scrollController = controller.scrollController;
               return Container(
                   constraints: const BoxConstraints(maxHeight: 400),
                   child: RawScrollbar(
@@ -105,5 +106,19 @@ class NewsContentController extends GetxController {
     }).catchError((e) {
       error.value = true;
     });
+  }
+
+  late ScrollController scrollController;
+
+  @override
+  void onInit() {
+    super.onInit();
+    scrollController = ScrollController();
+  }
+
+  @override
+  void onClose() {
+    scrollController.dispose();
+    super.onClose();
   }
 }

@@ -18,29 +18,49 @@ class GameChat extends StatelessWidget {
             height: 600,
             color: Colors.white,
             child: Column(
-              children: [Expanded(child: Center(child: Messages())), GuessInput()],
+              children: [const Expanded(child: Center(child: Messages())), GuessInput()],
             )));
   }
 }
 
-class Messages extends StatelessWidget {
-  Messages({super.key});
-  final ScrollController _scrollController = ScrollController();
+// TODO: TEST SCROLL UPDATE
+class Messages extends StatefulWidget {
+  const Messages({super.key});
+
   @override
-  Widget build(BuildContext context) {
-    return Obx(() {
+  State<Messages> createState() => _MessagesState();
+}
+
+class _MessagesState extends State<Messages> {
+  late ScrollController _scrollController;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController = ScrollController();
+    _scrollController.addListener(() {
       if (_scrollController.hasClients) {
         _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
       }
-      return Scrollbar(
-          controller: _scrollController,
-          thumbVisibility: true,
-          child: ListView(
-            controller: _scrollController,
-            shrinkWrap: true,
-            children: Game.inst.messages,
-          ));
     });
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scrollbar(
+        controller: _scrollController,
+        thumbVisibility: true,
+        child: Obx(() => ListView(
+              controller: _scrollController,
+              shrinkWrap: true,
+              children: Game.inst.messages,
+            )));
   }
 }
 

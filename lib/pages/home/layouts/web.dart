@@ -6,29 +6,51 @@ import 'package:skribbl_client/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class HomeWeb extends StatelessWidget {
+// TODO: test scrollcontroller
+class HomeWeb extends StatefulWidget {
   const HomeWeb({super.key});
 
   static const double minWidth = 1040.0;
 
   @override
+  State<HomeWeb> createState() => _HomeWebState();
+}
+
+class _HomeWebState extends State<HomeWeb> {
+  late ScrollController verticalScrollController;
+  late ScrollController horizontalScrollController;
+
+  @override
+  void initState() {
+    super.initState();
+    verticalScrollController = ScrollController();
+    horizontalScrollController = ScrollController();
+  }
+
+  @override
+  void dispose() {
+    verticalScrollController.dispose();
+    horizontalScrollController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final verticalScrollDetails = ScrollableDetails.vertical(controller: ScrollController());
-    final horizontalScrollDetails = ScrollableDetails.horizontal(controller: ScrollController());
     return Scrollbar(
         thumbVisibility: true,
         trackVisibility: true,
-        controller: verticalScrollDetails.controller,
+        controller: verticalScrollController,
         child: Scrollbar(
             thumbVisibility: true,
             trackVisibility: true,
-            controller: horizontalScrollDetails.controller,
+            controller: horizontalScrollController,
             child: SingleChild2DScrollView(
-                verticalDetails: verticalScrollDetails,
-                horizontalDetails: horizontalScrollDetails,
+                verticalDetails: ScrollableDetails.vertical(controller: verticalScrollController),
+                horizontalDetails:
+                    ScrollableDetails.horizontal(controller: horizontalScrollController),
                 delegate: SingleChild2DDelegate(
                     child: SizedBox(
-                        width: max(context.width, minWidth),
+                        width: max(context.width, HomeWeb.minWidth),
                         child: Column(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
                           Column(
                             children: [

@@ -3,24 +3,47 @@ import 'package:skribbl_client/utils/styles.dart';
 import 'package:skribbl_client/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 
-class GameplayWeb extends StatelessWidget {
+// TODO: test scrollcontroller
+class GameplayWeb extends StatefulWidget {
   const GameplayWeb({super.key});
   static const double width = 1312;
+
+  @override
+  State<GameplayWeb> createState() => _GameplayWebState();
+}
+
+class _GameplayWebState extends State<GameplayWeb> {
+  late ScrollController verticalScrollController;
+  late ScrollController horizontalScrollController;
+
+  @override
+  void initState() {
+    super.initState();
+    verticalScrollController = ScrollController();
+    horizontalScrollController = ScrollController();
+  }
+
+  @override
+  void dispose() {
+    verticalScrollController.dispose();
+    horizontalScrollController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    var verticalScrollDetails = ScrollableDetails.vertical(controller: ScrollController());
-    var horizontalScrollDetails = ScrollableDetails.horizontal(controller: ScrollController());
     return Scrollbar(
         thumbVisibility: true,
         trackVisibility: true,
-        controller: verticalScrollDetails.controller,
+        controller: verticalScrollController,
         child: Scrollbar(
             thumbVisibility: true,
             trackVisibility: true,
-            controller: horizontalScrollDetails.controller,
+            controller: horizontalScrollController,
             child: SingleChild2DScrollView(
-                horizontalDetails: horizontalScrollDetails,
-                verticalDetails: verticalScrollDetails,
+                horizontalDetails:
+                    ScrollableDetails.horizontal(controller: horizontalScrollController),
+                verticalDetails: ScrollableDetails.vertical(controller: verticalScrollController),
                 delegate: SingleChild2DDelegate(
                     child: Align(
                         alignment: Alignment.topCenter,

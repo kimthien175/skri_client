@@ -63,8 +63,7 @@ class _SwitchButtonState extends State<_SwitchButton> with SingleTickerProviderS
   late final GifBuilder child = GifManager.inst.misc(widget.path).builder.init();
   late final GifBuilder onHoverChild = GifManager.inst.misc(widget.onHoverPath).builder.init();
 
-  late final AnimationController animController =
-      AnimationController(vsync: this, duration: const Duration(milliseconds: 100));
+  late AnimationController animController;
   late final Animation<double> animation =
       CurvedAnimation(parent: animController, curve: Curves.linear);
 
@@ -76,6 +75,8 @@ class _SwitchButtonState extends State<_SwitchButton> with SingleTickerProviderS
   @override
   void initState() {
     super.initState();
+
+    animController = AnimationController(vsync: this, duration: const Duration(milliseconds: 100));
     visual = child;
 
     focusNode = FocusNode(onKeyEvent: (node, event) {

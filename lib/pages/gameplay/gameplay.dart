@@ -40,6 +40,7 @@ class GameplayController extends GetxController {
   // }
 }
 
+// TODO: test changes after replacing deprecated property
 class GameplayPage extends StatelessWidget {
   const GameplayPage({super.key});
 
@@ -47,7 +48,7 @@ class GameplayPage extends StatelessWidget {
   Widget build(BuildContext context) => ResourcesEnsurance(
       child: PopScope(
           canPop: false,
-          onPopInvoked: (didPop) async {
+          onPopInvokedWithResult: (didPop, result) {
             if (didPop) return;
             Game.inst.leave();
           },

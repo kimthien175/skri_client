@@ -6,12 +6,31 @@ import 'package:skribbl_client/widgets/logo.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class HomeMobile extends StatelessWidget {
+// TODO: test scrollcontroller
+class HomeMobile extends StatefulWidget {
   const HomeMobile({super.key});
 
   @override
+  State<HomeMobile> createState() => _HomeMobileState();
+}
+
+class _HomeMobileState extends State<HomeMobile> {
+  late ScrollController scrollController;
+
+  @override
+  void initState() {
+    super.initState();
+    scrollController = ScrollController();
+  }
+
+  @override
+  void dispose() {
+    scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final ScrollController scrollController = ScrollController();
     return Scrollbar(
         thumbVisibility: true,
         trackVisibility: true,
