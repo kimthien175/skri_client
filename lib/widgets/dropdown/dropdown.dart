@@ -68,14 +68,6 @@ class _DropdownState<T> extends State<Dropdown<T>> with SingleTickerProviderStat
       },
     );
 
-    focusNode.addListener(() {
-      if (focusNode.hasFocus) {
-        print('button focus');
-      } else {
-        print('button UNFOCUS');
-      }
-    });
-
     if (widget.value == null) {
       value = widget.items.first.obs;
     } else {
@@ -89,8 +81,6 @@ class _DropdownState<T> extends State<Dropdown<T>> with SingleTickerProviderStat
     if (controller.isDismissed || controller.velocity < 0) {
       // forward
       menu.show();
-      // request focus first item
-      // menu.focusNode.requestFocus();
       return;
     }
     // reverse

@@ -53,7 +53,7 @@ class _SwitchButton extends StatefulWidget {
 
   final String path;
   final String onHoverPath;
-  final Function() callback;
+  final void Function() callback;
 
   @override
   State<_SwitchButton> createState() => _SwitchButtonState();
@@ -131,10 +131,7 @@ class _SwitchButtonState extends State<_SwitchButton> with SingleTickerProviderS
             width: 34,
             child: FittedBox(
                 child: GestureDetector(
-                    onTap: () {
-                      focusNode.requestFocus();
-                      widget.callback();
-                    },
+                    onTap: widget.callback,
                     child: MouseRegion(
                         cursor: SystemMouseCursors.click,
                         onEnter: (_) {

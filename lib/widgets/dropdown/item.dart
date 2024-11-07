@@ -23,15 +23,6 @@ class _DropdownItemController<T> extends GetxController {
 
   late FocusNode focusNode;
 
-  Color get color {
-    if (list.parent.value.value == item) return Colors.blue.shade100;
-    if (focusNode.hasFocus) return Colors.amber;
-    if (isHovered) return Colors.pink;
-    return defaultColor;
-  }
-
-  Color get defaultColor => Colors.white;
-
   late Rx<Color> backgroundColor;
 
   @override
@@ -47,9 +38,8 @@ class _DropdownItemController<T> extends GetxController {
         return KeyEventResult.ignored;
       },
     );
-    focusNode.addListener(() {
-      backgroundColor.value = color;
-    });
+
+    focusNode.addListener(updateColor);
 
     backgroundColor = defaultColor.obs;
   }
@@ -66,17 +56,14 @@ class _DropdownItemController<T> extends GetxController {
   }
 
   void onTap() {
-    var menuController = list;
-
     // close menu
-    menuController.hide();
+    list.hide();
 
     // make changes
-    var parent = menuController.parent;
+    var parent = list.parent;
     if (parent.value.value != item) {
       // change color of current item
-      var currentItemController = parent.value.value.controller;
-      currentItemController.backgroundColor.value = currentItemController.color;
+      var oldItemController = parent.value.value.controller;
 
       parent.value.value = item;
 
@@ -84,20 +71,24 @@ class _DropdownItemController<T> extends GetxController {
       if (onChange != null) {
         onChange(item.value);
       }
+
+      updateColor();
+      oldItemController.updateColor();
     }
   }
 
-  bool isHovered = false;
+  Color get defaultColor => Colors.white;
 
-  void onEnter(PointerEnterEvent event) {
-    isHovered = true;
-    focusNode.requestFocus();
+  void updateColor() {
+    backgroundColor.value = (list.parent.value.value == item)
+        ? Colors.blue.shade100
+        : (focusNode.hasFocus)
+            ? Colors.amber.shade300
+            : defaultColor;
   }
 
-  void onExit(PointerExitEvent event) {
-    isHovered = false;
-    if (focusNode.hasFocus) return;
-    backgroundColor.value = color;
+  void onEnter(PointerEnterEvent event) {
+    focusNode.requestFocus();
   }
 }
 
@@ -110,7 +101,6 @@ class _DropdownItemWidget<T> extends StatelessWidget {
     var c = item.controller;
     return MouseRegion(
         onEnter: c.onEnter,
-        onExit: c.onExit,
         child: GestureDetector(
             onTap: c.onTap,
             child: Focus(
