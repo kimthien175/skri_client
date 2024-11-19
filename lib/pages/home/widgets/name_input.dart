@@ -4,7 +4,6 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:skribbl_client/utils/styles.dart';
 import 'package:skribbl_client/widgets/input_container.dart';
-//import 'package:visibility_detector/visibility_detector.dart';
 
 class NameInput extends StatefulWidget {
   const NameInput({super.key});
@@ -15,15 +14,27 @@ class NameInput extends StatefulWidget {
 
 class _NameInputState extends State<NameInput> {
   late FocusNode focusNode;
+  late TextEditingController textController;
 
   @override
   void initState() {
     super.initState();
+
+    textController = TextEditingController(text: MePlayer.inst.name);
+    textController.addListener(() => MePlayer.inst.name = textController.text);
+
     focusNode = FocusNode();
+    focusNode.addListener(() {
+      if (!focusNode.hasFocus) {
+        // format spaces
+        textController.text = textController.text.replaceAll(RegExp(r'\s\s+'), ' ').trim();
+      }
+    });
   }
 
   @override
   void dispose() {
+    textController.dispose();
     focusNode.dispose();
     super.dispose();
   }
@@ -38,13 +49,8 @@ class _NameInputState extends State<NameInput> {
             child: TextField(
               focusNode: focusNode,
               cursorColor: PanelStyles.color,
-              controller: TextEditingController(text: MePlayer.inst.name),
-              onChanged: (String text) => MePlayer.inst.name = text,
-              inputFormatters: [
-                LengthLimitingTextInputFormatter(20),
-                _NoLeadingSpaceFormatter(),
-                _NoMultipleSpacesFormatter()
-              ],
+              controller: textController,
+              inputFormatters: [LengthLimitingTextInputFormatter(20)],
               style: const TextStyle(fontWeight: FontWeight.w800),
               decoration: InputDecoration(
                   isDense: true,
@@ -53,20 +59,5 @@ class _NameInputState extends State<NameInput> {
                   hintText: 'name_input_placeholder'.tr,
                   hintStyle: const TextStyle(fontWeight: FontWeight.w800, color: Colors.black38)),
             )));
-  }
-}
-
-class _NoLeadingSpaceFormatter extends TextInputFormatter {
-  @override
-  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) =>
-      newValue.text.startsWith(' ') ? oldValue : newValue;
-}
-
-class _NoMultipleSpacesFormatter extends TextInputFormatter {
-  @override
-  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
-    final modifiedText = newValue.text.replaceAll(RegExp(r'\s\s+'), ' ');
-    return TextEditingValue(
-        text: modifiedText, selection: TextSelection.collapsed(offset: modifiedText.length));
   }
 }

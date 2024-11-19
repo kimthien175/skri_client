@@ -194,6 +194,7 @@ class GlobalStyles {
   static const Shadow textShadow = Shadow(color: Color(0x7a000000), offset: Offset(2, 2));
   static const Color colorPanelButton = Color(0xff2a51d1);
   static const Color colorPanelButtonHover = Color(0xff1e44be);
+  static const Color colorPanelText = Color(0xfff0f0f0);
 }
 
 class GameplayStyles {

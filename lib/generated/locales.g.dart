@@ -72,7 +72,6 @@ class LocaleKeys {
   static const create_private_room_error_content =
       'create_private_room_error_content';
   static const join_private_room_error_title = 'join_private_room_error_title';
-  static const wrong_private_room_code = 'wrong_private_room_code';
   static const gameplay_connection_error = 'gameplay_connection_error';
   static const gamebar_round_display = 'gamebar_round_display';
   static const round_noti = 'round_noti';
@@ -83,6 +82,10 @@ class LocaleKeys {
   static const click_to_copy_invite = 'click_to_copy_invite';
   static const reset_hotkeys_tooltip = 'reset_hotkeys_tooltip';
   static const key_binding_warning = 'key_binding_warning';
+  static const dialog_title_error = 'dialog_title_error';
+  static const dialog_content_wrong_private_code =
+      'dialog_content_wrong_private_code';
+  static const dialog_button_ok = 'dialog_button_ok';
   static const You = 'You';
   static const Normal = 'Normal';
   static const Hidden = 'Hidden';
@@ -173,8 +176,6 @@ class Locales {
         'Press Cancel to abort trying to connect',
     'join_private_room_error_title':
         'Connection Error: can\'t join private room right now',
-    'wrong_private_room_code':
-        'Can\'t connect to room, pls check the link again',
     'gameplay_connection_error':
         'If you want to keep trying to reconnect, please hold, or press Cancel to disconnect',
     'gamebar_round_display': 'Round @currentRound of @rounds',
@@ -186,6 +187,9 @@ class Locales {
     'click_to_copy_invite': 'Click to copy Invite',
     'reset_hotkeys_tooltip': 'Reset hotkeys to default',
     'key_binding_warning': 'Must be different with [@duplicated]',
+    'dialog_title_error': 'Something went wrong!',
+    'dialog_content_wrong_private_code': 'Wrong room code! Please check again!',
+    'dialog_button_ok': 'Okay!',
   };
   static const vi_VN = {
     'displayName': 'Tiếng Việt',
@@ -260,7 +264,6 @@ class Locales {
     'create_private_room_error_title': 'Đứt dây cáp: không thể tạo phòng!',
     'create_private_room_error_content': 'Nhấn Cancel để ngắt kết nối',
     'join_private_room_error_title': 'Đứt dây cáp! Hãy kiểm tra lại kết nối!',
-    'wrong_private_room_code': 'Không thể thể vào phòng, hãy kiểm tra lại link',
     'gameplay_connection_error':
         'Nếu bạn muốn kết nối lại, xin vui lòng kiểm tra kết nối, hoặc nhấn Cancel để thoát',
     'gamebar_round_display': 'Vòng @currentRound / @rounds',
@@ -282,5 +285,8 @@ class Locales {
     'Undo': 'Hoàn tác',
     'Clear': 'Xóa sạch',
     'Swap': 'Đổi màu',
+    'dialog_title_error': 'Có gì đó sai sai!',
+    'dialog_content_wrong_private_code': 'Sai mã phòng! Hãy kiểm tra lại!',
+    'dialog_button_ok': 'Okay!',
   };
 }

@@ -1,16 +1,34 @@
+library dialog;
+
+export 'button.dart';
+export 'layout.dart';
+
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:skribbl_client/widgets/animated_button/animated_button.dart';
-import 'package:skribbl_client/widgets/overlay/overlay.dart';
+import 'package:skribbl_client/widgets/widgets.dart';
+
+import '../../utils/utils.dart';
+
+typedef StringCallback = String Function();
 
 class GameDialog extends OverlayController with GetSingleTickerProviderStateMixin {
-  GameDialog({required this.title, required this.content, this.exitTap = true})
-      : super(builder: () => const _Dialog());
+  GameDialog({
+    required this.title,
+    required this.content,
+    this.exitTap = true,
+    // this.layout = GameDialogButtonsLayout.defaultOkay,
+    // this.buttons
+  }) : super(builder: () => const _Dialog());
 
-  final String Function() title;
+  static final Map<String, GameDialog> _cache = <String, GameDialog>{};
+
+  factory GameDialog.cache({required String tag, required GameDialog Function() builder}) =>
+      _cache.putIfAbsent(tag, builder);
+
+  final StringCallback title;
   final Widget content;
 
   final bool exitTap;
@@ -22,6 +40,12 @@ class GameDialog extends OverlayController with GetSingleTickerProviderStateMixi
   late final Animation<Offset> dialogAnimation;
 
   late final FocusScopeNode focusNode;
+
+  /// buttons null: ok button
+  /// layout null, buttons length ==1
+  /// layout != null, buttons length >1
+  // final GameDialogButtonsLayout Function() layout;
+  // final List<GameDialogButton>? buttons;
 
   @override
   void onInit() {
@@ -78,7 +102,7 @@ class _Dialog extends StatelessWidget with OverlayWidgetMixin<GameDialog> {
   @override
   Widget build(BuildContext context) {
     var c = controller;
-    final dialog = SlideTransition(
+    Widget dialog = SlideTransition(
         position: c.dialogAnimation,
         child: DefaultTextStyle(
             style: const TextStyle(fontFamily: 'Nunito-var', color: Colors.white),
@@ -106,38 +130,41 @@ class _Dialog extends StatelessWidget with OverlayWidgetMixin<GameDialog> {
                                             fontSize: 27,
                                             fontVariations: [FontVariation('wght', 750)]))),
                                 // content
-                                Padding(
+                                Container(
+                                    width: 410,
                                     padding: const EdgeInsets.only(
                                         top: 7.5, left: 15, right: 15, bottom: 15),
-                                    child: c.content)
+                                    child: Column(children: [
+                                      c.content,
+                                      // DefaultTextStyle(
+                                      //     style: const TextStyle(
+                                      //       color: GlobalStyles.colorPanelText,
+                                      //       fontSize: 15,
+                                      //     ),
+                                      //     child: c.layout())
+                                    ])),
                               ])))),
               Positioned(
                   top: 0, right: 8, child: GestureDetector(onTap: c.hide, child: _CloseIcon()))
             ])));
 
+    if (c.exitTap) {
+      dialog = TapRegion(
+          onTapOutside: (event) {
+            c.hide();
+          },
+          child: dialog);
+    }
+
     return FocusScope(
         node: c.focusNode,
         child: FadeTransition(
             opacity: c.bgAnimation,
-            child: c.exitTap
-                ? Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      GestureDetector(
-                          onTap: c.hide,
-                          child: Container(
-                            constraints: const BoxConstraints.expand(),
-                            alignment: Alignment.center,
-                            color: const Color.fromRGBO(0, 0, 0, 0.55),
-                          )),
-                      dialog
-                    ],
-                  )
-                : Container(
-                    constraints: const BoxConstraints.expand(),
-                    alignment: Alignment.center,
-                    color: const Color.fromRGBO(0, 0, 0, 0.55),
-                    child: dialog)));
+            child: Container(
+                constraints: const BoxConstraints.expand(),
+                alignment: Alignment.center,
+                color: const Color.fromRGBO(0, 0, 0, 0.55),
+                child: dialog)));
   }
 }
 
@@ -174,3 +201,70 @@ class _CloseIconState extends State<_CloseIcon> with SingleTickerProviderStateMi
                     fontVariations: const [FontVariation('wght', 850)]))));
   }
 }
+
+/*import 'package:skribbl_client/models/game/game.dart';
+import 'package:skribbl_client/pages/home/home.dart';
+import 'package:skribbl_client/widgets/dialog/dialog.dart';
+import 'package:skribbl_client/widgets/hover_button.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:skribbl_client/widgets/overlay/overlay.dart';
+
+class PlayButton extends StatelessWidget {
+  const PlayButton({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return HoverButton(
+      onTap: () {
+        var homeController = Get.find<HomeController>();
+
+        if (homeController.hasCode) {
+// #region Private room
+          if (homeController.isPrivateRoomCodeValid) {
+            // join private room
+            // TODO: TEST JOINING PRIVATE ROOM
+            PrivateGame.join(homeController.privateRoomCode);
+            return;
+          }
+          // show dialog for invalid code room
+
+          _dialog.show();
+// #endregion
+
+          return;
+        }
+
+        // otherwise join public game
+        PublicGame.join();
+      },
+      color: const Color(0xff53e237),
+      hoverColor: const Color(0xff38c41c),
+      height: 54,
+      child: Text('play_button'.tr,
+          style: const TextStyle(
+              fontSize: 32, shadows: [Shadow(color: Color(0x2b000000), offset: Offset(2, 2))])),
+    );
+  }
+
+  static GameDialog? __dialog;
+  // TODO: SHOW DIALOG FOR INVALID PRIVATE ROOM CODE
+  static GameDialog get _dialog => __dialog ??= _WrongPrivateCodeDialog();
+}
+
+class _WrongPrivateCodeDialog extends GameDialog {
+  _WrongPrivateCodeDialog()
+      : super(
+            title: () => 'dialog_title_error'.tr,
+            content: Text('dialog_content_wrong_private_code'.tr));
+}
+
+class _WrongPrivateCodeWidget extends OverlayWidgetChild<GameDialog> {
+  const _WrongPrivateCodeWidget();
+
+  @override
+  Widget build(BuildContext context) {
+    return Text('dialog_content_wrong_private_code'.tr);
+  }
+}
+*/

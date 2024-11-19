@@ -50,7 +50,6 @@
     "create_private_room_error_title": "Connection Error: can't create private room right now",
     "create_private_room_error_content": "Press Cancel to abort trying to connect",
     "join_private_room_error_title": "Connection Error: can't join private room right now",
-    "wrong_private_room_code": "Can't connect to room, pls check the link again",
     "gameplay_connection_error": "If you want to keep trying to reconnect, please hold, or press Cancel to disconnect",
     "gamebar_round_display": "Round @currentRound of @rounds",
     "round_noti": "Round @round",
@@ -60,5 +59,8 @@
     "news_error": "Can't get any news!!",
     "click_to_copy_invite": "Click to copy Invite",
     "reset_hotkeys_tooltip": "Reset hotkeys to default",
-    "key_binding_warning":"Must be different with [@duplicated]"
+    "key_binding_warning":"Must be different with [@duplicated]",
+    "dialog_title_error":"Something went wrong!",
+    "dialog_content_wrong_private_code":"Wrong room code! Please check again!",
+    "dialog_button_ok":"Okay!"
 }

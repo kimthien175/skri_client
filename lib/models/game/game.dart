@@ -1,6 +1,7 @@
 library game;
 
 export 'private_game.dart';
+export 'public_game.dart';
 export 'package:skribbl_client/models/game/message.dart';
 export 'package:skribbl_client/models/game/player.dart';
 export 'state/game_state.dart';
@@ -17,6 +18,7 @@ import 'package:get/get.dart';
 // ignore: avoid_web_libraries_in_flutter
 import 'dart:html' as html;
 
+// TODO: lost connection and try to continue the game again
 abstract class Game extends GetxController {
   Game(
       {required this.currentRound,

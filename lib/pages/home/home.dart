@@ -19,6 +19,7 @@ class HomeBindings implements Bindings {
   }
 }
 
+// TODO: UNKNOWN, IF CHANGE PRIVATE ROOM AND THE CONTROLLER STILL EXIST THE OLD INSTANCE, THEN USER WOULD JOIN OLD ROOM INSTEAD OF NEW ROOM
 class HomeController extends GetxController {
   HomeController() : super() {
     if (ResourcesController.inst.isLoaded.value) {
@@ -27,14 +28,16 @@ class HomeController extends GetxController {
       ResourcesController.inst.onDone.add(loadChildrenControllers);
     }
 
-    // check for room code
+    // init roomCode
     var keys = Get.parameters.keys.toList();
-    if (keys.isNotEmpty) {
-      var rawRoomCode = keys[0];
-      // change Play btn function
-      PlayButton.roomCode = rawRoomCode.toLowerCase();
-    }
+    _roomCode = keys.isEmpty ? '' : keys[0].toLowerCase();
   }
+
+  late final String _roomCode;
+
+  bool get hasCode =>_roomCode != '';
+  bool get isPrivateRoomCodeValid => RegExp(r'^[a-z0-9]{4,}$').hasMatch(_roomCode);
+  String get privateRoomCode => _roomCode;
 
   void loadChildrenControllers() {
     MePlayer.inst;
