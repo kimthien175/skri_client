@@ -10,8 +10,6 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:skribbl_client/widgets/widgets.dart';
 
-import '../../utils/utils.dart';
-
 typedef StringCallback = String Function();
 
 class GameDialog extends OverlayController with GetSingleTickerProviderStateMixin {
@@ -21,7 +19,7 @@ class GameDialog extends OverlayController with GetSingleTickerProviderStateMixi
     this.exitTap = true,
     // this.layout = GameDialogButtonsLayout.defaultOkay,
     // this.buttons
-  }) : super(builder: () => const _Dialog());
+  }) : super(widgetBuilder: () => const _Dialog());
 
   static final Map<String, GameDialog> _cache = <String, GameDialog>{};
 
@@ -33,13 +31,14 @@ class GameDialog extends OverlayController with GetSingleTickerProviderStateMixi
 
   final bool exitTap;
 
-  late final AnimationController animController;
+  late final AnimationController animController =
+      AnimationController(vsync: this, duration: const Duration(milliseconds: 210));
 
   late final Animation<double> bgAnimation;
 
   late final Animation<Offset> dialogAnimation;
 
-  late final FocusScopeNode focusNode;
+  late final FocusScopeNode focusNode = FocusScopeNode(onKeyEvent: _keyHandler);
 
   /// buttons null: ok button
   /// layout null, buttons length ==1
@@ -50,14 +49,11 @@ class GameDialog extends OverlayController with GetSingleTickerProviderStateMixi
   @override
   void onInit() {
     super.onInit();
-    animController = AnimationController(vsync: this, duration: const Duration(milliseconds: 210));
 
     bgAnimation = CurvedAnimation(parent: animController, curve: Curves.easeInOut);
 
     dialogAnimation =
         Tween<Offset>(begin: const Offset(0, -1), end: Offset.zero).animate(bgAnimation);
-
-    focusNode = FocusScopeNode(onKeyEvent: _keyHandler);
   }
 
   @override
@@ -96,12 +92,12 @@ class GameDialog extends OverlayController with GetSingleTickerProviderStateMixi
   }
 }
 
-class _Dialog extends StatelessWidget with OverlayWidgetMixin<GameDialog> {
+class _Dialog extends OverlayChildWidget<GameDialog, OverlayWidget> {
   const _Dialog();
 
   @override
   Widget build(BuildContext context) {
-    var c = controller;
+    var c = controller(context);
     Widget dialog = SlideTransition(
         position: c.dialogAnimation,
         child: DefaultTextStyle(

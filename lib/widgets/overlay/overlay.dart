@@ -4,28 +4,26 @@ import 'package:get/get.dart';
 import 'position.dart';
 
 class OverlayController extends GetxController {
-  OverlayController({this.builder = OverlayController.defaultBuilder});
+  OverlayController({this.widgetBuilder = OverlayController.defaultChildBuilder});
 
-  static Widget defaultBuilder() =>
+  static Widget defaultChildBuilder() =>
       throw Exception('Provide value or override getter for subclass');
 
-  final Widget Function() builder;
+  // OverlayWidget Function({required String tag, required Widget child}) get inheritedBuilder =>
+  //     OverlayWidget._internal;
+
+  final Widget Function() widgetBuilder;
 
   OverlayEntry? _entry;
   bool get isShowing => _entry != null;
 
-  String? _tag;
-  String get tag => _tag!;
+  String get tag => hashCode.toString();
 
   Future<bool> show() async {
     if (_entry != null) return false;
 
-    var child = builder();
-
-    _tag = child.hashCode.toString();
-
-    Get.lazyPut(() => this, tag: _tag);
-    _entry = OverlayEntry(builder: (ct) => child);
+    Get.lazyPut(() => this, tag: tag);
+    _entry = OverlayEntry(builder: (ct) => OverlayWidget(tag: tag, child: widgetBuilder()));
 
     final overlayState = Navigator.of(Get.overlayContext!, rootNavigator: false).overlay!;
 
@@ -57,17 +55,26 @@ class OverlayController extends GetxController {
   }
 }
 
-mixin OverlayWidgetMixin<T extends OverlayController> on Widget {
-  T get controller => Get.find<OverlayController>(tag: hashCode.toString()) as T;
-}
+class OverlayWidget extends InheritedWidget {
+  const OverlayWidget({super.key, required super.child, required this.tag});
 
-abstract class PositionedOverlayWidget<T extends OverlayController> extends StatelessWidget {
-  const PositionedOverlayWidget(this.tag, {super.key});
   final String tag;
-  T get controller => Get.find<OverlayController>(tag: tag) as T;
+
+  static OverlayWidget of(BuildContext context) =>
+      context.dependOnInheritedWidgetOfExactType<OverlayWidget>()!;
+
+  @override
+  bool updateShouldNotify(covariant OverlayWidget oldWidget) => oldWidget.tag != tag;
 }
 
-class PositionedOverlayController<T extends OverlayWidgetPosition> extends OverlayController {
+abstract class OverlayChildWidget<C extends OverlayController, W extends OverlayWidget>
+    extends StatelessWidget {
+  const OverlayChildWidget({super.key});
+
+  C controller(BuildContext ct) => Get.find<OverlayController>(tag: OverlayWidget.of(ct).tag) as C;
+}
+
+class PositionedOverlayController<P extends OverlayWidgetPosition> extends OverlayController {
   PositionedOverlayController(
       {required this.childBuilder,
       required this.position,
@@ -76,10 +83,10 @@ class PositionedOverlayController<T extends OverlayWidgetPosition> extends Overl
       this.tapOutsideToClose = false});
 
   @override
-  Widget Function() get builder => () => const _PositionedOverlayWidgetWrapper();
+  Widget Function() get widgetBuilder => () => const _PositionedOverlayChildWidget();
 
-  final Widget Function(String tag) childBuilder;
-  final T position;
+  final Widget Function() childBuilder;
+  final P position;
   final double Function() scale;
 
   final GlobalKey anchorKey;
@@ -90,26 +97,27 @@ class PositionedOverlayController<T extends OverlayWidgetPosition> extends Overl
   bool tapOutsideToClose;
 }
 
-class _PositionedOverlayWidgetWrapper<T extends OverlayWidgetPosition> extends StatelessWidget
-    with OverlayWidgetMixin<PositionedOverlayController> {
-  const _PositionedOverlayWidgetWrapper({super.key});
+class _PositionedOverlayChildWidget<T extends OverlayWidgetPosition>
+    extends OverlayChildWidget<PositionedOverlayController, OverlayWidget> {
+  const _PositionedOverlayChildWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
-    var child = controller.childBuilder(controller.tag);
+    var c = controller(context);
+    var child = c.childBuilder();
 
-    if (controller.tapOutsideToClose) {
+    if (c.tapOutsideToClose) {
       child = TapRegion(
         onTapOutside: (PointerDownEvent event) {
-          controller.hide();
+          c.hide();
         },
         child: child,
       );
     }
 
-    return controller.position.build(
-        originalBox: controller.originalBox,
-        scale: controller.scale(),
+    return c.position.build(
+        originalBox: c.originalBox,
+        scale: c.scale(),
         child: DefaultTextStyle(
           style: const TextStyle(
               color: Color.fromRGBO(240, 240, 240, 1),

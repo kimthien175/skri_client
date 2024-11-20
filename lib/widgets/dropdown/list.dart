@@ -5,7 +5,7 @@ class _DropdownList<T> extends PositionedOverlayController<OverlayWidgetPosition
       : super(
             anchorKey: parent.key,
             position: const OverlayWidgetPosition.leftBottom(),
-            childBuilder: _DropdownListWidget._init,
+            childBuilder: () => const _DropdownListWidget.init(),
             tapOutsideToClose: true,
             scale: parent.widget.scale);
 
@@ -63,12 +63,12 @@ class _DropdownList<T> extends PositionedOverlayController<OverlayWidgetPosition
   }
 }
 
-class _DropdownListWidget<T> extends PositionedOverlayWidget<_DropdownList<T>> {
-  const _DropdownListWidget._init(super.tag);
+class _DropdownListWidget<T> extends OverlayChildWidget<_DropdownList<T>, OverlayWidget> {
+  const _DropdownListWidget.init();
 
   @override
   Widget build(BuildContext context) {
-    var c = controller;
+    var c = controller(context);
     return ClipRect(
         child: SlideTransition(
             position: c.parent.controller

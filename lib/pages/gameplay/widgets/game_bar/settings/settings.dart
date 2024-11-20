@@ -28,7 +28,7 @@ class SettingsButton extends StatelessWidget {
                 decorators: [
                   const AnimatedButtonBackgroundColorDecorator(),
                   AnimatedButtonTooltipDecorator(
-                      childBuilder: (tag) => Text('reset_hotkeys_tooltip'.tr))
+                      childBuilder: () => Text('reset_hotkeys_tooltip'.tr))
                 ],
                 child: Text('Reset'.tr),
               )
@@ -55,7 +55,7 @@ class SettingsButton extends StatelessWidget {
           const AnimatedButtonOpacityDecorator(minOpacity: 0.9),
           const AnimatedButtonScaleDecorator(max: 1.1),
           AnimatedButtonTooltipDecorator(
-              childBuilder: (tag) => Text('Settings'.tr),
+              childBuilder: () => Text('Settings'.tr),
               position: const GameTooltipPosition.centerLeft())
         ],
         child: GifManager.inst

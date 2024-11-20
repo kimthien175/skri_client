@@ -15,7 +15,7 @@ class GameTooltip extends PositionedOverlayController<GameTooltipPosition> {
       required super.anchorKey});
 
   @override
-  Widget Function() get builder => () => const _Tooltip();
+  Widget Function() get widgetBuilder => () => const _Tooltip();
 
   final AnimationController controller;
   Animation<double> get scaleAnimation => controller.drive(Tween<double>(begin: 0, end: 1));
@@ -36,21 +36,22 @@ class GameTooltip extends PositionedOverlayController<GameTooltipPosition> {
   }
 }
 
-class _Tooltip extends StatelessWidget with OverlayWidgetMixin<GameTooltip> {
+class _Tooltip extends OverlayChildWidget<GameTooltip, OverlayWidget> {
   const _Tooltip();
   @override
   Widget build(BuildContext context) {
-    return controller.position.buildAnimation(
-        scaleAnimation: controller.scaleAnimation,
-        originalBox: controller.originalBox,
-        scale: controller.scale(),
+    var c = controller(context);
+    return c.position.buildAnimation(
+        scaleAnimation: c.scaleAnimation,
+        originalBox: c.originalBox,
+        scale: c.scale(),
         child: DefaultTextStyle(
           style: const TextStyle(
               color: Color.fromRGBO(240, 240, 240, 1),
               fontWeight: FontWeight.w700,
               fontSize: 13.0,
               fontFamily: 'Nunito'),
-          child: controller.childBuilder(controller.tag),
+          child: c.childBuilder(),
         ));
   }
 }

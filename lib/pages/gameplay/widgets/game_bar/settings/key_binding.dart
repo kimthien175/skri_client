@@ -23,7 +23,7 @@ class _KeyBindingState extends State<KeyBinding> with SingleTickerProviderStateM
   late GameTooltip tooltip = GameTooltip(
       controller: controller,
       anchorKey: globalKey,
-      childBuilder: (tag) => Text('key_binding_warning'.trParams({'duplicated': duplicatedKey.tr})),
+      childBuilder: () => Text('key_binding_warning'.trParams({'duplicated': duplicatedKey.tr})),
       position: const GameTooltipPosition.centerBottom(
           backgroundColor: GameTooltipBackgroundColor.warining));
 

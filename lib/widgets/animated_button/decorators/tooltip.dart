@@ -16,7 +16,7 @@ class AnimatedButtonTooltipDecorator implements AnimatedButtonDecorator {
 
   _Tooltip? _tooltip;
 
-  final Widget Function(String tag) childBuilder;
+  final Widget Function() childBuilder;
   final GameTooltipPosition position;
   final double Function() scale;
 

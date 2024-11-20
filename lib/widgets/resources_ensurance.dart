@@ -22,7 +22,7 @@ class ResourcesEnsurance extends StatelessWidget {
             child: SafeArea(
                 child: Obx(() => ResourcesController.inst.isLoaded.value
                     ? child
-                    : LoadingOverlay.inst.builder()))));
+                    : LoadingOverlay.inst.widgetBuilder()))));
   }
 }
 
