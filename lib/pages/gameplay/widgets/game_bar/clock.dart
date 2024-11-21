@@ -24,7 +24,7 @@ class GameClock extends GetView<GameClockController> {
                     child: Obx(() => Text(
                         controller.remainingTime.value
                             .toString(), //Game.inst.remainingTime.seconds.value.toString(),
-                        style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w800))))
+                        style: const TextStyle(fontSize: 22, fontVariations: [FontVariation.weight(800)]))))
               ],
             )));
   }

@@ -26,7 +26,7 @@ class SettingsButton extends StatelessWidget {
               AnimatedButton(
                 onTap: SystemSettings.inst.resetKeyMaps,
                 decorators: [
-                  const AnimatedButtonBackgroundColorDecorator(),
+                 // const AnimatedButtonBackgroundColorDecorator(),
                   AnimatedButtonTooltipDecorator(
                       childBuilder: () => Text('reset_hotkeys_tooltip'.tr))
                 ],

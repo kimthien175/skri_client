@@ -92,7 +92,7 @@ class PlayerCard extends StatelessWidget {
                       Text(info.nameForCard,
                           style: const TextStyle(
                               fontSize: 14,
-                              fontWeight: FontWeight.w800,
+                              fontVariations: [FontVariation.weight(800)],
                               color:
                                   //info.id == MePlayer.inst.id
                                   //     ? GameplayStyles.colorPlayerMe
@@ -100,7 +100,7 @@ class PlayerCard extends StatelessWidget {
                                   Colors.black,
                               height: 1.1)),
                       const Text('0 points',
-                          style: TextStyle(fontSize: 12.6, height: 1, fontWeight: FontWeight.w600))
+                          style: TextStyle(fontSize: 12.6, height: 1, fontVariations: [FontVariation.weight(600)]))
                     ],
                   )),
               Positioned(
@@ -113,7 +113,7 @@ class PlayerCard extends StatelessWidget {
                   left: 6,
                   child: Text(
                     '#${index + 1}',
-                    style: const TextStyle(fontSize: 15.4, fontWeight: FontWeight.w700),
+                    style: const TextStyle(fontSize: 15.4, fontVariations: [FontVariation.weight(700)]),
                   )),
               if (info.isOwner == true)
                 Positioned(

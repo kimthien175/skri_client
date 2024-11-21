@@ -63,7 +63,7 @@ class _DropdownList<T> extends PositionedOverlayController<OverlayWidgetPosition
   }
 }
 
-class _DropdownListWidget<T> extends OverlayChildWidget<_DropdownList<T>, OverlayWidget> {
+class _DropdownListWidget<T> extends OverlayChildWidget<_DropdownList<T>> {
   const _DropdownListWidget.init();
 
   @override

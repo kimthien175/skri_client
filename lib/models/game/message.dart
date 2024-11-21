@@ -43,7 +43,7 @@ class NewHostMessage extends Message {
         padding: EdgeInsets.only(left: paddingLeft),
         child: Text('message_room_owner_statement'.trParams({'room_owner': playerName}),
             style:
-                const TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: Message.orange)));
+                const TextStyle(fontSize: 14, fontVariations: [FontVariation.weight(700)], color: Message.orange)));
   }
 }
 
@@ -66,11 +66,11 @@ class PlayerChatMessage extends Message {
               TextSpan(
                   text: '$playerName: ',
                   style: const TextStyle(
-                      fontSize: 14, fontWeight: FontWeight.w700, fontFamily: 'Nunito')),
+                      fontSize: 14, fontVariations: [FontVariation.weight(700)], fontFamily: 'Nunito-var')),
               TextSpan(
                   text: chat,
                   style: const TextStyle(
-                      fontSize: 14, fontWeight: FontWeight.w500, fontFamily: 'Nunito')),
+                      fontSize: 14, fontVariations: [FontVariation.weight(500)], fontFamily: 'Nunito-var')),
             ],
           ),
         ));
@@ -88,7 +88,7 @@ class PlayerJoinMessage extends Message {
         padding: EdgeInsets.only(left: paddingLeft),
         child: Text("message_new_player_joined".trParams({'player_name': playerName}),
             style: const TextStyle(
-                fontSize: 14, fontWeight: FontWeight.w700, color: Message.green)));
+                fontSize: 14, fontVariations: [FontVariation.weight(700)], color: Message.green)));
   }
 }
 
@@ -103,7 +103,7 @@ class PlayerLeaveMessage extends Message {
         padding: EdgeInsets.only(left: paddingLeft),
         child: Text("message_player_leave".trParams({'player_name': playerName}),
             style: const TextStyle(
-                color: Message.darkOrange, fontSize: 14, fontWeight: FontWeight.w700)));
+                color: Message.darkOrange, fontSize: 14, fontVariations: [FontVariation.weight(700)])));
   }
 }
 
@@ -117,7 +117,7 @@ class Minimum2PlayersToStartMessage extends Message {
         padding: EdgeInsets.only(left: paddingLeft),
         child: Text("message_you_need_at_least_2_players".tr,
             style: const TextStyle(
-                color: Message.darkOrange, fontSize: 14, fontWeight: FontWeight.w700)));
+                color: Message.darkOrange, fontSize: 14, fontVariations: [FontVariation.weight(700)])));
   }
 }
 
@@ -131,7 +131,7 @@ class LinkCopiedMessage extends Message {
         padding: EdgeInsets.only(left: paddingLeft),
         child: Text("message_link_copied".tr,
             style: const TextStyle(
-                color: Message.yellow, fontSize: 14, fontWeight: FontWeight.w700)));
+                color: Message.yellow, fontSize: 14, fontVariations: [FontVariation.weight(700)])));
   }
 }
 
@@ -151,7 +151,7 @@ class PlayerWinMessage extends Message {
             style: const TextStyle(
                 color: Message.orange,
                 fontSize: 14,
-                fontWeight: FontWeight.w700)));
+                fontVariations: [FontVariation.weight(700)])));
   }
 }
 
@@ -168,6 +168,6 @@ class PlayerDrawMessage extends Message {
             style: const TextStyle(
                 color: Message.blue,
                 fontSize: 14,
-                fontWeight: FontWeight.w700)));
+                fontVariations: [FontVariation.weight(700)])));
   }
 }

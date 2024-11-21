@@ -2,6 +2,7 @@ import 'package:flutter/services.dart';
 import 'package:skribbl_client/utils/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:skribbl_client/widgets/animated_button/animated_button.dart';
+import 'package:skribbl_client/widgets/color_transition.dart';
 
 class HoverButton extends StatefulWidget {
   const HoverButton(
@@ -87,12 +88,22 @@ class _HoverButtonState extends State<HoverButton> with SingleTickerProviderStat
             },
             child: GestureDetector(
                 onTap: widget.onTap,
-                child: BackgroundColorTransition(
-                    height: widget.height,
-                    width: widget.width,
-                    borderRadius: widget.borderRadius,
+                child: ColorTransition(
                     listenable:
                         ColorTween(begin: widget.color, end: widget.hoverColor).animate(controller),
-                    child: widget.child))));
+                    builder: (color) => Container(
+                        height: widget.height,
+                        width: widget.width,
+                        padding: widget.height == null && widget.width == null
+                            ? const EdgeInsets.symmetric(horizontal: 5.85)
+                            : null,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(color: color, borderRadius: widget.borderRadius),
+                        child: DefaultTextStyle.merge(
+                            style: const TextStyle(
+                                color: PanelStyles.textColor,
+                                fontVariations: [FontVariation.weight(800)],
+                                shadows: [Shadow(color: Color(0x35000000), offset: Offset(2.5, 2.5))]),
+                            child: widget.child ?? Container()))))));
   }
 }

@@ -11,7 +11,7 @@ class InviteSection extends StatelessWidget {
     return Column(mainAxisSize: MainAxisSize.min, children: [
       Text(
         'invite_your_friends'.tr,
-        style: const TextStyle(color: Colors.white, fontSize: 28, fontWeight: FontWeight.w800),
+        style: const TextStyle(color: Colors.white, fontSize: 28, fontVariations: [FontVariation.weight(800)]),
       ),
       const SizedBox(
           height: 33,
@@ -49,11 +49,11 @@ class _InviteLink extends StatelessWidget {
                             style: const TextStyle(
                                 fontSize: 18.2,
                                 color: Color.fromRGBO(44, 44, 44, 1),
-                                fontWeight: FontWeight.w400))
+                                fontVariations: [FontVariation.weight(400)]))
                         : Text('hover_over_me_to_see_the_invite_link'.tr,
                             style: const TextStyle(
                                 color: Color.fromRGBO(44, 141, 231, 1),
-                                fontWeight: FontWeight.w800,
+                                fontVariations: [FontVariation.weight(800)],
                                 fontSize: 18.2))))));
   }
 }
@@ -77,7 +77,7 @@ class _CopyButton extends StatelessWidget {
                     style: const TextStyle(
                         color: Color.fromRGBO(240, 240, 240, 1),
                         fontSize: 14,
-                        fontWeight: FontWeight.w800,
+                        fontVariations: [FontVariation.weight(800)],
                         shadows: [
                           Shadow(offset: Offset(2, 2), color: Color.fromRGBO(0, 0, 0, 0.17))
                         ])))));

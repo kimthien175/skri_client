@@ -20,8 +20,7 @@ class CreatePrivateRoomButton extends StatelessWidget {
         color: const Color(0xff2c8de7),
         hoverColor: const Color(0xff1671c5),
         child: Text('create_private_room_button'.tr,
-            style: const TextStyle(
-                fontVariations: [FontVariation.weight(700)],
-                shadows: [Shadow(color: Color(0x2b000000), offset: Offset(2, 2))])));
+            style: const TextStyle(fontSize: 19.2,
+              fontVariations: [FontVariation.weight(700)])));
   }
 }

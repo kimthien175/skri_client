@@ -47,11 +47,11 @@ class DrawState extends GameState {
           Text(
             'DRAW_THIS'.tr,
             style: const TextStyle(
-                fontFamily: 'Inconsolata', fontWeight: FontWeight.w700, fontSize: 16),
+                fontFamily: 'Inconsolata', fontVariations: [FontVariation.weight(700)], fontSize: 16),
           ),
           Text(word,
               style: const TextStyle(
-                  fontFamily: 'Incosolata', fontWeight: FontWeight.w900, fontSize: 25.2))
+                  fontFamily: 'Incosolata', fontVariations: [FontVariation.weight(900)], fontSize: 25.2))
         ],
       );
     }
@@ -61,7 +61,7 @@ class DrawState extends GameState {
         Text(
           aboveStatusForGuesser(),
           style:
-              const TextStyle(fontFamily: 'Inconsolata', fontWeight: FontWeight.w700, fontSize: 16),
+              const TextStyle(fontFamily: 'Inconsolata', fontVariations: [FontVariation.weight(700)], fontSize: 16),
         ),
         // SizedBox(
         //     height: 27,

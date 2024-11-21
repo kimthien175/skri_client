@@ -54,8 +54,8 @@ class Footer extends StatelessWidget {
                     textAlign: TextAlign.center,
                     style: const TextStyle(
                         fontSize: 12.8,
-                        fontWeight: FontWeight.w600,
-                        fontFamily: 'Nunito',
+                        fontVariations: [FontVariation.weight(600)],
+                        fontFamily: 'Nunito-var',
                         color: Color.fromRGBO(103, 122, 249, 1)))
               ]));
     } else {
@@ -88,8 +88,8 @@ class Footer extends StatelessWidget {
                 textAlign: TextAlign.center,
                 style: TextStyle(
                     fontSize: mobilePanelWidth * 0.03,
-                    fontWeight: FontWeight.w600,
-                    fontFamily: 'Nunito',
+                    fontVariations: const [FontVariation.weight(600)],
+                    fontFamily: 'Nunito-var',
                     color: const Color.fromRGBO(103, 122, 249, 1))),
             SizedBox(height: mobilePanelWidth * 0.03)
           ]));
@@ -104,9 +104,9 @@ Widget _linkBuilder(String text, Function() onPressed) {
           onTap: onPressed,
           child: Text(text,
               style: TextStyle(
-                  fontFamily: 'Nunito',
+                  fontFamily: 'Nunito-var',
                   inherit: false,
-                  fontWeight: FontWeight.w600,
+                  fontVariations: const [FontVariation.weight(600)],
                   fontSize: 16,
                   color: const Color.fromRGBO(180, 186, 255, 1),
                   decoration: TextDecoration.underline,

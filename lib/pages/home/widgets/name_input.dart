@@ -51,13 +51,13 @@ class _NameInputState extends State<NameInput> {
               cursorColor: PanelStyles.color,
               controller: textController,
               inputFormatters: [LengthLimitingTextInputFormatter(20)],
-              style: const TextStyle(fontWeight: FontWeight.w800),
+              style: const TextStyle(fontVariations: [FontVariation.weight(800)]),
               decoration: InputDecoration(
                   isDense: true,
                   constraints: const BoxConstraints.tightForFinite(),
                   border: InputBorder.none,
                   hintText: 'name_input_placeholder'.tr,
-                  hintStyle: const TextStyle(fontWeight: FontWeight.w800, color: Colors.black38)),
+                  hintStyle: const TextStyle(fontVariations: [FontVariation.weight(800)], color: Colors.black38)),
             )));
   }
 }

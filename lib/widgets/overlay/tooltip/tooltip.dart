@@ -36,7 +36,7 @@ class GameTooltip extends PositionedOverlayController<GameTooltipPosition> {
   }
 }
 
-class _Tooltip extends OverlayChildWidget<GameTooltip, OverlayWidget> {
+class _Tooltip extends OverlayChildWidget<GameTooltip> {
   const _Tooltip();
   @override
   Widget build(BuildContext context) {
@@ -48,9 +48,9 @@ class _Tooltip extends OverlayChildWidget<GameTooltip, OverlayWidget> {
         child: DefaultTextStyle(
           style: const TextStyle(
               color: Color.fromRGBO(240, 240, 240, 1),
-              fontWeight: FontWeight.w700,
+              fontVariations: [FontVariation.weight(700)],
               fontSize: 13.0,
-              fontFamily: 'Nunito'),
+              fontFamily: 'Nunito-var'),
           child: c.childBuilder(),
         ));
   }

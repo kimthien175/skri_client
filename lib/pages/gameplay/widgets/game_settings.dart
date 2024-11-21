@@ -58,14 +58,14 @@ class GameSettings extends StatelessWidget {
                               Text('custom_words'.tr,
                                   style: const TextStyle(
                                     fontSize: 16.8,
-                                    fontWeight: FontWeight.w700,
+                                    fontVariations: [FontVariation.weight(700)],
                                     color: Color.fromRGBO(240, 240, 240, 1),
                                   )),
                               const Spacer(),
                               Text('use_custom_words_only'.tr,
                                   style: const TextStyle(
                                       fontSize: 13.44,
-                                      fontWeight: FontWeight.w700,
+                                      fontVariations: [FontVariation.weight(700)],
                                       color: Color.fromRGBO(240, 240, 240, 1))),
                               const _UseCustomWordsOnlyCheckbox()
                             ],
@@ -89,7 +89,7 @@ class GameSettings extends StatelessWidget {
                                 style: const TextStyle(
                                     fontSize: 32,
                                     color: PanelStyles.textColor,
-                                    fontWeight: FontWeight.w800,
+                                    fontVariations: [FontVariation.weight(800)],
                                     shadows: [GlobalStyles.textShadow])),
                           ))))
             ],
@@ -242,7 +242,7 @@ class CustomWordsInput extends StatelessWidget {
                       'max_char': maxLength.toString()
                     }),
                     hintStyle: const TextStyle(
-                        fontWeight: FontWeight.w700,
+                        fontVariations: [FontVariation.weight(700)],
                         color: Color.fromRGBO(0, 0, 0, 0.5),
                         fontSize: 15.4)),
                 maxLines: null,
@@ -264,7 +264,7 @@ class _SettingsItem extends StatelessWidget {
   DropdownMenuItem _menuItem(dynamic value) => DropdownMenuItem(
       value: value,
       child: Text(value is String ? value.tr : value.toString(),
-          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700)));
+          style: const TextStyle(fontSize: 14, fontVariations: [FontVariation.weight(700)])));
 
   List<DropdownMenuItem> getItems() {
     List<DropdownMenuItem> items = [];
@@ -299,7 +299,7 @@ class _SettingsItem extends StatelessWidget {
                     style: const TextStyle(
                         color: Color.fromRGBO(240, 240, 240, 1),
                         fontSize: 14,
-                        fontWeight: FontWeight.w500)))
+                        fontVariations: [FontVariation.weight(500)])))
           ])),
       Expanded(
           flex: 45,
@@ -357,7 +357,7 @@ class _LanguageSettingItem extends _SettingsItem {
   DropdownMenuItem _menuItem(dynamic value) => DropdownMenuItem(
       value: value,
       child: Text(AppTranslation.translations[value]!['displayName']!,
-          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700)));
+          style: const TextStyle(fontSize: 14, fontVariations: [FontVariation.weight(700)])));
 
   @override
   void changeSetting(value) {

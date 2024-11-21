@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:skribbl_client/utils/styles.dart';
-import 'package:skribbl_client/widgets/overlay/overlay.dart';
 import 'package:skribbl_client/widgets/overlay/position.dart';
 import '../widgets.dart';
 

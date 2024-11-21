@@ -144,7 +144,7 @@ class RoundWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Text('round_noti'.trParams({'round': Game.inst.currentRound.value.toString()}),
-        style: const TextStyle(color: Colors.white, fontSize: 32, fontWeight: FontWeight.w800));
+        style: const TextStyle(color: Colors.white, fontSize: 32, fontVariations: [FontVariation.weight(800)]));
   }
 }
 
@@ -180,7 +180,7 @@ class PlayerChooseWordWidget extends StatelessWidget {
           children: [
             Text('choose_a_word'.tr,
                 style: const TextStyle(
-                    color: Colors.white, fontSize: 28, fontWeight: FontWeight.w800)),
+                    color: Colors.white, fontSize: 28, fontVariations: [FontVariation.weight(800)])),
             Row(
               mainAxisSize: MainAxisSize.min,
               children: wordWidgets,
@@ -195,7 +195,7 @@ class PlayerChooseWordWidget extends StatelessWidget {
         children: [
           Text('player_choosing'.trParams({'playerName': currentState.playerName}),
               style:
-                  const TextStyle(color: Colors.white, fontSize: 28, fontWeight: FontWeight.w800)),
+                  const TextStyle(color: Colors.white, fontSize: 28, fontVariations: [FontVariation.weight(800)])),
           Game.inst.playersByMap[currentState.playerId]!.avatar.fit(height: 80)
         ],
       );
@@ -222,6 +222,6 @@ class WordItem extends StatelessWidget {
                 border: Border.all(color: Colors.white, width: 4)),
             child: Text(word,
                 style: const TextStyle(
-                    color: Colors.white, fontSize: 24, fontWeight: FontWeight.w800))));
+                    color: Colors.white, fontSize: 24, fontVariations: [FontVariation.weight(800)]))));
   }
 }

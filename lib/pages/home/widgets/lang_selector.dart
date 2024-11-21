@@ -20,7 +20,7 @@ class LangSelector extends StatelessWidget {
                   value: e.key,
                   child: Text(e.value['displayName'] ?? '',
                       style: const TextStyle(
-                          fontFamily: 'Nunito', fontWeight: FontWeight.w500, fontSize: 16))))
+                          fontFamily: 'Nunito-var', fontVariations: [FontVariation.weight(500)], fontSize: 16))))
               .toList(),
           onChange: (value) {
             var list = value.split('_');
@@ -34,7 +34,7 @@ class LangSelector extends StatelessWidget {
     //         child: Text(
     //           entry.value['displayName'] ?? '',
     //           style:
-    //               const TextStyle(fontFamily: 'Nunito', fontWeight: FontWeight.w500, fontSize: 16),
+    //               const TextStyle(fontFamily: 'Nunito-var', fontVariations: [FontVariation.weight(500)], fontSize: 16),
     //         )))
     //     .toList();
     // return InputContainer(

@@ -49,7 +49,7 @@ class NewsContent extends StatelessWidget {
                                   textStyle: const TextStyle(
                                       color: PanelStyles.textColor,
                                       fontSize: 18,
-                                      fontWeight: FontWeight.w600),
+                                      fontVariations: [FontVariation.weight(600)]),
                                   customStylesBuilder: (element) => {'font-size': '0.93em'})))));
             }
             return null;
@@ -59,7 +59,9 @@ class NewsContent extends StatelessWidget {
         return Center(
             child: Text('news_error'.tr,
                 style: const TextStyle(
-                    color: PanelStyles.textColor, fontWeight: FontWeight.w700, fontSize: 18)));
+                    color: PanelStyles.textColor,
+                    fontVariations: [FontVariation.weight(700)],
+                    fontSize: 18)));
       }
 
       return Container();
@@ -84,8 +86,11 @@ class _Head extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           textBaseline: TextBaseline.alphabetic,
           children: [
-            Text(title, style: TextStyle(color: color, fontWeight: FontWeight.w700, fontSize: 18)),
-            Text(date, style: TextStyle(color: color, fontWeight: FontWeight.w700))
+            Text(title,
+                style: TextStyle(
+                    color: color, fontVariations: const [FontVariation.weight(700)], fontSize: 18)),
+            Text(date,
+                style: TextStyle(color: color, fontVariations: const [FontVariation.weight(700)]))
           ],
         ));
   }

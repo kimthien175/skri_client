@@ -78,6 +78,7 @@
     "Clear": "Xóa sạch",
     "Swap": "Đổi màu",
     "dialog_title_error": "Có gì đó sai sai!",
-    "dialog_content_wrong_private_code":"Sai mã phòng! Hãy kiểm tra lại!",
+    "dialog_content_wrong_private_code":"Sai mã phòng!\nHãy kiểm tra lại!",
+    "dialog_content_no_server_connection":"Hệ thống đang bảo trì!\nVui lòng thử lại sau!\nStatus: 0",
     "dialog_button_ok": "Okay!"
 }

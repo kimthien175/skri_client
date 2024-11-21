@@ -14,7 +14,7 @@ class WaitForSetupState extends GameState {
           child: Text(
         'WAITING'.tr,
         style:
-            const TextStyle(fontFamily: 'Inconsolata', fontWeight: FontWeight.w700, fontSize: 16),
+            const TextStyle(fontFamily: 'Inconsolata', fontVariations: [FontVariation.weight(700)], fontSize: 16),
       ));
 
   @override

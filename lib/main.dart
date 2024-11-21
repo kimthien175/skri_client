@@ -15,7 +15,7 @@ void main() {
   ResourcesController.inst;
   usePathUrlStrategy();
   runApp(GetMaterialApp(
-    theme: ThemeData(fontFamily: 'Nunito'),
+    theme: ThemeData(fontFamily: 'Nunito-var'),
     // Locales
     translationsKeys: AppTranslation.translations,
     locale: Get.deviceLocale,

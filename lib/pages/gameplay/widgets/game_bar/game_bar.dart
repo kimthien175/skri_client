@@ -25,7 +25,7 @@ class GameBar extends StatelessWidget {
             Text(
               'WAITING'.tr,
               style: const TextStyle(
-                  fontFamily: 'Inconsolata', fontWeight: FontWeight.w700, fontSize: 16),
+                  fontFamily: 'Inconsolata', fontVariations: [FontVariation.weight(700)], fontSize: 16),
             ),
             const SizedBox(width: GameChat.width)
           ])),

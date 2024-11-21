@@ -22,8 +22,8 @@ class OverlayController extends GetxController {
   Future<bool> show() async {
     if (_entry != null) return false;
 
-    Get.lazyPut(() => this, tag: tag);
-    _entry = OverlayEntry(builder: (ct) => OverlayWidget(tag: tag, child: widgetBuilder()));
+    Get.put(this, tag: tag);
+    _entry = OverlayEntry(builder: (ct) => OverlayWidget(controller: this, child: widgetBuilder()));
 
     final overlayState = Navigator.of(Get.overlayContext!, rootNavigator: false).overlay!;
 
@@ -53,25 +53,27 @@ class OverlayController extends GetxController {
     hide();
     super.dispose();
   }
+
+  static S controller<S extends OverlayController>(BuildContext context) =>
+      OverlayWidget.of(context).controller as S;
 }
 
 class OverlayWidget extends InheritedWidget {
-  const OverlayWidget({super.key, required super.child, required this.tag});
+  const OverlayWidget({super.key, required super.child, required this.controller});
 
-  final String tag;
+  final OverlayController controller;
 
   static OverlayWidget of(BuildContext context) =>
       context.dependOnInheritedWidgetOfExactType<OverlayWidget>()!;
 
   @override
-  bool updateShouldNotify(covariant OverlayWidget oldWidget) => oldWidget.tag != tag;
+  bool updateShouldNotify(covariant OverlayWidget oldWidget) => oldWidget.controller != controller;
 }
 
-abstract class OverlayChildWidget<C extends OverlayController, W extends OverlayWidget>
-    extends StatelessWidget {
+abstract class OverlayChildWidget<C extends OverlayController> extends StatelessWidget {
   const OverlayChildWidget({super.key});
 
-  C controller(BuildContext ct) => Get.find<OverlayController>(tag: OverlayWidget.of(ct).tag) as C;
+  C controller(BuildContext ct) => OverlayWidget.of(ct).controller as C;
 }
 
 class PositionedOverlayController<P extends OverlayWidgetPosition> extends OverlayController {
@@ -98,7 +100,7 @@ class PositionedOverlayController<P extends OverlayWidgetPosition> extends Overl
 }
 
 class _PositionedOverlayChildWidget<T extends OverlayWidgetPosition>
-    extends OverlayChildWidget<PositionedOverlayController, OverlayWidget> {
+    extends OverlayChildWidget<PositionedOverlayController> {
   const _PositionedOverlayChildWidget({super.key});
 
   @override
@@ -121,9 +123,9 @@ class _PositionedOverlayChildWidget<T extends OverlayWidgetPosition>
         child: DefaultTextStyle(
           style: const TextStyle(
               color: Color.fromRGBO(240, 240, 240, 1),
-              fontWeight: FontWeight.w700,
+              fontVariations: [FontVariation.weight(700)],
               fontSize: 13.0,
-              fontFamily: 'Nunito'),
+              fontFamily: 'Nunito-var'),
           child: child,
         ));
   }

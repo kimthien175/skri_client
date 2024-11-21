@@ -13,13 +13,17 @@ import 'package:skribbl_client/widgets/widgets.dart';
 typedef StringCallback = String Function();
 
 class GameDialog extends OverlayController with GetSingleTickerProviderStateMixin {
-  GameDialog({
-    required this.title,
-    required this.content,
-    this.exitTap = true,
-    // this.layout = GameDialogButtonsLayout.defaultOkay,
-    // this.buttons
-  }) : super(widgetBuilder: () => const _Dialog());
+  GameDialog(
+      {required this.title, required this.content, this.exitTap = true, GameDialogButtons? buttons})
+      : _buttons = buttons ?? const GameDialogButtons.okay();
+
+  GameDialog.error({required this.content})
+      : _buttons = const GameDialogButtons.okay(),
+        title = (() => 'dialog_title_error'.tr),
+        exitTap = false;
+
+  @override
+  Widget Function() get widgetBuilder => () => const _Dialog();
 
   static final Map<String, GameDialog> _cache = <String, GameDialog>{};
 
@@ -31,29 +35,32 @@ class GameDialog extends OverlayController with GetSingleTickerProviderStateMixi
 
   final bool exitTap;
 
-  late final AnimationController animController =
-      AnimationController(vsync: this, duration: const Duration(milliseconds: 210));
+  late final AnimationController animController;
 
   late final Animation<double> bgAnimation;
 
   late final Animation<Offset> dialogAnimation;
 
-  late final FocusScopeNode focusNode = FocusScopeNode(onKeyEvent: _keyHandler);
+  late final FocusScopeNode focusNode;
 
-  /// buttons null: ok button
-  /// layout null, buttons length ==1
-  /// layout != null, buttons length >1
+  // buttons null, layout null: ok button
+  // layout null, buttons length ==1
+  // layout != null, buttons length >1
   // final GameDialogButtonsLayout Function() layout;
-  // final List<GameDialogButton>? buttons;
+  final GameDialogButtons _buttons;
 
   @override
   void onInit() {
     super.onInit();
 
+    animController = AnimationController(vsync: this, duration: const Duration(milliseconds: 210));
+
     bgAnimation = CurvedAnimation(parent: animController, curve: Curves.easeInOut);
 
     dialogAnimation =
         Tween<Offset>(begin: const Offset(0, -1), end: Offset.zero).animate(bgAnimation);
+
+    focusNode = FocusScopeNode(onKeyEvent: _keyHandler);
   }
 
   @override
@@ -92,7 +99,7 @@ class GameDialog extends OverlayController with GetSingleTickerProviderStateMixi
   }
 }
 
-class _Dialog extends OverlayChildWidget<GameDialog, OverlayWidget> {
+class _Dialog extends OverlayChildWidget<GameDialog> {
   const _Dialog();
 
   @override
@@ -101,7 +108,11 @@ class _Dialog extends OverlayChildWidget<GameDialog, OverlayWidget> {
     Widget dialog = SlideTransition(
         position: c.dialogAnimation,
         child: DefaultTextStyle(
-            style: const TextStyle(fontFamily: 'Nunito-var', color: Colors.white),
+            style: const TextStyle(
+                fontFamily: 'Nunito-var',
+                color: Colors.white,
+                fontVariations: [FontVariation('wght', 500)]),
+            textAlign: TextAlign.center,
             child: Stack(children: [
               ClipRRect(
                   borderRadius: BorderRadius.circular(10),
@@ -131,13 +142,13 @@ class _Dialog extends OverlayChildWidget<GameDialog, OverlayWidget> {
                                     padding: const EdgeInsets.only(
                                         top: 7.5, left: 15, right: 15, bottom: 15),
                                     child: Column(children: [
-                                      c.content,
-                                      // DefaultTextStyle(
-                                      //     style: const TextStyle(
-                                      //       color: GlobalStyles.colorPanelText,
-                                      //       fontSize: 15,
-                                      //     ),
-                                      //     child: c.layout())
+                                      Container(
+                                          height: 120,
+                                          alignment: Alignment.center,
+                                          child: DefaultTextStyle.merge(
+                                              style: const TextStyle(fontSize: 15),
+                                              child: c.content)),
+                                      c._buttons
                                     ])),
                               ])))),
               Positioned(
@@ -197,70 +208,3 @@ class _CloseIconState extends State<_CloseIcon> with SingleTickerProviderStateMi
                     fontVariations: const [FontVariation('wght', 850)]))));
   }
 }
-
-/*import 'package:skribbl_client/models/game/game.dart';
-import 'package:skribbl_client/pages/home/home.dart';
-import 'package:skribbl_client/widgets/dialog/dialog.dart';
-import 'package:skribbl_client/widgets/hover_button.dart';
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:skribbl_client/widgets/overlay/overlay.dart';
-
-class PlayButton extends StatelessWidget {
-  const PlayButton({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return HoverButton(
-      onTap: () {
-        var homeController = Get.find<HomeController>();
-
-        if (homeController.hasCode) {
-// #region Private room
-          if (homeController.isPrivateRoomCodeValid) {
-            // join private room
-            // TODO: TEST JOINING PRIVATE ROOM
-            PrivateGame.join(homeController.privateRoomCode);
-            return;
-          }
-          // show dialog for invalid code room
-
-          _dialog.show();
-// #endregion
-
-          return;
-        }
-
-        // otherwise join public game
-        PublicGame.join();
-      },
-      color: const Color(0xff53e237),
-      hoverColor: const Color(0xff38c41c),
-      height: 54,
-      child: Text('play_button'.tr,
-          style: const TextStyle(
-              fontSize: 32, shadows: [Shadow(color: Color(0x2b000000), offset: Offset(2, 2))])),
-    );
-  }
-
-  static GameDialog? __dialog;
-  // TODO: SHOW DIALOG FOR INVALID PRIVATE ROOM CODE
-  static GameDialog get _dialog => __dialog ??= _WrongPrivateCodeDialog();
-}
-
-class _WrongPrivateCodeDialog extends GameDialog {
-  _WrongPrivateCodeDialog()
-      : super(
-            title: () => 'dialog_title_error'.tr,
-            content: Text('dialog_content_wrong_private_code'.tr));
-}
-
-class _WrongPrivateCodeWidget extends OverlayWidgetChild<GameDialog> {
-  const _WrongPrivateCodeWidget();
-
-  @override
-  Widget build(BuildContext context) {
-    return Text('dialog_content_wrong_private_code'.tr);
-  }
-}
-*/

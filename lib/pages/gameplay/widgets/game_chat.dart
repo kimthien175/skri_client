@@ -83,7 +83,7 @@ class GuessInput extends StatelessWidget {
                 maxLines: 3, // Allow for multiple lines
                 //keyboardType: TextInputType.multiline, // Enable multiline input
                 style: const TextStyle(
-                    fontSize: 14, fontWeight: FontWeight.w600), // Set text and hint text font size
+                    fontSize: 14, fontVariations: [FontVariation.weight(600)]), // Set text and hint text font size
                 decoration: InputDecoration(
                   counterText: '',
                   border: InputBorder.none,
@@ -91,7 +91,7 @@ class GuessInput extends StatelessWidget {
                   contentPadding: const EdgeInsets.only(left: 10, top: 10, bottom: 10, right: 22),
                   hintText: 'guess_input_placeholder'.tr, // Use the hint text from the image
                   hintStyle: const TextStyle(
-                      fontSize: 14, fontWeight: FontWeight.w700), // Set hint text font size
+                      fontSize: 14, fontVariations: [FontVariation.weight(700)]), // Set hint text font size
                   focusedBorder: const OutlineInputBorder(
                     borderSide: BorderSide(
                       color: Colors.blueAccent, // Adjust color as desired
@@ -117,7 +117,7 @@ class GuessInput extends StatelessWidget {
                       controller.text.value.isNotEmpty
                           ? controller.text.value.length.toString()
                           : '',
-                      style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold))))
+                      style: const TextStyle(fontSize: 12, fontVariations: [FontVariation.weight(700)]))))
         ]));
   }
 }

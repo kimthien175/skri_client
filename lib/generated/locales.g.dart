@@ -85,6 +85,8 @@ class LocaleKeys {
   static const dialog_title_error = 'dialog_title_error';
   static const dialog_content_wrong_private_code =
       'dialog_content_wrong_private_code';
+  static const dialog_content_no_server_connection =
+      'dialog_content_no_server_connection';
   static const dialog_button_ok = 'dialog_button_ok';
   static const You = 'You';
   static const Normal = 'Normal';
@@ -188,7 +190,10 @@ class Locales {
     'reset_hotkeys_tooltip': 'Reset hotkeys to default',
     'key_binding_warning': 'Must be different with [@duplicated]',
     'dialog_title_error': 'Something went wrong!',
-    'dialog_content_wrong_private_code': 'Wrong room code! Please check again!',
+    'dialog_content_wrong_private_code':
+        'Wrong room code!\nPlease check again!',
+    'dialog_content_no_server_connection':
+        'Servers are currently undergoing maintenance!\nPlease try again later!\nStatus: 0',
     'dialog_button_ok': 'Okay!',
   };
   static const vi_VN = {
@@ -286,7 +291,9 @@ class Locales {
     'Clear': 'Xóa sạch',
     'Swap': 'Đổi màu',
     'dialog_title_error': 'Có gì đó sai sai!',
-    'dialog_content_wrong_private_code': 'Sai mã phòng! Hãy kiểm tra lại!',
+    'dialog_content_wrong_private_code': 'Sai mã phòng!\nHãy kiểm tra lại!',
+    'dialog_content_no_server_connection':
+        'Hệ thống đang bảo trì!\nVui lòng thử lại sau!\nStatus: 0',
     'dialog_button_ok': 'Okay!',
   };
 }

@@ -27,7 +27,7 @@ class Section extends StatelessWidget {
                     child: Text(title,
                         style: const TextStyle(
                             color: PanelStyles.textColor,
-                            fontWeight: FontWeight.bold,
+                            fontVariations: [FontVariation.weight(700)],
                             fontSize: 24))),
                 const SizedBox(height: 20),
                 content
@@ -55,7 +55,7 @@ class Section extends StatelessWidget {
                       child: Text(title,
                           style: const TextStyle(
                               color: PanelStyles.textColor,
-                              fontWeight: FontWeight.w800,
+                              fontVariations: [FontVariation.weight(800)],
                               fontSize: 22))),
                   const SizedBox(height: 8),
                   Container(margin: const EdgeInsets.all(10), child: content)

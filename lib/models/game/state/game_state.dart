@@ -44,7 +44,7 @@ abstract class GameState {
   Widget get middleStatusOnBar => Text(
         'WAITING'.tr,
         style:
-            const TextStyle(fontFamily: 'Inconsolata', fontWeight: FontWeight.w700, fontSize: 16),
+            const TextStyle(fontFamily: 'Inconsolata', fontVariations: [FontVariation.weight(700)], fontSize: 16),
       );
 
   Future<void> setup();
