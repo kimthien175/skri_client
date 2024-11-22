@@ -4,6 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:skribbl_client/widgets/animated_button/animated_button.dart';
 import 'package:skribbl_client/widgets/color_transition.dart';
 
+extension IsFocusNested on Widget {
+  bool get hasFocusNested => false;
+}
+
 class HoverButton extends StatefulWidget {
   const HoverButton(
       {super.key,
@@ -26,6 +30,8 @@ class HoverButton extends StatefulWidget {
 
   @override
   State<HoverButton> createState() => _HoverButtonState();
+
+  bool get hasFocusNested => true;
 }
 
 class _HoverButtonState extends State<HoverButton> with SingleTickerProviderStateMixin {
@@ -100,10 +106,11 @@ class _HoverButtonState extends State<HoverButton> with SingleTickerProviderStat
                         alignment: Alignment.center,
                         decoration: BoxDecoration(color: color, borderRadius: widget.borderRadius),
                         child: DefaultTextStyle.merge(
-                            style: const TextStyle(
-                                color: PanelStyles.textColor,
-                                fontVariations: [FontVariation.weight(800)],
-                                shadows: [Shadow(color: Color(0x35000000), offset: Offset(2.5, 2.5))]),
+                            style: const TextStyle(color: PanelStyles.textColor, fontVariations: [
+                              FontVariation.weight(800)
+                            ], shadows: [
+                              Shadow(color: Color(0x35000000), offset: Offset(2.5, 2.5))
+                            ]),
                             child: widget.child ?? Container()))))));
   }
 }

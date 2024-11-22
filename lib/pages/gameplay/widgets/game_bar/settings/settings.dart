@@ -23,15 +23,21 @@ class SettingsButton extends StatelessWidget {
             //
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
               _TittleItem(title: "Hotkeys".tr, icon: 'key'),
-              AnimatedButton(
-                onTap: SystemSettings.inst.resetKeyMaps,
-                decorators: [
-                 // const AnimatedButtonBackgroundColorDecorator(),
-                  AnimatedButtonTooltipDecorator(
-                      childBuilder: () => Text('reset_hotkeys_tooltip'.tr))
-                ],
-                child: Text('Reset'.tr),
-              )
+              GameTooltipWidget(
+                  child: HoverButton(
+                    onTap: SystemSettings.inst.resetKeyMaps,
+                    child: Text('Reset'.tr),
+                  ),
+                  tooltipContentBuilder: () => Text('reset_hotkeys_tooltip'.tr)),
+              // AnimatedButton(
+              //   onTap: SystemSettings.inst.resetKeyMaps,
+              //   decorators: [
+              //    // const AnimatedButtonBackgroundColorDecorator(),
+              //     AnimatedButtonTooltipDecorator(
+              //         childBuilder: () => Text('reset_hotkeys_tooltip'.tr))
+              //   ],
+              //   child: Text('Reset'.tr),
+              // )
             ]),
             Obx(() => Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
