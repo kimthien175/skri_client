@@ -11,7 +11,7 @@ class AvatarModel extends GifModel<AvatarModel> {
   SingleGifModel mouth;
   bool winner;
 
-  static AvatarModel init(int color, int eyes, int mouth, {bool winner = false}) {
+  factory AvatarModel(int color, int eyes, int mouth, {bool winner = false}) {
     var gif = GifManager.inst;
     var colorMod = gif.color(color);
     var eyesMod = gif.eyes(eyes);

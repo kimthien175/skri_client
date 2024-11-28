@@ -95,6 +95,6 @@ class AvatarEditorController extends GetxController {
     color.value = rd.nextInt(GifManager.inst.colorLength);
     eyes.value = rd.nextInt(GifManager.inst.eyesLength);
     mouth.value = rd.nextInt(GifManager.inst.mouthLength);
-    MePlayer.inst.avatar.model = AvatarModel.init(color.value, eyes.value, mouth.value);
+    MePlayer.inst.avatar.model = AvatarModel(color.value, eyes.value, mouth.value);
   }
 }

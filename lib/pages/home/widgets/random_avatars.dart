@@ -28,7 +28,7 @@ class RandomAvatarsController extends GetxController {
     //first 8 avatars base on color
 
     for (var i = 0; i < 8; i++) {
-      var avatar = AvatarModel.init(
+      var avatar = AvatarModel(
               i, rd.nextInt(GifManager.inst.eyesLength), rd.nextInt(GifManager.inst.mouthLength),
               winner: winnerId == i)
           .builder

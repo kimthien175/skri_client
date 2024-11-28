@@ -16,7 +16,7 @@ abstract class GameDialogButtons extends OverlayChildWidget<GameDialog> {
       shadows: [Shadow(color: Color(0x90000000), offset: Offset(2.3, 2.3))]);
 }
 
-typedef OnTapCallback = Future<void> Function(Future<void> Function(BuildContext context) quit);
+typedef OnTapCallback = Future<void> Function(Future<void> Function() quit);
 
 /// take maximum width
 abstract class GameDialogButton extends OverlayChildWidget<GameDialog> {
@@ -43,11 +43,13 @@ class _OKButton extends GameDialogButton {
                     GameDialogButton.quit(ct);
                   }
                 : () {
-                    onTap!(GameDialogButton.quit);
+                    onTap!(() async => GameDialogButton.quit(ct));
                   },
             height: 37.5,
             width: constraints.maxWidth,
-            child: Padding(padding: const EdgeInsets.symmetric(horizontal: 4.5) , child:Text('dialog_button_ok'.tr, style: GameDialogButtons.textStyle))));
+            child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 4.5),
+                child: Text('dialog_button_ok'.tr, style: GameDialogButtons.textStyle))));
   }
 }
 

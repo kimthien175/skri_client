@@ -1,3 +1,7 @@
+library overlay;
+
+export 'loading.dart';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -56,6 +60,11 @@ class OverlayController extends GetxController {
 
   static S controller<S extends OverlayController>(BuildContext context) =>
       OverlayWidget.of(context).controller as S;
+
+  Future<bool> showOnce() async {
+    if (isShowing) return false;
+    return show();
+  }
 }
 
 class OverlayWidget extends InheritedWidget {

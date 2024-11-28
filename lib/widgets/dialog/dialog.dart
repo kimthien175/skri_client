@@ -17,10 +17,13 @@ class GameDialog extends OverlayController with GetSingleTickerProviderStateMixi
       {required this.title, required this.content, this.exitTap = true, GameDialogButtons? buttons})
       : _buttons = buttons ?? const GameDialogButtons.okay();
 
-  GameDialog.error({required this.content})
-      : _buttons = const GameDialogButtons.okay(),
+  GameDialog.error({required this.content, GameDialogButtons? buttons})
+      : _buttons = buttons ?? const GameDialogButtons.okay(),
         title = (() => 'dialog_title_error'.tr),
         exitTap = false;
+
+  factory GameDialog.cacheError({required dynamic error}) => GameDialog.cache(
+      tag: error.toString(), builder: () => GameDialog.error(content: Text(error.toString())));
 
   @override
   Widget Function() get widgetBuilder => () => const _Dialog();

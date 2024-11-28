@@ -4,12 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 // ignore: depend_on_referenced_packages
 import 'package:flutter_web_plugins/url_strategy.dart';
-import 'package:skribbl_client/test.dart';
 import 'package:skribbl_client/widgets/resources_ensurance.dart';
 
 import 'pages/pages.dart';
 import 'utils/utils.dart';
 
+// TODO: reload gameplay page feature
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   ResourcesController.inst;
@@ -34,10 +34,9 @@ void main() {
         name: '/credits',
         page: () => const CreditsPage(),
       ),
-      GetPage(name: '/gameplay', page: () => const GameplayPage(), binding: GameplayBinding()), 
-      GetPage(name:'/test', page: ()=>const TestPage())
+      //GetPage(name: '/gameplay', page: () => const GameplayPage(), binding: GameplayBinding()),
+      //GetPage(name: '/test', page: () => const TestPage())
     ],
     navigatorObservers: [NavObserver],
   ));
 }
-

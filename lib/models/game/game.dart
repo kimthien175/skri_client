@@ -47,9 +47,9 @@ abstract class Game extends GetxController {
   GameTimer remainingTime = GameTimer(0);
   RxInt rounds;
   RxInt currentRound;
-  RxList<Player> playersByList;
-  Map<String, Player> playersByMap = {};
-  RxMap<String, dynamic> settings;
+  final RxList<Player> playersByList;
+  final Map<String, Player> playersByMap = {};
+  final RxMap<String, dynamic> settings;
 
   /// edit on this won't cause emiting to socketio
   RxList<Message> messages = List<Message>.empty().obs;

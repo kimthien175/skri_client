@@ -21,23 +21,22 @@ class Player {
     return Player(
         id: rawPlayer['id'],
         name: rawPlayer['name'],
-        avatar: AvatarModel.init(rawAvatar['color'], rawAvatar['eyes'], rawAvatar['mouth'])
-            .builder
-            .init(),
+        avatar:
+            AvatarModel(rawAvatar['color'], rawAvatar['eyes'], rawAvatar['mouth']).builder.init(),
         isOwner: rawPlayer['isOwner']);
   }
 }
 
 class MePlayer extends Player {
-  static final MePlayer inst = _freshInit();
+  static final MePlayer inst = MePlayer._freshInit();
 
-  static MePlayer _freshInit() {
+  factory MePlayer._freshInit() {
     var rd = Random();
     var color = rd.nextInt(GifManager.inst.colorLength);
     var eyes = rd.nextInt(GifManager.inst.eyesLength);
     var mouth = rd.nextInt(GifManager.inst.mouthLength);
     Get.lazyPut<AvatarEditorController>(() => AvatarEditorController(color, eyes, mouth));
-    return MePlayer._internal(avatar: AvatarModel.init(color, eyes, mouth).builder);
+    return MePlayer._internal(avatar: AvatarModel(color, eyes, mouth).builder.init());
   }
 
   MePlayer._internal({super.name = '', required super.avatar, super.id = ''});

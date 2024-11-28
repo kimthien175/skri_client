@@ -1,3 +1,5 @@
+import 'package:skribbl_client/models/game/private_game.dart';
+import 'package:skribbl_client/pages/home/home.dart';
 import 'package:skribbl_client/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -9,26 +11,23 @@ class PlayButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return HoverButton(
       onTap: () {
-        //var homeController = Get.find<HomeController>();
+        var homeController = Get.find<HomeController>();
 
-        _dialog.show();
-        return;
+        if (homeController.hasCode) {
+//#region Private room
+          if (homeController.isPrivateRoomCodeValid) {
+            // join private room
+            //TODO: TEST JOINING PRIVATE ROOM
+            PrivateGame.join(homeController.privateRoomCode);
+            return;
+          }
+          // show dialog for invalid code room
 
-//         if (homeController.hasCode) {
-// //#region Private room
-//           if (homeController.isPrivateRoomCodeValid) {
-//             // join private room
-//             //TODO: TEST JOINING PRIVATE ROOM
-//             PrivateGame.join(homeController.privateRoomCode);
-//             return;
-//           }
-//           // show dialog for invalid code room
+          _dialog.show();
+//#endregion
 
-//           _dialog.show();
-// //#endregion
-
-//           return;
-//         }
+          return;
+        }
 
 //         //otherwise join public game
 //         PublicGame.join();

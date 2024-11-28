@@ -1,16 +1,24 @@
+import 'package:flutter/material.dart';
 import 'package:skribbl_client/models/game/game.dart';
 
 import 'package:skribbl_client/pages/gameplay/widgets/game_settings.dart';
-import 'package:skribbl_client/utils/api.dart';
+import 'package:skribbl_client/utils/utils.dart';
 import 'package:get/get.dart';
-import 'package:socket_io_client/socket_io_client.dart';
+import 'package:skribbl_client/widgets/widgets.dart';
+import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 class SocketIO {
   SocketIO._internal() {
-    _socket =
-        io(API.inst.uri, OptionBuilder().setTransports(['websocket']).disableAutoConnect().build());
+    _socket = IO.io(
+        API.inst.uri, IO.OptionBuilder().setTransports(['websocket']).disableAutoConnect().build());
 
-    eventHandlers = SessionEventHandlers.initWithSocket(socket: socket);
+    // eventHandlers = SessionEventHandlers.initWithSocket(socket: _socket);
+
+    _socket.onAny((eventName, data) {
+      print('[onAny]');
+      print(eventName);
+      print(data);
+    });
 
     _socket.on('player_join', (newPlayerEmit) {
       var inst = Game.inst;
@@ -65,10 +73,24 @@ class SocketIO {
 
   static SocketIO get inst => _inst;
 
-  late final Socket _socket;
-  Socket get socket => _socket;
+  late final IO.Socket _socket;
+  IO.Socket get socket => _socket;
 
-  late final SessionEventHandlers eventHandlers;
+  // void connect() {
+  //   _socket.onConnectError((data) {
+  //     GameDialog.cache(
+  //         tag: data.toString(),
+  //         builder: () => GameDialog.error(
+  //             content: Text(data.toString()),
+  //             buttons: GameDialogButtons.okay(onTap: (quit) async {
+  //               _socket.disconnect();
+  //               quit();
+  //             }))).showOnce();
+  //   });
+  //   socket.connect();
+  // }
+
+  // late final SessionEventHandlers eventHandlers;
 
   onPlayerLeave(dynamic playerLeaveEmit) {
     var leftPlayerId = playerLeaveEmit['player_id'];
@@ -103,119 +125,122 @@ class SocketIO {
   }
 }
 
+typedef SocketCallback = dynamic Function(dynamic data);
+
 class SessionEventHandlers {
-  SessionEventHandlers.initWithSocket({
-    required Socket socket,
-    Function(dynamic)? onConnect,
-    Function(dynamic)? onConnectError,
-    Function(dynamic)? onConnectTimeout,
-    Function(dynamic)? onConnecting,
-    Function(dynamic)? onDisconnect,
-    Function(dynamic)? onError,
-    Function(dynamic)? onReconnect,
-    Function(dynamic)? onReconnectAttempt,
-    Function(dynamic)? onReconnectFailed,
-    Function(dynamic)? onReconnectError,
-    Function(dynamic)? onReconnecting,
-  }) {
-    this.onConnect = onConnect ?? emptyOnConnect;
-    socket.onConnect((data) => this.onConnect(data));
+  SessionEventHandlers.initWithSocket({required IO.Socket socket}) {
+    // this.onConnect = onConnect ?? emptyOnConnect;
+    // socket.onConnect((data) => this.onConnect(data));
 
-    this.onConnectError = onConnectError ?? emptyOnConnectError;
-    socket.onConnectError((data) => this.onConnectError(data));
+    // this.onConnectError = onConnectError ?? emptyOnConnectError;
+    // socket.onConnectError((data) => this.onConnectError(data));
 
-    this.onConnectTimeout = onConnectTimeout ?? emptyOnConnectTimeout;
-    socket.onConnectTimeout((data) => this.onConnectTimeout(data));
+    // this.onConnectTimeout = onConnectTimeout ?? emptyOnConnectTimeout;
+    // socket.onConnectTimeout((data) => this.onConnectTimeout(data));
 
-    this.onConnecting = onConnecting ?? emptyOnConnecting;
-    socket.onConnecting((data) => this.onConnecting(data));
+    // this.onConnecting = onConnecting ?? emptyOnConnecting;
+    // socket.onConnecting((data) => this.onConnecting(data));
 
-    this.onDisconnect = onDisconnect ?? emptyOnDisconnect;
-    socket.onDisconnect((data) => this.onDisconnect(data));
+    // this.onDisconnect = onDisconnect ?? emptyOnDisconnect;
+    // socket.onDisconnect((data) => this.onDisconnect(data));
 
-    this.onError = onError ?? emptyOnError;
-    socket.onError((data) => this.onError(data));
+    // this.onReconnect = onReconnect ?? emptyOnReconnect;
+    // socket.onReconnect((data) => this.onReconnect(data));
 
-    this.onReconnect = onReconnect ?? emptyOnReconnect;
-    socket.onReconnect((data) => this.onReconnect(data));
+    // this.onReconnectAttempt = onReconnectAttempt ?? emptyOnReconnectAttempt;
+    // socket.onReconnectAttempt((data) => this.onReconnectAttempt(data));
 
-    this.onReconnectAttempt = onReconnectAttempt ?? emptyOnReconnectAttempt;
-    socket.onReconnectAttempt((data) => this.onReconnectAttempt(data));
+    // this.onReconnectFailed = onReconnectFailed ?? emptyOnReconnectFailed;
+    // socket.onReconnectFailed((data) => this.onReconnectFailed(data));
 
-    this.onReconnectFailed = onReconnectFailed ?? emptyOnReconnectFailed;
-    socket.onReconnectFailed((data) => this.onReconnectFailed(data));
+    // this.onReconnectError = onReconnectError ?? emptyOnReconnectError;
+    // socket.onReconnectError((data) => this.onReconnectError(data));
 
-    this.onReconnectError = onReconnectError ?? emptyOnReconnectError;
-    socket.onReconnectError((data) => this.onReconnectError(data));
-
-    this.onReconnecting = onReconnecting ?? emptyOnReconnecting;
-    socket.onReconnecting((data) => this.onReconnecting(data));
+    // this.onReconnecting = onReconnecting ?? emptyOnReconnecting;
+    // socket.onReconnecting((data) => this.onReconnecting(data));
   }
-  late void Function(dynamic) onConnect;
-  static emptyOnConnect(data) {
-    print('onConnect');
-    print(data);
-  }
+  // late void Function(dynamic) onConnect;
+  // static emptyOnConnect(data) {
+  //   print('onConnect');
+  //   print(data);
+  // }
 
-  late void Function(dynamic) onConnectError;
-  static emptyOnConnectError(data) {
-    print('onConnectionError');
-    print(data);
-  }
+  // late void Function(dynamic) onConnectError;
+  // static emptyOnConnectError(data) {
+  //   print('onConnectionError');
+  //   print(data);
+  // }
 
-  late void Function(dynamic) onConnectTimeout;
-  static emptyOnConnectTimeout(data) {
-    print('onConnectTimeout');
-    print(data);
-  }
+  // late void Function(dynamic) onConnectTimeout;
+  // static emptyOnConnectTimeout(data) {
+  //   print('onConnectTimeout');
+  //   print(data);
+  // }
 
-  late void Function(dynamic) onConnecting;
-  static emptyOnConnecting(data) {
-    print('onConnecting');
-    print(data);
-  }
+  // late void Function(dynamic) onConnecting;
+  // static emptyOnConnecting(data) {
+  //   print('onConnecting');
+  //   print(data);
+  // }
 
-  late void Function(dynamic) onDisconnect;
-  static emptyOnDisconnect(data) {
-    print('onDisconnect');
-    print(data);
-  }
+  // late void Function(dynamic) onDisconnect;
+  // static emptyOnDisconnect(data) {
+  //   print('onDisconnect');
+  //   print(data);
+  // }
 
-  late void Function(dynamic) onError;
-  static emptyOnError(data) {
-    print('onError');
-    print(data);
-  }
+  dynamic defaultOnError(dynamic data) {
+    var socket = SocketIO.inst._socket;
+    // show error dialog, get to the main page on quit
 
-  late void Function(dynamic) onReconnect;
-  static emptyOnReconnect(data) {
-    print('onReconnect');
-    print(data);
+    // clear stuff
+    LoadingOverlay.inst.hide();
+    socket.disconnect();
+
+    GameDialog.cache(
+        tag: data.toString(),
+        builder: () => GameDialog.error(
+            content: Text(data.toString()),
+            buttons: GameDialogButtons.okay(onTap: (quit) async {
+              // disconnect
+              socket.disconnect();
+
+              await quit();
+
+              // out to home page
+              Get.safelyToNamed('/');
+            }))).showOnce();
   }
 
-  late void Function(dynamic) onReconnectAttempt;
-  static emptyOnReconnectAttempt(data) {
-    print('onReconnectAttempt');
-    print(data);
-  }
+  // late void Function(dynamic) onReconnect;
+  // static emptyOnReconnect(data) {
+  //   print('onReconnect');
+  //   print(data);
+  // }
 
-  late void Function(dynamic) onReconnectFailed;
-  static emptyOnReconnectFailed(data) {
-    print('onReconnectFailed');
-    print(data);
-  }
+  // late void Function(dynamic) onReconnectAttempt;
+  // static emptyOnReconnectAttempt(data) {
+  //   print('onReconnectAttempt');
+  //   print(data);
+  // }
 
-  late void Function(dynamic) onReconnectError;
-  static emptyOnReconnectError(data) {
-    print('onReconnectError');
-    print(data);
-  }
+  // late void Function(dynamic) onReconnectFailed;
+  // static emptyOnReconnectFailed(data) {
+  //   print('onReconnectFailed');
+  //   print(data);
+  // }
 
-  late void Function(dynamic) onReconnecting;
-  static emptyOnReconnecting(data) {
-    print('onReconnecting');
-    print(data);
-  }
+  // late void Function(dynamic) onReconnectError;
+  // static emptyOnReconnectError(data) {
+  //   print('onReconnectError');
+  //   print(data);
+  // }
+
+  // late void Function(dynamic) onReconnecting;
+  // static emptyOnReconnecting(data) {
+  //   print('onReconnecting');
+  //   print(data);
+  // }
   // void Function()? onPing;
   // void Function()? onPong;
 }

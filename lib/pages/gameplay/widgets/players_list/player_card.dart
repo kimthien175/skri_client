@@ -1,5 +1,4 @@
 import 'package:skribbl_client/models/models.dart';
-import 'package:skribbl_client/pages/pages.dart';
 import 'package:skribbl_client/utils/styles.dart';
 import 'package:skribbl_client/widgets/widgets.dart';
 import 'package:flutter/material.dart';
@@ -59,7 +58,7 @@ class PlayerCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var lastIndex = Get.find<PlayersListController>().players.length - 1;
+    var lastIndex = Game.inst.playersByList.length - 1;
     var controller = Get.find<PlayerController>(tag: index.toString());
     return GestureDetector(
         onTap: showInfo,
@@ -100,7 +99,10 @@ class PlayerCard extends StatelessWidget {
                                   Colors.black,
                               height: 1.1)),
                       const Text('0 points',
-                          style: TextStyle(fontSize: 12.6, height: 1, fontVariations: [FontVariation.weight(600)]))
+                          style: TextStyle(
+                              fontSize: 12.6,
+                              height: 1,
+                              fontVariations: [FontVariation.weight(600)]))
                     ],
                   )),
               Positioned(
@@ -113,7 +115,8 @@ class PlayerCard extends StatelessWidget {
                   left: 6,
                   child: Text(
                     '#${index + 1}',
-                    style: const TextStyle(fontSize: 15.4, fontVariations: [FontVariation.weight(700)]),
+                    style: const TextStyle(
+                        fontSize: 15.4, fontVariations: [FontVariation.weight(700)]),
                   )),
               if (info.isOwner == true)
                 Positioned(
