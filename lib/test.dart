@@ -5,6 +5,6 @@ class TestPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: Center(child:Container() ));
+    return const Scaffold(body: Center(child: Text('test')));
   }
 }

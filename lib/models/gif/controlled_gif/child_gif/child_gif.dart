@@ -17,7 +17,7 @@ class ChildGifModel extends SingleGifModel<ChildGifModel> {
 
   @override
   CustomPainter getCustomPainter(int frameIndex, ui.Paint paint, {Offset offset = Offset.zero}) =>
-      ChildGifCustomPainter(rect, frames[frameIndex].image, paint);
+      ChildGifCustomPainter(rect, frames[frameIndex].image, paint, offset: offset);
 
   @override
   ChildGifBuilder get builder => ChildGifBuilder(this);

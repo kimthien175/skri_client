@@ -35,7 +35,7 @@ class HomeController extends GetxController {
 
   late final String _roomCode;
 
-  bool get hasCode =>_roomCode != '';
+  bool get hasCode => _roomCode != '';
   bool get isPrivateRoomCodeValid => RegExp(r'^[a-z0-9]{4,}$').hasMatch(_roomCode);
   String get privateRoomCode => _roomCode;
 
@@ -44,6 +44,7 @@ class HomeController extends GetxController {
     Get.put(RandomAvatarsController());
     Get.put(NewsContentController());
     Get.put(HowToPlayContentController());
+    Get.put(AvatarEditorController());
   }
 }
 
