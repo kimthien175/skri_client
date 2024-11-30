@@ -29,7 +29,7 @@ class RandomAvatarsController extends GetxController {
 
     for (var i = 0; i < 8; i++) {
       var avatar = AvatarModel(
-              i, rd.nextInt(GifManager.inst.eyesLength), rd.nextInt(GifManager.inst.mouthLength),
+              i, rd.nextInt(GifManager.inst.eyes.length), rd.nextInt(GifManager.inst.mouth.length),
               winner: winnerId == i)
           .builder
           .initWithShadow();

@@ -4,7 +4,6 @@ import 'package:skribbl_client/models/gif/controlled_gif/avatar/builder.dart';
 import 'package:skribbl_client/models/gif/controlled_gif/avatar/model.dart';
 import 'package:get/get.dart';
 import 'package:skribbl_client/models/gif_manager.dart';
-import 'package:skribbl_client/pages/home/home.dart';
 
 class Player {
   Player(
@@ -28,14 +27,14 @@ class Player {
 }
 
 class MePlayer extends Player {
-  static final MePlayer inst = MePlayer._freshInit();
+  static final MePlayer inst = MePlayer._random();
 
-  factory MePlayer._freshInit() {
+  factory MePlayer._random() {
     var rd = Random();
-    var color = rd.nextInt(GifManager.inst.colorLength);
-    var eyes = rd.nextInt(GifManager.inst.eyesLength);
-    var mouth = rd.nextInt(GifManager.inst.mouthLength);
-    Get.lazyPut<AvatarEditorController>(() => AvatarEditorController(color, eyes, mouth));
+    var color = rd.nextInt(GifManager.inst.color.length);
+    var eyes = rd.nextInt(GifManager.inst.eyes.length);
+    var mouth = rd.nextInt(GifManager.inst.mouth.length);
+
     return MePlayer._internal(avatar: AvatarModel(color, eyes, mouth).builder.init());
   }
 

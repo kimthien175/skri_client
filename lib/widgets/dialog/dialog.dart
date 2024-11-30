@@ -102,12 +102,12 @@ class GameDialog extends OverlayController with GetSingleTickerProviderStateMixi
   }
 }
 
-class _Dialog extends OverlayChildWidget<GameDialog> {
+class _Dialog extends StatelessWidget {
   const _Dialog();
 
   @override
   Widget build(BuildContext context) {
-    var c = controller(context);
+    GameDialog c = OverlayWidget.of<GameDialog>(context);
     Widget dialog = SlideTransition(
         position: c.dialogAnimation,
         child: DefaultTextStyle(

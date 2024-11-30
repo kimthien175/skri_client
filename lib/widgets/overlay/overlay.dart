@@ -26,7 +26,6 @@ class OverlayController extends GetxController {
   Future<bool> show() async {
     if (_entry != null) return false;
 
-    Get.put(this, tag: tag);
     _entry = OverlayEntry(builder: (ct) => OverlayWidget(controller: this, child: widgetBuilder()));
 
     final overlayState = Navigator.of(Get.overlayContext!, rootNavigator: false).overlay!;
@@ -58,9 +57,6 @@ class OverlayController extends GetxController {
     super.dispose();
   }
 
-  static S controller<S extends OverlayController>(BuildContext context) =>
-      OverlayWidget.of(context).controller as S;
-
   Future<bool> showOnce() async {
     if (isShowing) return false;
     return show();
@@ -72,18 +68,18 @@ class OverlayWidget extends InheritedWidget {
 
   final OverlayController controller;
 
-  static OverlayWidget of(BuildContext context) =>
-      context.dependOnInheritedWidgetOfExactType<OverlayWidget>()!;
+  static T of<T extends OverlayController>(BuildContext context) =>
+      context.dependOnInheritedWidgetOfExactType<OverlayWidget>()!.controller as T;
 
   @override
   bool updateShouldNotify(covariant OverlayWidget oldWidget) => oldWidget.controller != controller;
 }
 
-abstract class OverlayChildWidget<C extends OverlayController> extends StatelessWidget {
-  const OverlayChildWidget({super.key});
+// abstract class OverlayChildWidget<C extends OverlayController> extends StatelessWidget {
+//   const OverlayChildWidget({super.key});
 
-  C controller(BuildContext ct) => OverlayWidget.of(ct).controller as C;
-}
+//   // C controller(BuildContext ct) => OverlayWidget.of<C>(ct);
+// }
 
 class PositionedOverlayController<P extends OverlayWidgetPosition> extends OverlayController {
   PositionedOverlayController(
@@ -94,7 +90,8 @@ class PositionedOverlayController<P extends OverlayWidgetPosition> extends Overl
       this.tapOutsideToClose = false});
 
   @override
-  Widget Function() get widgetBuilder => () => const _PositionedOverlayChildWidget();
+  Widget Function() get widgetBuilder =>
+      () => OverlayWidget(controller: this, child: const _PositionedOverlayChildWidget());
 
   final Widget Function() childBuilder;
   final P position;
@@ -108,13 +105,12 @@ class PositionedOverlayController<P extends OverlayWidgetPosition> extends Overl
   bool tapOutsideToClose;
 }
 
-class _PositionedOverlayChildWidget<T extends OverlayWidgetPosition>
-    extends OverlayChildWidget<PositionedOverlayController> {
+class _PositionedOverlayChildWidget<T extends OverlayWidgetPosition> extends StatelessWidget {
   const _PositionedOverlayChildWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
-    var c = controller(context);
+    var c = OverlayWidget.of<PositionedOverlayController>(context);
     var child = c.childBuilder();
 
     if (c.tapOutsideToClose) {

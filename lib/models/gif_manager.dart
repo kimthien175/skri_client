@@ -12,21 +12,13 @@ class GifManager {
   static GifManager get inst => _inst;
   //#endregion
 
-  final List<SingleGifModel> _color = [];
-  SingleGifModel color(int index) => _color[index];
-  int get colorLength => _color.length;
+  final List<SingleGifModel> color = [];
 
-  final List<SingleGifModel> _eyes = [];
-  SingleGifModel eyes(int index) => _eyes[index];
-  int get eyesLength => _eyes.length;
+  final List<SingleGifModel> eyes = [];
 
-  final List<SingleGifModel> _mouth = [];
-  SingleGifModel mouth(int index) => _mouth[index];
-  int get mouthLength => _mouth.length;
+  final List<SingleGifModel> mouth = [];
 
-  final List<SingleGifModel> _special = [];
-  SingleGifModel special(int index) => _special[index];
-  int get specialLength => _special.length;
+  final List<SingleGifModel> special = [];
 
   final Map<String, SingleGifModel> _misc = {};
   SingleGifModel misc(String name) => _misc[name]!;
@@ -37,15 +29,15 @@ class GifManager {
     for (String key in info.keys) {
       // load color
       if (key == "color") {
-        await loadByList(_color, info[key]);
+        await loadByList(color, info[key]);
       } else if (key == "misc") {
         await loadByName(_misc, info[key]["content"]);
       } else if (key == "eyes") {
-        await loadByList(_eyes, info[key]);
+        await loadByList(eyes, info[key]);
       } else if (key == "mouth") {
-        await loadByList(_mouth, info[key]);
+        await loadByList(mouth, info[key]);
       } else if (key == "special") {
-        await loadByList(_special, info[key]);
+        await loadByList(special, info[key]);
       }
     }
   }

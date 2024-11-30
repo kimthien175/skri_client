@@ -63,12 +63,13 @@ class _DropdownList<T> extends PositionedOverlayController<OverlayWidgetPosition
   }
 }
 
-class _DropdownListWidget<T> extends OverlayChildWidget<_DropdownList<T>> {
+class _DropdownListWidget<T> extends StatelessWidget {
+  //OverlayChildWidget<_DropdownList<T>> {
   const _DropdownListWidget.init();
 
   @override
   Widget build(BuildContext context) {
-    var c = controller(context);
+    var c = OverlayWidget.of<_DropdownList<T>>(context);
     return ClipRect(
         child: SlideTransition(
             position: c.parent.controller

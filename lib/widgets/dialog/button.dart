@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:skribbl_client/widgets/widgets.dart';
 
-typedef Callback = void Function(void Function() superCallback);
-
-abstract class GameDialogButtons extends OverlayChildWidget<GameDialog> {
+abstract class GameDialogButtons extends StatelessWidget {
   const factory GameDialogButtons.okay({OnTapCallback? onTap}) = _OKButtons;
   const factory GameDialogButtons.row({required List<GameDialogButton> children}) = _Row;
   const factory GameDialogButtons.column({required List<GameDialogButton> children}) = _Column;
@@ -16,15 +14,12 @@ abstract class GameDialogButtons extends OverlayChildWidget<GameDialog> {
       shadows: [Shadow(color: Color(0x90000000), offset: Offset(2.3, 2.3))]);
 }
 
-typedef OnTapCallback = Future<void> Function(Future<void> Function() quit);
+typedef OnTapCallback = Future<void> Function(Future<bool> Function() quit);
 
 /// take maximum width
-abstract class GameDialogButton extends OverlayChildWidget<GameDialog> {
+abstract class GameDialogButton extends StatelessWidget {
   const GameDialogButton({super.key, this.onTap});
-  static Future<void> quit(BuildContext context) {
-    var c = OverlayController.controller<GameDialog>(context);
-    return c.hide();
-  }
+  Future<bool> quit(BuildContext context) => OverlayWidget.of<GameDialog>(context).hide();
 
   /// if null, the behavior will be `quit(context)` for default
   ///
@@ -40,10 +35,10 @@ class _OKButton extends GameDialogButton {
         builder: (ct, constraints) => HoverButton(
             onTap: onTap == null
                 ? () {
-                    GameDialogButton.quit(ct);
+                    quit(ct);
                   }
                 : () {
-                    onTap!(() async => GameDialogButton.quit(ct));
+                    onTap!(() async => quit(ct));
                   },
             height: 37.5,
             width: constraints.maxWidth,

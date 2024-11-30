@@ -2,10 +2,8 @@ library game_tooltip;
 
 export 'position.dart';
 import 'package:flutter/material.dart';
-import 'package:skribbl_client/widgets/overlay/overlay.dart';
 
 import '../../widgets.dart';
-import 'position.dart';
 
 class GameTooltip extends PositionedOverlayController<GameTooltipPosition> {
   GameTooltip(
@@ -37,11 +35,11 @@ class GameTooltip extends PositionedOverlayController<GameTooltipPosition> {
   }
 }
 
-class _Tooltip extends OverlayChildWidget<GameTooltip> {
+class _Tooltip extends StatelessWidget {
   const _Tooltip();
   @override
   Widget build(BuildContext context) {
-    var c = controller(context);
+    var c = OverlayWidget.of<GameTooltip>(context);
     return c.position.buildAnimation(
         scaleAnimation: c.scaleAnimation,
         originalBox: c.originalBox,
