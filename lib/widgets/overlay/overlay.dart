@@ -26,6 +26,8 @@ class OverlayController extends GetxController {
   Future<bool> show() async {
     if (_entry != null) return false;
 
+    Get.put(this, tag: hashCode.toString());
+
     _entry = OverlayEntry(builder: (ct) => OverlayWidget(controller: this, child: widgetBuilder()));
 
     final overlayState = Navigator.of(Get.overlayContext!, rootNavigator: false).overlay!;
@@ -74,12 +76,6 @@ class OverlayWidget extends InheritedWidget {
   @override
   bool updateShouldNotify(covariant OverlayWidget oldWidget) => oldWidget.controller != controller;
 }
-
-// abstract class OverlayChildWidget<C extends OverlayController> extends StatelessWidget {
-//   const OverlayChildWidget({super.key});
-
-//   // C controller(BuildContext ct) => OverlayWidget.of<C>(ct);
-// }
 
 class PositionedOverlayController<P extends OverlayWidgetPosition> extends OverlayController {
   PositionedOverlayController(

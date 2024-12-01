@@ -1,14 +1,17 @@
 import 'dart:math';
 
-import 'package:skribbl_client/models/gif/controlled_gif/avatar/builder.dart';
 import 'package:skribbl_client/models/gif/controlled_gif/avatar/model.dart';
 import 'package:get/get.dart';
 import 'package:skribbl_client/models/gif_manager.dart';
 
 class Player {
   Player(
-      {required this.id, required this.name, required this.avatar, this.isOwner, this.points = 0});
-  final AvatarBuilder avatar;
+      {required this.id,
+      required this.name,
+      required this.avatarModel,
+      this.isOwner,
+      this.points = 0});
+  final AvatarModel avatarModel;
   String name;
   String get nameForCard => name;
 
@@ -20,8 +23,7 @@ class Player {
     return Player(
         id: rawPlayer['id'],
         name: rawPlayer['name'],
-        avatar:
-            AvatarModel(rawAvatar['color'], rawAvatar['eyes'], rawAvatar['mouth']).builder.init(),
+        avatarModel: AvatarModel(rawAvatar['color'], rawAvatar['eyes'], rawAvatar['mouth']),
         isOwner: rawPlayer['isOwner']);
   }
 }
@@ -35,15 +37,15 @@ class MePlayer extends Player {
     var eyes = rd.nextInt(GifManager.inst.eyes.length);
     var mouth = rd.nextInt(GifManager.inst.mouth.length);
 
-    return MePlayer._internal(avatar: AvatarModel(color, eyes, mouth).builder.init());
+    return MePlayer._internal(avatarModel: AvatarModel(color, eyes, mouth));
   }
 
-  MePlayer._internal({super.name = '', required super.avatar, super.id = ''});
+  MePlayer._internal({super.name = '', required super.avatarModel, super.id = ''});
 
   @override
   String get nameForCard => '$name (${'you'.tr})';
 
   Map<String, dynamic> toJSON() {
-    return {'name': name, 'avatar': avatar.model.toJSON(), 'id': id};
+    return {'name': name, 'avatar': avatarModel.toJSON(), 'id': id};
   }
 }

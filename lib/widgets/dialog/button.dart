@@ -35,10 +35,10 @@ class _OKButton extends GameDialogButton {
         builder: (ct, constraints) => HoverButton(
             onTap: onTap == null
                 ? () {
-                    quit(ct);
+                    quit(context);
                   }
                 : () {
-                    onTap!(() async => quit(ct));
+                    onTap!(() async => quit(context));
                   },
             height: 37.5,
             width: constraints.maxWidth,

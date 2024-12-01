@@ -22,7 +22,7 @@ class PlayersListController extends GetxController {
         winnerId = i;
       }
     }
-    players[winnerId].avatar.model.winner = true;
+    players[winnerId].avatarModel.winner = true;
   }
 
   // no need obs, because avatar controller have timer to re render periodly
@@ -32,9 +32,9 @@ class PlayersListController extends GetxController {
     if (newWinnerId != winnerId) {
       var players = Game.inst.playersByList;
       // remove crown of old player
-      players[winnerId].avatar.model.winner = false;
+      players[winnerId].avatarModel.winner = false;
       // set crown of new player
-      players[newWinnerId].avatar.model.winner = true;
+      players[newWinnerId].avatarModel.winner = true;
 
       winnerId = newWinnerId;
     }

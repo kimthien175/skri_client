@@ -39,10 +39,9 @@ class PrivateGame extends Game {
       GameDialog.cache(
           tag: data.toString(),
           builder: () => GameDialog.error(
-              content: Builder(
+                  content: Builder(
                 builder: (context) => Text('dialog_content_no_server_connection'.tr),
-              ),
-              buttons: const GameDialogButtons.okay())).show();
+              ))).show();
 
       LoadingOverlay.inst.hide();
     });

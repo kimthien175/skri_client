@@ -33,7 +33,7 @@ class PlayerCard extends StatelessWidget {
         content: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            info.avatar.fit(width: 150),
+            info.avatarModel.builder.init().fit(width: 150),
             Column(
               children: [
                 Text('invite_your_friends'.tr, style: const TextStyle(
@@ -109,7 +109,8 @@ class PlayerCard extends StatelessWidget {
                   top: -1,
                   right: 0,
                   child: ScaleTransition(
-                      scale: controller.animation, child: info.avatar.fit(width: 48))),
+                      scale: controller.animation,
+                      child: info.avatarModel.builder.init().fit(width: 48))),
               Positioned(
                   top: 5,
                   left: 6,

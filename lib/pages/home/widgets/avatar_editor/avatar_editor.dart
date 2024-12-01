@@ -36,7 +36,16 @@ class AvatarEditorController extends GetxController {
   late final JiggleController jiggleEyes;
   late final JiggleController jiggleMouth;
 
-  Rx<AvatarModel> modelRx = MePlayer.inst.avatar.model.obs;
+  AvatarEditorController() {
+    var model = MePlayer.inst.avatarModel;
+    color = model.color.index!.obs;
+    eyes = model.eyes.index!.obs;
+    mouth = model.mouth.index!.obs;
+  }
+
+  late final RxInt color;
+  late final RxInt eyes;
+  late final RxInt mouth;
 
   @override
   void onInit() {
@@ -54,73 +63,82 @@ class AvatarEditorController extends GetxController {
   }
 
   void onPreviousEyes() {
-    var eyes = MePlayer.inst.avatar.model.eyes;
-    var index = eyes.index!;
+    var eyesModel = MePlayer.inst.avatarModel.eyes;
     var gifs = GifManager.inst.eyes;
 
-    MePlayer.inst.avatar.model.eyes = gifs.first == eyes ? gifs.last : gifs[index - 1];
+    MePlayer.inst.avatarModel.eyes =
+        (gifs.first == eyesModel) ? gifs.last : gifs[eyesModel.index! - 1];
+
+    eyes.value = MePlayer.inst.avatarModel.eyes.index!;
     jiggleEyes.jiggle();
-    modelRx.refresh();
   }
 
   void onNextEyes() {
-    var eyes = MePlayer.inst.avatar.model.eyes;
-    var index = eyes.index!;
+    var eyesModel = MePlayer.inst.avatarModel.eyes;
     var gifs = GifManager.inst.eyes;
 
-    MePlayer.inst.avatar.model.eyes = gifs.last == eyes ? gifs.first : gifs[index + 1];
+    MePlayer.inst.avatarModel.eyes =
+        gifs.last == eyesModel ? gifs.first : gifs[eyesModel.index! + 1];
+
+    eyes.value = MePlayer.inst.avatarModel.eyes.index!;
     jiggleEyes.jiggle();
-    modelRx.refresh();
   }
 
   void onPreviousMouth() {
-    var mouth = MePlayer.inst.avatar.model.mouth;
-    var index = mouth.index!;
+    var mouthModel = MePlayer.inst.avatarModel.mouth;
     var gifs = GifManager.inst.mouth;
 
-    MePlayer.inst.avatar.model.mouth = gifs.first == mouth ? gifs.last : gifs[index - 1];
+    MePlayer.inst.avatarModel.mouth =
+        gifs.first == mouthModel ? gifs.last : gifs[mouthModel.index! - 1];
 
+    mouth.value = MePlayer.inst.avatarModel.mouth.index!;
     jiggleMouth.jiggle();
-    modelRx.refresh();
   }
 
   void onNextMouth() {
-    var mouth = MePlayer.inst.avatar.model.mouth;
-    var index = mouth.index!;
+    var mouthModel = MePlayer.inst.avatarModel.mouth;
     var gifs = GifManager.inst.mouth;
 
-    MePlayer.inst.avatar.model.mouth = gifs.last == mouth ? gifs.first : gifs[index + 1];
+    MePlayer.inst.avatarModel.mouth =
+        gifs.last == mouthModel ? gifs.first : gifs[mouthModel.index! + 1];
 
+    mouth.value = MePlayer.inst.avatarModel.mouth.index!;
     jiggleMouth.jiggle();
-    modelRx.refresh();
   }
 
   void onPreviousColor() {
-    var color = MePlayer.inst.avatar.model.color;
-    var index = color.index!;
+    var colorModel = MePlayer.inst.avatarModel.color;
     var gifs = GifManager.inst.color;
 
-    MePlayer.inst.avatar.model.color = gifs.first == color ? gifs.last : gifs[index - 1];
-    modelRx.refresh();
+    MePlayer.inst.avatarModel.color =
+        gifs.first == colorModel ? gifs.last : gifs[colorModel.index! - 1];
+
+    color.value = MePlayer.inst.avatarModel.color.index!;
   }
 
   void onNextColor() {
-    var color = MePlayer.inst.avatar.model.color;
-    var index = color.index!;
+    var colorModel = MePlayer.inst.avatarModel.color;
     var gifs = GifManager.inst.color;
 
-    MePlayer.inst.avatar.model.color = gifs.last == color ? gifs.first : gifs[index + 1];
-    modelRx.refresh();
+    MePlayer.inst.avatarModel.color =
+        gifs.last == colorModel ? gifs.first : gifs[colorModel.index! + 1];
+
+    color.value = MePlayer.inst.avatarModel.color.index!;
   }
 
   void randomize() {
     var rd = Random();
     var gif = GifManager.inst;
 
-    MePlayer.inst.avatar.model = AvatarModel(
-        rd.nextInt(gif.color.length), rd.nextInt(gif.eyes.length), rd.nextInt(gif.mouth.length));
+    color.value = rd.nextInt(gif.color.length);
+    eyes.value = rd.nextInt(gif.eyes.length);
+    mouth.value = rd.nextInt(gif.mouth.length);
 
-    modelRx.value = MePlayer.inst.avatar.model;
+    var model = MePlayer.inst.avatarModel;
+
+    model.color = gif.color[color.value];
+    model.eyes = gif.eyes[eyes.value];
+    model.mouth = gif.mouth[mouth.value];
   }
 }
 

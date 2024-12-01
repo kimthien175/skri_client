@@ -46,16 +46,9 @@ class GameDialog extends OverlayController with GetSingleTickerProviderStateMixi
 
   late final FocusScopeNode focusNode;
 
-  // buttons null, layout null: ok button
-  // layout null, buttons length ==1
-  // layout != null, buttons length >1
-  // final GameDialogButtonsLayout Function() layout;
-  final GameDialogButtons _buttons;
-
   @override
   void onInit() {
     super.onInit();
-
     animController = AnimationController(vsync: this, duration: const Duration(milliseconds: 210));
 
     bgAnimation = CurvedAnimation(parent: animController, curve: Curves.easeInOut);
@@ -65,6 +58,12 @@ class GameDialog extends OverlayController with GetSingleTickerProviderStateMixi
 
     focusNode = FocusScopeNode(onKeyEvent: _keyHandler);
   }
+
+  // buttons null, layout null: ok button
+  // layout null, buttons length ==1
+  // layout != null, buttons length >1
+  // final GameDialogButtonsLayout Function() layout;
+  final GameDialogButtons _buttons;
 
   @override
   void onClose() {
