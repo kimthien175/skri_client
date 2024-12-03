@@ -25,7 +25,7 @@ class CanvasOverlay extends StatelessWidget {
 class CanvasOverlayController extends GetxController with GetSingleTickerProviderStateMixin {
   CanvasOverlayController() {
     controller = AnimationController(
-      duration: MainContentAndFooter.animationDuration,
+      duration: MainContent.animationDuration,
       vsync: this,
     );
 

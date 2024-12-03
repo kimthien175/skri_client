@@ -13,14 +13,15 @@ class TopWidget extends StatelessWidget {
     return ClipRect(
         child: SlideTransition(
             position: controller._animation,
-            child: SizedBox(height: 600, width: 800, child: Center(child: Obx(() => controller.child.value)))));
+            child: SizedBox(
+                height: 600, width: 800, child: Center(child: Obx(() => controller.child.value)))));
   }
 }
 
 class TopWidgetController extends GetxController with GetSingleTickerProviderStateMixin {
   TopWidgetController({required Widget child}) {
     controller = AnimationController(
-      duration: MainContentAndFooter.animationDuration,
+      duration: MainContent.animationDuration,
       vsync: this,
     );
 

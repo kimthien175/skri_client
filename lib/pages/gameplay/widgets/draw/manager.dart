@@ -7,19 +7,17 @@ import 'package:get/get.dart';
 import 'mode.dart';
 import 'step/step.dart';
 import 'widgets/color.dart';
+import 'widgets/stroke.dart';
 
 class DrawTools extends GetxController {
-  // singleton
-  static init() {
-    _inst = DrawTools._internal();
-  }
-
   DrawTools._internal() {
     _currentColor = colorList[13];
     _currentStrokeSize = strokeSizeList[1];
+
+    Get.put(this);
   }
-  static DrawTools? _inst;
-  static DrawTools get inst => _inst!;
+  static final DrawTools _inst = DrawTools._internal();
+  static DrawTools get inst => _inst;
 
   List<Color> colorList = const [
     Color.fromRGBO(255, 255, 255, 1),
@@ -107,7 +105,7 @@ class DrawManager extends ChangeNotifier {
 
   void clear() {
     if (pastSteps.isEmpty) return;
-    
+
     pastSteps.add(ClearStep(id: pastSteps.length));
     lastStepRepaint.notifyListeners();
     SocketIO.inst.socket.emit('draw:clear');
@@ -120,17 +118,16 @@ class DrawManager extends ChangeNotifier {
 
   List<DrawStep> pastSteps = [];
 
-  static DrawManager? _inst;
-  static bool get isNull => _inst == null;
-  static DrawManager get inst => _inst!;
-
-  static init() {
-    DrawTools.init();
-    _inst = DrawManager._internal();
-  }
+  static final DrawManager _inst = DrawManager._internal();
+  static DrawManager get inst => _inst;
 
   // singleton
-  DrawManager._internal();
+  DrawManager._internal() {
+    Get.put(StrokeValueListController());
+    Get.put(StrokeValueItemController(DrawTools.inst.currentStrokeSize.obs),
+        tag: 'stroke_value_selector');
+    Get.put(RecentColorController());
+  }
 }
 
 class CurrentStepCustomPainter extends CustomPainter {

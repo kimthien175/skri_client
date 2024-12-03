@@ -9,8 +9,8 @@ import 'package:skribbl_client/utils/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class MainContentAndFooter extends StatelessWidget {
-  MainContentAndFooter({super.key}) {
+class MainContent extends StatelessWidget {
+  MainContent({super.key}) {
     Get.put(CanvasOverlayController());
   }
 
@@ -18,13 +18,13 @@ class MainContentAndFooter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var controller = Get.find<MainContentAndFooterController>();
+    var controller = Get.find<MainContentController>();
     return Obx(() => controller.child.value);
   }
 }
 
-class MainContentAndFooterController extends GetxController {
-  MainContentAndFooterController() {
+class MainContentController extends GetxController {
+  MainContentController() {
     // ignore: unnecessary_cast
     child = (canvas as Widget).obs;
   }

@@ -5,6 +5,4 @@ export 'main_content_footer/main_content_footer.dart';
 export 'game_settings.dart';
 export 'game_bar/game_bar.dart';
 export 'invite_section.dart';
-export 'draw/draw.dart';
-export 'draw_view/draw_view.dart';
 export 'game_chat.dart';

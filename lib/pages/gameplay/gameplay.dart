@@ -4,6 +4,8 @@ export 'layouts/web.dart';
 export 'layouts/mobile.dart';
 export 'widgets/widgets.dart';
 
+import 'package:skribbl_client/models/game/state/state.dart';
+import 'package:skribbl_client/models/game/state/wait_for_setup.dart';
 import 'package:skribbl_client/models/models.dart';
 import 'package:skribbl_client/pages/pages.dart';
 
@@ -28,9 +30,90 @@ class GameplayController extends GetxController {
   }
 
   void loadChildrenControllers() {
+    Map<String, dynamic> roomResult = {
+      "success": true,
+      "data": {
+        "settings": {
+          "_id": "659fcabc0d82dc3d3ecf05a4",
+          "default": {
+            "players": 8,
+            "language": "English",
+            "drawtime": 80,
+            "rounds": 3,
+            "word_mode": "Normal",
+            "word_count": 3,
+            "hints": 2
+          },
+          "options": {
+            "players": {"min": 2, "max": 20},
+            "language": {
+              "list": ["English"]
+            },
+            "drawtime": {
+              "list": [15, 20, 30, 40, 50, 60, 70, 80, 90, 100, 120, 150, 180, 210, 240]
+            },
+            "rounds": {"min": 2, "max": 10},
+            "word_mode": {
+              "list": ["Normal", "Hidden", "Combination"]
+            },
+            "word_count": {"min": 1, "max": 5},
+            "hints": {"min": 0, "max": 5},
+            "custom_words_rules": {
+              "min_words": 10,
+              "min_char_per_word": 1,
+              "max_char_per_word": 32,
+              "max_char": 20000
+            }
+          }
+        },
+        "ownerName": "suggest",
+        "player_id": "yNari4wJ5k3ZE4eyAAAK",
+        "message": {
+          "type": "new_host",
+          "player_id": "yNari4wJ5k3ZE4eyAAAK",
+          "timestamp": "2024-12-02T04:57:04.913Z",
+          "player_name": "suggest"
+        },
+        "code": "9eah"
+      }
+    };
+
+    var createdRoom = roomResult['data'];
+
+    Map<String, dynamic> settings = createdRoom['settings']['default'];
+
+    var me = MePlayer.inst;
+
+//#region set up player
+    // set room owner name if empty
+    if (me.name.isEmpty) {
+      me.name = createdRoom['ownerName'];
+    }
+    me.id = createdRoom['player_id'];
+    me.isOwner = true;
+//#endregion
+
+    Game.inst = PrivateGame.internal(
+        roomCode: createdRoom['code'],
+        settings: settings.obs,
+        currentRound: RxInt(1),
+        rounds: RxInt(settings['rounds']),
+        // ignore: unnecessary_cast
+        playersByList: [me as Player].obs,
+        // ignore: unnecessary_cast
+        //  state: (WaitForSetupState() as GameState).obs,
+        options: createdRoom['settings']['options']);
+
+    Game.inst.addMessage((color) =>
+        NewHostMessage(playerName: createdRoom['message']['player_name'], backgroundColor: color));
+
+    // Get.to(() => const GameplayPage(),
+    //     binding: GameplayBinding(), transition: Transition.noTransition);
+
     Get.put(PlayersListController());
-    Get.put(MainContentAndFooterController());
+    Get.put(MainContent());
     Get.put(GameClockController());
+    Get.put(GameChatController());
   }
 
   // @override

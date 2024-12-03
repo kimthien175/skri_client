@@ -18,12 +18,14 @@ import 'package:get/get.dart';
 // ignore: avoid_web_libraries_in_flutter
 import 'dart:html' as html;
 
+import 'state/state.dart';
+
 // TODO: lost connection and try to continue the game again
 abstract class Game extends GetxController {
   Game(
       {required this.currentRound,
       required this.rounds,
-      required this.state,
+      //  required this.state,
       required this.playersByList,
       required this.roomCode,
       required this.settings}) {
@@ -96,20 +98,18 @@ abstract class Game extends GetxController {
         break;
 
       default:
-        messages.add(Message(
-            backgroundColor: messages.length % 2 == 0 ? Colors.red : const Color(0xffececec)));
-        break;
+        throw Exception('undefined message');
     }
   }
 
-  Rx<GameState> state;
+  // Rx<GameState> state;
 
   static void empty() => _inst = null;
 
   static bool get isEmpty => _inst == null;
 
   void leave() {
-    state.value.clear();
+    //state.value.clear();
     SocketIO.inst.socket.disconnect();
 
     // reset meplayer as well

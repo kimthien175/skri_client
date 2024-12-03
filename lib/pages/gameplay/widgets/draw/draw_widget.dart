@@ -9,13 +9,7 @@ import 'widgets/stroke.dart';
 import 'widgets/stroke_value_item.dart';
 
 class DrawWidget extends StatelessWidget {
-  DrawWidget({super.key}) {
-    DrawManager.init();
-    Get.put(StrokeValueListController());
-    Get.put(StrokeValueItemController(DrawTools.inst.currentStrokeSize.obs),
-        tag: 'stroke_value_selector');
-    Get.put(RecentColorController());
-  }
+  const DrawWidget({super.key});
 
   @override
   Widget build(BuildContext context) {

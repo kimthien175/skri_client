@@ -78,7 +78,7 @@ class GameSettings extends StatelessWidget {
                   child: MouseRegion(
                       cursor: SystemMouseCursors.click,
                       child: GestureDetector(
-                          onTap: (Game.inst as PrivateGame).startGame,
+                          onTap: () {}, //(Game.inst as PrivateGame).startGame,
                           child: Container(
                             alignment: Alignment.center,
                             decoration: const BoxDecoration(

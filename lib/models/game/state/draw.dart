@@ -1,4 +1,7 @@
 import 'package:skribbl_client/models/game/game.dart';
+import 'package:skribbl_client/models/game/state/state.dart';
+import 'package:skribbl_client/pages/gameplay/widgets/draw/draw_widget.dart';
+import 'package:skribbl_client/pages/gameplay/widgets/draw_view/draw_view.dart';
 import 'package:skribbl_client/pages/pages.dart';
 import 'package:skribbl_client/utils/datetime.dart';
 import 'package:skribbl_client/utils/socket_io.dart';
@@ -8,16 +11,16 @@ import 'package:get/get.dart';
 class DrawState extends GameState {
   DrawState({required this.startedAt, required this.playerId, required this.word});
 
-  DrawState.afterChooseWord({required this.startedAt, required this.playerId, required this.word}) {
-    afterChooseWord();
-  }
+  // DrawState.afterChooseWord({required this.startedAt, required this.playerId, required this.word}) {
+  //   afterChooseWord();
+  // }
   String startedAt;
   String playerId;
   String word;
 
   void afterChooseWord() async {
-    Get.find<MainContentAndFooterController>().child.value =
-        playerId == MePlayer.inst.id ? DrawWidget() : DrawViewWidget();
+    // Get.find<MainContentAndFooterController>().child.value =
+    //     playerId == MePlayer.inst.id ? const DrawWidget() : DrawViewWidget();
 
     var durationFromStarted = hasPassed(startedAt);
     Game.inst.remainingTime.start(Game.inst.settings['drawtime'] - durationFromStarted.inSeconds,
@@ -47,11 +50,15 @@ class DrawState extends GameState {
           Text(
             'DRAW_THIS'.tr,
             style: const TextStyle(
-                fontFamily: 'Inconsolata', fontVariations: [FontVariation.weight(700)], fontSize: 16),
+                fontFamily: 'Inconsolata',
+                fontVariations: [FontVariation.weight(700)],
+                fontSize: 16),
           ),
           Text(word,
               style: const TextStyle(
-                  fontFamily: 'Incosolata', fontVariations: [FontVariation.weight(900)], fontSize: 25.2))
+                  fontFamily: 'Incosolata',
+                  fontVariations: [FontVariation.weight(900)],
+                  fontSize: 25.2))
         ],
       );
     }
@@ -60,8 +67,8 @@ class DrawState extends GameState {
       children: [
         Text(
           aboveStatusForGuesser(),
-          style:
-              const TextStyle(fontFamily: 'Inconsolata', fontVariations: [FontVariation.weight(700)], fontSize: 16),
+          style: const TextStyle(
+              fontFamily: 'Inconsolata', fontVariations: [FontVariation.weight(700)], fontSize: 16),
         ),
         // SizedBox(
         //     height: 27,
@@ -76,7 +83,7 @@ class DrawState extends GameState {
 
   @override
   Future<void> setup() async {
-    afterChooseWord();
+    //afterChooseWord();
   }
 
   @override

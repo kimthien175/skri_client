@@ -1,4 +1,6 @@
 import 'package:skribbl_client/models/game/game.dart';
+import 'package:skribbl_client/models/game/state/state.dart';
+import 'package:skribbl_client/models/game/state/wait_for_setup.dart';
 import 'package:skribbl_client/pages/pages.dart';
 import 'package:skribbl_client/utils/socket_io.dart';
 import 'package:flutter/material.dart';
@@ -7,10 +9,10 @@ import 'package:get/get.dart';
 import '../../widgets/widgets.dart';
 
 class PrivateGame extends Game {
-  PrivateGame._internal(
+  PrivateGame.internal(
       {required this.options,
       required super.settings,
-      required super.state,
+      // required super.state,
       required super.currentRound,
       required super.rounds,
       required super.playersByList,
@@ -56,8 +58,6 @@ class PrivateGame extends Game {
       SocketIO.inst.socket.emitWithAck(
           'init_private_room', {'player': MePlayer.inst.toJSON(), 'lang': Get.locale!.toString()},
           ack: (roomResult) {
-        print(roomResult);
-
         if (roomResult['success']) {
           var createdRoom = roomResult['data'];
 
@@ -74,7 +74,7 @@ class PrivateGame extends Game {
           me.isOwner = true;
 //#endregion
 
-          Game.inst = PrivateGame._internal(
+          Game.inst = PrivateGame.internal(
               roomCode: createdRoom['code'],
               settings: settings.obs,
               currentRound: RxInt(1),
@@ -82,7 +82,7 @@ class PrivateGame extends Game {
               // ignore: unnecessary_cast
               playersByList: [me as Player].obs,
               // ignore: unnecessary_cast
-              state: (WaitForSetupState() as GameState).obs,
+              //  state: (WaitForSetupState() as GameState).obs,
               options: createdRoom['settings']['options']);
 
           Game.inst.addMessage((color) => NewHostMessage(
@@ -231,23 +231,23 @@ class PrivateGame extends Game {
     // inst.eventHandlers.onReconnect = (_) => dialogOpenCount = 0;
   }
 
-  void startGame() {
-    if (playersByList.length == 1) {
-      Game.inst.addMessage((Color color) => Minimum2PlayersToStartMessage(
-            backgroundColor: color,
-          ));
-      return;
-    }
-    // gather settings, settings from dropdown and check button is saved in settings already
-    // now have left only the custom words
-    if (Get.find<GlobalKey<FormState>>().currentState!.validate()) {
-      Get.find<MainContentAndFooterController>().clearCanvasAndHideTopWidget();
-      // start game
-      var settings = Map<String, dynamic>.from((Game.inst as PrivateGame).settings);
-      settings['custom_words'] = CustomWordsInput.proceededWords;
-      SocketIO.inst.socket.emit('start_private_game', settings);
-    }
-  }
+  // void startGame() {
+  //   if (playersByList.length == 1) {
+  //     Game.inst.addMessage((Color color) => Minimum2PlayersToStartMessage(
+  //           backgroundColor: color,
+  //         ));
+  //     return;
+  //   }
+  //   // gather settings, settings from dropdown and check button is saved in settings already
+  //   // now have left only the custom words
+  //   if (Get.find<GlobalKey<FormState>>().currentState!.validate()) {
+  //     Get.find<MainContentAndFooterController>().clearCanvasAndHideTopWidget();
+  //     // start game
+  //     var settings = Map<String, dynamic>.from((Game.inst as PrivateGame).settings);
+  //     settings['custom_words'] = CustomWordsInput.proceededWords;
+  //     SocketIO.inst.socket.emit('start_private_game', settings);
+  //   }
+  // }
 
   // Map<String, dynamic> getDifferentSettingsFromDefault() {
   //   Map<String, dynamic> result = {};

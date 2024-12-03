@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:skribbl_client/models/game/game.dart';
 
-import 'package:skribbl_client/pages/gameplay/widgets/game_settings.dart';
 import 'package:skribbl_client/utils/utils.dart';
 import 'package:get/get.dart';
 import 'package:skribbl_client/widgets/widgets.dart';
@@ -58,16 +57,16 @@ class SocketIO {
       (Game.inst as PrivateGame).settings[key] = value;
     });
 
-    _socket.on('start_private_game', (startPrivateGamePackage) {
-      // Start round 1 and choosing word
-      Game.inst.state.value
-          .next(startPrivateGamePackage)
-          .then((value) => Game.inst.state.value = value);
-    });
+    // _socket.on('start_private_game', (startPrivateGamePackage) {
+    //   // Start round 1 and choosing word
+    //   Game.inst.state.value
+    //       .next(startPrivateGamePackage)
+    //       .then((value) => Game.inst.state.value = value);
+    // });
 
-    _socket.on('choose_word', (chooseWordPkg) {
-      Game.inst.state.value.next(chooseWordPkg).then((value) => Game.inst.state.value = value);
-    });
+    // _socket.on('choose_word', (chooseWordPkg) {
+    //   Game.inst.state.value.next(chooseWordPkg).then((value) => Game.inst.state.value = value);
+    // });
   }
   static final SocketIO _inst = SocketIO._internal();
 
@@ -115,13 +114,13 @@ class SocketIO {
     inst.addMessage(
         (color) => NewHostMessage(playerName: newHostEmit['player_name'], backgroundColor: color));
 
-    if (MePlayer.inst.isOwner == true) {
-      var game = (Game.inst as PrivateGame);
-      game.settings.value = newHostEmit['settings'];
-      if (game.state.value is WaitForSetupState) {
-        Get.find<GameSettingsController>().isCovered.value = false;
-      }
-    }
+    // if (MePlayer.inst.isOwner == true) {
+    //   var game = (Game.inst as PrivateGame);
+    //   game.settings.value = newHostEmit['settings'];
+    //   if (game.state.value is WaitForSetupState) {
+    //     Get.find<GameSettingsController>().isCovered.value = false;
+    //   }
+    // }
   }
 }
 
