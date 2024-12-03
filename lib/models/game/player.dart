@@ -43,7 +43,7 @@ class MePlayer extends Player {
   MePlayer._internal({super.name = '', required super.avatarModel, super.id = ''});
 
   @override
-  String get nameForCard => '$name (${'you'.tr})';
+  String get nameForCard => '$name (${'You'.tr})';
 
   Map<String, dynamic> toJSON() {
     return {'name': name, 'avatar': avatarModel.toJSON(), 'id': id};

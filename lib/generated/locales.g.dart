@@ -64,6 +64,14 @@ class LocaleKeys {
   static const message_link_copied = 'message_link_copied';
   static const message_player_won = 'message_player_won';
   static const message_player_draw = 'message_player_draw';
+  static const message_player_spam = 'message_player_spam';
+  static const message_player_dislike = 'message_player_dislike';
+  static const message_player_like = 'message_player_like';
+  static const message_player_guessed_right = 'message_player_guessed_right';
+  static const message_player_got_kicked = 'message_player_got_kicked';
+  static const message_player_guess_close = 'message_player_guess_close';
+  static const message_player_vote_kick = 'message_player_vote_kick';
+  static const message_word_reveal = 'message_word_reveal';
   static const WORD_HIDDEN = 'WORD_HIDDEN';
   static const GUESS_THIS = 'GUESS_THIS';
   static const DRAW_THIS = 'DRAW_THIS';
@@ -88,6 +96,7 @@ class LocaleKeys {
   static const dialog_content_no_server_connection =
       'dialog_content_no_server_connection';
   static const dialog_button_ok = 'dialog_button_ok';
+  static const dialog_content_kick_countdown = 'dialog_content_kick_countdown';
   static const You = 'You';
   static const Normal = 'Normal';
   static const Hidden = 'Hidden';
@@ -169,6 +178,16 @@ class Locales {
     'message_link_copied': 'Copied room link to clipboard!',
     'message_player_won': '@playerName won with a score of @score!',
     'message_player_draw': '@playerName is drawing now!',
+    'message_player_spam':
+        'Spam detected! You\'re sending messages too quickly.',
+    'message_player_dislike': '@playerName disliked the drawing!',
+    'message_player_like': '@playerName liked the drawing!',
+    'message_player_guessed_right': '@playerName guessed the word!',
+    'message_player_got_kicked': '@playerName has been kicked!',
+    'message_player_guess_close': '@word is close!',
+    'message_player_vote_kick':
+        '@voterName is voting to kick @victimName! (@votedCount/@notVictimPlayerCount)',
+    'message_word_reveal': 'The word was \'@word\'',
     'WORD_HIDDEN': 'WORD HIDDEN',
     'GUESS_THIS': 'GUESS THIS',
     'DRAW_THIS': 'DRAW THIS',
@@ -195,6 +214,7 @@ class Locales {
     'dialog_content_no_server_connection':
         'Servers are currently undergoing maintenance!\nPlease try again later!\nStatus: 0',
     'dialog_button_ok': 'Okay!',
+    'dialog_content_kick_countdown': 'You are on a kick countdown!',
   };
   static const vi_VN = {
     'displayName': 'Tiếng Việt',
@@ -261,6 +281,16 @@ class Locales {
     'message_link_copied': 'Đã sao chép link vào bộ nhớ đệm!',
     'message_player_won': '@playerName đã chiến thắng với số điểm @score!',
     'message_player_draw': '@playerName bắt đầu vẽ!',
+    'message_player_spam':
+        'Phát hiện spam! Bạn đang gửi tin nhắn quá nhanh quá nguy hiểm.',
+    'message_player_dislike': '@playerName không thích bức vẽ!',
+    'message_player_like': '@playerName thích bức vẽ!',
+    'message_player_guessed_right': '@playerName đã đoán đúng!',
+    'message_player_got_kicked': '@playerName vừa bị đạp khỏi phòng!',
+    'message_player_guess_close': '@word gần đúng!',
+    'message_player_vote_kick':
+        '@voterName bỏ phiếu kick @victimName! (@votedCount/@notVictimPlayerCount)',
+    'message_word_reveal': 'Đáp án là \'@word\'',
     'No': 'Khum',
     'WAITING': 'ĐANG CHỜ',
     'WORD_HIDDEN': 'TỪ BỊ ẨN',
@@ -295,5 +325,7 @@ class Locales {
     'dialog_content_no_server_connection':
         'Hệ thống đang bảo trì!\nVui lòng thử lại sau!\nStatus: 0',
     'dialog_button_ok': 'Okay!',
+    'dialog_content_kick_countdown':
+        'Bạn còn trong thời gian bị đá khỏi phòng!',
   };
 }
