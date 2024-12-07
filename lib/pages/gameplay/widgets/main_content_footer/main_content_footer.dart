@@ -5,9 +5,13 @@ export 'top_widget.dart';
 
 import 'package:skribbl_client/models/game/game.dart';
 import 'package:skribbl_client/pages/gameplay/gameplay.dart';
+import 'package:skribbl_client/pages/gameplay/widgets/draw/draw.dart';
+import 'package:skribbl_client/pages/gameplay/widgets/draw_view/draw_view.dart';
 import 'package:skribbl_client/utils/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
+import '../../../../models/game/state/draw.dart';
 
 class MainContent extends StatelessWidget {
   MainContent({super.key}) {
@@ -18,8 +22,24 @@ class MainContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var controller = Get.find<MainContentController>();
-    return Obx(() => controller.child.value);
+    return const Stack(children: [
+      GameCanvas(),
+    ]);
+  }
+}
+
+class GameCanvas extends StatelessWidget {
+  const GameCanvas({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Obx(() {
+      var state = Game.inst.state.value;
+      if (state is DrawState) {
+        if (state.playerId == MePlayer.inst.id) return const DrawWidget();
+      }
+      return const DrawViewWidget();
+    });
   }
 }
 

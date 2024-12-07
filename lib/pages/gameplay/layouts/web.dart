@@ -1,3 +1,4 @@
+import 'package:skribbl_client/models/game/game.dart';
 import 'package:skribbl_client/pages/gameplay/widgets/draw/draw.dart';
 import 'package:skribbl_client/pages/pages.dart';
 import 'package:skribbl_client/utils/styles.dart';
@@ -56,9 +57,7 @@ class _GameplayWebState extends State<GameplayWeb> {
                                   alignment: Alignment.bottomLeft,
                                   child: SizedBox(
                                       width: 320,
-                                      child: FittedBox(child: Logo(() {
-                                        // TODO: LEAVE GAME
-                                      })))),
+                                      child: FittedBox(child: Logo(Game.inst.confirmLeave)))),
                               GameplayStyles.layoutGap,
                               const GameBar(),
                               GameplayStyles.layoutGap,

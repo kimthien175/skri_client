@@ -96,6 +96,8 @@ class LocaleKeys {
   static const dialog_content_no_server_connection =
       'dialog_content_no_server_connection';
   static const dialog_button_ok = 'dialog_button_ok';
+  static const dialog_button_yes = 'dialog_button_yes';
+  static const dialog_button_no = 'dialog_button_no';
   static const dialog_content_kick_countdown = 'dialog_content_kick_countdown';
   static const You = 'You';
   static const Normal = 'Normal';
@@ -214,6 +216,8 @@ class Locales {
     'dialog_content_no_server_connection':
         'Servers are currently undergoing maintenance!\nPlease try again later!\nStatus: 0',
     'dialog_button_ok': 'Okay!',
+    'dialog_button_yes': 'Yes',
+    'dialog_button_no': 'No',
     'dialog_content_kick_countdown': 'You are on a kick countdown!',
   };
   static const vi_VN = {
@@ -324,7 +328,9 @@ class Locales {
     'dialog_content_wrong_private_code': 'Sai mã phòng!\nHãy kiểm tra lại!',
     'dialog_content_no_server_connection':
         'Hệ thống đang bảo trì!\nVui lòng thử lại sau!\nStatus: 0',
-    'dialog_button_ok': 'Okay!',
+    'dialog_button_ok': 'Okê!',
+    'dialog_button_yes': 'Có',
+    'dialog_button_no': 'Không',
     'dialog_content_kick_countdown':
         'Bạn còn trong thời gian bị đá khỏi phòng!',
   };

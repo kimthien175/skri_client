@@ -2,26 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 abstract class OverlayWidgetPosition {
-  const factory OverlayWidgetPosition.centerLeft() =
-      OverlayWidgetPositionCenterLeft;
-  const factory OverlayWidgetPosition.centerTop() =
-      OverlayWidgetPositionCenterTop;
-  const factory OverlayWidgetPosition.centerRight() =
-      OverlayWidgetPositionCenterRight;
-  const factory OverlayWidgetPosition.centerBotttom() =
-      OverlayWidgetPositionCenterBottom;
-  const factory OverlayWidgetPosition.leftBottom() =
-      OverlayWidgetPositionLeftBottom;
+  const factory OverlayWidgetPosition.centerLeft() = OverlayWidgetPositionCenterLeft;
+  const factory OverlayWidgetPosition.centerTop() = OverlayWidgetPositionCenterTop;
+  const factory OverlayWidgetPosition.centerRight() = OverlayWidgetPositionCenterRight;
+  const factory OverlayWidgetPosition.centerBotttom() = OverlayWidgetPositionCenterBottom;
+  const factory OverlayWidgetPosition.leftBottom() = OverlayWidgetPositionLeftBottom;
+  const factory OverlayWidgetPosition.innerTopRight() = OverlayWidgetPositionInnerTopRight;
 
   const OverlayWidgetPosition();
   Widget wrapWithZone(Widget aligned, Offset offset, Size size);
 
   Alignment get relativeAlignment;
 
-  Widget build(
-          {required Widget child,
-          required RenderBox originalBox,
-          required double scale}) =>
+  Widget build({required Widget child, required RenderBox originalBox, required double scale}) =>
       wrapWithZone(
           Align(
               alignment: relativeAlignment,
@@ -49,10 +42,8 @@ mixin CenterLeftMixin on OverlayWidgetPosition {
           Positioned(
               top: 0,
               left: 0,
-              child: SizedBox(
-                  width: offset.dx,
-                  height: offset.dy * 2 + size.height,
-                  child: aligned),
+              child:
+                  SizedBox(width: offset.dx, height: offset.dy * 2 + size.height, child: aligned),
             )
           :
           // bottom half
@@ -77,10 +68,7 @@ mixin CenterTopMixin on OverlayWidgetPosition {
           Positioned(
               top: 0,
               left: 0,
-              child: SizedBox(
-                  width: offset.dx * 2 + size.width,
-                  height: offset.dy,
-                  child: aligned))
+              child: SizedBox(width: offset.dx * 2 + size.width, height: offset.dy, child: aligned))
           :
           // right half
           Positioned(
@@ -141,41 +129,49 @@ mixin LeftBottomMixin on OverlayWidgetPosition {
   Alignment get relativeAlignment => throw UnimplementedError();
 
   @override
-  Widget wrapWithZone(Widget aligned, Offset offset, Size size) =>
-      throw UnimplementedError();
+  Widget wrapWithZone(Widget aligned, Offset offset, Size size) => throw UnimplementedError();
 
   @override
-  Widget build(
-      {required Widget child,
-      required RenderBox originalBox,
-      required double scale}) {
+  Widget build({required Widget child, required RenderBox originalBox, required double scale}) {
     var coord = originalBox.localToGlobal(Offset.zero);
-    return Positioned(
-        left: coord.dx, top: coord.dy + originalBox.size.height, child: child);
+    return Positioned(left: coord.dx, top: coord.dy + originalBox.size.height, child: child);
   }
 }
 
-class OverlayWidgetPositionCenterLeft extends OverlayWidgetPosition
-    with CenterLeftMixin {
+class OverlayWidgetPositionCenterLeft extends OverlayWidgetPosition with CenterLeftMixin {
   const OverlayWidgetPositionCenterLeft();
 }
 
-class OverlayWidgetPositionCenterTop extends OverlayWidgetPosition
-    with CenterTopMixin {
+class OverlayWidgetPositionCenterTop extends OverlayWidgetPosition with CenterTopMixin {
   const OverlayWidgetPositionCenterTop();
 }
 
-class OverlayWidgetPositionCenterRight extends OverlayWidgetPosition
-    with CenterRightMixin {
+class OverlayWidgetPositionCenterRight extends OverlayWidgetPosition with CenterRightMixin {
   const OverlayWidgetPositionCenterRight();
 }
 
-class OverlayWidgetPositionCenterBottom extends OverlayWidgetPosition
-    with CenterBottomMixin {
+class OverlayWidgetPositionCenterBottom extends OverlayWidgetPosition with CenterBottomMixin {
   const OverlayWidgetPositionCenterBottom();
 }
 
-class OverlayWidgetPositionLeftBottom extends OverlayWidgetPosition
-    with LeftBottomMixin {
+class OverlayWidgetPositionLeftBottom extends OverlayWidgetPosition with LeftBottomMixin {
   const OverlayWidgetPositionLeftBottom();
+}
+
+class OverlayWidgetPositionInnerTopRight extends OverlayWidgetPosition {
+  const OverlayWidgetPositionInnerTopRight();
+  @override
+  Widget build({required Widget child, required RenderBox originalBox, required double scale}) {
+    var coord = originalBox.localToGlobal(Offset.zero);
+    return Positioned(
+        top: coord.dy, right: Get.width - coord.dx - originalBox.size.width, child: child);
+  }
+
+  @override
+  Alignment get relativeAlignment => throw UnimplementedError();
+
+  @override
+  Widget wrapWithZone(Widget aligned, Offset offset, Size size) {
+    throw UnimplementedError();
+  }
 }

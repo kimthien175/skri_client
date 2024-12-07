@@ -5,7 +5,7 @@ class PublicGame extends Game {
   PublicGame(
       {required super.currentRound,
       required super.rounds,
-      //   required super.state,
+      required super.state,
       required super.playersByList,
       required super.roomCode,
       required super.settings});

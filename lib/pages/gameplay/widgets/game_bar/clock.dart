@@ -24,7 +24,8 @@ class GameClock extends GetView<GameClockController> {
                     child: Obx(() => Text(
                         controller.remainingTime.value
                             .toString(), //Game.inst.remainingTime.seconds.value.toString(),
-                        style: const TextStyle(fontSize: 22, fontVariations: [FontVariation.weight(800)]))))
+                        style: const TextStyle(
+                            fontSize: 22, fontVariations: [FontVariation.weight(800)]))))
               ],
             )));
   }
@@ -47,21 +48,32 @@ class GameClockController extends GetxController with GetSingleTickerProviderSta
 
     rotateTween = Tween<double>(begin: 0, end: turnsEnd);
     rotateAnimation = curvedAnimation.drive(rotateTween);
+  }
 
+  void start(Duration duration, void Function() onEnd) {
+    this.onEnd = onEnd;
+    remainingTime.value = duration.inSeconds;
     timer = Timer.periodic(const Duration(seconds: 1), decreaseSeconds);
   }
 
-  late final Timer timer;
+  void stop() {
+    timer!.cancel();
+  }
+
+  void Function() onEnd = () {};
+
+  Timer? timer;
 
   Future<void> decreaseSeconds(Timer timer) async {
     if (remainingTime.value == 0) {
       timer.cancel();
+      onEnd();
+      onEnd = () {};
       return;
     }
 
     remainingTime--;
-    if (remainingTime.value >= 10 // TODO: || Game.inst.allCorrectBeforeTimeEnd
-        ) return;
+    if (remainingTime.value >= 10) return;
 
     await controller.forward();
     await controller.reverse();
@@ -70,7 +82,7 @@ class GameClockController extends GetxController with GetSingleTickerProviderSta
     rotateTween.end = turnsEnd;
   }
 
-  var remainingTime = 20.obs;
+  var remainingTime = 0.obs;
 
   late final AnimationController controller;
   late final CurvedAnimation curvedAnimation;
@@ -83,6 +95,7 @@ class GameClockController extends GetxController with GetSingleTickerProviderSta
 
   @override
   void onClose() {
+    timer?.cancel();
     curvedAnimation.dispose();
     controller.dispose();
 

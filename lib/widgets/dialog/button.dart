@@ -14,7 +14,7 @@ abstract class GameDialogButtons extends StatelessWidget {
       shadows: [Shadow(color: Color(0x90000000), offset: Offset(2.3, 2.3))]);
 }
 
-typedef OnTapCallback = Future<void> Function(Future<bool> Function() quit);
+typedef OnTapCallback = Future<bool> Function(Future<bool> Function() quit);
 
 /// take maximum width
 abstract class GameDialogButton extends StatelessWidget {
@@ -27,32 +27,73 @@ abstract class GameDialogButton extends StatelessWidget {
   final OnTapCallback? onTap;
 }
 
-class _OKButton extends GameDialogButton {
-  const _OKButton({super.onTap});
+class OKayDialogButton extends GameDialogButton {
+  const OKayDialogButton({super.key, super.onTap});
+  String get content => 'dialog_button_ok'.tr;
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
         builder: (ct, constraints) => HoverButton(
             onTap: onTap == null
                 ? () {
-                    quit(context);
+                    OverlayWidget.of<GameDialog>(context).completer!.complete(quit(context));
                   }
                 : () {
-                    onTap!(() async => quit(context));
+                    OverlayWidget.of<GameDialog>(context)
+                        .completer!
+                        .complete(onTap!(() => quit(context)));
                   },
             height: 37.5,
             width: constraints.maxWidth,
             child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 4.5),
-                child: Text('dialog_button_ok'.tr, style: GameDialogButtons.textStyle))));
+                child: Text(content, style: GameDialogButtons.textStyle))));
   }
+}
+
+class NoDialogButton extends GameDialogButton {
+  const NoDialogButton({super.key, super.onTap});
+
+  Future<bool> defaultOnTap(BuildContext context) async {
+    await quit(context);
+    return false;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+        builder: (ct, constraints) => HoverButton(
+            onTap: onTap == null
+                ? () {
+                    OverlayWidget.of<GameDialog>(context)
+                        .completer!
+                        .complete(defaultOnTap(context));
+                  }
+                : () {
+                    OverlayWidget.of<GameDialog>(context)
+                        .completer!
+                        .complete(onTap!(() => quit(context)));
+                  },
+            height: 37.5,
+            width: constraints.maxWidth,
+            child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 4.5),
+                child: Text('dialog_button_no'.tr, style: GameDialogButtons.textStyle))));
+  }
+}
+
+class YesDialogButton extends OKayDialogButton {
+  const YesDialogButton({super.key, super.onTap});
+
+  @override
+  String get content => 'dialog_button_yes'.tr;
 }
 
 class _OKButtons extends GameDialogButtons {
   const _OKButtons({this.onTap});
   final OnTapCallback? onTap;
   @override
-  Widget build(BuildContext context) => _OKButton(onTap: onTap);
+  Widget build(BuildContext context) => OKayDialogButton(onTap: onTap);
 }
 
 class _Row extends GameDialogButtons {
@@ -60,10 +101,27 @@ class _Row extends GameDialogButtons {
   final List<GameDialogButton> children;
 
   @override
-  Widget build(BuildContext context) => Row(
-      mainAxisSize: MainAxisSize.max,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: children);
+  Widget build(BuildContext context) {
+    assert(children.isNotEmpty, 'children must be not empty');
+    late List<Widget> finalChildren;
+
+    if (children.length == 1) {
+      finalChildren = children;
+    } else {
+      finalChildren = [];
+      // add spacer between children except the last child
+      for (int i = 0; i < children.length - 1; i++) {
+        finalChildren.add(Expanded(child: children[i]));
+        finalChildren.add(const SizedBox(width: 10));
+      }
+      finalChildren.add(Expanded(child: children.last));
+    }
+
+    return Row(
+        //  mainAxisSize: MainAxisSize.max,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: finalChildren);
+  }
 }
 
 class _Column extends _Row {

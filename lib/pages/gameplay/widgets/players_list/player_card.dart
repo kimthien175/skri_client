@@ -29,7 +29,7 @@ class PlayerCard extends StatelessWidget {
   void showInfo() {
     GameDialog(
         exitTap: true,
-        title: () => info.nameForCard,
+        title: Builder(builder: (_) => Text(info.nameForCard)),
         content: Row(
           mainAxisSize: MainAxisSize.min,
           children: [

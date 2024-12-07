@@ -72,5 +72,7 @@
     "dialog_content_wrong_private_code":"Wrong room code!\nPlease check again!",
     "dialog_content_no_server_connection":"Servers are currently undergoing maintenance!\nPlease try again later!\nStatus: 0",
     "dialog_button_ok":"Okay!",
+    "dialog_button_yes":"Yes",
+    "dialog_button_no":"No",
     "dialog_content_kick_countdown":"You are on a kick countdown!"
 }

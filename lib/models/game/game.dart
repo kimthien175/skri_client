@@ -6,14 +6,13 @@ export 'package:skribbl_client/models/game/message.dart';
 export 'package:skribbl_client/models/game/player.dart';
 export 'state/game_state.dart';
 
-import 'dart:async';
-
 import 'package:skribbl_client/models/models.dart';
 import 'package:skribbl_client/pages/pages.dart';
-import 'package:skribbl_client/utils/socket_io.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:skribbl_client/utils/utils.dart';
+import 'package:skribbl_client/widgets/dialog/dialog.dart';
 
 // ignore: avoid_web_libraries_in_flutter
 import 'dart:html' as html;
@@ -25,7 +24,7 @@ abstract class Game extends GetxController {
   Game(
       {required this.currentRound,
       required this.rounds,
-      //  required this.state,
+      required this.state,
       required this.playersByList,
       required this.roomCode,
       required this.settings}) {
@@ -46,7 +45,6 @@ abstract class Game extends GetxController {
         (value) => Game.inst.addMessage((color) => LinkCopiedMessage(backgroundColor: color)));
   }
 
-  GameTimer remainingTime = GameTimer(0);
   RxInt rounds;
   RxInt currentRound;
   final RxList<Player> playersByList;
@@ -102,13 +100,40 @@ abstract class Game extends GetxController {
     }
   }
 
-  // Rx<GameState> state;
+  Rx<GameState> state;
 
   static void empty() => _inst = null;
 
   static bool get isEmpty => _inst == null;
 
-  void leave() {
+  void confirmLeave() async {
+    var shouldPop = await GameDialog.cache(
+        tag: 'gameplay-confirm-leave',
+        builder: () => GameDialog(
+            title: const Text("You're leaving the game"),
+            content: const Text('Are you sure?'),
+            exitTap: true,
+            buttons: GameDialogButtons.row(children: [
+              YesDialogButton(
+                onTap: (quit) async {
+                  if (await quit()) {
+                    return true;
+                  }
+                  throw Exception('dialog error');
+                },
+              ),
+              NoDialogButton(
+                onTap: (quit) async {
+                  if (await quit()) {
+                    return false;
+                  }
+                  throw Exception('dialog error');
+                },
+              )
+            ]))).showOnce();
+
+    if (!shouldPop) return;
+
     //state.value.clear();
     SocketIO.inst.socket.disconnect();
 
@@ -117,7 +142,7 @@ abstract class Game extends GetxController {
     me.isOwner = false;
     me.points = 0;
 
-    Get.back();
+    Get.safelyToNamed('/');
     Game.empty();
   }
 
@@ -125,28 +150,33 @@ abstract class Game extends GetxController {
     Get.find<TopWidgetController>().controller.reverse();
     SocketIO.inst.socket.emit('choose_word', word);
   }
+
+  //#region RECONSTRUCT GAME
+  //#endregion
 }
 
-class GameTimer {
-  GameTimer(int remainingTime) {
-    seconds = remainingTime.obs;
-  }
-  late RxInt seconds;
-  late Timer? timer;
-  void start(int remainingTime, Function() onDone) {
-    seconds.value = remainingTime;
-    timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      if (seconds.value > 0) {
-        seconds.value -= 1;
-      } else {
-        timer.cancel();
-        onDone();
-      }
-    });
-  }
+typedef GameStateInitCallback = GameState Function();
 
-  void stop() {
-    seconds.value = 0;
-    timer?.cancel();
-  }
-}
+// class GameTimer {
+//   GameTimer(int remainingTime) {
+//     seconds = remainingTime.obs;
+//   }
+//   late RxInt seconds;
+//   late Timer? timer;
+//   void start(int remainingTime, Function() onDone) {
+//     seconds.value = remainingTime;
+//     timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+//       if (seconds.value > 0) {
+//         seconds.value -= 1;
+//       } else {
+//         timer.cancel();
+//         onDone();
+//       }
+//     });
+//   }
+
+//   void stop() {
+//     seconds.value = 0;
+//     timer?.cancel();
+//   }
+// }

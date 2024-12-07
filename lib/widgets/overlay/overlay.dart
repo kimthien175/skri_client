@@ -47,18 +47,6 @@ class OverlayController extends GetxController {
     return true;
   }
 
-  @override
-  void onClose() {
-    hide();
-    super.onClose();
-  }
-
-  @override
-  void dispose() {
-    hide();
-    super.dispose();
-  }
-
   Future<bool> showOnce() async {
     if (isShowing) return false;
     return show();

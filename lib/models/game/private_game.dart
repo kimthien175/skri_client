@@ -1,18 +1,18 @@
 import 'package:skribbl_client/models/game/game.dart';
-import 'package:skribbl_client/models/game/state/state.dart';
-import 'package:skribbl_client/models/game/state/wait_for_setup.dart';
+import 'package:skribbl_client/models/game/state/prev_game.dart';
 import 'package:skribbl_client/pages/pages.dart';
 import 'package:skribbl_client/utils/socket_io.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../widgets/widgets.dart';
+import 'state/state.dart';
 
 class PrivateGame extends Game {
   PrivateGame.internal(
       {required this.options,
       required super.settings,
-      // required super.state,
+      required super.state,
       required super.currentRound,
       required super.rounds,
       required super.playersByList,
@@ -82,7 +82,7 @@ class PrivateGame extends Game {
               // ignore: unnecessary_cast
               playersByList: [me as Player].obs,
               // ignore: unnecessary_cast
-              //  state: (WaitForSetupState() as GameState).obs,
+              state: (PrevGameState(startedDate: '') as GameState).obs,
               options: createdRoom['settings']['options']);
 
           Game.inst.addMessage((color) => NewHostMessage(

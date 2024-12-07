@@ -11,7 +11,7 @@ class SettingsButton extends StatelessWidget {
   const SettingsButton({super.key});
 
   static final settingDialog = GameDialog(
-      title: () => 'Settings'.tr,
+      title: Builder(builder: (_) => Text('Settings'.tr)),
       content: SizedBox(
           width: 500,
           child: Column(children: [

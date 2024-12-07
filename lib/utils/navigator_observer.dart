@@ -53,10 +53,7 @@ extension SafeNavigation on GetInterface {
       Get.close(NavObserver.lenght - pageIndex - 1);
     }
     return Get.toNamed<T>(page,
-        arguments: arguments,
-        id: id,
-        preventDuplicates: preventDuplicates,
-        parameters: parameters);
+        arguments: arguments, id: id, preventDuplicates: preventDuplicates, parameters: parameters);
   }
 }
 

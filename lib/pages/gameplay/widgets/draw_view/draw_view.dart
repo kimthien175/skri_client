@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:get/get.dart';
 import 'package:skribbl_client/utils/socket_io.dart';
 import 'package:flutter/material.dart';
 
@@ -7,36 +8,41 @@ import '../draw/manager.dart';
 import 'like_dislike.dart';
 import 'dart:ui' as ui;
 
-class DrawViewWidget extends StatelessWidget {
-  DrawViewWidget({super.key}) {
-    DrawViewManager.init();
-  }
-
+class DrawViewController extends GetxController {
+  late final LikeAndDislikeOverlayController buttonsController;
+  late final GlobalKey anchorKey;
   @override
-  Widget build(BuildContext context) {
-    return Stack(
-      alignment: Alignment.topRight,
-      children: [
-        ClipRRect(
-            borderRadius: const BorderRadius.all(Radius.circular(3)),
-            child: Container(
-              height: DrawManager.height,
-              width: DrawManager.width,
-              decoration: const BoxDecoration(
-                color: Colors.white,
-              ),
-              child: CustomPaint(
-                  size: const Size(DrawManager.width, DrawManager.height),
-                  painter: DrawViewCustomPainter(repaint: DrawViewManager.inst)),
-            )),
-        const LikeAndDislikeButtons()
-      ],
-    );
+  void onInit() {
+    super.onInit();
+    anchorKey = GlobalKey();
+    buttonsController = LikeAndDislikeOverlayController(anchorKey: anchorKey);
   }
 }
 
-class DrawViewCustomPainter extends CustomPainter {
-  DrawViewCustomPainter({super.repaint});
+class DrawViewWidget extends StatelessWidget {
+  const DrawViewWidget({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    var controller = Get.find<DrawViewController>();
+    return ClipRRect(
+        key: controller.anchorKey,
+        borderRadius: const BorderRadius.all(Radius.circular(3)),
+        child: Container(
+          height: DrawManager.height,
+          width: DrawManager.width,
+          decoration: const BoxDecoration(
+            color: Colors.white,
+          ),
+          child: CustomPaint(
+              size: const Size(DrawManager.width, DrawManager.height),
+              painter: _DrawViewCustomPainter()),
+        ));
+  }
+}
+
+class _DrawViewCustomPainter extends CustomPainter {
+  _DrawViewCustomPainter() : super(repaint: DrawViewManager.inst);
   @override
   void paint(Canvas canvas, Size size) {
     var inst = DrawViewManager.inst;
@@ -55,11 +61,11 @@ class DrawViewCustomPainter extends CustomPainter {
 }
 
 class DrawViewManager extends ChangeNotifier {
-  static void init() {
-    _inst = DrawViewManager._internal();
+  static final DrawViewManager _inst = DrawViewManager._internal();
+  static DrawViewManager get inst => _inst;
+  DrawViewManager._internal() {
     SocketIO.inst.socket.on('draw:temp', (data) async {
       TempStepView.fromJSON(data);
- 
     });
     SocketIO.inst.socket.on('draw:down_current', (data) {
       inst.current = CurrentStepView.fromJSON(data);
@@ -76,10 +82,6 @@ class DrawViewManager extends ChangeNotifier {
       inst.notifyListeners();
     });
   }
-
-  static DrawViewManager? _inst;
-  static DrawViewManager get inst => _inst!;
-  DrawViewManager._internal();
 
   CurrentStepView? current;
   TempStepView? temp;
