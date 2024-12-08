@@ -50,14 +50,14 @@ class StrokeValueItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var toolsInst = DrawTools.inst;
+    var toolsInst = DrawManager.inst;
     var widget = isMain
         ? Obx(() => Container(
             alignment: Alignment.center,
             decoration: BoxDecoration(
                 color: controller.isHovered.value
                     ? const Color.fromRGBO(76, 76, 76, 1)
-                    : (DrawTools.inst.currentColor == Colors.white ? Colors.grey : Colors.white)),
+                    : (DrawManager.inst.currentColor == Colors.white ? Colors.grey : Colors.white)),
             height: size,
             width: size,
             child: SlideTransition(position: controller._animation, child: child)))
@@ -69,7 +69,7 @@ class StrokeValueItem extends StatelessWidget {
                         ? Colors.deepPurpleAccent
                         : controller.isHovered.value
                             ? const Color.fromRGBO(76, 76, 76, 1)
-                            : (DrawTools.inst.currentColor == Colors.white
+                            : (DrawManager.inst.currentColor == Colors.white
                                 ? Colors.grey
                                 : Colors.white)),
                 height: size,

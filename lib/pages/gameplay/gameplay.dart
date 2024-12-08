@@ -11,8 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:skribbl_client/widgets/resources_ensurance.dart';
 
-import '../../models/game/state/draw.dart';
-import '../../widgets/dialog/dialog.dart';
+import 'widgets/draw/manager.dart';
 import 'widgets/draw_view/draw_view.dart';
 
 class GameplayBinding implements Bindings {
@@ -120,12 +119,8 @@ class GameplayController extends GetxController {
     Get.put(GameClockController());
     Get.put(GameChatController());
 
-    var gameState = Game.inst.state.value;
-    if (gameState is DrawState && gameState.isSpectator) {
-      Get.put(DrawViewController());
-    } else {
-      Get.lazyPut(() => DrawViewController());
-    }
+    Get.put(DrawViewController());
+    DrawManager.init();
   }
 
   @override

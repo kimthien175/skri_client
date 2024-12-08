@@ -23,7 +23,7 @@ class DrawWidget extends StatelessWidget {
                       color: Colors.white,
                     ),
                     child: MouseRegion(
-                        cursor: DrawTools.inst.currentMode.cursor,
+                        cursor: DrawManager.inst.currentMode.cursor,
                         child: GestureDetector(
                             onPanDown: (details) {
                               drawInst.currentStep.onDown(details.localPosition);
@@ -67,7 +67,7 @@ class DrawWidget extends StatelessWidget {
           if (Get.find<StrokeValueListController>().isOpened.value)
             Positioned(
                 left: 360,
-                top: 610 - 18 - DrawTools.inst.strokeSizeList.length * StrokeValueItem.size,
+                top: 610 - 18 - DrawManager.inst.strokeSizeList.length * StrokeValueItem.size,
                 child: const StrokeValueList())
         ]));
   }
@@ -80,13 +80,13 @@ class BrushButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
         onTap: () {
-          if (DrawTools.inst.currentMode is! BrushMode) {
-            DrawTools.inst.currentMode = BrushMode();
+          if (DrawManager.inst.currentMode is! BrushMode) {
+            DrawManager.inst.currentMode = BrushMode();
           }
         },
         child: Obx(() => Container(
             decoration: BoxDecoration(
-                color: DrawTools.inst.currentMode is BrushMode
+                color: DrawManager.inst.currentMode is BrushMode
                     ? const Color.fromRGBO(171, 102, 235, 1)
                     : Colors.white,
                 borderRadius: const BorderRadius.all(Radius.circular(3))),
@@ -101,13 +101,13 @@ class FillButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
         onTap: () {
-          if (DrawTools.inst.currentMode is! FillMode) {
-            DrawTools.inst.currentMode = FillMode();
+          if (DrawManager.inst.currentMode is! FillMode) {
+            DrawManager.inst.currentMode = FillMode();
           }
         },
         child: Obx(() => Container(
             decoration: BoxDecoration(
-                color: DrawTools.inst.currentMode is FillMode
+                color: DrawManager.inst.currentMode is FillMode
                     ? const Color.fromRGBO(171, 102, 235, 1)
                     : Colors.white,
                 borderRadius: const BorderRadius.all(Radius.circular(3))),

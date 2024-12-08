@@ -3,6 +3,7 @@ library dialog;
 export 'button.dart';
 export 'layout.dart';
 
+import 'dart:async';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
@@ -19,7 +20,7 @@ class GameDialog extends OverlayController with GetSingleTickerProviderStateMixi
 
   GameDialog.error({required this.content, GameDialogButtons? buttons})
       : _buttons = buttons ?? const GameDialogButtons.okay(),
-        title = (() => 'dialog_title_error'.tr),
+        title = Builder(builder: (context) => Text('dialog_title_error'.tr)),
         exitTap = false;
 
   factory GameDialog.cacheError({required dynamic error}) => GameDialog.cache(
@@ -33,7 +34,7 @@ class GameDialog extends OverlayController with GetSingleTickerProviderStateMixi
   factory GameDialog.cache({required String tag, required GameDialog Function() builder}) =>
       _cache.putIfAbsent(tag, builder);
 
-  final StringCallback title;
+  final Widget title;
   final Widget content;
 
   final bool exitTap;
@@ -82,15 +83,17 @@ class GameDialog extends OverlayController with GetSingleTickerProviderStateMixi
     return KeyEventResult.ignored;
   }
 
+  late Completer<bool> completer;
+
   @override
   Future<bool> show() async {
     if (await super.show()) {
       await animController.forward();
       focusNode.requestFocus();
-
-      return true;
+      completer = Completer();
+      return completer.future;
     }
-    return false;
+    throw Exception('dialog failed');
   }
 
   @override
@@ -134,10 +137,11 @@ class _Dialog extends StatelessWidget {
                                 Padding(
                                     padding:
                                         const EdgeInsets.only(top: 13.5, left: 13.5, right: 40),
-                                    child: Text(c.title(),
+                                    child: DefaultTextStyle(
                                         style: const TextStyle(
                                             fontSize: 27,
-                                            fontVariations: [FontVariation('wght', 750)]))),
+                                            fontVariations: [FontVariation('wght', 750)]),
+                                        child: c.title)),
                                 // content
                                 Container(
                                     width: 410,
@@ -157,13 +161,13 @@ class _Dialog extends StatelessWidget {
                   top: 0, right: 8, child: GestureDetector(onTap: c.hide, child: _CloseIcon()))
             ])));
 
-    if (c.exitTap) {
-      dialog = TapRegion(
-          onTapOutside: (event) {
-            c.hide();
-          },
-          child: dialog);
-    }
+    // if (c.exitTap) {
+    //   dialog = TapRegion(
+    //       onTapOutside: (event) {
+    //         c.hide();
+    //       },
+    //       child: dialog);
+    // }
 
     return FocusScope(
         node: c.focusNode,

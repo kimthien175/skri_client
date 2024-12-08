@@ -21,7 +21,7 @@ class FillStep extends GestureDrawStep {
 
   @override
   void changeColor() {
-    _color = DrawTools.inst.currentColor;
+    _color = DrawManager.inst.currentColor;
     if (isLegitBeforeDrawing()) {
       enable();
     } else {
@@ -67,7 +67,7 @@ class FillStep extends GestureDrawStep {
 
     return true;
   }
- 
+
   Uint8List? byteList;
 
   // @override

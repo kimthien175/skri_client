@@ -20,11 +20,11 @@ class StrokeValueSelector extends StatelessWidget {
             Get.find<StrokeValueListController>().isOpened.value = true;
           },
           child: Obx(() {
-            var size = 48 * controller.value.value / DrawTools.inst.strokeSizeList.last;
+            var size = 48 * controller.value.value / DrawManager.inst.strokeSizeList.last;
             return GifManager.inst
                 .misc('stroke_size')
                 .builder
-                .initWithShadow(color: DrawTools.inst.currentColor, height: size, width: size);
+                .initWithShadow(color: DrawManager.inst.currentColor, height: size, width: size);
           }
               // Text(controller.value.value.toStringAsFixed(2)),
               ),
@@ -42,21 +42,21 @@ class StrokeValueList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final List<StrokeValueItem> items = [];
-    var list = DrawTools.inst.strokeSizeList;
+    var list = DrawManager.inst.strokeSizeList;
     for (int i = 0; i < list.length; i++) {
       var size = 48 * list[i] / list.last;
       items.add(StrokeValueItem(
           controller: StrokeValueItemController(list[i].obs),
           onTap: () {
-            DrawTools.inst.currentStrokeSize = DrawTools.inst.strokeSizeList[i];
+            DrawManager.inst.currentStrokeSize = DrawManager.inst.strokeSizeList[i];
             Get.find<StrokeValueListController>().isOpened.value = false;
             Get.find<StrokeValueItemController>(tag: 'stroke_value_selector').value.value =
-                DrawTools.inst.currentStrokeSize;
+                DrawManager.inst.currentStrokeSize;
           },
           child: GifManager.inst
               .misc('stroke_size')
               .builder
-              .initWithShadow(color: DrawTools.inst.currentColor, height: size, width: size)));
+              .initWithShadow(color: DrawManager.inst.currentColor, height: size, width: size)));
     }
 
     return TapRegion(

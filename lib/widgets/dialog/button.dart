@@ -36,11 +36,11 @@ class OKayDialogButton extends GameDialogButton {
         builder: (ct, constraints) => HoverButton(
             onTap: onTap == null
                 ? () {
-                    OverlayWidget.of<GameDialog>(context).completer!.complete(quit(context));
+                    OverlayWidget.of<GameDialog>(context).completer.complete(quit(context));
                   }
                 : () {
                     OverlayWidget.of<GameDialog>(context)
-                        .completer!
+                        .completer
                         .complete(onTap!(() => quit(context)));
                   },
             height: 37.5,
@@ -65,13 +65,11 @@ class NoDialogButton extends GameDialogButton {
         builder: (ct, constraints) => HoverButton(
             onTap: onTap == null
                 ? () {
-                    OverlayWidget.of<GameDialog>(context)
-                        .completer!
-                        .complete(defaultOnTap(context));
+                    OverlayWidget.of<GameDialog>(context).completer.complete(defaultOnTap(context));
                   }
                 : () {
                     OverlayWidget.of<GameDialog>(context)
-                        .completer!
+                        .completer
                         .complete(onTap!(() => quit(context)));
                   },
             height: 37.5,

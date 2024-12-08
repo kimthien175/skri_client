@@ -10,7 +10,7 @@ import 'step.dart';
 
 class BrushStep extends GestureDrawStep {
   BrushStep.init({required super.id}) {
-    var drawTools = DrawTools.inst;
+    var drawTools = DrawManager.inst;
     _brush = Paint()
       ..strokeWidth = drawTools.currentStrokeSize
       ..strokeCap = StrokeCap.round;
@@ -19,11 +19,11 @@ class BrushStep extends GestureDrawStep {
   }
 
   BrushStep.defaultInit({required super.id}) {
-    var drawTools = DrawTools.inst;
+    var drawTools = DrawManager.inst;
     _brush = Paint()
       ..strokeWidth = drawTools.currentStrokeSize
       ..strokeCap = StrokeCap.round
-      ..color = DrawTools.inst.currentColor;
+      ..color = DrawManager.inst.currentColor;
 
     enable();
   }
@@ -45,7 +45,7 @@ class BrushStep extends GestureDrawStep {
 
   @override
   void changeColor() {
-    _brush.color = DrawTools.inst.currentColor;
+    _brush.color = DrawManager.inst.currentColor;
     if (isLegitBeforeDraw()) {
       enable();
     } else {
@@ -68,8 +68,6 @@ class BrushStep extends GestureDrawStep {
   void enabledOnDown(Offset point) {
     points.add(point);
     DrawManager.inst.notifyListeners();
-
-
   }
 
   void enabledOnUpdate(Offset point) {
@@ -81,7 +79,7 @@ class BrushStep extends GestureDrawStep {
 
   @override
   void changeStrokeSize() {
-    _brush.strokeWidth = DrawTools.inst.currentStrokeSize;
+    _brush.strokeWidth = DrawManager.inst.currentStrokeSize;
   }
 
   @override

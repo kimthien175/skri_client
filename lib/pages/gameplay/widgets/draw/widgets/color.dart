@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 
 import '../manager.dart';
 
-
 class RecentColor extends StatelessWidget {
   const RecentColor({super.key});
 
@@ -51,18 +50,18 @@ class RecentColorCustomPainter extends CustomPainter {
 class RecentColorController extends GetxController {
   RecentColorController() {
     // currentColor and white
-    var inst = DrawTools.inst;
+    var inst = DrawManager.inst;
     last2Colors = [inst.colorList[0], inst.currentColor].obs;
   }
   late RxList<Color> last2Colors;
   void switchColor() {
     last2Colors.value = [last2Colors[1], last2Colors[0]];
-    DrawTools.inst.currentColor = last2Colors[1];
+    DrawManager.inst.currentColor = last2Colors[1];
   }
 
   void addRecent() {
-    if (last2Colors[1] == DrawTools.inst.currentColor) return;
-    last2Colors.value = [last2Colors[1], DrawTools.inst.currentColor];
+    if (last2Colors[1] == DrawManager.inst.currentColor) return;
+    last2Colors.value = [last2Colors[1], DrawManager.inst.currentColor];
   }
 }
 
@@ -72,10 +71,10 @@ class ColorSelector extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     List<Widget> items = [];
-    var list = DrawTools.inst.colorList;
+    var list = DrawManager.inst.colorList;
     for (int i = 0; i < list.length; i++) {
       items.add(InkWell(
-          onTap: () => DrawTools.inst.currentColor = list[i],
+          onTap: () => DrawManager.inst.currentColor = list[i],
           child: Container(height: 24, width: 24, color: list[i])));
     }
     return ClipRRect(

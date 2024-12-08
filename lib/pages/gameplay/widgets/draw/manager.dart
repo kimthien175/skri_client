@@ -9,15 +9,22 @@ import 'step/step.dart';
 import 'widgets/color.dart';
 import 'widgets/stroke.dart';
 
-class DrawTools extends GetxController {
-  DrawTools._internal() {
+class DrawManager extends ChangeNotifier {
+  static DrawManager? _inst;
+  static DrawManager get inst => _inst!;
+  static void init() {
+    DrawManager._inst = DrawManager._internal();
+    Get.put(StrokeValueListController());
+    Get.put(StrokeValueItemController(DrawManager.inst.currentStrokeSize.obs),
+        tag: 'stroke_value_selector');
+    Get.put(RecentColorController());
+  }
+
+  // singleton
+  DrawManager._internal() {
     _currentColor = colorList[13];
     _currentStrokeSize = strokeSizeList[1];
-
-    Get.put(this);
   }
-  static final DrawTools _inst = DrawTools._internal();
-  static DrawTools get inst => _inst;
 
   List<Color> colorList = const [
     Color.fromRGBO(255, 255, 255, 1),
@@ -78,16 +85,14 @@ class DrawTools extends GetxController {
     _currentMode.value = mode;
     DrawManager.inst.currentStep = newCurrentStep;
   }
-}
 
-class DrawManager extends ChangeNotifier {
   void onEnd() {
     if (!currentStep.onEnd()) return;
 
     currentStep.id = pastSteps.length;
     pastSteps.add(currentStep);
 
-    currentStep = DrawTools.inst.newCurrentStep;
+    currentStep = newCurrentStep;
   }
 
   void undo() {
@@ -114,20 +119,9 @@ class DrawManager extends ChangeNotifier {
   static const double width = 800;
   static const double height = 600;
 
-  GestureDrawStep currentStep = DrawTools.inst._currentMode.value.defaultStep(id: -2);
+  late GestureDrawStep currentStep = _currentMode.value.defaultStep(id: -2);
 
   List<DrawStep> pastSteps = [];
-
-  static final DrawManager _inst = DrawManager._internal();
-  static DrawManager get inst => _inst;
-
-  // singleton
-  DrawManager._internal() {
-    Get.put(StrokeValueListController());
-    Get.put(StrokeValueItemController(DrawTools.inst.currentStrokeSize.obs),
-        tag: 'stroke_value_selector');
-    Get.put(RecentColorController());
-  }
 }
 
 class CurrentStepCustomPainter extends CustomPainter {
