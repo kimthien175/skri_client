@@ -88,6 +88,8 @@ class PrivateGame extends Game {
           Game.inst.addMessage((color) => NewHostMessage(
               playerName: createdRoom['message']['player_name'], backgroundColor: color));
 
+          GameplayController.readyCallback = Game.inst.state.value.start;
+
           Get.to(() => const GameplayPage(),
               binding: GameplayBinding(), transition: Transition.noTransition);
         } else {

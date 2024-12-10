@@ -7,6 +7,7 @@
 // import 'start_round.dart';
 // import 'state.dart';
 
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:skribbl_client/pages/gameplay/gameplay.dart';
 
@@ -14,8 +15,11 @@ import 'state.dart';
 
 class PrevGameState extends GameState {
   PrevGameState({super.cachedNextState, required super.startedDate}) {
-    GameplayController.readyCallback = start;
+    Get.put(GameSettingsController());
   }
+
+  @override
+  Widget get topWidget => const GameSettings();
 
   @override
   Future<void> end() {
@@ -25,9 +29,7 @@ class PrevGameState extends GameState {
 
   @override
   void start() {
-    Get.find<GameClockController>().start(const Duration(seconds: 10), () {
-      print('timer end');
-    });
+    Get.find<TopWidgetController>().show();
   }
 
   // @override

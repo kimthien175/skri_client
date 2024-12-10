@@ -1,5 +1,4 @@
 import 'package:skribbl_client/models/game/game.dart';
-import 'package:skribbl_client/pages/gameplay/widgets/draw/draw.dart';
 import 'package:skribbl_client/pages/pages.dart';
 import 'package:skribbl_client/utils/styles.dart';
 import 'package:skribbl_client/widgets/widgets.dart';
@@ -67,7 +66,7 @@ class _GameplayWebState extends State<GameplayWeb> {
                                   children: [
                                     PlayersList(),
                                     GameplayStyles.layoutGap,
-                                    DrawWidget(),
+                                    MainContent(),
                                     GameplayStyles.layoutGap,
                                     GameChat(),
                                     //LangSelector()

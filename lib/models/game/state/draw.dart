@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:skribbl_client/models/game/game.dart';
 import 'package:skribbl_client/models/game/state/state.dart';
 
@@ -15,6 +16,9 @@ class DrawState extends GameState {
   String word;
 
   bool get isSpectator => playerId != MePlayer.inst.id;
+
+  @override
+  Widget get topWidget => throw UnimplementedError();
 
   // void afterChooseWord() async {
   //   var durationFromStarted = hasPassed(startedDate);

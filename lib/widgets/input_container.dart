@@ -13,6 +13,7 @@ class InputContainer extends StatefulWidget {
       this.constraints,
       this.margin,
       this.focusNode,
+      this.color,
       this.padding = const EdgeInsets.symmetric(vertical: 2.0, horizontal: 10.0),
       super.key})
       : assert(child == null || builder == null,
@@ -28,8 +29,10 @@ class InputContainer extends StatefulWidget {
   final EdgeInsets? margin;
   final FocusNode? focusNode;
   final EdgeInsetsGeometry? padding;
+  final Color? color;
 
   static const Color activeColor = Color(0xff56b2fd);
+  static double borderWidth = 1.5;
 
   @override
   State<InputContainer> createState() => _InputContainerState();
@@ -37,23 +40,23 @@ class InputContainer extends StatefulWidget {
 
 class _InputContainerState extends State<InputContainer> with SingleTickerProviderStateMixin {
   late final AnimationController controller;
+  late final FocusNode focusNode;
   @override
   void initState() {
     super.initState();
     controller = AnimationController(vsync: this, duration: AnimatedButton.duration);
 
-    var focusNode = widget.focusNode;
-    if (focusNode != null) {
-      focusNode.addListener(() {
-        if (isHovered) return;
-        if (focusNode.hasFocus) {
-          controller.forward();
-        } else {
-          controller.reverse();
-        }
-      });
-      if (focusNode.hasFocus) controller.value = controller.upperBound;
-    }
+    focusNode = widget.focusNode ?? FocusNode();
+
+    focusNode.addListener(() {
+      if (isHovered) return;
+      if (focusNode.hasFocus) {
+        controller.forward();
+      } else {
+        controller.reverse();
+      }
+    });
+    if (focusNode.hasFocus) controller.value = controller.upperBound;
   }
 
   bool get _hasFocus => widget.focusNode?.hasFocus == true;
@@ -63,12 +66,15 @@ class _InputContainerState extends State<InputContainer> with SingleTickerProvid
   @override
   void dispose() {
     controller.dispose();
+    if (widget.focusNode == null) {
+      focusNode.dispose();
+    }
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return MouseRegion(
+    Widget child = MouseRegion(
         onEnter: (event) {
           isHovered = true;
           if (_hasFocus) return;
@@ -90,10 +96,14 @@ class _InputContainerState extends State<InputContainer> with SingleTickerProvid
                 margin: widget.margin,
                 padding: widget.padding,
                 decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: widget.color ?? Colors.white,
                     borderRadius: GlobalStyles.borderRadius,
-                    border: Border.all(color: color, width: 2.0)),
+                    border: Border.all(color: color, width: InputContainer.borderWidth)),
                 child: widget.child ??
                     (widget.builder != null ? widget.builder!(controller) : null))));
+
+    if (widget.focusNode == null) child = Focus(focusNode: focusNode, child: child);
+
+    return child;
   }
 }

@@ -1,39 +1,78 @@
+import 'package:skribbl_client/models/game/game.dart';
 import 'package:skribbl_client/pages/gameplay/widgets/main_content_footer/main_content_footer.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:skribbl_client/utils/styles.dart';
 
 class TopWidget extends StatelessWidget {
-  TopWidget({required Widget child, super.key}) {
-    controller = Get.put(TopWidgetController(child: child));
-  }
-  late final TopWidgetController controller;
+  const TopWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return ClipRect(
-        child: SlideTransition(
-            position: controller._animation,
-            child: SizedBox(
-                height: 600, width: 800, child: Center(child: Obx(() => controller.child.value)))));
+    var controller = Get.find<TopWidgetController>();
+    return Stack(children: [
+      FadeTransition(
+          opacity: controller.backgroundOpactityAnimation,
+          child: Container(
+            height: 600,
+            width: 800,
+            decoration: const BoxDecoration(
+              color: Color.fromRGBO(3, 8, 29, 0.8),
+              borderRadius: GlobalStyles.borderRadius,
+            ),
+          )),
+      ClipRect(
+          child: SlideTransition(
+              position: controller.offsetAnimation,
+              child: SizedBox(
+                  height: 600,
+                  width: 800,
+                  child: Center(child: Obx(() => Game.inst.state.value.topWidget)))))
+    ]);
   }
 }
 
-class TopWidgetController extends GetxController with GetSingleTickerProviderStateMixin {
-  TopWidgetController({required Widget child}) {
-    controller = AnimationController(
+class TopWidgetController extends GetxController with GetTickerProviderStateMixin {
+  late final AnimationController contentController;
+  late final AnimationController backgroundController;
+  late final Animation<Offset> offsetAnimation;
+  late final Animation<double> backgroundOpactityAnimation;
+
+  @override
+  void onInit() {
+    super.onInit();
+    contentController = AnimationController(
       duration: MainContent.animationDuration,
       vsync: this,
     );
 
-    _animation = Tween<Offset>(
+    backgroundController = AnimationController(
+      duration: MainContent.animationDuration,
+      vsync: this,
+    );
+
+    offsetAnimation = Tween<Offset>(
       begin: const Offset(0, -1),
       end: Offset.zero,
-    ).animate(CurvedAnimation(parent: controller, curve: Curves.easeOutBack));
+    ).animate(CurvedAnimation(parent: contentController, curve: Curves.easeOutBack));
 
-    this.child = child.obs;
+    backgroundOpactityAnimation = Tween(begin: 0.0, end: 1.0).animate(backgroundController);
   }
-  late final AnimationController controller;
-  late final Animation<Offset> _animation;
 
-  late final Rx<Widget> child;
+  Future<void> show() async {
+    await backgroundController.forward();
+    return contentController.forward();
+  }
+
+  Future<void> hide() async {
+    await contentController.reverse();
+    return backgroundController.reverse();
+  }
+
+  @override
+  onClose() {
+    contentController.dispose();
+    backgroundController.dispose();
+    super.onClose();
+  }
 }

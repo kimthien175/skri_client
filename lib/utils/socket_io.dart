@@ -208,6 +208,7 @@ class SessionEventHandlers {
 
               // out to home page
               Get.safelyToNamed('/');
+              return true;
             }))).showOnce();
   }
 

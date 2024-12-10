@@ -1,5 +1,7 @@
 // ignore_for_file: constant_identifier_names
 
+import 'package:flutter/material.dart';
+
 abstract class GameState {
   GameState({this.cachedNextState, required this.startedDate});
   //.factory GameState.fromJSON(Map<String, dynamic> data) {}
@@ -19,4 +21,6 @@ abstract class GameState {
 
   GameState? cachedNextState;
   String startedDate;
+
+  Widget get topWidget;
 }

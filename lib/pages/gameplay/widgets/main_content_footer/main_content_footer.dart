@@ -1,6 +1,5 @@
 library game_play_main_content_footer;
 
-export 'overlay.dart';
 export 'top_widget.dart';
 
 import 'package:skribbl_client/models/game/game.dart';
@@ -14,17 +13,13 @@ import 'package:get/get.dart';
 import '../../../../models/game/state/draw.dart';
 
 class MainContent extends StatelessWidget {
-  MainContent({super.key}) {
-    Get.put(CanvasOverlayController());
-  }
+  const MainContent({super.key});
 
   static Duration animationDuration = const Duration(milliseconds: 800);
 
   @override
   Widget build(BuildContext context) {
-    return const Stack(children: [
-      GameCanvas(),
-    ]);
+    return const Stack(children: [GameCanvas(), TopWidget()]);
   }
 }
 
@@ -35,8 +30,8 @@ class GameCanvas extends StatelessWidget {
   Widget build(BuildContext context) {
     return Obx(() {
       var state = Game.inst.state.value;
-      if (state is DrawState) {
-        if (state.playerId == MePlayer.inst.id) return const DrawWidget();
+      if (state is DrawState && state.isSpectator) {
+        return const DrawWidget();
       }
       return const DrawViewWidget();
     });
@@ -52,32 +47,27 @@ class MainContentController extends GetxController {
   late final Rx<Widget> child;
   final CanvasAndFooter canvas = CanvasAndFooter();
 
-  void showSettings() {
-    Get.find<CanvasAndFooterController>().child.value = const EmptyCanvasAndInvite();
-    child.value = Stack(
-      children: [
-        canvas,
+  // void showSettings() {
+  //   Get.find<CanvasAndFooterController>().child.value = const EmptyCanvasAndInvite();
+  //   child.value = Stack(
+  //     children: [
+  //       canvas,
 
-        // animate overlay
-        const CanvasOverlay(),
-        // animated settings
+  //       // animate overlay
+  //       const CanvasOverlay(),
+  //       // animated settings
 
-        TopWidget(child: GameSettings())
-        // const GameSettings()
-      ],
-    );
+  //       TopWidget()
+  //       // const GameSettings()
+  //     ],
+  //   );
 
-    Get.find<CanvasOverlayController>().controller.forward().then(
-      (value) {
-        Get.find<TopWidgetController>().controller.forward();
-      },
-    );
-  }
-
-  clearCanvasAndHideTopWidget() async {
-    Get.find<CanvasAndFooterController>().empty();
-    await Get.find<TopWidgetController>().controller.reverse();
-  }
+  //   Get.find<CanvasOverlayController>().controller.forward().then(
+  //     (value) {
+  //       Get.find<TopWidgetController>().controller.forward();
+  //     },
+  //   );
+  // }
 }
 
 class CanvasAndFooter extends StatelessWidget {

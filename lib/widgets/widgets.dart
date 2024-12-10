@@ -11,3 +11,4 @@ export 'overlay/tooltip/tooltip.dart';
 export 'dropdown/dropdown.dart';
 export 'color_transition.dart';
 export 'overlay/overlay.dart';
+export 'checkbox.dart';

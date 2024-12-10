@@ -115,12 +115,13 @@ class GameplayController extends GetxController {
 //#endregion
 
     Get.put(PlayersListController());
-    Get.put(MainContent());
     Get.put(GameClockController());
     Get.put(GameChatController());
 
     Get.put(DrawViewController());
     DrawManager.init();
+
+    Get.put(TopWidgetController());
   }
 
   @override

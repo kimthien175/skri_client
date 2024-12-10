@@ -7,7 +7,6 @@ export 'package:skribbl_client/models/game/player.dart';
 export 'state/game_state.dart';
 
 import 'package:skribbl_client/models/models.dart';
-import 'package:skribbl_client/pages/pages.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -145,38 +144,6 @@ abstract class Game extends GetxController {
     Get.safelyToNamed('/');
     Game.empty();
   }
-
-  void chooseWord(String word) {
-    Get.find<TopWidgetController>().controller.reverse();
-    SocketIO.inst.socket.emit('choose_word', word);
-  }
-
-  //#region RECONSTRUCT GAME
-  //#endregion
 }
 
 typedef GameStateInitCallback = GameState Function();
-
-// class GameTimer {
-//   GameTimer(int remainingTime) {
-//     seconds = remainingTime.obs;
-//   }
-//   late RxInt seconds;
-//   late Timer? timer;
-//   void start(int remainingTime, Function() onDone) {
-//     seconds.value = remainingTime;
-//     timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-//       if (seconds.value > 0) {
-//         seconds.value -= 1;
-//       } else {
-//         timer.cancel();
-//         onDone();
-//       }
-//     });
-//   }
-
-//   void stop() {
-//     seconds.value = 0;
-//     timer?.cancel();
-//   }
-// }

@@ -3,7 +3,8 @@ import 'package:skribbl_client/models/models.dart';
 import 'package:skribbl_client/utils/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:skribbl_client/widgets/input_container.dart';
+
+import 'package:skribbl_client/widgets/widgets.dart';
 
 class GameSettingsController extends GetxController {
   GameSettingsController() {
@@ -13,14 +14,12 @@ class GameSettingsController extends GetxController {
 }
 
 class GameSettings extends StatelessWidget {
-  GameSettings({super.key}) {
-    controller = Get.put(GameSettingsController());
-  }
-
-  late final GameSettingsController controller;
+  const GameSettings({super.key});
 
   // DBRoomSettingsDocument
   static Map<String, dynamic> get fetchedOptions => (Game.inst as PrivateGame).options;
+
+  GameSettingsController get controller => Get.find<GameSettingsController>();
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +36,7 @@ class GameSettings extends StatelessWidget {
                     SizedBox(height: 3.5),
                     _LanguageSettingItem(),
                     SizedBox(height: 3.5),
-                    _SettingsItem(gif: 'setting_2', settingKey: 'drawtime'),
+                    _SettingsItem(gif: 'setting_2', settingKey: 'draw_time'),
                     SizedBox(height: 3.5),
                     _SettingsItem(gif: 'setting_3', settingKey: 'rounds'),
                     SizedBox(height: 3.5),
@@ -67,10 +66,11 @@ class GameSettings extends StatelessWidget {
                                       fontSize: 13.44,
                                       fontVariations: [FontVariation.weight(700)],
                                       color: Color.fromRGBO(240, 240, 240, 1))),
+                              const SizedBox(width: 8),
                               const _UseCustomWordsOnlyCheckbox()
                             ],
                           ),
-                          Expanded(child: CustomWordsInput())
+                          const Expanded(child: CustomWordsInput())
                         ],
                       ))),
               Expanded(
@@ -114,11 +114,29 @@ class GameSettings extends StatelessWidget {
   }
 }
 
-// TODO: _CustomWordsInput: HIGHLIGHT WHEN FOCUS
-class CustomWordsInput extends StatelessWidget {
-  CustomWordsInput({super.key}) {
-    formKey = Get.put(GlobalKey<FormState>());
+class CustomWordsInput extends StatefulWidget {
+  const CustomWordsInput({super.key});
+
+  @override
+  State<CustomWordsInput> createState() => _CustomWordsInputState();
+}
+
+class _CustomWordsInputState extends State<CustomWordsInput> {
+  late final FocusNode focusNode;
+  @override
+  void initState() {
+    super.initState();
+    focusNode = FocusNode();
   }
+
+  @override
+  void dispose() {
+    focusNode.dispose();
+    super.dispose();
+  }
+  // {
+  //   formKey = Get.put(GlobalKey<FormState>());
+  // }
 
   static List<String> proceededWords = [];
 
@@ -215,7 +233,7 @@ class CustomWordsInput extends StatelessWidget {
 
   String fixSpaces(String str) => str.replaceAll(RegExp(r"\s+"), " ").trim();
 
-  late final GlobalKey<FormState> formKey;
+  // late final GlobalKey<FormState> formKey;
 
   @override
   Widget build(BuildContext context) {
@@ -226,27 +244,29 @@ class CustomWordsInput extends StatelessWidget {
         return const InputContainer();
       }
       return InputContainer(
+          focusNode: focusNode,
           child: Form(
-              key: formKey,
+              // key: formKey,
               child: TextFormField(
-                validator: validator,
-                maxLength: maxLength,
-                decoration: InputDecoration(
-                    isCollapsed: true,
-                    contentPadding: const EdgeInsets.symmetric(vertical: 6, horizontal: 3),
-                    border: InputBorder.none,
-                    hintText: 'custom_words_input_placeholder'.trParams({
-                      'min_words': fetchedRules['min_words'].toString(),
-                      'min_char_per_word': fetchedRules['min_char_per_word'].toString(),
-                      'max_char_per_word': fetchedRules['max_char_per_word'].toString(),
-                      'max_char': maxLength.toString()
-                    }),
-                    hintStyle: const TextStyle(
-                        fontVariations: [FontVariation.weight(700)],
-                        color: Color.fromRGBO(0, 0, 0, 0.5),
-                        fontSize: 15.4)),
-                maxLines: null,
-              )));
+            focusNode: focusNode,
+            validator: validator,
+            maxLength: maxLength,
+            decoration: InputDecoration(
+                isCollapsed: true,
+                contentPadding: const EdgeInsets.symmetric(vertical: 6, horizontal: 3),
+                border: InputBorder.none,
+                hintText: 'custom_words_input_placeholder'.trParams({
+                  'min_words': fetchedRules['min_words'].toString(),
+                  'min_char_per_word': fetchedRules['min_char_per_word'].toString(),
+                  'max_char_per_word': fetchedRules['max_char_per_word'].toString(),
+                  'max_char': maxLength.toString()
+                }),
+                hintStyle: const TextStyle(
+                    fontVariations: [FontVariation.weight(700)],
+                    color: Color.fromRGBO(0, 0, 0, 0.5),
+                    fontSize: 15.4)),
+            maxLines: null,
+          )));
     });
   }
 }
@@ -261,13 +281,13 @@ class _SettingsItem extends StatelessWidget {
 
   dynamic getSetting() => (Game.inst as PrivateGame).settings[settingKey];
 
-  DropdownMenuItem _menuItem(dynamic value) => DropdownMenuItem(
+  DropdownItem _menuItem(dynamic value) => DropdownItem(
       value: value,
       child: Text(value is String ? value.tr : value.toString(),
           style: const TextStyle(fontSize: 14, fontVariations: [FontVariation.weight(700)])));
 
-  List<DropdownMenuItem> getItems() {
-    List<DropdownMenuItem> items = [];
+  List<DropdownItem> getItems() {
+    List<DropdownItem> items = [];
     var settings = GameSettings.fetchedOptions[settingKey];
     if (settings['list'] == null) {
       int max = settings['max'];
@@ -303,36 +323,19 @@ class _SettingsItem extends StatelessWidget {
           ])),
       Expanded(
           flex: 45,
-          child: InputContainer(
-              child: Obx(() => DropdownButtonHideUnderline(
-                  child: DropdownButton(
-                      icon: const Icon(Icons.keyboard_arrow_down_rounded, color: InputStyles.color),
-                      padding: const EdgeInsets.only(left: 7),
-                      // isExpanded: true,
-                      value: getSetting(),
-                      items: getItems(),
-                      onChanged: changeSetting)))))
+          child:
+              Dropdown(height: 36, value: getSetting(), onChange: changeSetting, items: getItems()))
     ]));
   }
 }
 
-// TODO: _UseCustomWordsOnlyCheckbox: HIGHLIGHT WHEN FOCUS, CUSTOMIZED CHECKED STATE DISPLAY
 class _UseCustomWordsOnlyCheckbox extends StatelessWidget {
   const _UseCustomWordsOnlyCheckbox();
 
-  RxMap<String, dynamic> gameSettings() => (Game.inst as PrivateGame).settings;
   @override
   Widget build(BuildContext context) {
-    return Obx(() => Checkbox(
-        // TODO: CHANGED FROM MATERIALSTATEPROPERTY TO THIS, TEST AGAIN
-        fillColor: WidgetStateProperty.resolveWith((states) {
-          // TODO: CHANGED FROM MATERIALSTATE TO THIS, TEST AGAIN
-          if (states.contains(WidgetState.selected)) {
-            return Colors.blue; // Set the background color when checked
-          }
-          return Colors.white; // Set the background color when unchecked
-        }),
-        value: gameSettings()['use_custom_words_only'],
+    return Obx(() => GameCheckbox(
+        value: Game.inst.settings['use_custom_words_only'] ?? false,
         onChanged: (bool? value) {
           (Game.inst as PrivateGame).changeSettings('use_custom_words_only', value);
         }));
@@ -342,8 +345,8 @@ class _UseCustomWordsOnlyCheckbox extends StatelessWidget {
 class _LanguageSettingItem extends _SettingsItem {
   const _LanguageSettingItem() : super(gif: 'setting_0', settingKey: 'language');
   @override
-  List<DropdownMenuItem> getItems() {
-    List<DropdownMenuItem> items = [];
+  List<DropdownItem> getItems() {
+    List<DropdownItem> items = [];
     var settings = GameSettings.fetchedOptions[settingKey];
 
     for (dynamic e in settings['list']) {
@@ -354,7 +357,7 @@ class _LanguageSettingItem extends _SettingsItem {
   }
 
   @override
-  DropdownMenuItem _menuItem(dynamic value) => DropdownMenuItem(
+  DropdownItem _menuItem(dynamic value) => DropdownItem(
       value: value,
       child: Text(AppTranslation.translations[value]!['displayName']!,
           style: const TextStyle(fontSize: 14, fontVariations: [FontVariation.weight(700)])));
