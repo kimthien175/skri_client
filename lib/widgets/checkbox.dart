@@ -82,7 +82,7 @@ class _GameCheckboxState extends State<GameCheckbox> with SingleTickerProviderSt
                             child: Container(
                               constraints: const BoxConstraints.expand(),
                               decoration: const BoxDecoration(
-                                  color: GlobalStyles.colorPanelButton, shape: BoxShape.circle),
+                                  color: Color(0xff1da1f2), shape: BoxShape.circle),
                             )))))));
   }
 }

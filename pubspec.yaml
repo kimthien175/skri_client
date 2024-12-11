@@ -41,6 +41,7 @@ dependencies:
   socket_io_client: ^2.0.3+1
   http: ^1.1.2
   flutter_widget_from_html: ^0.15.0
+  flutter_svg: ^2.0.16
 
 dev_dependencies:
   flutter_test:
@@ -107,6 +108,7 @@ flutter:
     - assets/gif/audio.gif
     - assets/gif/key.gif
     - assets/gif/questionmark.gif
+    - assets/link.svg
 
 
 

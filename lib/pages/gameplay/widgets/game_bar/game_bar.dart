@@ -2,6 +2,7 @@ library game_bar;
 
 export 'clock.dart';
 
+import 'package:skribbl_client/models/game/game.dart';
 import 'package:skribbl_client/pages/gameplay/widgets/game_bar/settings/settings.dart';
 import 'package:skribbl_client/pages/pages.dart';
 import 'package:skribbl_client/utils/styles.dart';
@@ -25,7 +26,9 @@ class GameBar extends StatelessWidget {
             Text(
               'WAITING'.tr,
               style: const TextStyle(
-                  fontFamily: 'Inconsolata', fontVariations: [FontVariation.weight(700)], fontSize: 16),
+                  fontFamily: 'Inconsolata',
+                  fontVariations: [FontVariation.weight(700)],
+                  fontSize: 16),
             ),
             const SizedBox(width: GameChat.width)
           ])),
@@ -33,17 +36,15 @@ class GameBar extends StatelessWidget {
       Positioned(
           left: 60,
           top: 13,
-          child:
-              //Obx(() =>
-              Text(
-                  "gamebar_round_display".trParams({
-                    "currentRound": '1', //Game.inst.currentRound.value.toString(),
-                    "rounds": '3' //Game.inst.rounds.value.toString()
-                  }),
-                  style: const TextStyle(
-                      fontFamily: 'Nunito-var',
-                      fontSize: 19.6,
-                      fontVariations: [FontVariation.weight(720)]))),
+          child: Obx(() => Text(
+              "gamebar_round_display".trParams({
+                "currentRound": '1', //Game.inst.currentRound.value.toString(),
+                "rounds": Game.inst.rounds.value.toString()
+              }),
+              style: const TextStyle(
+                  fontFamily: 'Nunito-var',
+                  fontSize: 19.6,
+                  fontVariations: [FontVariation.weight(720)])))),
       const Positioned(right: 3, child: SettingsButton())
     ]);
   }

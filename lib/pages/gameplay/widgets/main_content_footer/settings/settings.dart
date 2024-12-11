@@ -1,5 +1,6 @@
 import 'package:skribbl_client/generated/locales.g.dart';
 import 'package:skribbl_client/models/models.dart';
+import 'package:skribbl_client/pages/gameplay/widgets/main_content_footer/settings/start_game_button.dart';
 import 'package:skribbl_client/utils/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -24,33 +25,34 @@ class GameSettings extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Obx(() {
+      const SizedBox itemGap = SizedBox(height: 7);
       var content = Container(
           padding: const EdgeInsets.all(6),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              const Expanded(
-                  flex: 52,
-                  child: Column(children: [
-                    _SettingsItem(gif: 'setting_1', settingKey: 'players'),
-                    SizedBox(height: 3.5),
-                    _LanguageSettingItem(),
-                    SizedBox(height: 3.5),
-                    _SettingsItem(gif: 'setting_2', settingKey: 'draw_time'),
-                    SizedBox(height: 3.5),
-                    _SettingsItem(gif: 'setting_3', settingKey: 'rounds'),
-                    SizedBox(height: 3.5),
-                    _SettingsItem(gif: 'setting_6', settingKey: 'word_mode'),
-                    SizedBox(height: 3.5),
-                    _SettingsItem(gif: 'setting_4', settingKey: 'word_count'),
-                    SizedBox(height: 3.5),
-                    _SettingsItem(gif: 'setting_5', settingKey: 'hints'),
-                  ])),
+              const Column(mainAxisSize: MainAxisSize.min, children: [
+                _SettingsItem(gif: 'setting_1', settingKey: 'players'),
+                itemGap,
+                _LanguageSettingItem(),
+                itemGap,
+                _SettingsItem(gif: 'setting_2', settingKey: 'draw_time'),
+                itemGap,
+                _SettingsItem(gif: 'setting_3', settingKey: 'rounds'),
+                itemGap,
+                _SettingsItem(gif: 'setting_6', settingKey: 'word_mode'),
+                itemGap,
+                _SettingsItem(gif: 'setting_4', settingKey: 'word_count'),
+                itemGap,
+                _SettingsItem(gif: 'setting_5', settingKey: 'hints'),
+              ]),
+              const SizedBox(height: 3),
               Expanded(
-                  flex: 38,
+                  flex: 82,
                   child: Container(
                       margin: const EdgeInsets.symmetric(vertical: 6),
                       child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Row(
                             children: [
@@ -70,28 +72,11 @@ class GameSettings extends StatelessWidget {
                               const _UseCustomWordsOnlyCheckbox()
                             ],
                           ),
+                          const SizedBox(height: 4),
                           const Expanded(child: CustomWordsInput())
                         ],
                       ))),
-              Expanded(
-                  flex: 10,
-                  child: MouseRegion(
-                      cursor: SystemMouseCursors.click,
-                      child: GestureDetector(
-                          onTap: () {}, //(Game.inst as PrivateGame).startGame,
-                          child: Container(
-                            alignment: Alignment.center,
-                            decoration: const BoxDecoration(
-                              color: Color(0xff53e237),
-                              borderRadius: GlobalStyles.borderRadius,
-                            ),
-                            child: Text('start'.tr,
-                                style: const TextStyle(
-                                    fontSize: 32,
-                                    color: PanelStyles.textColor,
-                                    fontVariations: [FontVariation.weight(800)],
-                                    shadows: [GlobalStyles.textShadow])),
-                          ))))
+              const Expanded(flex: 15, child: StartGameButton())
             ],
           ));
 
@@ -306,11 +291,10 @@ class _SettingsItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-        child: Row(children: [
+    return Row(children: [
       Expanded(
           flex: 55,
-          child: Row(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+          child: Row(children: [
             FittedBox(child: GifManager.inst.misc(gif).builder.initWithShadow()),
             const SizedBox(width: 7),
             Align(
@@ -319,13 +303,13 @@ class _SettingsItem extends StatelessWidget {
                     style: const TextStyle(
                         color: Color.fromRGBO(240, 240, 240, 1),
                         fontSize: 14,
-                        fontVariations: [FontVariation.weight(500)])))
+                        fontVariations: [FontVariation.weight(350)])))
           ])),
       Expanded(
           flex: 45,
           child:
-              Dropdown(height: 36, value: getSetting(), onChange: changeSetting, items: getItems()))
-    ]));
+              Dropdown(height: 32, value: getSetting(), onChange: changeSetting, items: getItems()))
+    ]);
   }
 }
 
@@ -336,7 +320,7 @@ class _UseCustomWordsOnlyCheckbox extends StatelessWidget {
   Widget build(BuildContext context) {
     return Obx(() => GameCheckbox(
         value: Game.inst.settings['use_custom_words_only'] ?? false,
-        onChanged: (bool? value) {
+        onChanged: (bool value) {
           (Game.inst as PrivateGame).changeSettings('use_custom_words_only', value);
         }));
   }

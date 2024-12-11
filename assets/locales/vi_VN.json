@@ -91,5 +91,6 @@
     "dialog_button_ok": "Okê!",
     "dialog_button_yes": "Có",
     "dialog_button_no": "Không",
-    "dialog_content_kick_countdown": "Bạn còn trong thời gian bị đá khỏi phòng!"
+    "dialog_content_kick_countdown": "Bạn còn trong thời gian bị đá khỏi phòng!",
+    "invite": "Mời"
 }

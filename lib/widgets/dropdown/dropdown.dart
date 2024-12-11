@@ -100,20 +100,22 @@ class _DropdownState<T> extends State<Dropdown<T>> with SingleTickerProviderStat
           if (!focusNode.hasFocus) focusNode.requestFocus();
           toggleMenu();
         },
-        child: InputContainer(
-            key: key,
-            padding: const EdgeInsets.only(left: 10),
-            height: widget.height,
-            width: widget.width,
+        child: Focus(
             focusNode: focusNode,
-            child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-              Obx(() => value.value.child),
-              RotationTransition(
-                  turns: controller.drive(Tween<double>(begin: 0.0, end: -0.5)),
-                  child: ColorTransition(
-                      builder: (color) => Icon(Icons.keyboard_arrow_down_rounded, color: color),
-                      listenable: controller.drive(
-                          ColorTween(begin: InputStyles.color, end: InputContainer.activeColor))))
-            ])));
+            child: InputContainer(
+                key: key,
+                padding: const EdgeInsets.only(left: 10),
+                height: widget.height,
+                width: widget.width,
+                focusNode: focusNode,
+                child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                  Obx(() => value.value.child),
+                  RotationTransition(
+                      turns: controller.drive(Tween<double>(begin: 0.0, end: -0.5)),
+                      child: ColorTransition(
+                          builder: (color) => Icon(Icons.keyboard_arrow_down_rounded, color: color),
+                          listenable: controller.drive(ColorTween(
+                              begin: InputStyles.color, end: InputContainer.activeColor))))
+                ]))));
   }
 }

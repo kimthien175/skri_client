@@ -74,5 +74,6 @@
     "dialog_button_ok":"Okay!",
     "dialog_button_yes":"Yes",
     "dialog_button_no":"No",
-    "dialog_content_kick_countdown":"You are on a kick countdown!"
+    "dialog_content_kick_countdown":"You are on a kick countdown!",
+    "invite": "Invite"
 }

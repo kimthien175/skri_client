@@ -9,6 +9,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:skribbl_client/utils/styles.dart';
 import 'package:skribbl_client/widgets/widgets.dart';
 
 typedef StringCallback = String Function();
@@ -115,7 +116,7 @@ class _Dialog extends StatelessWidget {
         child: DefaultTextStyle(
             style: const TextStyle(
                 fontFamily: 'Nunito-var',
-                color: Colors.white,
+                color: GlobalStyles.colorPanelText,
                 fontVariations: [FontVariation('wght', 500)]),
             textAlign: TextAlign.center,
             child: Stack(children: [
@@ -137,7 +138,7 @@ class _Dialog extends StatelessWidget {
                                 Padding(
                                     padding:
                                         const EdgeInsets.only(top: 13.5, left: 13.5, right: 40),
-                                    child: DefaultTextStyle(
+                                    child: DefaultTextStyle.merge(
                                         style: const TextStyle(
                                             fontSize: 27,
                                             fontVariations: [FontVariation('wght', 750)]),

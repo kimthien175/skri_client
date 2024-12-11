@@ -99,6 +99,7 @@ class LocaleKeys {
   static const dialog_button_yes = 'dialog_button_yes';
   static const dialog_button_no = 'dialog_button_no';
   static const dialog_content_kick_countdown = 'dialog_content_kick_countdown';
+  static const invite = 'invite';
   static const You = 'You';
   static const Normal = 'Normal';
   static const Hidden = 'Hidden';
@@ -219,6 +220,7 @@ class Locales {
     'dialog_button_yes': 'Yes',
     'dialog_button_no': 'No',
     'dialog_content_kick_countdown': 'You are on a kick countdown!',
+    'invite': 'Invite',
   };
   static const vi_VN = {
     'displayName': 'Tiếng Việt',
@@ -333,5 +335,6 @@ class Locales {
     'dialog_button_no': 'Không',
     'dialog_content_kick_countdown':
         'Bạn còn trong thời gian bị đá khỏi phòng!',
+    'invite': 'Mời',
   };
 }
