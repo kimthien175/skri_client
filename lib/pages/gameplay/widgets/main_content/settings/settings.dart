@@ -1,6 +1,6 @@
 import 'package:skribbl_client/generated/locales.g.dart';
 import 'package:skribbl_client/models/models.dart';
-import 'package:skribbl_client/pages/gameplay/widgets/main_content_footer/settings/start_game_button.dart';
+import 'package:skribbl_client/pages/gameplay/widgets/main_content/settings/start_game_button.dart';
 import 'package:skribbl_client/utils/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
