@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
 import 'package:skribbl_client/widgets/widgets.dart';
 
 abstract class GameDialogButtons extends StatelessWidget {
-  const factory GameDialogButtons.okay({OnTapCallback? onTap}) = _OKButtons;
+  const factory GameDialogButtons.okay({OnTapCallback onTap}) = _OKButtons;
   const factory GameDialogButtons.row({required List<GameDialogButton> children}) = _Row;
   const factory GameDialogButtons.column({required List<GameDialogButton> children}) = _Column;
   const GameDialogButtons({super.key});
@@ -14,70 +15,52 @@ abstract class GameDialogButtons extends StatelessWidget {
       shadows: [Shadow(color: Color(0x90000000), offset: Offset(2.3, 2.3))]);
 }
 
-typedef OnTapCallback = Future<bool> Function(Future<bool> Function() quit);
+typedef OnTapCallback = Future<bool> Function(Future<bool> Function() onQuit);
 
 /// take maximum width
 abstract class GameDialogButton extends StatelessWidget {
-  const GameDialogButton({super.key, this.onTap});
-  Future<bool> quit(BuildContext context) => OverlayWidget.of<GameDialog>(context).hide();
+  const GameDialogButton({super.key, this.onTap = GameDialogButton.defaultOnTap});
+
+  // static Future<bool> defaultOnTap(BuildContext context) =>
+  //     OverlayWidget.of<GameDialog>(context).onQuit();
+
+  static Future<bool> defaultOnTap(Future<bool> Function() onQuit) => onQuit();
 
   /// if null, the behavior will be `quit(context)` for default
   ///
   /// if not null, you can call `quit(context)` with the `quit` parameter
-  final OnTapCallback? onTap;
+  final OnTapCallback onTap;
 }
 
 class OKayDialogButton extends GameDialogButton {
   const OKayDialogButton({super.key, super.onTap});
   String get content => 'dialog_button_ok'.tr;
+
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-        builder: (ct, constraints) => HoverButton(
-            onTap: onTap == null
-                ? () {
-                    OverlayWidget.of<GameDialog>(context).completer.complete(quit(context));
-                  }
-                : () {
-                    OverlayWidget.of<GameDialog>(context)
-                        .completer
-                        .complete(onTap!(() => quit(context)));
-                  },
-            height: 37.5,
-            width: constraints.maxWidth,
-            child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 4.5),
-                child: Text(content, style: GameDialogButtons.textStyle))));
+    return HoverButton(
+        onTap: () {
+          GameDialog controller = OverlayWidget.of(context);
+
+          controller.completer.complete(onTap(() => controller.onQuit(controller.hide)));
+        },
+        constraints: const BoxConstraints(minHeight: 37.5),
+        child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 4.5),
+            child: Text(content, style: GameDialogButtons.textStyle)));
   }
 }
 
-class NoDialogButton extends GameDialogButton {
-  const NoDialogButton({super.key, super.onTap});
+class NoDialogButton extends OKayDialogButton {
+  const NoDialogButton({super.key, super.onTap = NoDialogButton.defaultOnTap});
 
-  Future<bool> defaultOnTap(BuildContext context) async {
-    await quit(context);
+  static Future<bool> defaultOnTap(Future<bool> Function() onQuit) async {
+    await onQuit();
     return false;
   }
 
   @override
-  Widget build(BuildContext context) {
-    return LayoutBuilder(
-        builder: (ct, constraints) => HoverButton(
-            onTap: onTap == null
-                ? () {
-                    OverlayWidget.of<GameDialog>(context).completer.complete(defaultOnTap(context));
-                  }
-                : () {
-                    OverlayWidget.of<GameDialog>(context)
-                        .completer
-                        .complete(onTap!(() => quit(context)));
-                  },
-            height: 37.5,
-            width: constraints.maxWidth,
-            child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 4.5),
-                child: Text('dialog_button_no'.tr, style: GameDialogButtons.textStyle))));
-  }
+  String get content => 'dialog_button_no'.tr;
 }
 
 class YesDialogButton extends OKayDialogButton {
@@ -88,8 +71,8 @@ class YesDialogButton extends OKayDialogButton {
 }
 
 class _OKButtons extends GameDialogButtons {
-  const _OKButtons({this.onTap});
-  final OnTapCallback? onTap;
+  const _OKButtons({this.onTap = GameDialogButton.defaultOnTap});
+  final OnTapCallback onTap;
   @override
   Widget build(BuildContext context) => OKayDialogButton(onTap: onTap);
 }
@@ -101,24 +84,8 @@ class _Row extends GameDialogButtons {
   @override
   Widget build(BuildContext context) {
     assert(children.isNotEmpty, 'children must be not empty');
-    late List<Widget> finalChildren;
 
-    if (children.length == 1) {
-      finalChildren = children;
-    } else {
-      finalChildren = [];
-      // add spacer between children except the last child
-      for (int i = 0; i < children.length - 1; i++) {
-        finalChildren.add(Expanded(child: children[i]));
-        finalChildren.add(const SizedBox(width: 10));
-      }
-      finalChildren.add(Expanded(child: children.last));
-    }
-
-    return Row(
-        //  mainAxisSize: MainAxisSize.max,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: finalChildren);
+    return _RowRenderObjectWidget(gap: 10, children: children);
   }
 }
 
@@ -127,3 +94,68 @@ class _Column extends _Row {
   @override
   Widget build(BuildContext context) => Column(mainAxisSize: MainAxisSize.min, children: children);
 }
+
+class _RowRenderObjectWidget extends MultiChildRenderObjectWidget {
+  const _RowRenderObjectWidget({required super.children, this.gap = 0});
+  final double gap;
+  @override
+  RenderObject createRenderObject(BuildContext context) => _RowRenderObject(gap: gap);
+  @override
+  void updateRenderObject(BuildContext context, _RowRenderObject renderObject) {
+    renderObject.gap = gap;
+  }
+}
+
+class _RowRenderObject extends RenderBox
+    with
+        ContainerRenderObjectMixin<RenderBox, _ChildParentData>,
+        RenderBoxContainerDefaultsMixin<RenderBox, _ChildParentData> {
+  _RowRenderObject({required this.gap});
+  double gap;
+  @override
+  void setupParentData(covariant RenderObject child) {
+    if (child.parentData is! _ChildParentData) {
+      child.parentData = _ChildParentData();
+    }
+  }
+
+  @override
+  void performLayout() {
+    RenderBox? child = firstChild;
+
+    if (child == null) return;
+
+    if (childCount == 1) {
+      child.layout(BoxConstraints(minWidth: constraints.minWidth));
+      (child.parentData as _ChildParentData).offset = const Offset(0, 0);
+
+      size = child.size;
+
+      return;
+    }
+
+    var childWidth = (constraints.minWidth - gap * (childCount - 1)) / childCount;
+
+    child.layout(BoxConstraints(minWidth: childWidth), parentUsesSize: true);
+    (child.parentData as _ChildParentData).offset = const Offset(0, 0);
+    double dx = child.size.width + gap;
+
+    var finalHeight = child.size.height;
+    child = childAfter(child);
+
+    while (child != null) {
+      child.layout(BoxConstraints(minWidth: childWidth), parentUsesSize: true);
+      (child.parentData as _ChildParentData).offset = Offset(dx, 0);
+      dx += child.size.width + gap;
+
+      child = childAfter(child);
+    }
+
+    size = Size(dx - gap, finalHeight);
+  }
+
+  @override
+  void paint(PaintingContext context, Offset offset) => defaultPaint(context, offset);
+}
+
+class _ChildParentData extends ContainerBoxParentData<RenderBox> {}

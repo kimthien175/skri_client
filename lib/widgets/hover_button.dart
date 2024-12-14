@@ -17,7 +17,8 @@ class HoverButton extends StatefulWidget {
       this.onTap,
       this.borderRadius = GlobalStyles.borderRadius,
       this.height,
-      this.width});
+      this.width,
+      this.constraints});
 
   final Widget? child;
   final Color color;
@@ -27,6 +28,8 @@ class HoverButton extends StatefulWidget {
 
   final double? width;
   final double? height;
+
+  final BoxConstraints? constraints;
 
   @override
   State<HoverButton> createState() => _HoverButtonState();
@@ -98,6 +101,7 @@ class _HoverButtonState extends State<HoverButton> with SingleTickerProviderStat
                     listenable:
                         ColorTween(begin: widget.color, end: widget.hoverColor).animate(controller),
                     builder: (color) => Container(
+                        constraints: widget.constraints,
                         height: widget.height,
                         width: widget.width,
                         padding: widget.height == null && widget.width == null
