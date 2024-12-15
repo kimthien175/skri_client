@@ -107,18 +107,19 @@ abstract class Game extends GetxController {
 
   void confirmLeave() async {
     var shouldPop = await GameDialog.cache(
-            tag: 'gameplay-confirm-leave',
-            builder: () => GameDialog(
-                onQuit: (hide) async {
-                  await hide();
-                  return false;
-                },
-                title: const Text("You're leaving the game"),
-                content: const Text('Are you sure?'),
-                exitTap: true,
-                buttons:
-                    const GameDialogButtons.row(children: [YesDialogButton(), NoDialogButton()])))
-        .showOnce();
+        tag: 'gameplay-confirm-leave',
+        builder: () => GameDialog(
+            onQuit: (hide) async {
+              await hide();
+              return false;
+            },
+            title: const Text("You're leaving the game"),
+            content: const Text('Are you sure?'),
+            exitTap: true,
+            buttons: const GameDialogButtons.row(children: [
+              GameDialogButtonContainer(child: YesDialogButton()),
+              GameDialogButtonContainer(child: NoDialogButton())
+            ]))).showOnce();
 
     if (!shouldPop) return;
 

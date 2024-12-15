@@ -31,7 +31,9 @@ class GameDialog extends OverlayController with GetSingleTickerProviderStateMixi
   }
 
   GameDialog.error({required this.content, GameDialogButtons? buttons})
-      : buttons = buttons ?? const GameDialogButtons.okay(),
+      : buttons = buttons ??
+            const GameDialogButtons.row(
+                children: [GameDialogButtonContainer(child: OKayDialogButton())]),
         title = Builder(builder: (context) => Text('dialog_title_error'.tr)),
         exitTap = false;
 

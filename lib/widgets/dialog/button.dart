@@ -1,12 +1,14 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
 import 'package:skribbl_client/widgets/widgets.dart';
 
-abstract class GameDialogButtons extends StatelessWidget {
-  const factory GameDialogButtons.okay({OnTapCallback onTap}) = _OKButtons;
-  const factory GameDialogButtons.row({required List<GameDialogButton> children}) = _Row;
-  const factory GameDialogButtons.column({required List<GameDialogButton> children}) = _Column;
+abstract class GameDialogButtons extends Widget {
+  const factory GameDialogButtons.row(
+      {required List<GameDialogButtonContainer> children, double gap}) = _RowRenderObjectWidget;
+//  const factory GameDialogButtons.column({required List<GameDialogButton> children}) = _Column;
   const GameDialogButtons({super.key});
 
   static TextStyle get textStyle => const TextStyle(
@@ -17,9 +19,29 @@ abstract class GameDialogButtons extends StatelessWidget {
 
 typedef OnTapCallback = Future<bool> Function(Future<bool> Function() onQuit);
 
-/// take maximum width
-abstract class GameDialogButton extends StatelessWidget {
-  const GameDialogButton({super.key, this.onTap = GameDialogButton.defaultOnTap});
+class GameDialogButtonContainer extends ParentDataWidget<_ChildParentData> {
+  const GameDialogButtonContainer({super.key, this.flex = 1.0, required super.child})
+      : assert(flex > 0);
+  final double flex;
+
+  @override
+  void applyParentData(RenderObject renderObject) {
+    final parentData = renderObject.parentData as _ChildParentData;
+    if (parentData.flex != flex) {
+      parentData.flex = flex;
+      final targetParent = renderObject.parent;
+      if (targetParent is RenderObject) {
+        targetParent.markNeedsLayout();
+      }
+    }
+  }
+
+  @override
+  Type get debugTypicalAncestorWidgetClass => throw UnimplementedError();
+}
+
+abstract class GameDialogButtonChild extends StatelessWidget {
+  const GameDialogButtonChild({super.key, this.onTap = GameDialogButtonChild.defaultOnTap});
 
   // static Future<bool> defaultOnTap(BuildContext context) =>
   //     OverlayWidget.of<GameDialog>(context).onQuit();
@@ -32,7 +54,7 @@ abstract class GameDialogButton extends StatelessWidget {
   final OnTapCallback onTap;
 }
 
-class OKayDialogButton extends GameDialogButton {
+class OKayDialogButton extends GameDialogButtonChild {
   const OKayDialogButton({super.key, super.onTap});
   String get content => 'dialog_button_ok'.tr;
 
@@ -70,33 +92,15 @@ class YesDialogButton extends OKayDialogButton {
   String get content => 'dialog_button_yes'.tr;
 }
 
-class _OKButtons extends GameDialogButtons {
-  const _OKButtons({this.onTap = GameDialogButton.defaultOnTap});
-  final OnTapCallback onTap;
-  @override
-  Widget build(BuildContext context) => OKayDialogButton(onTap: onTap);
-}
+// class _Column extends _Row {
+//   const _Column({required super.children});
+//   @override
+//   Widget build(BuildContext context) => Column(mainAxisSize: MainAxisSize.min, children: children);
+// }
 
-class _Row extends GameDialogButtons {
-  const _Row({required this.children});
-  final List<GameDialogButton> children;
-
-  @override
-  Widget build(BuildContext context) {
-    assert(children.isNotEmpty, 'children must be not empty');
-
-    return _RowRenderObjectWidget(gap: 10, children: children);
-  }
-}
-
-class _Column extends _Row {
-  const _Column({required super.children});
-  @override
-  Widget build(BuildContext context) => Column(mainAxisSize: MainAxisSize.min, children: children);
-}
-
-class _RowRenderObjectWidget extends MultiChildRenderObjectWidget {
-  const _RowRenderObjectWidget({required super.children, this.gap = 0});
+class _RowRenderObjectWidget extends MultiChildRenderObjectWidget implements GameDialogButtons {
+  const _RowRenderObjectWidget({required super.children, this.gap = 10});
+  // : assert(children.length > 1 || gap == 0, 'If children.length <= 1, gap must be 0');
   final double gap;
   @override
   RenderObject createRenderObject(BuildContext context) => _RowRenderObject(gap: gap);
@@ -123,39 +127,49 @@ class _RowRenderObject extends RenderBox
   void performLayout() {
     RenderBox? child = firstChild;
 
-    if (child == null) return;
-
-    if (childCount == 1) {
-      child.layout(BoxConstraints(minWidth: constraints.minWidth));
-      (child.parentData as _ChildParentData).offset = const Offset(0, 0);
-
-      size = child.size;
-
+    if (child == null) {
+      size = const Size(0, 0);
       return;
     }
 
-    var childWidth = (constraints.minWidth - gap * (childCount - 1)) / childCount;
+    // size
+    var childWidthUnit = (constraints.minWidth - gap * (childCount - 1)) / childCount;
+    double maxChildWidthUnit = childWidthUnit;
+    double maxHeight = 0;
+    late double flex;
 
-    child.layout(BoxConstraints(minWidth: childWidth), parentUsesSize: true);
-    (child.parentData as _ChildParentData).offset = const Offset(0, 0);
-    double dx = child.size.width + gap;
+    do {
+      while (child != null) {
+        flex = (child.parentData as _ChildParentData).flex;
+        child.layout(
+            BoxConstraints(minWidth: childWidthUnit * flex, minHeight: constraints.minHeight),
+            parentUsesSize: true);
+        maxChildWidthUnit = max(maxChildWidthUnit, child.size.width / flex);
+        maxHeight = max(maxHeight, child.size.height);
 
-    var finalHeight = child.size.height;
-    child = childAfter(child);
+        child = childAfter(child);
+      }
+    } while (maxChildWidthUnit > childWidthUnit);
+
+    // position
+    child = firstChild;
+    double dx = 0;
 
     while (child != null) {
-      child.layout(BoxConstraints(minWidth: childWidth), parentUsesSize: true);
       (child.parentData as _ChildParentData).offset = Offset(dx, 0);
-      dx += child.size.width + gap;
 
+      dx += child.size.width + gap;
       child = childAfter(child);
     }
 
-    size = Size(dx - gap, finalHeight);
+    size = Size(dx - gap, maxHeight);
   }
 
   @override
   void paint(PaintingContext context, Offset offset) => defaultPaint(context, offset);
 }
 
-class _ChildParentData extends ContainerBoxParentData<RenderBox> {}
+class _ChildParentData extends ContainerBoxParentData<RenderBox> {
+  _ChildParentData({this.flex = 1});
+  double flex;
+}

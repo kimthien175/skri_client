@@ -200,16 +200,18 @@ class SessionEventHandlers {
         tag: data.toString(),
         builder: () => GameDialog.error(
             content: Text(data.toString()),
-            buttons: GameDialogButtons.okay(onTap: (quit) async {
-              // disconnect
-              socket.disconnect();
+            buttons: GameDialogButtons.row(children: [
+              GameDialogButtonContainer(child: OKayDialogButton(onTap: (quit) async {
+                // disconnect
+                socket.disconnect();
 
-              await quit();
+                await quit();
 
-              // out to home page
-              Get.safelyToNamed('/');
-              return true;
-            }))).showOnce();
+                // out to home page
+                Get.safelyToNamed('/');
+                return true;
+              }))
+            ]))).showOnce();
   }
 
   // late void Function(dynamic) onReconnect;
