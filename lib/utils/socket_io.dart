@@ -200,8 +200,8 @@ class SessionEventHandlers {
         tag: data.toString(),
         builder: () => GameDialog.error(
             content: Text(data.toString()),
-            buttons: GameDialogButtons.row(children: [
-              GameDialogButtonContainer(child: OKayDialogButton(onTap: (quit) async {
+            buttons: RowRenderObjectWidget(children: [
+              GameDialogButton.okay(onTap: (quit) async {
                 // disconnect
                 socket.disconnect();
 
@@ -210,7 +210,7 @@ class SessionEventHandlers {
                 // out to home page
                 Get.safelyToNamed('/');
                 return true;
-              }))
+              })
             ]))).showOnce();
   }
 

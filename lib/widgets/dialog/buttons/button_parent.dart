@@ -1,0 +1,42 @@
+part of 'buttons.dart';
+
+class GameDialogButton extends ParentDataWidget<_ButtonParentData> {
+  const GameDialogButton.okay(
+      {super.key, this.flex = 1.0, this.onTap = GameDialogButtonChild.defaultOnTap})
+      : assert(flex > 0),
+        super(child: const _OKayButtonChild());
+
+  const GameDialogButton.yes(
+      {super.key, this.flex = 1.0, this.onTap = GameDialogButtonChild.defaultOnTap})
+      : assert(flex > 0),
+        super(child: const _YesButtonChild());
+
+  const GameDialogButton.no({super.key, this.flex = 1.0, this.onTap = _NoButtonChild.defaultOnTap})
+      : assert(flex > 0),
+        super(child: const _NoButtonChild());
+
+  final double flex;
+
+  final OnTapCallback onTap;
+
+  @override
+  void applyParentData(RenderObject renderObject) {
+    final parentData = renderObject.parentData as _ButtonParentData;
+    if (parentData.flex != flex) {
+      parentData.flex = flex;
+      renderObject.parent?.markNeedsLayout();
+    }
+    if (parentData.onTap != onTap) {
+      parentData.onTap = onTap;
+      renderObject.parent?.markNeedsSemanticsUpdate();
+    }
+  }
+
+  @override
+  Type get debugTypicalAncestorWidgetClass => throw UnimplementedError();
+}
+
+class _ButtonParentData extends ContainerBoxParentData<RenderBox> {
+  double flex = 1;
+  OnTapCallback onTap = GameDialogButtonChild.defaultOnTap;
+}

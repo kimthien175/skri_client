@@ -1,6 +1,6 @@
 library dialog;
 
-export 'button.dart';
+export 'buttons/buttons.dart';
 export 'layout.dart';
 
 import 'dart:async';
@@ -30,10 +30,8 @@ class GameDialog extends OverlayController with GetSingleTickerProviderStateMixi
         };
   }
 
-  GameDialog.error({required this.content, GameDialogButtons? buttons})
-      : buttons = buttons ??
-            const GameDialogButtons.row(
-                children: [GameDialogButtonContainer(child: OKayDialogButton())]),
+  GameDialog.error({required this.content, RowRenderObjectWidget? buttons})
+      : buttons = buttons ?? const RowRenderObjectWidget(children: [GameDialogButton.okay()]),
         title = Builder(builder: (context) => Text('dialog_title_error'.tr)),
         exitTap = false;
 
@@ -79,7 +77,7 @@ class GameDialog extends OverlayController with GetSingleTickerProviderStateMixi
   // layout null, buttons length ==1
   // layout != null, buttons length >1
   // final GameDialogButtonsLayout Function() layout;
-  final GameDialogButtons? buttons;
+  final RowRenderObjectWidget? buttons;
 
   @override
   void onClose() {
@@ -142,7 +140,6 @@ class _Dialog extends StatelessWidget {
                   constraints: const BoxConstraints(minHeight: 100),
                   child: c.content),
               if (c.buttons != null) c.buttons!
-              // Row(mainAxisSize: MainAxisSize.min, children: [c.buttons!, c.buttons!])
             ],
           )),
       const _CloseButton()
@@ -265,7 +262,7 @@ class _CloseButtonState extends State<_CloseButton> with SingleTickerProviderSta
 }
 
 class _Title extends StatelessWidget {
-  const _Title({super.key});
+  const _Title();
 
   @override
   Widget build(BuildContext context) {

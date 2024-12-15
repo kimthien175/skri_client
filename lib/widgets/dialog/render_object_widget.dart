@@ -72,6 +72,19 @@ class _DialogRenderObject extends RenderBox
   void paint(PaintingContext context, Offset offset) {
     defaultPaint(context, offset);
   }
+
+  @override
+  bool hitTestChildren(BoxHitTestResult result, {required Offset position}) {
+    RenderBox? child = firstChild;
+    while (child != null) {
+      if (child.hitTest(result, position: position - (child.parentData as _ParentData).offset)) {
+        return true;
+      }
+      child = childAfter(child);
+    }
+
+    return false;
+  }
 }
 
 class _ParentData extends ContainerBoxParentData<RenderBox> {}
