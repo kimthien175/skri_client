@@ -1,10 +1,12 @@
 library game;
 
 export 'private_game.dart';
-export 'public_game.dart';
+
 export 'package:skribbl_client/models/game/message.dart';
 export 'package:skribbl_client/models/game/player.dart';
 export 'state/game_state.dart';
+
+import 'dart:collection';
 
 import 'package:skribbl_client/models/models.dart';
 import 'package:flutter/material.dart';
@@ -19,24 +21,34 @@ import 'dart:html' as html;
 import 'state/state.dart';
 
 // TODO: lost connection and try to continue the game again
-abstract class Game extends GetxController {
-  Game(
-      {required this.currentRound,
-      required this.rounds,
-      required this.state,
-      required this.playersByList,
-      required this.roomCode,
-      required this.settings}) {
+class Game extends GetxController {
+  Game({required this.data}) {
+    state = GameState.fromJSON(data['state']).obs;
+
+    futureStates = Queue<GameState>();
+    for (var jsonState in data['future_states']) {
+      futureStates.add(GameState.fromJSON(jsonState));
+    }
+
+    playersByList = Player.listFromJSON(data['players']).obs;
     for (int i = 0; i < playersByList.length; i++) {
       var rxPlayer = playersByList[i];
       playersByMap[rxPlayer.id] = rxPlayer;
     }
+
+    settings = (data['settings'] as Map<String, dynamic>).obs;
+
+    messages = Message.listFromJSON(data['messages']).obs;
   }
   static Game? _inst;
   static Game get inst => _inst!;
   static set inst(Game game) => _inst = game;
 
-  String roomCode;
+  final Map<String, dynamic> data;
+
+  String get roomCode => data['code'];
+  Map<String, dynamic> get system => data['system'];
+
   String get inviteLink => '${html.window.location.host}/?$roomCode';
 
   copyLink() {
@@ -44,94 +56,57 @@ abstract class Game extends GetxController {
         (value) => Game.inst.addMessage((color) => LinkCopiedMessage(backgroundColor: color)));
   }
 
-  RxInt rounds;
-  RxInt currentRound;
-  final RxList<Player> playersByList;
+  late final RxList<Player> playersByList;
   final Map<String, Player> playersByMap = {};
-  final RxMap<String, dynamic> settings;
+  late final RxMap<String, dynamic> settings;
 
   /// edit on this won't cause emiting to socketio
-  RxList<Message> messages = List<Message>.empty().obs;
+  late final RxList<Message> messages;
 
   void addMessage(Message Function(Color color) callback) {
     messages.add(callback(messages.length % 2 == 0 ? Colors.white : const Color(0xffececec)));
   }
 
-  /// add message only on client
-  void addMessageByRaw(Map<String, dynamic> rawMessage) {
-    Color color = messages.length % 2 == 0 ? Colors.white : const Color(0xffececec);
-    switch (rawMessage['type']) {
-      case Message.newHost:
-        messages.add(NewHostMessage(playerName: rawMessage['player_name'], backgroundColor: color));
-        break;
-
-      case Message.playerJoin:
-        messages
-            .add(PlayerJoinMessage(playerName: rawMessage['player_name'], backgroundColor: color));
-        break;
-
-      case Message.playerLeave:
-        inst.messages
-            .add(PlayerLeaveMessage(playerName: rawMessage['player_name'], backgroundColor: color));
-        break;
-
-      case Message.playerChat:
-        inst.messages.add(PlayerChatMessage(
-            playerName: rawMessage['player_name'],
-            chat: rawMessage['chat'],
-            backgroundColor: color));
-        break;
-
-      case Message.playerWin:
-        inst.messages.add(PlayerWinMessage(
-            playerName: rawMessage['player_name'],
-            score: rawMessage['score'],
-            backgroundColor: color));
-        break;
-
-      case Message.playerDraw:
-        inst.messages
-            .add(PlayerDrawMessage(playerName: rawMessage['player_name'], backgroundColor: color));
-        break;
-
-      default:
-        throw Exception('undefined message');
-    }
-  }
-
-  Rx<GameState> state;
-
-  static void empty() => _inst = null;
+  late Rx<GameState> state;
+  late Queue<GameState> futureStates;
 
   static bool get isEmpty => _inst == null;
 
   void confirmLeave() async {
-    var shouldPop = await GameDialog.cache(
-        tag: 'gameplay-confirm-leave',
-        builder: () => GameDialog(
-            onQuit: (hide) async {
-              await hide();
-              return false;
-            },
-            title: const Text("You're leaving the game"),
-            content: const Text('Are you sure?'),
-            exitTap: true,
-            buttons: const RowRenderObjectWidget(
-                children: [GameDialogButton.yes(), GameDialogButton.no()]))).showOnce();
+    var shouldPop = await GameDialog(
+        title: Text("dialog_title_confirm_leave".tr),
+        content: Text('dialog_content_confirm_leave'.tr),
+        exitTap: true,
+        buttons: const RowRenderObjectWidget(
+            children: [GameDialogButton.yes(), GameDialogButton.no()])).showOnce();
 
-    if (!shouldPop) return;
+    if (shouldPop) {
+      leave();
+    }
+  }
 
+  static leave() {
     //state.value.clear();
     SocketIO.inst.socket.disconnect();
 
     // reset meplayer as well
-    var me = MePlayer.inst;
-    me.isOwner = false;
-    me.points = 0;
+    MePlayer.inst.points = 0;
 
     Get.safelyToNamed('/');
-    Game.empty();
+    _inst = null;
   }
+
+  // factory Game.fromJSON(dynamic data) {
+  //   var futureStates = Queue<GameState>();
+  //   for (var state in data) {
+  //     futureStates.add(GameState.fromJSON(data));
+  //   }
+  //   return Game(
+  //       data: data,
+  //       playersByList: Player.listFromJSON(data['players']).obs,
+  //       state: GameState.fromJSON(data['state']).obs,
+  //       futureState: Qu);
+  // }
 }
 
 typedef GameStateInitCallback = GameState Function();

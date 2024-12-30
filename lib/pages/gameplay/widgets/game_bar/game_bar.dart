@@ -39,7 +39,7 @@ class GameBar extends StatelessWidget {
           child: Obx(() => Text(
               "gamebar_round_display".trParams({
                 "currentRound": '1', //Game.inst.currentRound.value.toString(),
-                "rounds": Game.inst.rounds.value.toString()
+                "rounds": Game.inst.settings['rounds'].toString()
               }),
               style: const TextStyle(
                   fontFamily: 'Nunito-var',

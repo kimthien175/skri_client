@@ -53,78 +53,80 @@ class PlayerCard extends StatelessWidget {
               ],
             )
           ],
-        )).show();
+        )).showOnce();
   }
 
   @override
-  Widget build(BuildContext context) {
-    var lastIndex = Game.inst.playersByList.length - 1;
-    var controller = Get.find<PlayerController>(tag: index.toString());
-    return GestureDetector(
-        onTap: showInfo,
-        child: MouseRegion(
-            onEnter: (_) {
-              controller.animController.forward();
-            },
-            onExit: (_) {
-              controller.animController.reverse();
-            },
-            cursor: SystemMouseCursors.click,
-            child: Stack(clipBehavior: Clip.none, children: [
-              Container(
-                  decoration: BoxDecoration(
-                      borderRadius: index == 0
-                          ? (index == lastIndex
-                              ? BorderRadius.circular(3)
-                              : const BorderRadiusDirectional.vertical(top: Radius.circular(3)))
-                          : (index == lastIndex
-                              ? const BorderRadiusDirectional.vertical(bottom: Radius.circular(3))
-                              : BorderRadius.zero),
-                      color: index % 2 == 0
-                          ? GameplayStyles.colorPlayerBGBase
-                          : GameplayStyles.colorPlayerBGBase_2),
-                  height: 48,
-                  width: width,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(info.nameForCard,
-                          style: const TextStyle(
-                              fontSize: 14,
-                              fontVariations: [FontVariation.weight(800)],
-                              color:
-                                  //info.id == MePlayer.inst.id
-                                  //     ? GameplayStyles.colorPlayerMe
-                                  //     :
-                                  Colors.black,
-                              height: 1.1)),
-                      const Text('0 points',
-                          style: TextStyle(
-                              fontSize: 12.6,
-                              height: 1,
-                              fontVariations: [FontVariation.weight(600)]))
-                    ],
-                  )),
-              Positioned(
-                  top: -1,
-                  right: 0,
-                  child: ScaleTransition(
-                      scale: controller.animation,
-                      child: info.avatarModel.builder.init().fit(width: 48))),
-              Positioned(
-                  top: 5,
-                  left: 6,
-                  child: Text(
-                    '#${index + 1}',
-                    style: const TextStyle(
-                        fontSize: 15.4, fontVariations: [FontVariation.weight(700)]),
-                  )),
-              if (info.isOwner == true)
-                Positioned(
-                    bottom: 0,
-                    left: 4,
-                    child:
-                        Opacity(opacity: 0.7, child: GifManager.inst.misc('owner').builder.init()))
-            ])));
-  }
+  Widget build(BuildContext context) => Obx(() {
+        var inst = Game.inst;
+        var lastIndex = inst.playersByList.length - 1;
+        var controller = Get.find<PlayerController>(tag: index.toString());
+        return GestureDetector(
+            onTap: showInfo,
+            child: MouseRegion(
+                onEnter: (_) {
+                  controller.animController.forward();
+                },
+                onExit: (_) {
+                  controller.animController.reverse();
+                },
+                cursor: SystemMouseCursors.click,
+                child: Stack(clipBehavior: Clip.none, children: [
+                  Container(
+                      decoration: BoxDecoration(
+                          borderRadius: index == 0
+                              ? (index == lastIndex
+                                  ? BorderRadius.circular(3)
+                                  : const BorderRadiusDirectional.vertical(top: Radius.circular(3)))
+                              : (index == lastIndex
+                                  ? const BorderRadiusDirectional.vertical(
+                                      bottom: Radius.circular(3))
+                                  : BorderRadius.zero),
+                          color: index % 2 == 0
+                              ? GameplayStyles.colorPlayerBGBase
+                              : GameplayStyles.colorPlayerBGBase_2),
+                      height: 48,
+                      width: width,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(info.nameForCard,
+                              style: const TextStyle(
+                                  fontSize: 14,
+                                  fontVariations: [FontVariation.weight(800)],
+                                  color:
+                                      //info.id == MePlayer.inst.id
+                                      //     ? GameplayStyles.colorPlayerMe
+                                      //     :
+                                      Colors.black,
+                                  height: 1.1)),
+                          const Text('0 points',
+                              style: TextStyle(
+                                  fontSize: 12.6,
+                                  height: 1,
+                                  fontVariations: [FontVariation.weight(600)]))
+                        ],
+                      )),
+                  Positioned(
+                      top: -1,
+                      right: 0,
+                      child: ScaleTransition(
+                          scale: controller.animation,
+                          child: info.avatarModel.builder.init().fit(width: 48))),
+                  Positioned(
+                      top: 5,
+                      left: 6,
+                      child: Text(
+                        '#${index + 1}',
+                        style: const TextStyle(
+                            fontSize: 15.4, fontVariations: [FontVariation.weight(700)]),
+                      )),
+                  if (inst is PrivateGame && info.id == inst.hostPlayerId.value)
+                    Positioned(
+                        bottom: 0,
+                        left: 4,
+                        child: Opacity(
+                            opacity: 0.7, child: GifManager.inst.misc('owner').builder.init()))
+                ])));
+      });
 }

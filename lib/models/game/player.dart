@@ -5,17 +5,17 @@ import 'package:get/get.dart';
 import 'package:skribbl_client/models/gif_manager.dart';
 
 class Player {
-  Player(
-      {required this.id,
-      required this.name,
-      required this.avatarModel,
-      this.isOwner = false,
-      this.points = 0});
+  Player({required this.id, required this.name, required this.avatarModel, this.points = 0});
   final AvatarModel avatarModel;
   String name;
   String get nameForCard => name;
 
-  bool isOwner;
+  // bool get isOwner {
+  //   var inst = Game.inst;
+  //   assert(inst is PrivateGame);
+  //   return (inst as PrivateGame).hostPlayerId.value == id;
+  // }
+
   int points;
   String id;
   static Player fromJSON(rawPlayer) {
@@ -23,8 +23,20 @@ class Player {
     return Player(
         id: rawPlayer['id'],
         name: rawPlayer['name'],
-        avatarModel: AvatarModel(rawAvatar['color'], rawAvatar['eyes'], rawAvatar['mouth']),
-        isOwner: rawPlayer['isOwner']);
+        avatarModel: AvatarModel(rawAvatar['color'], rawAvatar['eyes'], rawAvatar['mouth']));
+  }
+
+  static List<Player> listFromJSON(List<dynamic> rawPlayers) {
+    List<Player> players = [];
+    for (dynamic rawPlayer in rawPlayers) {
+      if (rawPlayer['id'] == MePlayer.inst.id) {
+        players.add(MePlayer.inst);
+      } else {
+        players.add(Player.fromJSON(rawPlayer));
+      }
+    }
+
+    return players;
   }
 }
 

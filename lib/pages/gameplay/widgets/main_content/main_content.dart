@@ -29,7 +29,7 @@ class GameCanvas extends StatelessWidget {
   Widget build(BuildContext context) {
     return Obx(() {
       var state = Game.inst.state.value;
-      if (state is DrawState && state.isSpectator) {
+      if (state is DrawState && !state.isSpectator) {
         return const DrawWidget();
       }
       return const DrawViewWidget();

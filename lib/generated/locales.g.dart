@@ -99,6 +99,8 @@ class LocaleKeys {
   static const dialog_button_yes = 'dialog_button_yes';
   static const dialog_button_no = 'dialog_button_no';
   static const dialog_content_kick_countdown = 'dialog_content_kick_countdown';
+  static const dialog_title_confirm_leave = 'dialog_title_confirm_leave';
+  static const dialog_content_confirm_leave = 'dialog_content_confirm_leave';
   static const invite = 'invite';
   static const You = 'You';
   static const Normal = 'Normal';
@@ -177,7 +179,7 @@ class Locales {
     'message_new_player_joined': '@player_name joined the room!',
     'message_player_leave': '@player_name left the room!',
     'message_you_need_at_least_2_players':
-        'You need at least 2 players to start the game!',
+        'You need at least @min players to start the game!',
     'message_link_copied': 'Copied room link to clipboard!',
     'message_player_won': '@playerName won with a score of @score!',
     'message_player_draw': '@playerName is drawing now!',
@@ -220,6 +222,8 @@ class Locales {
     'dialog_button_yes': 'Yes',
     'dialog_button_no': 'No',
     'dialog_content_kick_countdown': 'You are on a kick countdown!',
+    'dialog_title_confirm_leave': 'You\'re leaving the game',
+    'dialog_content_confirm_leave': 'Are you sure?',
     'invite': 'Invite',
   };
   static const vi_VN = {
@@ -283,7 +287,7 @@ class Locales {
     'message_new_player_joined': '@player_name đã tham gia phòng!',
     'message_player_leave': '@player_name đã rời khỏi phòng!',
     'message_you_need_at_least_2_players':
-        'Bạn cần tối thiểu 2 người để bắt đầu trò chơi!',
+        'Bạn cần tối thiểu @min người để bắt đầu trò chơi!',
     'message_link_copied': 'Đã sao chép link vào bộ nhớ đệm!',
     'message_player_won': '@playerName đã chiến thắng với số điểm @score!',
     'message_player_draw': '@playerName bắt đầu vẽ!',
@@ -335,6 +339,8 @@ class Locales {
     'dialog_button_no': 'Không',
     'dialog_content_kick_countdown':
         'Bạn còn trong thời gian bị đá khỏi phòng!',
+    'dialog_title_confirm_leave': 'Bạn đang thoát trò chơi',
+    'dialog_content_confirm_leave': 'Bạn chắc chứ?',
     'invite': 'Mời',
   };
 }

@@ -15,6 +15,8 @@ import 'package:skribbl_client/widgets/widgets.dart';
 
 typedef StringCallback = String Function();
 
+typedef OnQuitCallback = Future<bool> Function(Future<bool> Function() hide);
+
 class GameDialog extends OverlayController with GetSingleTickerProviderStateMixin {
   /// `hide` parameter for `onQuit` is default to true for returning
   GameDialog(
@@ -22,29 +24,30 @@ class GameDialog extends OverlayController with GetSingleTickerProviderStateMixi
       required this.content,
       this.exitTap = true,
       this.buttons,
-      Future<bool> Function(Future<bool> Function() hide)? onQuit}) {
-    this.onQuit = onQuit ??
-        (_) async {
-          await hide();
-          return false;
-        };
+      this.onQuit = GameDialog.onQuitDefault});
+
+  static Future<bool> onQuitDefault(Future<bool> Function() hide) async {
+    await hide();
+    return false;
   }
 
-  GameDialog.error({required this.content, RowRenderObjectWidget? buttons})
-      : buttons = buttons ?? const RowRenderObjectWidget(children: [GameDialogButton.okay()]),
-        title = Builder(builder: (context) => Text('dialog_title_error'.tr)),
+  GameDialog.error(
+      {required this.content,
+      this.buttons = const RowRenderObjectWidget(children: [GameDialogButton.okay()]),
+      this.onQuit = GameDialog.onQuitDefault})
+      : title = Builder(builder: (context) => Text('dialog_title_error'.tr)),
         exitTap = false;
 
-  factory GameDialog.cacheError({required dynamic error}) => GameDialog.cache(
-      tag: error.toString(), builder: () => GameDialog.error(content: Text(error.toString())));
+  // factory GameDialog.cacheError({required dynamic error}) => GameDialog.cache(
+  //     tag: error.toString(), builder: () => GameDialog.error(content: Text(error.toString())));
 
   @override
   Widget Function() get widgetBuilder => () => const _Dialog();
 
-  static final Map<String, GameDialog> _cache = <String, GameDialog>{};
+  // static final Map<String, GameDialog> _cache = <String, GameDialog>{};
 
-  factory GameDialog.cache({required String tag, required GameDialog Function() builder}) =>
-      _cache.putIfAbsent(tag, builder);
+  // factory GameDialog.cache({required String tag, required GameDialog Function() builder}) =>
+  //     _cache.putIfAbsent(tag, builder);
 
   final Widget title;
   final Widget content;

@@ -1,26 +1,41 @@
 // ignore_for_file: constant_identifier_names
 
 import 'package:flutter/material.dart';
+import 'package:skribbl_client/models/game/state/draw.dart';
+import 'package:skribbl_client/models/game/state/match_making.dart';
+import 'package:skribbl_client/models/game/state/pick_word.dart';
+import 'package:skribbl_client/models/game/state/pre_game.dart';
 
 abstract class GameState {
-  GameState({this.cachedNextState, required this.startedDate});
-  //.factory GameState.fromJSON(Map<String, dynamic> data) {}
+  GameState({required this.data});
 
-  static const prevGame = 'prev_game';
-  static const chooseWord = 'choose_word';
-  static const draw = 'draw';
-  static const gameResult = 'gameResult';
+  /// parse state from server
+  factory GameState.fromJSON(dynamic data) {
+    switch (data['type']) {
+      // from server || client create
+      case 'pre_game':
+        return PreGameState(data: data);
+      // from server || client create
+      case 'pick_word':
+        return PickWordState(data: data);
 
-  static const matchMaking = 'match_making';
+      case 'draw':
+        return DrawState(data: data);
 
-  /// close current state and switch to next state
-  void next() {}
+      case 'match_making':
+        return MatchMakingState(data: data);
+      default:
+        throw Exception('Unimplemented game state');
+    }
+  }
 
   void start();
-  Future<void> end();
+  Future<void> end(dynamic data);
 
-  GameState? cachedNextState;
-  String startedDate;
+  String get startedDate => data['started_date'];
+  final Map<String, dynamic> data;
 
   Widget get topWidget;
+
+  bool get isExpired;
 }

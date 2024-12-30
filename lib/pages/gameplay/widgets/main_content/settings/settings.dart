@@ -8,14 +8,27 @@ import 'package:get/get.dart';
 import 'package:skribbl_client/widgets/widgets.dart';
 
 class GameSettingsController extends GetxController {
-  GameSettingsController() {
-    isCovered = (!(MePlayer.inst.isOwner == true)).obs;
+  late GlobalKey<FormState> formKey;
+  late final FocusNode wordsInputFocusNode;
+
+  @override
+  void onInit() {
+    super.onInit();
+
+    formKey = GlobalKey<FormState>();
+
+    wordsInputFocusNode = FocusNode();
   }
-  late RxBool isCovered;
+
+  @override
+  void onClose() {
+    wordsInputFocusNode.dispose();
+    super.onClose();
+  }
 }
 
-class GameSettings extends StatelessWidget {
-  const GameSettings({super.key});
+class GameSettingsWidget extends StatelessWidget {
+  const GameSettingsWidget({super.key});
 
   // DBRoomSettingsDocument
   static Map<String, dynamic> get fetchedOptions => (Game.inst as PrivateGame).options;
@@ -24,6 +37,8 @@ class GameSettings extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var game = Game.inst;
+    if (game is! PrivateGame) throw Exception('not private game');
     return Obx(() {
       const SizedBox itemGap = SizedBox(height: 7);
       var content = Container(
@@ -80,10 +95,13 @@ class GameSettings extends StatelessWidget {
             ],
           ));
 
-      return controller.isCovered.value
+      return (game.hostPlayerId.value == MePlayer.inst.id)
           ? Stack(
               children: [
-                content,
+                FocusTraversalGroup(
+                    descendantsAreFocusable: false,
+                    descendantsAreTraversable: false,
+                    child: content),
                 Container(
                   height: 600,
                   width: 800,
@@ -99,36 +117,13 @@ class GameSettings extends StatelessWidget {
   }
 }
 
-class CustomWordsInput extends StatefulWidget {
+class CustomWordsInput extends StatelessWidget {
   const CustomWordsInput({super.key});
-
-  @override
-  State<CustomWordsInput> createState() => _CustomWordsInputState();
-}
-
-class _CustomWordsInputState extends State<CustomWordsInput> {
-  late final FocusNode focusNode;
-  @override
-  void initState() {
-    super.initState();
-    focusNode = FocusNode();
-  }
-
-  @override
-  void dispose() {
-    focusNode.dispose();
-    super.dispose();
-  }
-  // {
-  //   formKey = Get.put(GlobalKey<FormState>());
-  // }
-
-  static List<String> proceededWords = [];
 
   String? validator(String? value) {
     if (value == null) return '';
 
-    var fetchedRules = GameSettings.fetchedOptions['custom_words_rules'];
+    var fetchedRules = GameSettingsWidget.fetchedOptions['custom_words_rules'];
 
     // check length per word
     var minCharPerWord = fetchedRules['min_char_per_word'];
@@ -206,7 +201,7 @@ class _CustomWordsInputState extends State<CustomWordsInput> {
       return "$newMsg$invalidationMsg";
     }
 
-    proceededWords = uniqueValidWords.values.toList();
+    (Game.inst as PrivateGame).settings['custom_words'] = uniqueValidWords.values.toList();
 
     return null;
   }
@@ -222,36 +217,37 @@ class _CustomWordsInputState extends State<CustomWordsInput> {
 
   @override
   Widget build(BuildContext context) {
-    var fetchedRules = GameSettings.fetchedOptions['custom_words_rules'];
+    var fetchedRules = GameSettingsWidget.fetchedOptions['custom_words_rules'];
     var maxLength = fetchedRules['max_char'];
+    var controller = Get.find<GameSettingsController>();
     return Obx(() {
-      if (Get.find<GameSettingsController>().isCovered.value) {
+      if ((Game.inst as PrivateGame).hostPlayerId.value == MePlayer.inst.id) {
         return const InputContainer();
       }
       return InputContainer(
-          focusNode: focusNode,
+          focusNode: controller.wordsInputFocusNode,
           child: Form(
-              // key: formKey,
+              key: Get.find<GameSettingsController>().formKey,
               child: TextFormField(
-            focusNode: focusNode,
-            validator: validator,
-            maxLength: maxLength,
-            decoration: InputDecoration(
-                isCollapsed: true,
-                contentPadding: const EdgeInsets.symmetric(vertical: 6, horizontal: 3),
-                border: InputBorder.none,
-                hintText: 'custom_words_input_placeholder'.trParams({
-                  'min_words': fetchedRules['min_words'].toString(),
-                  'min_char_per_word': fetchedRules['min_char_per_word'].toString(),
-                  'max_char_per_word': fetchedRules['max_char_per_word'].toString(),
-                  'max_char': maxLength.toString()
-                }),
-                hintStyle: const TextStyle(
-                    fontVariations: [FontVariation.weight(700)],
-                    color: Color.fromRGBO(0, 0, 0, 0.5),
-                    fontSize: 15.4)),
-            maxLines: null,
-          )));
+                focusNode: controller.wordsInputFocusNode,
+                validator: validator,
+                maxLength: maxLength,
+                decoration: InputDecoration(
+                    isCollapsed: true,
+                    contentPadding: const EdgeInsets.symmetric(vertical: 6, horizontal: 3),
+                    border: InputBorder.none,
+                    hintText: 'custom_words_input_placeholder'.trParams({
+                      'min_words': fetchedRules['min_words'].toString(),
+                      'min_char_per_word': fetchedRules['min_char_per_word'].toString(),
+                      'max_char_per_word': fetchedRules['max_char_per_word'].toString(),
+                      'max_char': maxLength.toString()
+                    }),
+                    hintStyle: const TextStyle(
+                        fontVariations: [FontVariation.weight(700)],
+                        color: Color.fromRGBO(0, 0, 0, 0.5),
+                        fontSize: 15.4)),
+                maxLines: null,
+              )));
     });
   }
 }
@@ -273,17 +269,17 @@ class _SettingsItem extends StatelessWidget {
 
   List<DropdownItem> getItems() {
     List<DropdownItem> items = [];
-    var settings = GameSettings.fetchedOptions[settingKey];
-    if (settings['list'] == null) {
+    var settings = GameSettingsWidget.fetchedOptions[settingKey];
+    if (settings is List<dynamic>) {
+      for (dynamic e in settings) {
+        items.add(_menuItem(e));
+      }
+    } else {
       int max = settings['max'];
       int min = settings['min'];
 
       for (int i = min; i <= max; i++) {
         items.add(_menuItem(i));
-      }
-    } else {
-      for (dynamic e in settings['list']) {
-        items.add(_menuItem(e));
       }
     }
     return items;
@@ -331,9 +327,9 @@ class _LanguageSettingItem extends _SettingsItem {
   @override
   List<DropdownItem> getItems() {
     List<DropdownItem> items = [];
-    var settings = GameSettings.fetchedOptions[settingKey];
+    var settings = GameSettingsWidget.fetchedOptions[settingKey];
 
-    for (dynamic e in settings['list']) {
+    for (dynamic e in settings) {
       items.add(_menuItem(e));
     }
 

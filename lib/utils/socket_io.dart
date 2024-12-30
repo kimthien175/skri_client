@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:skribbl_client/models/game/game.dart';
+import 'package:skribbl_client/models/game/state/pre_game.dart';
 
 import 'package:skribbl_client/utils/utils.dart';
 import 'package:get/get.dart';
@@ -10,6 +11,13 @@ class SocketIO {
   SocketIO._internal() {
     _socket = IO.io(
         API.inst.uri, IO.OptionBuilder().setTransports(['websocket']).disableAutoConnect().build());
+
+    _socket.on('start_private_game', (data) {
+      var state = Game.inst.state.value;
+      assert(state is PreGameState);
+
+      if (data) state.end(data);
+    });
 
     // eventHandlers = SessionEventHandlers.initWithSocket(socket: _socket);
 
@@ -25,8 +33,8 @@ class SocketIO {
       inst.playersByList.add(newPlayer);
       inst.playersByMap[newPlayer.id] = newPlayer;
 
-      inst.addMessage((color) => PlayerJoinMessage(
-          playerName: newPlayerEmit['message']['player_name'], backgroundColor: color));
+      inst.addMessage(
+          (color) => PlayerJoinMessage(data: newPlayerEmit['message'], backgroundColor: color));
     });
 
     _socket.on('player_leave', onPlayerLeave);
@@ -39,30 +47,17 @@ class SocketIO {
     });
 
     _socket.on('player_chat', (chatMsg) {
-      Game.inst.addMessage((color) => PlayerChatMessage(
-          playerName: chatMsg['player_name'], chat: chatMsg['chat'], backgroundColor: color));
+      Game.inst.addMessage((color) => PlayerChatMessage(data: chatMsg, backgroundColor: color));
       // TODO: DISPLAY TOOLTIP BESIDE PLAYER CARD
     });
 
     _socket.on('change_settings', (setting) {
-      var game = (Game.inst as PrivateGame);
-
       var entry = (setting as Map<String, dynamic>).entries.first;
       var key = entry.key;
       var value = entry.value;
 
-      if (key == 'rounds') {
-        game.rounds.value = value;
-      }
       (Game.inst as PrivateGame).settings[key] = value;
     });
-
-    // _socket.on('start_private_game', (startPrivateGamePackage) {
-    //   // Start round 1 and choosing word
-    //   Game.inst.state.value
-    //       .next(startPrivateGamePackage)
-    //       .then((value) => Game.inst.state.value = value);
-    // });
 
     // _socket.on('choose_word', (chooseWordPkg) {
     //   Game.inst.state.value.next(chooseWordPkg).then((value) => Game.inst.state.value = value);
@@ -98,8 +93,7 @@ class SocketIO {
     inst.playersByList.removeWhere((element) => element.id == leftPlayerId);
 
     // message side
-    inst.addMessage((color) =>
-        PlayerLeaveMessage(playerName: playerLeaveEmit['player_name'], backgroundColor: color));
+    inst.addMessage((color) => PlayerLeaveMessage(data: playerLeaveEmit, backgroundColor: color));
 
     inst.playersByMap.removeWhere((key, value) => key == leftPlayerId);
   }
@@ -108,11 +102,10 @@ class SocketIO {
   onNewHost(dynamic newHostEmit) {
     var inst = Game.inst;
     var newHost = inst.playersByMap[newHostEmit['player_id']]!;
-    newHost.isOwner = true;
+    (inst as PrivateGame).hostPlayerId.value = newHost.id;
     inst.playersByList.refresh();
 
-    inst.addMessage(
-        (color) => NewHostMessage(playerName: newHostEmit['player_name'], backgroundColor: color));
+    inst.addMessage((color) => NewHostMessage(data: newHostEmit, backgroundColor: color));
 
     // if (MePlayer.inst.isOwner == true) {
     //   var game = (Game.inst as PrivateGame);
@@ -196,22 +189,20 @@ class SessionEventHandlers {
     LoadingOverlay.inst.hide();
     socket.disconnect();
 
-    GameDialog.cache(
-        tag: data.toString(),
-        builder: () => GameDialog.error(
-            content: Text(data.toString()),
-            buttons: RowRenderObjectWidget(children: [
-              GameDialogButton.okay(onTap: (quit) async {
-                // disconnect
-                socket.disconnect();
+    GameDialog.error(
+        content: Text(data.toString()),
+        buttons: RowRenderObjectWidget(children: [
+          GameDialogButton.okay(onTap: (quit) async {
+            // disconnect
+            socket.disconnect();
 
-                await quit();
+            await quit();
 
-                // out to home page
-                Get.safelyToNamed('/');
-                return true;
-              })
-            ]))).showOnce();
+            // out to home page
+            Get.safelyToNamed('/');
+            return true;
+          })
+        ])).showOnce();
   }
 
   // late void Function(dynamic) onReconnect;

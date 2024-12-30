@@ -46,18 +46,16 @@ class TestPage extends StatelessWidget {
   //           _TittleItem(title: 'Miscellaneous'.tr, icon: 'questionmark')
   //         ])));
 
-  static GameDialog settingDialog = GameDialog.cache(
-      tag: 'gameplay-confirm-leave',
-      builder: () => GameDialog(
-          onQuit: (hide) async {
-            await hide();
-            return false;
-          },
-          title: const Text("You're leaving the game"),
-          content: const Text('Are you sure?'),
-          exitTap: true,
-          buttons: const RowRenderObjectWidget(
-              children: [GameDialogButton.yes(flex: 2), GameDialogButton.no()])));
+  static GameDialog settingDialog = GameDialog(
+      onQuit: (hide) async {
+        await hide();
+        return false;
+      },
+      title: const Text("You're leaving the game"),
+      content: const Text('Are you sure?'),
+      exitTap: true,
+      buttons: const RowRenderObjectWidget(
+          children: [GameDialogButton.yes(flex: 2), GameDialogButton.no()]));
 
   @override
   Widget build(BuildContext context) {

@@ -44,8 +44,7 @@ class GameChatController extends GetxController {
       } else {
         // submit
         Game.inst.addMessage((color) => PlayerChatMessage(
-              playerName: MePlayer.inst.name,
-              chat: text,
+              data: {'player_name': MePlayer.inst.name, 'text': text},
               backgroundColor: color,
             ));
         // emit to server

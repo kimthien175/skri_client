@@ -1,8 +1,39 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:skribbl_client/models/game/game.dart';
+
+const Map<String, dynamic> _emptyData = {};
 
 abstract class Message extends StatelessWidget {
-  const Message({super.key, required this.backgroundColor});
+  const Message({super.key, required this.data, required this.backgroundColor});
+
+  factory Message.fromJSON(
+      {Map<String, dynamic> data = _emptyData, required Color backgroundColor}) {
+    switch (data['type']) {
+      case Message.newHost:
+        return NewHostMessage(data: data, backgroundColor: backgroundColor);
+
+      case Message.playerJoin:
+        return PlayerJoinMessage(data: data, backgroundColor: backgroundColor);
+
+      case Message.playerLeave:
+        return PlayerLeaveMessage(data: data, backgroundColor: backgroundColor);
+
+      case Message.playerChat:
+        return PlayerChatMessage(data: data, backgroundColor: backgroundColor);
+
+      case Message.playerWin:
+        return PlayerWinMessage(data: data, backgroundColor: backgroundColor);
+
+      case Message.playerDraw:
+        return PlayerDrawMessage(data: data, backgroundColor: backgroundColor);
+
+      default:
+        throw Exception('undefined message');
+    }
+  }
+
+  final Map<String, dynamic> data;
 
   final Color backgroundColor;
   final double paddingLeft = 10;
@@ -21,13 +52,22 @@ abstract class Message extends StatelessWidget {
   static const Color yellow = Color.fromRGBO(226, 203, 0, 1);
   static const Color blue = Color.fromRGBO(57, 117, 206, 1);
   static const Color guessedRightBackgroundColor = Color(0xffe7ffdf);
+
+  static List<Message> listFromJSON(List<dynamic> messages) {
+    List<Message> result = [];
+    for (int i = 0; i < messages.length; i++) {
+      result.add(Message.fromJSON(
+          backgroundColor: i % 2 == 0 ? Colors.white : const Color(0xffececec), data: messages[i]));
+    }
+    return result;
+  }
 }
 
 // TODO: OLIVE???
 
 class NewHostMessage extends Message {
-  const NewHostMessage({super.key, required this.playerName, required super.backgroundColor});
-  final String playerName;
+  const NewHostMessage({super.key, required super.data, required super.backgroundColor});
+  String get playerName => data['player_name'];
 
   @override
   Widget build(BuildContext context) {
@@ -42,11 +82,10 @@ class NewHostMessage extends Message {
 }
 
 class PlayerChatMessage extends Message {
-  final String playerName;
-  final String chat;
+  String get playerName => data['player_name'];
+  String get text => data['text'];
 
-  const PlayerChatMessage(
-      {required this.playerName, required this.chat, super.key, required super.backgroundColor});
+  const PlayerChatMessage({required super.data, super.key, required super.backgroundColor});
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +103,7 @@ class PlayerChatMessage extends Message {
                       fontVariations: [FontVariation.weight(700)],
                       fontFamily: 'Nunito-var')),
               TextSpan(
-                  text: chat,
+                  text: text,
                   style: const TextStyle(
                       fontSize: 14,
                       fontVariations: [FontVariation.weight(500)],
@@ -76,8 +115,8 @@ class PlayerChatMessage extends Message {
 }
 
 class PlayerJoinMessage extends Message {
-  const PlayerJoinMessage({required this.playerName, super.key, required super.backgroundColor});
-  final String playerName;
+  const PlayerJoinMessage({required super.data, super.key, required super.backgroundColor});
+  String get playerName => data['player_name'];
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -91,8 +130,8 @@ class PlayerJoinMessage extends Message {
 }
 
 class PlayerLeaveMessage extends Message {
-  const PlayerLeaveMessage({required this.playerName, super.key, required super.backgroundColor});
-  final String playerName;
+  const PlayerLeaveMessage({required super.data, super.key, required super.backgroundColor});
+  String get playerName => data['player_name'];
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -107,15 +146,18 @@ class PlayerLeaveMessage extends Message {
   }
 }
 
-class Minimum2PlayersToStartMessage extends Message {
-  const Minimum2PlayersToStartMessage({super.key, required super.backgroundColor});
+class RequiredMinimumPlayersToStartMessage extends Message {
+  const RequiredMinimumPlayersToStartMessage({super.key, required super.backgroundColor})
+      : super(data: _emptyData);
   @override
   Widget build(BuildContext context) {
     return Container(
         color: backgroundColor,
         alignment: Alignment.centerLeft,
         padding: EdgeInsets.only(left: paddingLeft),
-        child: Text("message_you_need_at_least_2_players".tr,
+        child: Text(
+            "message_you_need_at_least_2_players"
+                .trParams({'min': (Game.inst as PrivateGame).options['players']['min'].toString()}),
             style: const TextStyle(
                 color: Message.darkOrange,
                 fontSize: 14,
@@ -124,7 +166,7 @@ class Minimum2PlayersToStartMessage extends Message {
 }
 
 class LinkCopiedMessage extends Message {
-  const LinkCopiedMessage({super.key, required super.backgroundColor});
+  const LinkCopiedMessage({super.key, required super.backgroundColor}) : super(data: _emptyData);
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -138,10 +180,9 @@ class LinkCopiedMessage extends Message {
 }
 
 class PlayerWinMessage extends Message {
-  const PlayerWinMessage(
-      {required this.playerName, required this.score, super.key, required super.backgroundColor});
-  final String playerName;
-  final int score;
+  const PlayerWinMessage({required super.data, super.key, required super.backgroundColor});
+  String get playerName => data['player_name'];
+  int get score => data['score'];
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -156,8 +197,8 @@ class PlayerWinMessage extends Message {
 }
 
 class PlayerDrawMessage extends Message {
-  const PlayerDrawMessage({super.key, required this.playerName, required super.backgroundColor});
-  final String playerName;
+  const PlayerDrawMessage({super.key, required super.data, required super.backgroundColor});
+  String get playerName => data['player_name'];
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -171,7 +212,7 @@ class PlayerDrawMessage extends Message {
 }
 
 class PlayerSpamMessage extends Message {
-  const PlayerSpamMessage({super.key, required super.backgroundColor});
+  const PlayerSpamMessage({super.key, required super.backgroundColor}) : super(data: _emptyData);
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -188,8 +229,8 @@ class PlayerSpamMessage extends Message {
 
 // TODO: APPLY
 class PlayerDislikeMessage extends Message {
-  const PlayerDislikeMessage({super.key, required super.backgroundColor, required this.playerName});
-  final String playerName;
+  const PlayerDislikeMessage({super.key, required super.backgroundColor, required super.data});
+  String get playerName => data['player_name'];
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -206,8 +247,8 @@ class PlayerDislikeMessage extends Message {
 
 // TODO: APPLY
 class PlayerLikeMessage extends Message {
-  const PlayerLikeMessage({super.key, required super.backgroundColor, required this.playerName});
-  final String playerName;
+  const PlayerLikeMessage({super.key, required super.backgroundColor, required super.data});
+  String get playerName => data['player_name'];
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -222,9 +263,9 @@ class PlayerLikeMessage extends Message {
 
 // TODO: APPLY
 class PlayerGuessedRight extends Message {
-  const PlayerGuessedRight({super.key, required this.playerName})
+  const PlayerGuessedRight({super.key, required super.data})
       : super(backgroundColor: Message.guessedRightBackgroundColor);
-  final String playerName;
+  String get playerName => data['player_name'];
 
   @override
   Widget build(BuildContext context) {
@@ -240,8 +281,8 @@ class PlayerGuessedRight extends Message {
 
 // TODO: kick countdown
 class PlayerGotKicked extends Message {
-  const PlayerGotKicked({super.key, required super.backgroundColor, required this.playerName});
-  final String playerName;
+  const PlayerGotKicked({super.key, required super.backgroundColor, required super.data});
+  String get playerName => data['player_name'];
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -258,8 +299,8 @@ class PlayerGotKicked extends Message {
 
 /// TODO: private message,
 class PlayerGuessClose extends Message {
-  const PlayerGuessClose({super.key, required this.word, required super.backgroundColor});
-  final String word;
+  const PlayerGuessClose({super.key, required super.data, required super.backgroundColor});
+  String get word => data['word'];
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -274,17 +315,11 @@ class PlayerGuessClose extends Message {
 
 // TODO: APPLY
 class PlayerVoteKick extends Message {
-  const PlayerVoteKick(
-      {super.key,
-      required this.voterName,
-      required this.victimName,
-      required this.votedCount,
-      required this.notVictimPlayerCount,
-      required super.backgroundColor});
-  final String voterName;
-  final String victimName;
-  final int votedCount;
-  final int notVictimPlayerCount;
+  const PlayerVoteKick({super.key, required super.data, required super.backgroundColor});
+  String get voterName => data['voter_name'];
+  String get victimName => data['victim_name'];
+  int get votedCount => data['voted_count'];
+  int get notVictimPlayerCount => data['not_victim_player_count'];
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -304,8 +339,8 @@ class PlayerVoteKick extends Message {
 }
 
 class WordRevealMessage extends Message {
-  const WordRevealMessage({super.key, required this.word, required super.backgroundColor});
-  final String word;
+  const WordRevealMessage({super.key, required super.data, required super.backgroundColor});
+  String get word => data['word'];
 
   @override
   Widget build(BuildContext context) {

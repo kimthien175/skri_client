@@ -1,31 +1,24 @@
 import 'package:skribbl_client/models/game/game.dart';
-import 'package:skribbl_client/models/game/state/prev_game.dart';
+
 import 'package:skribbl_client/pages/pages.dart';
 import 'package:skribbl_client/utils/socket_io.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../widgets/widgets.dart';
-import 'state/state.dart';
 
 class PrivateGame extends Game {
-  PrivateGame.internal(
-      {required this.options,
-      required super.settings,
-      required super.state,
-      required super.currentRound,
-      required super.rounds,
-      required super.playersByList,
-      required super.roomCode});
+  PrivateGame.internal({required super.data}) {
+    hostPlayerId = (data['host_player_id'] as String).obs;
+  }
 
-  Map<String, dynamic> options;
+  late RxString hostPlayerId;
+
+  Map<String, dynamic> get options => data['options'];
 
   void changeSettings(String key, dynamic value) {
-    if (key == 'rounds') {
-      rounds.value = value;
-    }
     settings[key] = value;
-    SocketIO.inst.socket.emit('change_settings', {key: value});
+    SocketIO.inst.socket.emit('change_settings', {'key': key, 'value': value});
   }
 
   /// use for join and host starting connecting to server
@@ -38,12 +31,18 @@ class PrivateGame extends Game {
     socket.once('connect_error', (data) {
       SocketIO.inst.socket.disconnect();
 
-      GameDialog.cache(
-          tag: data.toString(),
-          builder: () => GameDialog.error(
-                  content: Builder(
-                builder: (context) => Text('dialog_content_no_server_connection'.tr),
-              ))).show();
+      GameDialog.error(
+          onQuit: (hide) async {
+            await hide();
+
+            if (Get.currentRoute != '/') {
+              Game.leave();
+            }
+            return true;
+          },
+          content: Builder(
+            builder: (context) => Text('dialog_content_no_server_connection'.tr),
+          )).showOnce();
 
       LoadingOverlay.inst.hide();
     });
@@ -59,34 +58,19 @@ class PrivateGame extends Game {
           'init_private_room', {'player': MePlayer.inst.toJSON(), 'lang': Get.locale!.toString()},
           ack: (roomResult) {
         if (roomResult['success']) {
-          var createdRoom = roomResult['data'];
-
-          Map<String, dynamic> settings = createdRoom['settings']['default'];
+          var data = roomResult['data'];
 
           var me = MePlayer.inst;
 
-//#region set up player
+          //#region set up player
           // set room owner name if empty
           if (me.name.isEmpty) {
-            me.name = createdRoom['ownerName'];
+            me.name = data['player']['name'];
           }
-          me.id = createdRoom['player_id'];
-          me.isOwner = true;
+          me.id = data['player']['id'];
 //#endregion
 
-          Game.inst = PrivateGame.internal(
-              roomCode: createdRoom['code'],
-              settings: settings.obs,
-              currentRound: RxInt(1),
-              rounds: RxInt(settings['rounds']),
-              // ignore: unnecessary_cast
-              playersByList: [me as Player].obs,
-              // ignore: unnecessary_cast
-              state: (PrevGameState(startedDate: '') as GameState).obs,
-              options: createdRoom['settings']['options']);
-
-          Game.inst.addMessage((color) => NewHostMessage(
-              playerName: createdRoom['message']['player_name'], backgroundColor: color));
+          Game.inst = PrivateGame.internal(data: data['room']);
 
           GameplayController.readyCallback = Game.inst.state.value.start;
 
@@ -95,7 +79,7 @@ class PrivateGame extends Game {
         } else {
           SocketIO.inst.socket.disconnect();
 
-          GameDialog.error(content: Text(roomResult['data'].toString())).show();
+          GameDialog.error(content: Text(roomResult['data'].toString())).showOnce();
         }
 
         LoadingOverlay.inst.hide();
@@ -233,23 +217,19 @@ class PrivateGame extends Game {
     // inst.eventHandlers.onReconnect = (_) => dialogOpenCount = 0;
   }
 
-  // void startGame() {
-  //   if (playersByList.length == 1) {
-  //     Game.inst.addMessage((Color color) => Minimum2PlayersToStartMessage(
-  //           backgroundColor: color,
-  //         ));
-  //     return;
-  //   }
-  //   // gather settings, settings from dropdown and check button is saved in settings already
-  //   // now have left only the custom words
-  //   if (Get.find<GlobalKey<FormState>>().currentState!.validate()) {
-  //     Get.find<MainContentAndFooterController>().clearCanvasAndHideTopWidget();
-  //     // start game
-  //     var settings = Map<String, dynamic>.from((Game.inst as PrivateGame).settings);
-  //     settings['custom_words'] = CustomWordsInput.proceededWords;
-  //     SocketIO.inst.socket.emit('start_private_game', settings);
-  //   }
-  // }
+  void startGame() {
+    if (playersByList.length < (Game.inst as PrivateGame).options['players']['min']) {
+      addMessage((Color color) => RequiredMinimumPlayersToStartMessage(
+            backgroundColor: color,
+          ));
+      return;
+    }
+    // gather settings, settings from dropdown and check button is saved in settings already
+    // now have left only the custom words
+    if (Get.find<GameSettingsController>().formKey.currentState!.validate()) {
+      SocketIO.inst.socket.emit('start_private_game', Game.inst.settings);
+    }
+  }
 
   // Map<String, dynamic> getDifferentSettingsFromDefault() {
   //   Map<String, dynamic> result = {};

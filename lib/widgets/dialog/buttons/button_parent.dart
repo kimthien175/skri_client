@@ -2,12 +2,12 @@ part of 'buttons.dart';
 
 class GameDialogButton extends ParentDataWidget<_ButtonParentData> {
   const GameDialogButton.okay(
-      {super.key, this.flex = 1.0, this.onTap = GameDialogButtonChild.defaultOnTap})
+      {super.key, this.flex = 1.0, this.onTap = _OKayButtonChild.defaultOnTap})
       : assert(flex > 0),
         super(child: const _OKayButtonChild());
 
   const GameDialogButton.yes(
-      {super.key, this.flex = 1.0, this.onTap = GameDialogButtonChild.defaultOnTap})
+      {super.key, this.flex = 1.0, this.onTap = _OKayButtonChild.defaultOnTap})
       : assert(flex > 0),
         super(child: const _YesButtonChild());
 

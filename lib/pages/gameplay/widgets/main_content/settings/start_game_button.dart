@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:skribbl_client/models/models.dart';
 import 'package:skribbl_client/widgets/widgets.dart';
 import 'dart:ui' as ui;
 
@@ -13,7 +14,7 @@ class StartGameButton extends StatelessWidget {
       Expanded(
           flex: 7,
           child: HoverButton(
-              onTap: () {},
+              onTap: (Game.inst as PrivateGame).startGame,
               color: const Color(0xff53e237),
               hoverColor: const Color(0xff38c41c),
               child: Text('start'.tr,
@@ -24,6 +25,7 @@ class StartGameButton extends StatelessWidget {
       Expanded(
           flex: 3,
           child: HoverButton(
+              onTap: Game.inst.copyLink,
               color: const Color(0xff2c8de7),
               hoverColor: const Color(0xff1671c5),
               child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [

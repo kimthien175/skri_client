@@ -7,13 +7,13 @@ import 'package:skribbl_client/pages/gameplay/widgets/draw_view/draw_view.dart';
 import 'package:get/get.dart';
 
 class DrawState extends GameState {
-  DrawState({required super.startedDate, required this.playerId, required this.word});
+  DrawState({required super.data});
 
   // DrawState.afterChooseWord({required this.startedAt, required this.playerId, required this.word}) {
   //   afterChooseWord();
   // }
-  String playerId;
-  String word;
+  String get playerId => data['player_id'];
+  String get word => data['word'];
 
   bool get isSpectator => playerId != MePlayer.inst.id;
 
@@ -92,5 +92,9 @@ class DrawState extends GameState {
   }
 
   @override
-  Future<void> end() async {}
+  Future<void> end(dynamic data) async {}
+
+  @override
+  // TODO: implement isExpired
+  bool get isExpired => throw UnimplementedError();
 }

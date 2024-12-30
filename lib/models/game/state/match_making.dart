@@ -1,13 +1,11 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/src/widgets/framework.dart';
 import 'package:skribbl_client/models/game/state/state.dart';
 
-class PickWordState extends GameState {
-  PickWordState({required super.data});
+class MatchMakingState extends GameState {
+  MatchMakingState({required super.data});
 
-  String get playerId => data['player_id'];
-  List<String>? get words => data['words'];
   @override
-  Future<void> end(dynamic data) {
+  Future<void> end(data) {
     // TODO: implement end
     throw UnimplementedError();
   }
@@ -20,11 +18,6 @@ class PickWordState extends GameState {
   @override
   // TODO: implement topWidget
   Widget get topWidget => throw UnimplementedError();
-
-  void chooseWord(String word) {
-    // Get.find<TopWidgetController>().controller.reverse();
-    // SocketIO.inst.socket.emit('choose_word', word);
-  }
 
   @override
   // TODO: implement isExpired

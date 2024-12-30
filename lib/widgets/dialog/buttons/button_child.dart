@@ -18,11 +18,16 @@ class _OKayButtonChild extends GameDialogButtonChild {
   const _OKayButtonChild();
   String get content => 'dialog_button_ok'.tr;
 
+  static Future<bool> defaultOnTap(Future<bool> Function() onQuit) async {
+    await onQuit();
+    return true;
+  }
+
   @override
   Widget build(BuildContext context) {
     return HoverButton(
         onTap: () {
-          GameDialog controller = OverlayWidget.of(context);
+          GameDialog controller = OverlayWidget.of<GameDialog>(context);
           GameDialogButton buttonParent =
               context.findAncestorWidgetOfExactType<GameDialogButton>()!;
 

@@ -40,7 +40,7 @@
     "message_room_owner_statement": "@room_owner is now the room owner!",
     "message_new_player_joined": "@player_name joined the room!",
     "message_player_leave": "@player_name left the room!",
-    "message_you_need_at_least_2_players": "You need at least 2 players to start the game!",
+    "message_you_need_at_least_2_players": "You need at least @min players to start the game!",
     "message_link_copied": "Copied room link to clipboard!",
     "message_player_won": "@playerName won with a score of @score!",
     "message_player_draw": "@playerName is drawing now!",
@@ -75,5 +75,7 @@
     "dialog_button_yes":"Yes",
     "dialog_button_no":"No",
     "dialog_content_kick_countdown":"You are on a kick countdown!",
+    "dialog_title_confirm_leave":"You're leaving the game",
+    "dialog_content_confirm_leave":"Are you sure?",
     "invite": "Invite"
 }

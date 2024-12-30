@@ -64,7 +64,7 @@ class TopWidgetController extends GetxController with GetTickerProviderStateMixi
     return contentController.forward();
   }
 
-  Future<void> hide() async {
+  Future<void> hideAll() async {
     await contentController.reverse();
     return backgroundController.reverse();
   }
