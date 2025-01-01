@@ -60,7 +60,7 @@ class PlayerCard extends StatelessWidget {
   Widget build(BuildContext context) => Obx(() {
         var inst = Game.inst;
         var lastIndex = inst.playersByList.length - 1;
-        var controller = Get.find<PlayerController>(tag: index.toString());
+        var controller = Get.find<PlayerController>(tag: info.id);
         return GestureDetector(
             onTap: showInfo,
             child: MouseRegion(

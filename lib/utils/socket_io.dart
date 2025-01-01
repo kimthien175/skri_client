@@ -1,16 +1,16 @@
-import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:skribbl_client/models/game/game.dart';
 import 'package:skribbl_client/models/game/state/pre_game.dart';
 
 import 'package:skribbl_client/utils/utils.dart';
-import 'package:get/get.dart';
-import 'package:skribbl_client/widgets/widgets.dart';
-import 'package:socket_io_client/socket_io_client.dart' as IO;
+import 'package:socket_io_client/socket_io_client.dart' as io;
+
+import '../pages/pages.dart';
 
 class SocketIO {
   SocketIO._internal() {
-    _socket = IO.io(
-        API.inst.uri, IO.OptionBuilder().setTransports(['websocket']).disableAutoConnect().build());
+    _socket = io.io(
+        API.inst.uri, io.OptionBuilder().setTransports(['websocket']).disableAutoConnect().build());
 
     _socket.on('start_private_game', (data) {
       var state = Game.inst.state.value;
@@ -28,13 +28,16 @@ class SocketIO {
     });
 
     _socket.on('player_join', (newPlayerEmit) {
+      var emit = newPlayerEmit[0];
       var inst = Game.inst;
-      var newPlayer = Player.fromJSON(newPlayerEmit['player']);
+      var newPlayer = Player.fromJSON(emit['players']);
       inst.playersByList.add(newPlayer);
       inst.playersByMap[newPlayer.id] = newPlayer;
+      Get.put(PlayerController(), tag: newPlayer.id);
 
-      inst.addMessage(
-          (color) => PlayerJoinMessage(data: newPlayerEmit['message'], backgroundColor: color));
+      inst.addMessage((color) => PlayerJoinMessage(data: emit['messages'], backgroundColor: color));
+
+      inst.roundWhiteList.add(emit['round_white_list']);
     });
 
     _socket.on('player_leave', onPlayerLeave);
@@ -52,11 +55,12 @@ class SocketIO {
     });
 
     _socket.on('change_settings', (setting) {
-      var entry = (setting as Map<String, dynamic>).entries.first;
-      var key = entry.key;
-      var value = entry.value;
+      print(setting);
+      // var entry = (setting as Map<String, dynamic>).entries.first;
+      // var key = entry.key;
+      // var value = entry.value;
 
-      (Game.inst as PrivateGame).settings[key] = value;
+      // (Game.inst as PrivateGame).settings[key] = value;
     });
 
     // _socket.on('choose_word', (chooseWordPkg) {
@@ -67,8 +71,8 @@ class SocketIO {
 
   static SocketIO get inst => _inst;
 
-  late final IO.Socket _socket;
-  IO.Socket get socket => _socket;
+  late final io.Socket _socket;
+  io.Socket get socket => _socket;
 
   // void connect() {
   //   _socket.onConnectError((data) {
@@ -120,7 +124,7 @@ class SocketIO {
 typedef SocketCallback = dynamic Function(dynamic data);
 
 class SessionEventHandlers {
-  SessionEventHandlers.initWithSocket({required IO.Socket socket}) {
+  SessionEventHandlers.initWithSocket({required io.Socket socket}) {
     // this.onConnect = onConnect ?? emptyOnConnect;
     // socket.onConnect((data) => this.onConnect(data));
 
@@ -181,29 +185,29 @@ class SessionEventHandlers {
   //   print(data);
   // }
 
-  dynamic defaultOnError(dynamic data) {
-    var socket = SocketIO.inst._socket;
-    // show error dialog, get to the main page on quit
+  // dynamic defaultOnError(dynamic data) {
+  //   var socket = SocketIO.inst._socket;
+  //   // show error dialog, get to the main page on quit
 
-    // clear stuff
-    LoadingOverlay.inst.hide();
-    socket.disconnect();
+  //   // clear stuff
+  //   LoadingOverlay.inst.hide();
+  //   socket.disconnect();
 
-    GameDialog.error(
-        content: Text(data.toString()),
-        buttons: RowRenderObjectWidget(children: [
-          GameDialogButton.okay(onTap: (quit) async {
-            // disconnect
-            socket.disconnect();
+  //   GameDialog.error(
+  //       content: Text(data.toString()),
+  //       buttons: RowRenderObjectWidget(children: [
+  //         GameDialogButton.okay(onTap: (quit) async {
+  //           // disconnect
+  //           socket.disconnect();
 
-            await quit();
+  //           await quit();
 
-            // out to home page
-            Get.safelyToNamed('/');
-            return true;
-          })
-        ])).showOnce();
-  }
+  //           // out to home page
+  //           Get.safelyToNamed('/');
+  //           return true;
+  //         })
+  //       ])).showOnce();
+  // }
 
   // late void Function(dynamic) onReconnect;
   // static emptyOnReconnect(data) {

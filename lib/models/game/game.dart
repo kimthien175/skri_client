@@ -39,6 +39,8 @@ class Game extends GetxController {
     settings = (data['settings'] as Map<String, dynamic>).obs;
 
     messages = Message.listFromJSON(data['messages']).obs;
+
+    currentRound = (data['current_round'] as int).obs;
   }
   static Game? _inst;
   static Game get inst => _inst!;
@@ -48,6 +50,8 @@ class Game extends GetxController {
 
   String get roomCode => data['code'];
   Map<String, dynamic> get system => data['system'];
+  List<dynamic> get roundWhiteList => data['round_white_list'];
+  late final RxInt currentRound;
 
   String get inviteLink => '${html.window.location.host}/?$roomCode';
 

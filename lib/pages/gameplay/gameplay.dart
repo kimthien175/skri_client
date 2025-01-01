@@ -128,14 +128,8 @@ class GameplayController extends GetxController {
   void onReady() {
     super.onReady();
 
-    var readyCallback = GameplayController.readyCallback;
-    if (readyCallback != null) {
-      readyCallback();
-      GameplayController.readyCallback = null;
-    }
+    Game.inst.state.value.start();
   }
-
-  static void Function()? readyCallback;
 }
 
 // TODO: test changes after replacing deprecated property

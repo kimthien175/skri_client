@@ -95,7 +95,7 @@ class GameSettingsWidget extends StatelessWidget {
             ],
           ));
 
-      return (game.hostPlayerId.value == MePlayer.inst.id)
+      return (game.hostPlayerId.value != MePlayer.inst.id)
           ? Stack(
               children: [
                 FocusTraversalGroup(
@@ -221,7 +221,7 @@ class CustomWordsInput extends StatelessWidget {
     var maxLength = fetchedRules['max_char'];
     var controller = Get.find<GameSettingsController>();
     return Obx(() {
-      if ((Game.inst as PrivateGame).hostPlayerId.value == MePlayer.inst.id) {
+      if ((Game.inst as PrivateGame).hostPlayerId.value != MePlayer.inst.id) {
         return const InputContainer();
       }
       return InputContainer(

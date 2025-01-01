@@ -13,8 +13,15 @@ class OverlayController extends GetxController {
   static Widget defaultChildBuilder() =>
       throw Exception('Provide value or override getter for subclass');
 
-  // OverlayWidget Function({required String tag, required Widget child}) get inheritedBuilder =>
-  //     OverlayWidget._internal;
+  static final Map<String, OverlayController> _cache = <String, OverlayController>{};
+
+  factory OverlayController.cache(
+      {required String tag, required OverlayController Function() builder}) {
+    var inst = _cache.putIfAbsent(tag, builder);
+    inst.cached = true;
+    return inst;
+  }
+  bool? cached;
 
   final Widget Function() widgetBuilder;
 
@@ -26,7 +33,7 @@ class OverlayController extends GetxController {
   Future<bool> show() async {
     if (_entry != null) return false;
 
-    Get.put(this, tag: hashCode.toString());
+    Get.put(this, tag: hashCode.toString(), permanent: cached ?? false);
 
     _entry = OverlayEntry(builder: (ct) => OverlayWidget(controller: this, child: widgetBuilder()));
 

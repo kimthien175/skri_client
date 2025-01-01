@@ -38,4 +38,6 @@ abstract class GameState {
   Widget get topWidget;
 
   bool get isExpired;
+
+  String get status => 'WAITING';
 }

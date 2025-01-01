@@ -38,16 +38,19 @@ class TopWidgetController extends GetxController with GetTickerProviderStateMixi
   late final Animation<Offset> offsetAnimation;
   late final Animation<double> backgroundOpactityAnimation;
 
+  static Duration get contentDuration => MainContent.animationDuration;
+  static Duration get backgroundDuration => MainContent.animationDuration;
+
   @override
   void onInit() {
     super.onInit();
     contentController = AnimationController(
-      duration: MainContent.animationDuration,
+      duration: TopWidgetController.contentDuration,
       vsync: this,
     );
 
     backgroundController = AnimationController(
-      duration: MainContent.animationDuration,
+      duration: TopWidgetController.backgroundDuration,
       vsync: this,
     );
 
@@ -59,9 +62,25 @@ class TopWidgetController extends GetxController with GetTickerProviderStateMixi
     backgroundOpactityAnimation = Tween(begin: 0.0, end: 1.0).animate(backgroundController);
   }
 
-  Future<void> show() async {
-    await backgroundController.forward();
-    return contentController.forward();
+  Future<void> show(Duration fromStartedDate) async {
+    if (fromStartedDate < TopWidgetController.backgroundDuration) {
+      await backgroundController.forward(
+          from: fromStartedDate / TopWidgetController.backgroundDuration);
+      await contentController.forward();
+      return;
+    }
+
+    if (fromStartedDate <
+        TopWidgetController.backgroundDuration + TopWidgetController.contentDuration) {
+      backgroundController.value = 1;
+      await contentController.forward(
+          from: (fromStartedDate - TopWidgetController.backgroundDuration) /
+              TopWidgetController.contentDuration);
+      return;
+    }
+
+    backgroundController.value = 1;
+    contentController.value = 1;
   }
 
   Future<void> hideAll() async {
@@ -75,4 +94,8 @@ class TopWidgetController extends GetxController with GetTickerProviderStateMixi
     backgroundController.dispose();
     super.onClose();
   }
+}
+
+extension DurationDivision on Duration {
+  double operator /(Duration other) => inMicroseconds / other.inMicroseconds;
 }

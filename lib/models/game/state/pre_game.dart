@@ -23,7 +23,8 @@ class PreGameState extends GameState {
 
   @override
   void start() {
-    Get.find<TopWidgetController>().show();
+    var difference = DateTime.now().difference(DateTime.parse(data['started_at']));
+    Get.find<TopWidgetController>().show(difference);
   }
 
   @override

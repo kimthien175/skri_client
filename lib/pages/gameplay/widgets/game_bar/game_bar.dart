@@ -23,13 +23,13 @@ class GameBar extends StatelessWidget {
               color: GameplayStyles.colorPlayerBGBase, borderRadius: GlobalStyles.borderRadius),
           child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
             const SizedBox(width: PlayerCard.width),
-            Text(
-              'WAITING'.tr,
-              style: const TextStyle(
-                  fontFamily: 'Inconsolata',
-                  fontVariations: [FontVariation.weight(700)],
-                  fontSize: 16),
-            ),
+            Obx(() => Text(
+                  Game.inst.state.value.status.tr,
+                  style: const TextStyle(
+                      fontFamily: 'Inconsolata',
+                      fontVariations: [FontVariation.weight(700)],
+                      fontSize: 16),
+                )),
             const SizedBox(width: GameChat.width)
           ])),
       const Positioned(top: -10, left: -8, child: GameClock()),
@@ -38,7 +38,7 @@ class GameBar extends StatelessWidget {
           top: 13,
           child: Obx(() => Text(
               "gamebar_round_display".trParams({
-                "currentRound": '1', //Game.inst.currentRound.value.toString(),
+                "currentRound": Game.inst.currentRound.value.toString(),
                 "rounds": Game.inst.settings['rounds'].toString()
               }),
               style: const TextStyle(

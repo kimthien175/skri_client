@@ -13,7 +13,7 @@ class PlayersListController extends GetxController {
     var players = Game.inst.playersByList;
     // init items controller
     for (int i = 0; i < players.length; i++) {
-      Get.put(PlayerController(), tag: i.toString());
+      Get.put(PlayerController(), tag: players[i].id);
     }
 
     // find winner
@@ -45,13 +45,12 @@ class PlayersList extends StatelessWidget {
   const PlayersList({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    List<PlayerCard> children = [];
-    var players = Game.inst.playersByList;
-    for (int i = 0; i < players.length; i++) {
-      children.add(PlayerCard(info: players[i], index: i));
-    }
-
-    return Column(children: children);
-  }
+  Widget build(BuildContext context) => Obx(() {
+        List<PlayerCard> children = [];
+        var players = Game.inst.playersByList;
+        for (int i = 0; i < players.length; i++) {
+          children.add(PlayerCard(info: players[i], index: i));
+        }
+        return Column(children: children);
+      });
 }

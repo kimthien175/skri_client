@@ -8,7 +8,34 @@ import 'package:get/get.dart';
 import '../../widgets/widgets.dart';
 
 class PrivateGame extends Game {
-  PrivateGame.internal({required super.data}) {
+  static load(Map<String, dynamic> roomResult) {
+    if (roomResult['success']) {
+      var data = roomResult['data'];
+
+      var me = MePlayer.inst;
+
+      //#region set up player
+      // set room owner name if empty
+      if (me.name.isEmpty) {
+        me.name = data['player']['name'];
+      }
+      me.id = data['player']['id'];
+      //#endregion
+
+      Game.inst = PrivateGame._internal(data: data['room']);
+
+      Get.to(() => const GameplayPage(),
+          binding: GameplayBinding(), transition: Transition.noTransition);
+    } else {
+      SocketIO.inst.socket.disconnect();
+
+      GameDialog.error(content: Text(roomResult['data'].toString())).show();
+    }
+
+    LoadingOverlay.inst.hide();
+  }
+
+  PrivateGame._internal({required super.data}) {
     hostPlayerId = (data['host_player_id'] as String).obs;
   }
 
@@ -28,21 +55,23 @@ class PrivateGame extends Game {
 
     var socket = SocketIO.inst.socket;
 
-    socket.once('connect_error', (data) {
+    socket.on('connect_error', (data) {
       SocketIO.inst.socket.disconnect();
 
-      GameDialog.error(
-          onQuit: (hide) async {
-            await hide();
+      OverlayController.cache(
+          tag: 'connect_error_dialog',
+          builder: () => GameDialog.error(
+              onQuit: (hide) async {
+                await hide();
 
-            if (Get.currentRoute != '/') {
-              Game.leave();
-            }
-            return true;
-          },
-          content: Builder(
-            builder: (context) => Text('dialog_content_no_server_connection'.tr),
-          )).showOnce();
+                if (Get.currentRoute != '/') {
+                  Game.leave();
+                }
+                return true;
+              },
+              content: Builder(
+                builder: (context) => Text('dialog_content_no_server_connection'.tr),
+              ))).showOnce();
 
       LoadingOverlay.inst.hide();
     });
@@ -56,47 +85,16 @@ class PrivateGame extends Game {
     _connect((data) {
       SocketIO.inst.socket.emitWithAck(
           'init_private_room', {'player': MePlayer.inst.toJSON(), 'lang': Get.locale!.toString()},
-          ack: (roomResult) {
-        if (roomResult['success']) {
-          var data = roomResult['data'];
-
-          var me = MePlayer.inst;
-
-          //#region set up player
-          // set room owner name if empty
-          if (me.name.isEmpty) {
-            me.name = data['player']['name'];
-          }
-          me.id = data['player']['id'];
-//#endregion
-
-          Game.inst = PrivateGame.internal(data: data['room']);
-
-          GameplayController.readyCallback = Game.inst.state.value.start;
-
-          Get.to(() => const GameplayPage(),
-              binding: GameplayBinding(), transition: Transition.noTransition);
-        } else {
-          SocketIO.inst.socket.disconnect();
-
-          GameDialog.error(content: Text(roomResult['data'].toString())).showOnce();
-        }
-
-        LoadingOverlay.inst.hide();
-      });
+          ack: PrivateGame.load);
     });
   }
 
   static void join(String code) {
     _connect((data) {
       // emit join private room
-      SocketIO.inst.socket.emitWithAck('join_private_room', {
-        'player': MePlayer.inst.toJSON(),
-        'code': code,
-        'lang': Get.locale!.toString()
-      }, ack: (roomResult) {
-        LoadingOverlay.inst.hide();
-      });
+      SocketIO.inst.socket.emitWithAck('join_private_room',
+          {'player': MePlayer.inst.toJSON(), 'code': code, 'lang': Get.locale!.toString()},
+          ack: PrivateGame.load);
     });
 
     // inst.eventHandlers.onConnect = (_) {

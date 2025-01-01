@@ -38,16 +38,8 @@ class GameDialog extends OverlayController with GetSingleTickerProviderStateMixi
       : title = Builder(builder: (context) => Text('dialog_title_error'.tr)),
         exitTap = false;
 
-  // factory GameDialog.cacheError({required dynamic error}) => GameDialog.cache(
-  //     tag: error.toString(), builder: () => GameDialog.error(content: Text(error.toString())));
-
   @override
   Widget Function() get widgetBuilder => () => const _Dialog();
-
-  // static final Map<String, GameDialog> _cache = <String, GameDialog>{};
-
-  // factory GameDialog.cache({required String tag, required GameDialog Function() builder}) =>
-  //     _cache.putIfAbsent(tag, builder);
 
   final Widget title;
   final Widget content;
@@ -220,6 +212,7 @@ class _CloseButtonState extends State<_CloseButton> with SingleTickerProviderSta
       if (key is KeyDownEvent) {
         if (key.logicalKey == LogicalKeyboardKey.enter) {
           var c = OverlayWidget.of<GameDialog>(context);
+          if (c.completer.isCompleted) return KeyEventResult.ignored;
           c.completer.complete(c.onQuit(c.hide));
           return KeyEventResult.handled;
         }
@@ -249,7 +242,10 @@ class _CloseButtonState extends State<_CloseButton> with SingleTickerProviderSta
         child: Focus(
             focusNode: focusNode,
             child: GestureDetector(
-                onTap: () => c.completer.complete(c.onQuit(c.hide)),
+                onTap: () {
+                  if (c.completer.isCompleted) return;
+                  c.completer.complete(c.onQuit(c.hide));
+                },
                 child: MouseRegion(
                     onEnter: (_) => controller.forward(),
                     onExit: (_) => controller.reverse(),
