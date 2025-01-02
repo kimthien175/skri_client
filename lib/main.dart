@@ -19,7 +19,7 @@ void main() {
     theme: ThemeData(fontFamily: 'Nunito-var'),
     // Locales
     translationsKeys: AppTranslation.translations,
-    locale: const Locale('vi', 'VN'), //Get.deviceLocale,
+    locale: Get.deviceLocale,
     fallbackLocale: const Locale('en', 'US'),
     debugShowCheckedModeBanner: false,
     title: 'Material App',
@@ -36,7 +36,7 @@ void main() {
         page: () => const CreditsPage(),
       ),
       //   GetPage(name: '/gameplay', page: () => const GameplayPage(), binding: GameplayBinding()),
-      GetPage(name: '/test', page: () => const TestPage())
+      GetPage(name: '/test', page: () => TestPage())
     ],
     navigatorObservers: [NavObserver],
   ));

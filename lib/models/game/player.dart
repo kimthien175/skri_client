@@ -9,6 +9,7 @@ class Player {
   final AvatarModel avatarModel;
   String name;
   String get nameForCard => name;
+  bool? isMuted;
 
   // bool get isOwner {
   //   var inst = Game.inst;

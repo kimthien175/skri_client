@@ -63,28 +63,29 @@ class _DropdownItemController<T> extends GetxController {
     var parent = list.parent;
     if (parent.value.value != item) {
       // change color of current item
-      var oldItemController = parent.value.value.controller;
+      var oldItemController = parent.value.controller;
 
-      parent.value.value = item;
+      // ignore: invalid_use_of_protected_member
+      parent.setState(() {
+        parent.value = item;
+      });
+      updateColor();
+
+      oldItemController.updateColor();
 
       var onChange = parent.widget.onChange;
       if (onChange != null) {
         onChange(item.value);
       }
-
-      updateColor();
-      oldItemController.updateColor();
     }
   }
 
   Color get defaultColor => Colors.white;
 
   void updateColor() {
-    backgroundColor.value = (list.parent.value.value == item)
+    backgroundColor.value = list.parent.value == item
         ? Colors.blue.shade100
-        : (focusNode.hasFocus)
-            ? Colors.amber.shade300
-            : defaultColor;
+        : (focusNode.hasFocus ? Colors.amber.shade300 : defaultColor);
   }
 
   void onEnter(PointerEnterEvent event) {

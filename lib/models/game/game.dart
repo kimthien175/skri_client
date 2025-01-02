@@ -23,7 +23,7 @@ import 'state/state.dart';
 // TODO: lost connection and try to continue the game again
 class Game extends GetxController {
   Game({required this.data}) {
-    state = GameState.fromJSON(data['state']).obs;
+    state = GameState.fromJSON(data['states'][0]).obs;
 
     futureStates = Queue<GameState>();
     for (var jsonState in data['future_states']) {

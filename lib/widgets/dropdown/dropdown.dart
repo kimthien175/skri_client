@@ -47,9 +47,21 @@ class _DropdownState<T> extends State<Dropdown<T>> with SingleTickerProviderStat
   late AnimationController controller;
   late FocusNode focusNode;
   GlobalKey key = GlobalKey();
-  late Rx<DropdownItem<T>> value;
+  late DropdownItem<T> value;
 
   late _DropdownList menu;
+
+  @override
+  void didUpdateWidget(Dropdown<T> oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.value != widget.value) {
+      if (widget.value == null) {
+        value = widget.items.first;
+      } else {
+        value = widget.items.firstWhere((e) => e.value == widget.value);
+      }
+    }
+  }
 
   @override
   void initState() {
@@ -68,9 +80,9 @@ class _DropdownState<T> extends State<Dropdown<T>> with SingleTickerProviderStat
     );
 
     if (widget.value == null) {
-      value = widget.items.first.obs;
+      value = widget.items.first;
     } else {
-      value = widget.items.firstWhere((e) => e.value == widget.value).obs;
+      value = widget.items.firstWhere((e) => e.value == widget.value);
     }
 
     menu = _DropdownList<T>(parent: this);
@@ -109,7 +121,7 @@ class _DropdownState<T> extends State<Dropdown<T>> with SingleTickerProviderStat
                 width: widget.width,
                 focusNode: focusNode,
                 child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                  Obx(() => value.value.child),
+                  value.child,
                   RotationTransition(
                       turns: controller.drive(Tween<double>(begin: 0.0, end: -0.5)),
                       child: ColorTransition(

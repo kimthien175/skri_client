@@ -4,17 +4,44 @@ import 'package:skribbl_client/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class PlayerController extends GetxController with GetSingleTickerProviderStateMixin {
+class PlayerController extends GetxController with GetTickerProviderStateMixin {
   late final AnimationController animController =
       AnimationController(duration: AnimatedButton.duration, vsync: this);
   late final Animation<double> animation =
       CurvedAnimation(parent: animController, curve: Curves.linear)
           .drive(Tween<double>(begin: 1.0, end: 1.1));
 
+  late final GlobalKey anchorKey;
+  late final GameTooltip tooltip;
+  RxString tooltipContent = ''.obs;
+
+  late final AnimationController tooltipController =
+      AnimationController(duration: AnimatedButton.duration, vsync: this);
+
+  @override
+  void onInit() {
+    super.onInit();
+    anchorKey = GlobalKey();
+    tooltip = GameTooltip(
+        anchorKey: anchorKey,
+        position: GameTooltipPosition.centerRight(),
+        childBuilder: () => Obx(() => Text(tooltipContent.value)),
+        controller: tooltipController);
+  }
+
   @override
   void onClose() {
     animController.dispose();
+    tooltipController.dispose();
     super.onClose();
+  }
+
+  void showMessage(String text) {
+    tooltipContent.value = text;
+    tooltip
+        .show()
+        .then((_) => Future.delayed(const Duration(seconds: 2)))
+        .then((_) => tooltip.hide());
   }
 }
 
@@ -62,6 +89,7 @@ class PlayerCard extends StatelessWidget {
         var lastIndex = inst.playersByList.length - 1;
         var controller = Get.find<PlayerController>(tag: info.id);
         return GestureDetector(
+            key: controller.anchorKey,
             onTap: showInfo,
             child: MouseRegion(
                 onEnter: (_) {

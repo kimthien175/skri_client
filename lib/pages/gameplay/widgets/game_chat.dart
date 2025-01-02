@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:skribbl_client/utils/utils.dart';
 
+import 'players_list/player_card.dart';
+
 // TODO: LAZY LOADING OLD MSG
 class GameChatController extends GetxController {
   late final ScrollController _scrollController;
@@ -47,6 +49,7 @@ class GameChatController extends GetxController {
               data: {'player_name': MePlayer.inst.name, 'text': text},
               backgroundColor: color,
             ));
+        Get.find<PlayerController>(tag: MePlayer.inst.id).showMessage(text);
         // emit to server
         SocketIO.inst.socket.emit('player_chat', text);
       }

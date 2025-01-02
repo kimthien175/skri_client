@@ -22,6 +22,15 @@ class _GameCheckboxState extends State<GameCheckbox> with SingleTickerProviderSt
   late bool value = widget.value;
 
   @override
+  void didUpdateWidget(covariant GameCheckbox oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (value != widget.value) {
+      value = !value;
+      controller.toggle();
+    }
+  }
+
+  @override
   void initState() {
     super.initState();
 
@@ -35,8 +44,8 @@ class _GameCheckboxState extends State<GameCheckbox> with SingleTickerProviderSt
         return KeyEventResult.ignored;
       },
     );
-    controller = AnimationController(
-        vsync: this, duration: AnimatedButton.duration); //, value: value ? 1 : 0);
+    controller =
+        AnimationController(vsync: this, duration: AnimatedButton.duration, value: value ? 1 : 0);
     animation = CurvedAnimation(parent: controller, curve: Curves.easeInOut);
   }
 

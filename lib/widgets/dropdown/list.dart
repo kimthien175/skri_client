@@ -48,7 +48,7 @@ class _DropdownList<T> extends PositionedOverlayController<OverlayWidgetPosition
   Future<bool> show() async {
     if (await super.show()) {
       // current value get focused
-      parent.value.value.controller.focusNode.requestFocus();
+      parent.value.controller.focusNode.requestFocus();
       await parent.controller.forward();
 
       return true;
