@@ -55,7 +55,7 @@ class PrivateGame extends Game {
 
     var socket = SocketIO.inst.socket;
 
-    socket.on('connect_error', (data) {
+    socket.once('connect_error', (data) {
       SocketIO.inst.socket.disconnect();
 
       OverlayController.cache(
@@ -71,7 +71,7 @@ class PrivateGame extends Game {
               },
               content: Builder(
                 builder: (context) => Text('dialog_content_no_server_connection'.tr),
-              ))).showOnce();
+              ))).show();
 
       LoadingOverlay.inst.hide();
     });

@@ -77,5 +77,11 @@
     "dialog_content_kick_countdown":"You are on a kick countdown!",
     "dialog_title_confirm_leave":"You're leaving the game",
     "dialog_content_confirm_leave":"Are you sure?",
-    "invite": "Invite"
+    "invite": "Invite",
+    "report_form_title": "Please select the reasons for your report",
+
+    "report_form_reason_inappropriate": "Inappropriate Messages / Drawings",
+    "report_form_reason_spam":"Spam",
+    "report_form_reason_cheating":"Botting / Cheating",
+    "you_reported": "You reported"
 }

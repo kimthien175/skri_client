@@ -1,12 +1,14 @@
 part of 'buttons.dart';
 
 class RowRenderObjectWidget extends MultiChildRenderObjectWidget {
-  const RowRenderObjectWidget({required super.children, this.gap = 10});
+  const RowRenderObjectWidget({super.key, required List<GameDialogButton> children, this.gap = 10})
+      : super(children: children);
   // : assert(children.length > 1 || gap == 0, 'If children.length <= 1, gap must be 0');
   final double gap;
   @override
   RenderObject createRenderObject(BuildContext context) => _RowRenderObject(gap: gap);
   @override
+  // ignore: library_private_types_in_public_api
   void updateRenderObject(BuildContext context, _RowRenderObject renderObject) {
     renderObject.gap = gap;
   }

@@ -21,10 +21,12 @@ class GameDialog extends OverlayController with GetSingleTickerProviderStateMixi
   /// `hide` parameter for `onQuit` is default to true for returning
   GameDialog(
       {required this.title,
-      required this.content,
+      required Widget content,
       this.exitTap = true,
-      this.buttons,
-      this.onQuit = GameDialog.onQuitDefault});
+      RowRenderObjectWidget? buttons,
+      this.onQuit = GameDialog.onQuitDefault})
+      : content = content.obs,
+        buttons = buttons.obs;
 
   static Future<bool> onQuitDefault(Future<bool> Function() hide) async {
     await hide();
@@ -32,17 +34,20 @@ class GameDialog extends OverlayController with GetSingleTickerProviderStateMixi
   }
 
   GameDialog.error(
-      {required this.content,
-      this.buttons = const RowRenderObjectWidget(children: [GameDialogButton.okay()]),
+      {required Widget content,
+      RowRenderObjectWidget buttons =
+          const RowRenderObjectWidget(children: [GameDialogButton.okay()]),
       this.onQuit = GameDialog.onQuitDefault})
       : title = Builder(builder: (context) => Text('dialog_title_error'.tr)),
-        exitTap = false;
+        exitTap = false,
+        content = content.obs,
+        buttons = buttons.obs;
 
   @override
   Widget Function() get widgetBuilder => () => const _Dialog();
 
   final Widget title;
-  final Widget content;
+  final Rx<Widget> content;
 
   final bool exitTap;
 
@@ -72,7 +77,7 @@ class GameDialog extends OverlayController with GetSingleTickerProviderStateMixi
   // layout null, buttons length ==1
   // layout != null, buttons length >1
   // final GameDialogButtonsLayout Function() layout;
-  final RowRenderObjectWidget? buttons;
+  final Rx<RowRenderObjectWidget?> buttons;
 
   @override
   void onClose() {
@@ -95,19 +100,37 @@ class GameDialog extends OverlayController with GetSingleTickerProviderStateMixi
 
   @override
   Future<bool> show() async {
+    if (isShowing) return false;
+    completer = Completer<bool>();
     if (await super.show()) {
       await animController.forward();
       focusNode.requestFocus();
-      completer = Completer();
+
       return completer.future;
     }
-    throw Exception('dialog failed');
+    return false;
   }
 
   @override
   Future<bool> hide() async {
     focusNode.unfocus();
     await animController.reverse();
+    return super.hide();
+  }
+
+  Future<bool> showInstantly() async {
+    completer = Completer<bool>();
+    if (await super.show()) {
+      animController.value = 1;
+      focusNode.requestFocus();
+
+      return completer.future;
+    }
+    throw Exception('dialog failed');
+  }
+
+  Future<bool> hideInstantly() async {
+    focusNode.unfocus();
     return super.hide();
   }
 
@@ -127,16 +150,16 @@ class _Dialog extends StatelessWidget {
           decoration: const BoxDecoration(
               color: Color.fromRGBO(12, 44, 150, 0.75),
               borderRadius: BorderRadius.all(Radius.circular(10))),
-          child: DialogRenderObjectWidget(
-            children: [
-              const _Title(),
-              Container(
-                  alignment: Alignment.center,
-                  constraints: const BoxConstraints(minHeight: 100),
-                  child: c.content),
-              if (c.buttons != null) c.buttons!
-            ],
-          )),
+          child: Obx(() => DialogRenderObjectWidget(
+                children: [
+                  const _Title(),
+                  Container(
+                      alignment: Alignment.center,
+                      constraints: const BoxConstraints(minHeight: 100),
+                      child: c.content.value),
+                  if (c.buttons.value != null) c.buttons.value!
+                ],
+              ))),
       const _CloseButton()
     ]);
 
@@ -160,7 +183,7 @@ class _Dialog extends StatelessWidget {
     if (c.exitTap) {
       dialog = TapRegion(
           onTapOutside: (event) {
-            c.onQuit(c.hide);
+            c.completer.complete(c.onQuit(c.hide));
           },
           child: dialog);
     }

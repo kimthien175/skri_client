@@ -1,6 +1,6 @@
-library overlay;
-
 export 'loading.dart';
+
+import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -18,22 +18,22 @@ class OverlayController extends GetxController {
   factory OverlayController.cache(
       {required String tag, required OverlayController Function() builder}) {
     var inst = _cache.putIfAbsent(tag, builder);
-    inst.cached = true;
+    inst.cachedTag = tag;
     return inst;
   }
-  bool? cached;
+  String? cachedTag;
 
   final Widget Function() widgetBuilder;
 
   OverlayEntry? _entry;
   bool get isShowing => _entry != null;
 
-  String get tag => hashCode.toString();
+  String get tag => cachedTag ?? hashCode.toString();
 
   Future<bool> show() async {
     if (_entry != null) return false;
 
-    Get.put(this, tag: hashCode.toString(), permanent: cached ?? false);
+    Get.put(this, tag: tag, permanent: cachedTag != null);
 
     _entry = OverlayEntry(builder: (ct) => OverlayWidget(controller: this, child: widgetBuilder()));
 
@@ -51,13 +51,19 @@ class OverlayController extends GetxController {
     _entry?.dispose();
     _entry = null;
 
+    if (cachedTag == null) {
+      Get.delete<OverlayController>(tag: tag);
+    }
+
     return true;
   }
 
-  Future<bool> showOnce() async {
-    if (isShowing) return false;
-    return show();
-  }
+  // Future<void> showOnce({void Function(bool value)? onDone}) async {
+  //   assert(cachedTag != null);
+  //   if (isShowing) return;
+  //   var result = await show();
+  //   if (onDone != null) onDone(result);
+  // }
 }
 
 class OverlayWidget extends InheritedWidget {

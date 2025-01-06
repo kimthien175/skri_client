@@ -14,8 +14,8 @@ abstract class GameDialogButtonChild extends StatelessWidget {
   // final OnTapCallback onTap;
 }
 
-class _OKayButtonChild extends GameDialogButtonChild {
-  const _OKayButtonChild();
+class OKayDialogButtonChild extends GameDialogButtonChild {
+  const OKayDialogButtonChild({super.key});
   String get content => 'dialog_button_ok'.tr;
 
   static Future<bool> defaultOnTap(Future<bool> Function() onQuit) async {
@@ -44,7 +44,7 @@ class _OKayButtonChild extends GameDialogButtonChild {
   }
 }
 
-class _NoButtonChild extends _OKayButtonChild {
+class _NoButtonChild extends OKayDialogButtonChild {
   const _NoButtonChild(); //{super.onTap = _NoButtonChild.defaultOnTap});
 
   static Future<bool> defaultOnTap(Future<bool> Function() onQuit) async {
@@ -56,7 +56,7 @@ class _NoButtonChild extends _OKayButtonChild {
   String get content => 'dialog_button_no'.tr;
 }
 
-class _YesButtonChild extends _OKayButtonChild {
+class _YesButtonChild extends OKayDialogButtonChild {
   const _YesButtonChild(); //{super.key, super.onTap});
 
   @override

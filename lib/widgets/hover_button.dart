@@ -4,10 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:skribbl_client/widgets/animated_button/animated_button.dart';
 import 'package:skribbl_client/widgets/color_transition.dart';
 
-extension IsFocusNested on Widget {
-  bool get hasFocusNested => false;
-}
-
 class HoverButton extends StatefulWidget {
   const HoverButton(
       {super.key,
@@ -18,7 +14,8 @@ class HoverButton extends StatefulWidget {
       this.borderRadius = GlobalStyles.borderRadius,
       this.height,
       this.width,
-      this.constraints});
+      this.constraints,
+      this.isDisabled = false});
 
   final Widget? child;
   final Color color;
@@ -30,11 +27,10 @@ class HoverButton extends StatefulWidget {
   final double? height;
 
   final BoxConstraints? constraints;
+  final bool isDisabled;
 
   @override
   State<HoverButton> createState() => _HoverButtonState();
-
-  bool get hasFocusNested => true;
 }
 
 class _HoverButtonState extends State<HoverButton> with SingleTickerProviderStateMixin {
@@ -47,20 +43,18 @@ class _HoverButtonState extends State<HoverButton> with SingleTickerProviderStat
   void initState() {
     super.initState();
 
-    focusNode = FocusNode(
-      onKeyEvent: (node, event) {
-        if (event is KeyDownEvent) {
-          if (event.logicalKey == LogicalKeyboardKey.enter) {
-            if (widget.onTap != null) {
-              widget.onTap!();
-              return KeyEventResult.handled;
-            }
+    focusNode = FocusNode(onKeyEvent: (node, event) {
+      if (event is KeyDownEvent) {
+        if (event.logicalKey == LogicalKeyboardKey.enter) {
+          if (widget.onTap != null) {
+            widget.onTap!();
+            return KeyEventResult.handled;
           }
         }
+      }
 
-        return KeyEventResult.ignored;
-      },
-    );
+      return KeyEventResult.ignored;
+    });
 
     focusNode.addListener(() {
       if (isHovered) return;
@@ -81,6 +75,26 @@ class _HoverButtonState extends State<HoverButton> with SingleTickerProviderStat
 
   @override
   Widget build(BuildContext context) {
+    if (widget.isDisabled) {
+      return Container(
+          constraints: widget.constraints,
+          height: widget.height,
+          width: widget.width,
+          padding: widget.height == null && widget.width == null
+              ? const EdgeInsets.symmetric(horizontal: 5.85)
+              : null,
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+              color: Color.alphaBlend(Colors.black.withOpacity(0.2), widget.color),
+              borderRadius: widget.borderRadius),
+          child: DefaultTextStyle.merge(
+              style: TextStyle(
+                  color: Color.alphaBlend(Colors.black.withOpacity(0.2), PanelStyles.textColor),
+                  fontVariations: [FontVariation.weight(800)],
+                  shadows: [Shadow(color: Color(0x35000000), offset: Offset(2.5, 2.5))]),
+              child: widget.child ?? Container()));
+    }
+
     return Focus(
         focusNode: focusNode,
         child: MouseRegion(

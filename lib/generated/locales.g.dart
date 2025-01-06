@@ -102,6 +102,12 @@ class LocaleKeys {
   static const dialog_title_confirm_leave = 'dialog_title_confirm_leave';
   static const dialog_content_confirm_leave = 'dialog_content_confirm_leave';
   static const invite = 'invite';
+  static const report_form_title = 'report_form_title';
+  static const report_form_reason_inappropriate =
+      'report_form_reason_inappropriate';
+  static const report_form_reason_spam = 'report_form_reason_spam';
+  static const report_form_reason_cheating = 'report_form_reason_cheating';
+  static const you_reported = 'you_reported';
   static const You = 'You';
   static const Normal = 'Normal';
   static const Hidden = 'Hidden';
@@ -119,6 +125,12 @@ class LocaleKeys {
   static const Undo = 'Undo';
   static const Clear = 'Clear';
   static const Swap = 'Swap';
+  static const Kick = 'Kick';
+  static const Ban = 'Ban';
+  static const Votekick = 'Votekick';
+  static const Mute = 'Mute';
+  static const Unmute = 'Unmute';
+  static const Report = 'Report';
 }
 
 class Locales {
@@ -225,6 +237,11 @@ class Locales {
     'dialog_title_confirm_leave': 'You\'re leaving the game',
     'dialog_content_confirm_leave': 'Are you sure?',
     'invite': 'Invite',
+    'report_form_title': 'Please select the reasons for your report',
+    'report_form_reason_inappropriate': 'Inappropriate Messages / Drawings',
+    'report_form_reason_spam': 'Spam',
+    'report_form_reason_cheating': 'Botting / Cheating',
+    'you_reported': 'You reported',
   };
   static const vi_VN = {
     'displayName': 'Tiếng Việt',
@@ -342,5 +359,16 @@ class Locales {
     'dialog_title_confirm_leave': 'Bạn đang thoát trò chơi',
     'dialog_content_confirm_leave': 'Bạn chắc chứ?',
     'invite': 'Mời',
+    'Kick': 'Đuổi',
+    'Ban': 'Cấm chơi',
+    'Votekick': 'Bỏ phiếu đuổi',
+    'Mute': 'Im lặng',
+    'Unmute': '',
+    'Report': 'Báo cáo',
+    'report_form_title': 'Vui lòng chọn lý do báo cáo',
+    'report_form_reason_inappropriate': 'Tin nhắn / Hình vẽ không chuẩn mực',
+    'report_form_reason_spam': 'Spam',
+    'report_form_reason_cheating': 'Dùng bot / Gian lận',
+    'you_reported': 'Bạn đã báo cáo',
   };
 }

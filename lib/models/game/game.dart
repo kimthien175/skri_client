@@ -18,6 +18,7 @@ import 'package:skribbl_client/widgets/dialog/dialog.dart';
 // ignore: avoid_web_libraries_in_flutter
 import 'dart:html' as html;
 
+import '../../widgets/widgets.dart';
 import 'state/state.dart';
 
 // TODO: lost connection and try to continue the game again
@@ -76,17 +77,18 @@ class Game extends GetxController {
 
   static bool get isEmpty => _inst == null;
 
-  void confirmLeave() async {
-    var shouldPop = await GameDialog(
-        title: Text("dialog_title_confirm_leave".tr),
-        content: Text('dialog_content_confirm_leave'.tr),
-        exitTap: true,
-        buttons: const RowRenderObjectWidget(
-            children: [GameDialogButton.yes(), GameDialogButton.no()])).showOnce();
+  void confirmLeave() {
+    var dialog = OverlayController.cache(
+        tag: 'confirm_leave',
+        builder: () => GameDialog(
+            title: Text("dialog_title_confirm_leave".tr),
+            content: Text('dialog_content_confirm_leave'.tr),
+            buttons: const RowRenderObjectWidget(
+                children: [GameDialogButton.yes(), GameDialogButton.no()])));
 
-    if (shouldPop) {
-      leave();
-    }
+    dialog.show().then((value) {
+      if (value) leave();
+    });
   }
 
   static leave() {

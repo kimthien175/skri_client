@@ -94,5 +94,17 @@
     "dialog_content_kick_countdown": "Bạn còn trong thời gian bị đá khỏi phòng!",
     "dialog_title_confirm_leave":"Bạn đang thoát trò chơi",
     "dialog_content_confirm_leave":"Bạn chắc chứ?",
-    "invite": "Mời"
+    "invite": "Mời",
+    "Kick":"Đuổi",
+    "Ban":"Cấm chơi",
+    "Votekick":"Bỏ phiếu đuổi",
+    "Mute":"Im lặng",
+    "Unmute":"",
+    "Report": "Báo cáo" ,
+    "report_form_title": "Vui lòng chọn lý do báo cáo",
+
+    "report_form_reason_inappropriate": "Tin nhắn / Hình vẽ không chuẩn mực",
+    "report_form_reason_spam":"Spam",
+    "report_form_reason_cheating":"Dùng bot / Gian lận",
+    "you_reported":"Bạn đã báo cáo"
 }

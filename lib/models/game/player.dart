@@ -10,6 +10,7 @@ class Player {
   String name;
   String get nameForCard => name;
   bool? isMuted;
+  bool? isReported;
 
   // bool get isOwner {
   //   var inst = Game.inst;
@@ -39,6 +40,10 @@ class Player {
 
     return players;
   }
+
+  Map<String, dynamic> toJSON() {
+    return {'name': name, 'avatar': avatarModel.toJSON(), 'id': id};
+  }
 }
 
 class MePlayer extends Player {
@@ -57,8 +62,4 @@ class MePlayer extends Player {
 
   @override
   String get nameForCard => '$name (${'You'.tr})';
-
-  Map<String, dynamic> toJSON() {
-    return {'name': name, 'avatar': avatarModel.toJSON(), 'id': id};
-  }
 }

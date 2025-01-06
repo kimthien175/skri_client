@@ -5,8 +5,12 @@ class API {
   static final API _instance = API._internal();
   static API get inst => _instance;
   final client = Client();
-  final String uri =  'http://127.0.0.1:4000/';
+  final String uri = 'http://127.0.0.1:4000/';
   Future<Response> get(String smt) async {
     return client.get(Uri.parse('$uri$smt'));
+  }
+
+  Future<Response> post(String path, dynamic data) async {
+    return client.post(Uri.parse('$uri$path'), body: data);
   }
 }
