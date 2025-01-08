@@ -1,4 +1,4 @@
-library dialog;
+library;
 
 export 'buttons/buttons.dart';
 export 'layout.dart';

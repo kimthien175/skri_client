@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:skribbl_client/models/gif_manager.dart';
+import 'package:skribbl_client/utils/socket_io.dart';
 
 import 'overlay/loading.dart';
 
@@ -35,7 +36,7 @@ class ResourcesController extends GetxController {
   static ResourcesController get inst => _inst;
 
   Future<void> load() async {
-    await Future.wait([GifManager.inst.loadResources()]);
+    await Future.wait([GifManager.inst.loadResources(), SocketIO.initSocket()]);
 
     for (int i = 0; i < onDone.length; i++) {
       onDone[i]();

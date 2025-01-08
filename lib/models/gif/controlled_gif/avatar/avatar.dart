@@ -1,4 +1,4 @@
-library avatar;
+library;
 
 export 'builder.dart';
 

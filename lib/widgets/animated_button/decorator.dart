@@ -1,4 +1,4 @@
-library animated_button_decorator;
+library;
 
 export 'decorators/tooltip.dart';
 export 'decorators/opacity.dart';

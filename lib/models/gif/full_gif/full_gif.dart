@@ -1,7 +1,8 @@
-library full_gif;
+library;
 
 export 'custom_painter.dart';
 
+import 'package:get/get.dart';
 import 'package:skribbl_client/models/models.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -47,7 +48,10 @@ class FullGifBuilder extends GifBuilder<FullGifModel> {
   @override
   GifBuilder<GifModel> init({Color? color, double? width, double? height}) {
     this.color = color;
-    widget = _origin(width: width ?? model.width, height: height ?? model.height);
+    widget = Obx(() => CustomPaint(
+        painter: model.getCustomPainter(
+            ControlledGifBuilder.controller.currentFrameIndex.value, Paint()),
+        size: Size(width ?? model.width, height ?? model.height)));
     return this;
   }
 
@@ -58,20 +62,23 @@ class FullGifBuilder extends GifBuilder<FullGifModel> {
       double? height,
       double? width,
       FilterQuality filterQuality = FilterQuality.none}) {
-    var finalHeight = height ?? model.height;
-    var finalWidth = width ?? model.width;
+    var size = Size(width ?? model.width, height ?? model.height);
     this.color = color;
-    widget = Stack(clipBehavior: Clip.none, children: [
-      Transform.translate(
-          offset: info.offset,
-          child: Image.asset(model.path,
-              color: Colors.black.withOpacity(info.opacity),
-              filterQuality: filterQuality,
-              fit: BoxFit.contain,
-              width: finalWidth,
-              height: finalHeight)),
-      _origin(filterQuality: filterQuality, width: finalWidth, height: finalHeight)
-    ]);
+    widget = Obx(() => Stack(clipBehavior: Clip.none, children: [
+          Transform.translate(
+              offset: info.offset,
+              child: CustomPaint(
+                  painter: model.getCustomPainter(
+                      ControlledGifBuilder.controller.currentFrameIndex.value,
+                      Paint()
+                        ..colorFilter = ColorFilter.mode(
+                            Color.fromRGBO(0, 0, 0, info.opacity), BlendMode.srcIn)),
+                  size: size)),
+          CustomPaint(
+              painter: model.getCustomPainter(
+                  ControlledGifBuilder.controller.currentFrameIndex.value, Paint()),
+              size: size)
+        ]));
     return this;
   }
 
@@ -81,12 +88,12 @@ class FullGifBuilder extends GifBuilder<FullGifModel> {
     return this;
   }
 
-  Widget _origin(
-          {FilterQuality filterQuality = FilterQuality.none, double? width, double? height}) =>
-      Image.asset(model.path,
-          fit: BoxFit.contain,
-          color: color,
-          filterQuality: filterQuality,
-          width: width,
-          height: height);
+  // Widget _origin(
+  //         {FilterQuality filterQuality = FilterQuality.none, double? width, double? height}) =>
+  //     Image.asset(model.path,
+  //         fit: BoxFit.contain,
+  //         color: color,
+  //         filterQuality: filterQuality,
+  //         width: width,
+  //         height: height);
 }

@@ -1,4 +1,4 @@
-library game_play_main_content_footer;
+library;
 
 export 'top_widget.dart';
 

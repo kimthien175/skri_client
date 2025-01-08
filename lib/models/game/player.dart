@@ -11,6 +11,7 @@ class Player {
   String get nameForCard => name;
   bool? isMuted;
   bool? isReported;
+  bool? isKickVoted;
 
   // bool get isOwner {
   //   var inst = Game.inst;

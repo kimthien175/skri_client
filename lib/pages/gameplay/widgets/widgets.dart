@@ -1,4 +1,4 @@
-library gameplay_widgets;
+library;
 
 export 'players_list/players_list.dart';
 export 'main_content/main_content.dart';

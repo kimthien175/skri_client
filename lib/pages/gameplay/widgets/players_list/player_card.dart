@@ -4,6 +4,8 @@ import 'package:skribbl_client/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import 'player_card/info.dart';
+
 class PlayerController extends GetxController with GetTickerProviderStateMixin {
   late final AnimationController animController =
       AnimationController(duration: AnimatedButton.duration, vsync: this);
@@ -33,6 +35,7 @@ class PlayerController extends GetxController with GetTickerProviderStateMixin {
   void onClose() {
     animController.dispose();
     tooltipController.dispose();
+    Get.delete<OverlayController>(tag: tooltip.tag);
     super.onClose();
   }
 
@@ -54,33 +57,7 @@ class PlayerCard extends StatelessWidget {
 
   // TODO: DIALOG CONTENT DIFFERENT DEPENDS ON STATE
   void showInfo() {
-    GameDialog(
-        exitTap: true,
-        title: Builder(builder: (_) => Text(info.nameForCard)),
-        content: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            info.avatarModel.builder.init().fit(width: 150),
-            Column(
-              children: [
-                Text('invite_your_friends'.tr, style: const TextStyle(
-                    fontSize: 19.5,
-                    //    color: Colors.white,
-                    fontVariations: [FontVariation.weight(500)])),
-                const SizedBox(height: 7.5),
-                HoverButton(
-                    // TODO: WHEN GAME LOGIC DONE, UNCOMMENT THIS
-                    //onTap: Game.inst.copyLink,
-                    height: 34.5,
-                    width: 200,
-                    child: Text(
-                      'click_to_copy_invite'.tr,
-                      style: const TextStyle(fontSize: 15),
-                    ))
-              ],
-            )
-          ],
-        )).showOnce();
+    PlayerInfoDialog.factory(info).show();
   }
 
   @override
@@ -119,14 +96,12 @@ class PlayerCard extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(info.nameForCard,
-                              style: const TextStyle(
+                              style: TextStyle(
                                   fontSize: 14,
                                   fontVariations: [FontVariation.weight(800)],
-                                  color:
-                                      //info.id == MePlayer.inst.id
-                                      //     ? GameplayStyles.colorPlayerMe
-                                      //     :
-                                      Colors.black,
+                                  color: info.id == MePlayer.inst.id
+                                      ? GameplayStyles.colorPlayerMe
+                                      : Colors.black,
                                   height: 1.1)),
                           const Text('0 points',
                               style: TextStyle(

@@ -1,4 +1,4 @@
-library home_footer;
+library;
 
 export 'about.dart';
 export 'news.dart';

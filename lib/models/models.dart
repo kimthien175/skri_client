@@ -1,4 +1,4 @@
-library models;
+library;
 
 export 'game/game.dart';
 export 'gif/gif.dart';

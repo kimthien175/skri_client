@@ -1,4 +1,4 @@
-library controlled_gif;
+library;
 
 export 'avatar/avatar.dart';
 export 'child_gif/child_gif.dart';

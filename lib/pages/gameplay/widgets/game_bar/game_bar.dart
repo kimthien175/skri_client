@@ -1,4 +1,4 @@
-library game_bar;
+library;
 
 export 'clock.dart';
 

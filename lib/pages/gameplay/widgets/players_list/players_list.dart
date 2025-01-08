@@ -1,4 +1,4 @@
-library player_list;
+library;
 
 export 'player_card.dart';
 

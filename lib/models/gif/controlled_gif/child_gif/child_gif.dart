@@ -1,4 +1,4 @@
-library chid_gif;
+library;
 
 export 'custom_painter.dart';
 
@@ -56,15 +56,13 @@ class ChildGifBuilder extends ControlledGifBuilder<ChildGifModel> {
     widget = Obx(() => Stack(clipBehavior: Clip.none, children: [
           Transform.translate(
               offset: info.offset,
-              child: Opacity(
-                  opacity: info.opacity,
-                  child: CustomPaint(
-                      painter: model.getCustomPainter(
-                        ControlledGifBuilder.controller.currentFrameIndex.value,
-                        Paint()
-                          ..colorFilter = const ColorFilter.mode(Colors.black, BlendMode.srcATop),
-                      ),
-                      size: size))),
+              child: CustomPaint(
+                  painter: model.getCustomPainter(
+                      ControlledGifBuilder.controller.currentFrameIndex.value,
+                      Paint()
+                        ..colorFilter = ColorFilter.mode(
+                            Color.fromRGBO(0, 0, 0, info.opacity), BlendMode.srcIn)),
+                  size: size)),
           CustomPaint(
               painter: ChildGifCustomPainter(
                   model.rect,

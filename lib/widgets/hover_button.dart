@@ -34,7 +34,7 @@ class HoverButton extends StatefulWidget {
 }
 
 class _HoverButtonState extends State<HoverButton> with SingleTickerProviderStateMixin {
-  late final controller = AnimationController(vsync: this, duration: AnimatedButton.duration);
+  late final AnimationController controller;
   late final FocusNode focusNode;
 
   bool isHovered = false;
@@ -42,6 +42,8 @@ class _HoverButtonState extends State<HoverButton> with SingleTickerProviderStat
   @override
   void initState() {
     super.initState();
+
+    controller = AnimationController(vsync: this, duration: AnimatedButton.duration);
 
     focusNode = FocusNode(onKeyEvent: (node, event) {
       if (event is KeyDownEvent) {

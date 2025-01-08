@@ -1,4 +1,4 @@
-library avatar_editor;
+library;
 
 export 'jiggle_avatar.dart';
 

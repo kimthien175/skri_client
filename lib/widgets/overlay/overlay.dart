@@ -1,3 +1,5 @@
+library;
+
 export 'loading.dart';
 
 import 'dart:async';
@@ -15,12 +17,18 @@ class OverlayController extends GetxController {
 
   static final Map<String, OverlayController> _cache = <String, OverlayController>{};
 
-  factory OverlayController.cache(
-      {required String tag, required OverlayController Function() builder}) {
-    var inst = _cache.putIfAbsent(tag, builder);
+  static P cache<P extends OverlayController>(
+      {required String tag, required P Function() builder}) {
+    var inst = _cache.putIfAbsent(tag, builder) as P;
     inst.cachedTag = tag;
     return inst;
   }
+
+  static deleteCache(String tag) {
+    _cache.remove(tag);
+    Get.delete<OverlayController>(tag: tag, force: true);
+  }
+
   String? cachedTag;
 
   final Widget Function() widgetBuilder;
@@ -56,6 +64,15 @@ class OverlayController extends GetxController {
     }
 
     return true;
+  }
+
+  @override
+  void onClose() {
+    if (_entry != null) {
+      _entry?.remove();
+      _entry?.dispose();
+    }
+    super.onClose();
   }
 
   // Future<void> showOnce({void Function(bool value)? onDone}) async {

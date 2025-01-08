@@ -1,4 +1,4 @@
-library game;
+library;
 
 export 'private_game.dart';
 
@@ -12,8 +12,8 @@ import 'package:skribbl_client/models/models.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:skribbl_client/pages/gameplay/widgets/players_list/player_card.dart';
 import 'package:skribbl_client/utils/utils.dart';
-import 'package:skribbl_client/widgets/dialog/dialog.dart';
 
 // ignore: avoid_web_libraries_in_flutter
 import 'dart:html' as html;
@@ -63,6 +63,20 @@ class Game extends GetxController {
 
   late final RxList<Player> playersByList;
   final Map<String, Player> playersByMap = {};
+  void removePlayer(String id) {
+    playersByList.removeWhere((player) => player.id == id);
+    playersByMap.remove(id);
+
+    // remove PlayerController
+    Get.delete<PlayerController>(tag: id);
+
+    // remove info dialog controller
+    OverlayController.deleteCache('card_info_$id');
+
+    // remove report dialog controller
+    OverlayController.deleteCache('report $id');
+  }
+
   late final RxMap<String, dynamic> settings;
 
   /// edit on this won't cause emiting to socketio

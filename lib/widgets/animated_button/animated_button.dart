@@ -1,4 +1,4 @@
-library animated_button;
+library;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

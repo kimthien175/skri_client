@@ -1,4 +1,4 @@
-library widgets;
+library;
 
 export 'single_child_2d_scroll_view.dart';
 export 'logo.dart';

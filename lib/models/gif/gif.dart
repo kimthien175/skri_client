@@ -1,4 +1,4 @@
-library gif;
+library;
 
 export 'full_gif/full_gif.dart';
 export 'controlled_gif/controlled_gif.dart';

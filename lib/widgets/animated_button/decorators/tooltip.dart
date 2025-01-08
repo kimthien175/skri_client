@@ -1,4 +1,4 @@
-library animated_button_tooltip;
+library;
 
 export '../../overlay/tooltip/position.dart';
 

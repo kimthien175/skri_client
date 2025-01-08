@@ -1,4 +1,4 @@
-library utils;
+library;
 
 export 'api.dart';
 export 'datetime.dart';

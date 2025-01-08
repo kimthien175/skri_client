@@ -1,4 +1,4 @@
-library home_widgets;
+library;
 
 export 'avatar_editor/avatar_editor.dart';
 export 'play_button.dart';

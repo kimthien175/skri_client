@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:http/http.dart';
 
 class API {
@@ -10,7 +12,8 @@ class API {
     return client.get(Uri.parse('$uri$smt'));
   }
 
-  Future<Response> post(String path, dynamic data) async {
-    return client.post(Uri.parse('$uri$path'), body: data);
+  Future<Response> post(String path, Map<String, dynamic> data) async {
+    return client.post(Uri.parse('$uri$path'),
+        body: jsonEncode(data), headers: {'Content-Type': 'application/json'});
   }
 }

@@ -1,4 +1,4 @@
-library game_tooltip;
+library;
 
 export 'position.dart';
 import 'package:flutter/material.dart';

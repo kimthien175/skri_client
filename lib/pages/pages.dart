@@ -1,4 +1,4 @@
-library pages;
+library;
 
 export 'home/home.dart';
 

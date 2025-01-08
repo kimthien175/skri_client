@@ -1,4 +1,4 @@
-library game_play;
+library;
 
 export 'layouts/web.dart';
 export 'layouts/mobile.dart';

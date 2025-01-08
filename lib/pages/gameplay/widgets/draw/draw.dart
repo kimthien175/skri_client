@@ -1,3 +1,3 @@
-library gameplay_draw;
+library;
 
 export 'draw_widget.dart';

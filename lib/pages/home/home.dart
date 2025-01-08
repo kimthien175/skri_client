@@ -1,4 +1,4 @@
-library home;
+library;
 
 export 'footer/footer.dart';
 export 'layouts/web.dart';

@@ -28,6 +28,12 @@ abstract class Message extends StatelessWidget {
       case Message.playerDraw:
         return PlayerDrawMessage(data: data, backgroundColor: backgroundColor);
 
+      case Message.playerVotekick:
+        return PlayerVoteKick(data: data, backgroundColor: backgroundColor);
+
+      case Message.playerGotKicked:
+        return PlayerGotKicked(backgroundColor: backgroundColor, data: data);
+
       default:
         throw Exception('undefined message');
     }
@@ -45,6 +51,8 @@ abstract class Message extends StatelessWidget {
   static const String playerChat = 'player_chat';
   static const String playerWin = 'player_win';
   static const String playerDraw = 'player_draw';
+  static const String playerVotekick = 'player_votekick';
+  static const String playerGotKicked = 'player_got_kicked';
 
   static const Color darkOrange = Color.fromRGBO(206, 79, 10, 1);
   static const Color orange = Color.fromRGBO(255, 168, 68, 1);
@@ -318,8 +326,8 @@ class PlayerVoteKick extends Message {
   const PlayerVoteKick({super.key, required super.data, required super.backgroundColor});
   String get voterName => data['voter_name'];
   String get victimName => data['victim_name'];
-  int get votedCount => data['voted_count'];
-  int get notVictimPlayerCount => data['not_victim_player_count'];
+  int get votedCount => data['vote_count'];
+  int get minCount => data['min_count'];
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -331,7 +339,7 @@ class PlayerVoteKick extends Message {
               "voterName": voterName,
               "victimName": victimName,
               "votedCount": votedCount.toString(),
-              "notVictimPlayerCount": notVictimPlayerCount.toString()
+              "notVictimPlayerCount": minCount.toString()
             }),
             style: const TextStyle(
                 color: Message.yellow, fontSize: 14, fontVariations: [FontVariation.weight(700)])));
