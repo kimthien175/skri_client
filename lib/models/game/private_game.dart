@@ -78,6 +78,8 @@ class PrivateGame extends Game {
 
     socket.once('connect', callback);
 
+    SocketIO.inst.registerCallbacks();
+
     socket.connect();
   }
 

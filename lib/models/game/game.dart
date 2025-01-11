@@ -105,15 +105,15 @@ class Game extends GetxController {
     });
   }
 
-  static leave() {
+  static Future<void> leave() async {
     //state.value.clear();
     SocketIO.inst.socket.disconnect();
 
     // reset meplayer as well
     MePlayer.inst.points = 0;
 
-    Get.safelyToNamed('/');
-    _inst = null;
+    await Get.toNamed('/');
+    Game._inst = null;
   }
 
   // factory Game.fromJSON(dynamic data) {

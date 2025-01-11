@@ -8,7 +8,6 @@ import 'package:skribbl_client/test.dart';
 import 'package:skribbl_client/widgets/resources_ensurance.dart';
 
 import 'pages/pages.dart';
-import 'utils/utils.dart';
 
 // TODO: reload gameplay page feature
 void main() {
@@ -38,6 +37,6 @@ void main() {
       //   GetPage(name: '/gameplay', page: () => const GameplayPage(), binding: GameplayBinding()),
       GetPage(name: '/test', page: () => TestPage())
     ],
-    navigatorObservers: [NavObserver],
+    //  navigatorObservers: [NavObserver],
   ));
 }

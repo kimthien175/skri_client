@@ -14,14 +14,16 @@ class GameplayWeb extends StatefulWidget {
 }
 
 class _GameplayWebState extends State<GameplayWeb> {
-  late ScrollController verticalScrollController;
-  late ScrollController horizontalScrollController;
+  ScrollController verticalScrollController = ScrollController();
+  late ScrollableDetails verticalDetails;
+  ScrollController horizontalScrollController = ScrollController();
+  late ScrollableDetails horizontalDetails;
 
   @override
   void initState() {
     super.initState();
-    verticalScrollController = ScrollController();
-    horizontalScrollController = ScrollController();
+    verticalDetails = ScrollableDetails.vertical(controller: verticalScrollController);
+    horizontalDetails = ScrollableDetails.horizontal(controller: horizontalScrollController);
   }
 
   @override
@@ -42,9 +44,8 @@ class _GameplayWebState extends State<GameplayWeb> {
             trackVisibility: true,
             controller: horizontalScrollController,
             child: SingleChild2DScrollView(
-                horizontalDetails:
-                    ScrollableDetails.horizontal(controller: horizontalScrollController),
-                verticalDetails: ScrollableDetails.vertical(controller: verticalScrollController),
+                horizontalDetails: horizontalDetails,
+                verticalDetails: verticalDetails,
                 delegate: SingleChild2DDelegate(
                     child: Align(
                         alignment: Alignment.topCenter,

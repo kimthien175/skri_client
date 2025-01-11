@@ -108,7 +108,7 @@ class _StepButton extends GetView<HowToPlayContentController> {
                         decoration: BoxDecoration(
                             color: (isHover || index == controller.step)
                                 ? Colors.white
-                                : Colors.white.withOpacity(0.3),
+                                : Colors.white.withValues(alpha: 0.3),
                             shape: BoxShape.circle),
                         width: index == controller.step ? 14.25 : 11,
                         height: index == controller.step ? 14.25 : 11))))));

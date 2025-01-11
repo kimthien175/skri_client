@@ -152,7 +152,7 @@ class AvatarEditor extends StatelessWidget {
       Container(
           margin: const EdgeInsets.only(top: 10, bottom: 10),
           decoration: BoxDecoration(
-              color: Colors.black.withOpacity(0.1), borderRadius: GlobalStyles.borderRadius),
+              color: Colors.black.withValues(alpha: 0.1), borderRadius: GlobalStyles.borderRadius),
           padding: const EdgeInsets.all(8),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,

@@ -87,11 +87,12 @@ class _HoverButtonState extends State<HoverButton> with SingleTickerProviderStat
               : null,
           alignment: Alignment.center,
           decoration: BoxDecoration(
-              color: Color.alphaBlend(Colors.black.withOpacity(0.2), widget.color),
+              color: Color.alphaBlend(Colors.black.withValues(alpha: 0.2), widget.color),
               borderRadius: widget.borderRadius),
           child: DefaultTextStyle.merge(
               style: TextStyle(
-                  color: Color.alphaBlend(Colors.black.withOpacity(0.2), PanelStyles.textColor),
+                  color:
+                      Color.alphaBlend(Colors.black.withValues(alpha: 0.2), PanelStyles.textColor),
                   fontVariations: [FontVariation.weight(800)],
                   shadows: [Shadow(color: Color(0x35000000), offset: Offset(2.5, 2.5))]),
               child: widget.child ?? Container()));

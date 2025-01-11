@@ -42,7 +42,6 @@ class HomeController extends GetxController {
   void loadChildrenControllers() {
     MePlayer.inst;
     Get.put(RandomAvatarsController());
-    Get.put(NewsContentController());
     Get.put(HowToPlayContentController());
     Get.put(AvatarEditorController());
   }

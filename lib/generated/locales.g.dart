@@ -108,6 +108,7 @@ class LocaleKeys {
   static const report_form_reason_spam = 'report_form_reason_spam';
   static const report_form_reason_cheating = 'report_form_reason_cheating';
   static const you_reported = 'you_reported';
+  static const dialog_content_got_kicked = 'dialog_content_got_kicked';
   static const You = 'You';
   static const Normal = 'Normal';
   static const Hidden = 'Hidden';
@@ -242,6 +243,7 @@ class Locales {
     'report_form_reason_spam': 'Spam',
     'report_form_reason_cheating': 'Botting / Cheating',
     'you_reported': 'You reported',
+    'dialog_content_got_kicked': 'You has been kicked!',
   };
   static const vi_VN = {
     'displayName': 'Tiếng Việt',
@@ -370,5 +372,6 @@ class Locales {
     'report_form_reason_spam': 'Spam',
     'report_form_reason_cheating': 'Dùng bot / Gian lận',
     'you_reported': 'Bạn đã báo cáo',
+    'dialog_content_got_kicked': 'Bạn vừa bị đá khỏi phòng!!',
   };
 }

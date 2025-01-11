@@ -61,7 +61,8 @@ class _InfoDialogContent extends StatelessWidget {
                               if (data['success']) {
                                 Game.inst.removePlayer(info.id);
                                 Game.inst.addMessage((color) => PlayerGotKicked(
-                                    backgroundColor: color, data: data['data']['\$push']));
+                                    backgroundColor: color,
+                                    data: data['data']['\$push']['messages']));
                               }
                             });
                           },

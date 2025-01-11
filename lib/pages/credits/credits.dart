@@ -17,7 +17,7 @@ class CreditsPage extends StatelessWidget {
     return ResourcesEnsurance(
         child: Column(children: [
       const SizedBox(height: 25),
-      Logo(() => Get.safelyToNamed('/')),
+      Logo(() => Get.toNamed('/')),
       const SizedBox(height: 50),
       Container(
           width: 400,

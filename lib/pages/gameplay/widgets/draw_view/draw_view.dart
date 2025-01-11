@@ -9,12 +9,11 @@ import 'like_dislike.dart';
 import 'dart:ui' as ui;
 
 class DrawViewController extends GetxController {
-  late final LikeAndDislikeOverlayController buttonsController;
-  late final GlobalKey anchorKey;
+  late LikeAndDislikeOverlayController buttonsController;
+  GlobalKey anchorKey = GlobalKey();
   @override
   void onInit() {
     super.onInit();
-    anchorKey = GlobalKey();
     buttonsController = LikeAndDislikeOverlayController(anchorKey: anchorKey);
   }
 }
