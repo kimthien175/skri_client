@@ -11,7 +11,68 @@ import 'package:socket_io_client/socket_io_client.dart' as IO;
 import '../pages/pages.dart';
 
 class SocketIO {
-  SocketIO._internal(this._socket);
+  SocketIO._internal(this._socket) {
+    socket.on('player_join', (dataList) {
+      var data = (dataList as List<dynamic>).first;
+      var inst = Game.inst;
+      var newPlayer = Player.fromJSON(data['players']);
+      inst.playersByList.add(newPlayer);
+      inst.playersByMap[newPlayer.id] = newPlayer;
+      Get.put(PlayerController(), tag: newPlayer.id);
+
+      inst.addMessage((color) => PlayerJoinMessage(data: data['messages'], backgroundColor: color));
+
+      inst.roundWhiteList.add(data['round_white_list']);
+    });
+
+    socket.on('change_settings', (dataList) {
+      var setting = (dataList as List).first;
+      Game.inst.settings[setting['key']] = setting['value'];
+    });
+
+    socket.on('player_got_kicked', (dataList) async {
+      var update = (dataList as List).first;
+
+      var victimId = update['\$pull']['players']['id'];
+
+      if (victimId == MePlayer.inst.id) {
+        Game.leave();
+        GameDialog.error(content: Center(child: Text("dialog_content_got_kicked".tr))).show();
+      } else {
+        Game.inst.removePlayer(victimId);
+        Game.inst.addMessage(
+            (color) => PlayerGotKicked(backgroundColor: color, data: update['\$push']['messages']));
+      }
+    });
+
+    // _socket.on('start_private_game', (data) {
+    //   var state = Game.inst.state.value;
+    //   assert(state is PreGameState);
+
+    //   if (data) state.end(data);
+    // });
+
+    // _socket.on('player_leave', onPlayerLeave);
+
+    // _socket.on('new_host', onNewHost);
+
+    // _socket.on('host_leave', (hostLeaveEmit) {
+    //   onPlayerLeave(hostLeaveEmit[0]);
+    //   onNewHost(hostLeaveEmit[1]);
+    // });
+
+    socket.on('player_chat', (dataList) {
+      var chatMsg = dataList[0];
+      var playerId = chatMsg['player_id'];
+      if (Game.inst.playersByMap[playerId]?.isMuted == true) return;
+      Game.inst.addMessage((color) => PlayerChatMessage(data: chatMsg, backgroundColor: color));
+      Get.find<PlayerController>(tag: playerId).showMessage(chatMsg['text']);
+    });
+
+    // _socket.on('choose_word', (chooseWordPkg) {
+    //   Game.inst.state.value.next(chooseWordPkg).then((value) => Game.inst.state.value = value);
+    // });
+  }
 
   static Future<void> initSocket() async {
     //  await FlutterUdid.consistentUdid.then((value) => print(value)).catchError((e) => print(e));
@@ -82,69 +143,6 @@ class SocketIO {
     //     Get.find<GameSettingsController>().isCovered.value = false;
     //   }
     // }
-  }
-
-  void registerCallbacks() {
-    socket.on('player_join', (dataList) {
-      var data = (dataList as List<dynamic>).first;
-      var inst = Game.inst;
-      var newPlayer = Player.fromJSON(data['players']);
-      inst.playersByList.add(newPlayer);
-      inst.playersByMap[newPlayer.id] = newPlayer;
-      Get.put(PlayerController(), tag: newPlayer.id);
-
-      inst.addMessage((color) => PlayerJoinMessage(data: data['messages'], backgroundColor: color));
-
-      inst.roundWhiteList.add(data['round_white_list']);
-    });
-
-    socket.on('change_settings', (dataList) {
-      var setting = (dataList as List).first;
-      Game.inst.settings[setting['key']] = setting['value'];
-    });
-
-    socket.on('player_got_kicked', (dataList) async {
-      var update = (dataList as List).first;
-
-      var victimId = update['\$pull']['players']['id'];
-
-      if (victimId == MePlayer.inst.id) {
-        Game.leave();
-        GameDialog.error(content: Text("dialog_content_got_kicked".tr)).show();
-      } else {
-        Game.inst.removePlayer(victimId);
-        Game.inst.addMessage(
-            (color) => PlayerGotKicked(backgroundColor: color, data: update['\$push']['messages']));
-      }
-    });
-
-    // _socket.on('start_private_game', (data) {
-    //   var state = Game.inst.state.value;
-    //   assert(state is PreGameState);
-
-    //   if (data) state.end(data);
-    // });
-
-    // _socket.on('player_leave', onPlayerLeave);
-
-    // _socket.on('new_host', onNewHost);
-
-    // _socket.on('host_leave', (hostLeaveEmit) {
-    //   onPlayerLeave(hostLeaveEmit[0]);
-    //   onNewHost(hostLeaveEmit[1]);
-    // });
-
-    socket.on('player_chat', (dataList) {
-      var chatMsg = dataList[0];
-      var playerId = chatMsg['player_id'];
-      if (Game.inst.playersByMap[playerId]?.isMuted == true) return;
-      Game.inst.addMessage((color) => PlayerChatMessage(data: chatMsg, backgroundColor: color));
-      Get.find<PlayerController>(tag: playerId).showMessage(chatMsg['text']);
-    });
-
-    // _socket.on('choose_word', (chooseWordPkg) {
-    //   Game.inst.state.value.next(chooseWordPkg).then((value) => Game.inst.state.value = value);
-    // });
   }
 }
 

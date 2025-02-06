@@ -18,6 +18,9 @@ typedef StringCallback = String Function();
 typedef OnQuitCallback = Future<bool> Function(Future<bool> Function() hide);
 
 class GameDialog extends OverlayController with GetSingleTickerProviderStateMixin {
+  static const double minWidth = 390;
+  static const double padding = 10;
+
   /// `hide` parameter for `onQuit` is default to true for returning
   GameDialog(
       {required this.title,
@@ -145,8 +148,8 @@ class _Dialog extends StatelessWidget {
     GameDialog c = OverlayWidget.of<GameDialog>(context);
     Widget dialog = Stack(children: [
       Container(
-          padding: const EdgeInsets.all(10),
-          constraints: const BoxConstraints(minWidth: 410),
+          padding: const EdgeInsets.all(GameDialog.padding),
+          constraints: const BoxConstraints(minWidth: GameDialog.minWidth + GameDialog.padding * 2),
           decoration: const BoxDecoration(
               color: Color.fromRGBO(12, 44, 150, 0.75),
               borderRadius: BorderRadius.all(Radius.circular(10))),
@@ -154,7 +157,7 @@ class _Dialog extends StatelessWidget {
                 children: [
                   const _Title(),
                   Container(
-                      alignment: Alignment.center,
+                      //alignment: Alignment.center,
                       constraints: const BoxConstraints(minHeight: 100),
                       child: c.content.value),
                   if (c.buttons.value != null) c.buttons.value!
@@ -245,6 +248,8 @@ class _CloseButtonState extends State<_CloseButton> with SingleTickerProviderSta
     focusNode.addListener(() {
       if (focusNode.hasFocus) {
         controller.forward();
+      } else {
+        controller.reverse();
       }
     });
   }
@@ -332,4 +337,3 @@ class _Title extends StatelessWidget {
               //           child: c.content)),
               //   //  c._buttons
 */
-

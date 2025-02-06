@@ -34,7 +34,7 @@ void main() {
         name: '/credits',
         page: () => const CreditsPage(),
       ),
-      //   GetPage(name: '/gameplay', page: () => const GameplayPage(), binding: GameplayBinding()),
+      // GetPage(name: '/GameplayPage', page: () => const GameplayPage(), binding: GameplayBinding()),
       GetPage(name: '/test', page: () => TestPage())
     ],
     //  navigatorObservers: [NavObserver],

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:skribbl_client/models/models.dart';
+import 'package:skribbl_client/pages/gameplay/widgets/players_list/player_card/report/content.dart';
 import 'package:skribbl_client/utils/utils.dart';
 import 'package:skribbl_client/widgets/widgets.dart';
 
@@ -8,9 +9,7 @@ class ReportFormDialog extends GameDialog {
   ReportFormDialog._internal({
     required this.info,
   }) : super(
-            title: Builder(
-              builder: (context) => Text(info.name),
-            ),
+            title: Builder(builder: (context) => Text(info.name)),
             content: const _ReportContent(),
             buttons: RowRenderObjectWidget(children: [
               GameDialogButton(
@@ -34,11 +33,12 @@ class ReportFormDialog extends GameDialog {
                       return true;
                     } else {
                       await dialog.hideInstantly();
-                      GameDialog.error(content: Text(res.body.toString())).showInstantly();
+                      GameDialog.error(content: Center(child: Text(res.body.toString())))
+                          .showInstantly();
                       return false;
                     }
                   },
-                  child: _DialogReportButton())
+                  child: const _DialogReportButton())
             ]));
   factory ReportFormDialog.factory(Player info) {
     return OverlayController.cache(
@@ -57,29 +57,15 @@ class _ReportContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var controller = OverlayWidget.of<ReportFormDialog>(context);
-    return Column(
-      children: [
-        Text('report_form_title'.tr),
-        Row(
-          children: [
-            Text('report_form_reason_inappropriate'.tr),
-            GameCheckbox(onChanged: (value) => controller.reason1 = value)
-          ],
-        ),
-        Row(
-          children: [
-            Text('report_form_reason_spam'.tr),
-            GameCheckbox(onChanged: (value) => controller.reason2 = value)
-          ],
-        ),
-        Row(
-          children: [
-            Text('report_form_reason_cheating'.tr),
-            GameCheckbox(onChanged: (value) => controller.reason3 = value)
-          ],
-        )
-      ],
-    );
+    return ReportContentObjectWidget(children: [
+      Text('report_form_title'.tr),
+      Text('report_form_reason_inappropriate'.tr),
+      GameCheckbox(onChanged: (value) => controller.reason1 = value),
+      Text('report_form_reason_spam'.tr),
+      GameCheckbox(onChanged: (value) => controller.reason2 = value),
+      Text('report_form_reason_cheating'.tr),
+      GameCheckbox(onChanged: (value) => controller.reason3 = value)
+    ]);
   }
 }
 

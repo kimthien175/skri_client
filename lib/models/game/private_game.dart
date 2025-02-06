@@ -29,7 +29,7 @@ class PrivateGame extends Game {
     } else {
       SocketIO.inst.socket.disconnect();
 
-      GameDialog.error(content: Text(roomResult['data'].toString())).show();
+      GameDialog.error(content: Center(child: Text(roomResult['data'].toString()))).show();
     }
 
     LoadingOverlay.inst.hide();
@@ -59,26 +59,25 @@ class PrivateGame extends Game {
       SocketIO.inst.socket.disconnect();
 
       OverlayController.cache(
-          tag: 'connect_error_dialog',
-          builder: () => GameDialog.error(
-              onQuit: (hide) async {
-                await hide();
+              tag: 'connect_error_dialog',
+              builder: () => GameDialog.error(
+                  onQuit: (hide) async {
+                    await hide();
 
-                if (Get.currentRoute != '/') {
-                  Game.leave();
-                }
-                return true;
-              },
-              content: Builder(
-                builder: (context) => Text('dialog_content_no_server_connection'.tr),
-              ))).show();
+                    if (Get.currentRoute != '/') {
+                      Game.leave();
+                    }
+                    return true;
+                  },
+                  content: Center(
+                      child:
+                          Builder(builder: (_) => Text('dialog_content_no_server_connection'.tr)))))
+          .show();
 
       LoadingOverlay.inst.hide();
     });
 
     socket.once('connect', callback);
-
-    SocketIO.inst.registerCallbacks();
 
     socket.connect();
   }

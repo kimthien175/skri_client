@@ -41,5 +41,6 @@ class PlayButton extends StatelessWidget {
 
   static GameDialog? __dialog;
   static GameDialog get _dialog => __dialog ??= GameDialog.error(
-      content: Builder(builder: (ct) => Text('dialog_content_wrong_private_code'.tr)));
+      content:
+          Center(child: Builder(builder: (ct) => Text('dialog_content_wrong_private_code'.tr))));
 }

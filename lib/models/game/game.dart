@@ -96,7 +96,7 @@ class Game extends GetxController {
         tag: 'confirm_leave',
         builder: () => GameDialog(
             title: Text("dialog_title_confirm_leave".tr),
-            content: Text('dialog_content_confirm_leave'.tr),
+            content: Center(child: Text('dialog_content_confirm_leave'.tr)),
             buttons: const RowRenderObjectWidget(
                 children: [GameDialogButton.yes(), GameDialogButton.no()])));
 
@@ -112,7 +112,7 @@ class Game extends GetxController {
     // reset meplayer as well
     MePlayer.inst.points = 0;
 
-    await Get.toNamed('/');
+    await Get.offAllNamed('/');
     Game._inst = null;
   }
 

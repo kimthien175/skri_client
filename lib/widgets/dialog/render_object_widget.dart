@@ -37,7 +37,7 @@ class _DialogRenderObject extends RenderBox
 
     //#region content
     RenderBox content = childAfter(title)!;
-    content.layout(const BoxConstraints(), parentUsesSize: true);
+    content.layout(BoxConstraints(minWidth: constraints.minWidth), parentUsesSize: true);
 
     maxWidth = max(maxWidth, content.size.width);
     height += content.size.height;

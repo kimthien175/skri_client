@@ -59,9 +59,9 @@ class OverlayController extends GetxController {
     _entry?.dispose();
     _entry = null;
 
-    if (cachedTag == null) {
-      Get.delete<OverlayController>(tag: tag);
-    }
+    // if (cachedTag == null) {
+    //   Get.delete<OverlayController>(tag: tag);
+    // }
 
     return true;
   }
