@@ -50,6 +50,10 @@ class Game extends GetxController {
   final Map<String, dynamic> data;
 
   String get roomCode => data['code'];
+  set roomCode(String value) {
+    data['code'] = value;
+  }
+
   Map<String, dynamic> get system => data['system'];
   List<dynamic> get roundWhiteList => data['round_white_list'];
   late final RxInt currentRound;

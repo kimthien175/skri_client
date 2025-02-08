@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:skribbl_client/models/gif/controlled_gif/avatar/avatar.dart';
 import 'package:skribbl_client/pages/gameplay/widgets/players_list/player_card/report/report.dart';
+import 'package:skribbl_client/utils/storage.dart';
 import 'package:skribbl_client/widgets/hover_button.dart';
 import 'package:skribbl_client/widgets/resources_ensurance.dart';
 
@@ -13,12 +14,13 @@ class TestPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return ResourcesEnsurance(
         child: Center(
-            child: HoverButton(
-                onTap: () {
-                  ReportFormDialog.factory(
-                          Player(id: 'abc', name: 'abc', avatarModel: AvatarModel(0, 0, 0)))
-                      .showInstantly();
-                },
-                child: Text('show'))));
+            child: Column(children: [
+      Text(Storage.data.toString()),
+      HoverButton(
+          onTap: () {
+            Storage.set(['def', 'xyz'], 'hehe');
+          },
+          child: Text('show'))
+    ])));
   }
 }

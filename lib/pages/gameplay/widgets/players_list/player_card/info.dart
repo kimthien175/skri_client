@@ -50,10 +50,11 @@ class _InfoDialogContent extends StatelessWidget {
                           const BoxConstraints(minWidth: minWidth / 2 - 3, minHeight: minHeight),
                       onTap: () {
                         SocketIO.inst.socket.emitWithAck('host_kick', info.id, ack: (data) {
-                          if (data['success']) {
-                            Game.inst.removePlayer(info.id);
-                            Game.inst.addMessage((color) => PlayerGotKicked(
-                                backgroundColor: color, data: data['data']['\$push']['messages']));
+                          if (!data['success']) {
+                            var dialog = OverlayController.cache(
+                                tag: 'host_kick',
+                                builder: () => GameDialog.error(content: Container()));
+                            if (!dialog.isShowing) dialog.show();
                           }
                         });
                       },

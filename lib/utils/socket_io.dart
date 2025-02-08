@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:skribbl_client/models/game/game.dart';
+import 'package:skribbl_client/utils/storage.dart';
 
 import 'package:skribbl_client/utils/utils.dart';
 import 'package:skribbl_client/widgets/dialog/dialog.dart';
@@ -32,16 +33,17 @@ class SocketIO {
 
     socket.on('player_got_kicked', (dataList) async {
       var update = (dataList as List).first;
-
-      var victimId = update['\$pull']['players']['id'];
+      var victimId = update['victim_id'];
 
       if (victimId == MePlayer.inst.id) {
+        Storage.set([Game.inst.roomCode], {...update, 'type': 'kick'});
         Game.leave();
         GameDialog.error(content: Center(child: Text("dialog_content_got_kicked".tr))).show();
       } else {
+        Game.inst.roomCode = update['new_code'];
         Game.inst.removePlayer(victimId);
         Game.inst.addMessage(
-            (color) => PlayerGotKicked(backgroundColor: color, data: update['\$push']['messages']));
+            (color) => PlayerGotKicked(backgroundColor: color, data: update['message']));
       }
     });
 
