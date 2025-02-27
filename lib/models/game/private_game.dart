@@ -4,6 +4,7 @@ import 'package:skribbl_client/pages/pages.dart';
 import 'package:skribbl_client/utils/socket_io.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:skribbl_client/utils/storage.dart';
 
 import '../../widgets/widgets.dart';
 
@@ -24,8 +25,26 @@ class PrivateGame extends Game {
 
       Game.inst = PrivateGame._internal(data: data['room']);
 
+//#region edit local storage for rejoin ticket
+      var homeController = Get.find<HomeController>();
+
+      if (homeController.hasCode && homeController.isPrivateRoomCodeValid) {
+        var kickMap = Storage.data['kick'];
+        if (kickMap != null) {
+          var ticket = kickMap[homeController.privateRoomCode];
+          if (ticket != null) {
+            ticket['used_by'] = Game.inst.hashCode;
+            Storage.set(['kick', homeController.privateRoomCode], ticket);
+          }
+        }
+      }
+//#endregion
+
       Get.to(() => const GameplayPage(),
           binding: GameplayBinding(), transition: Transition.noTransition);
+
+      // save metadata to local storage
+      Storage.set(['system'], Game.inst.data['system']);
     } else {
       SocketIO.inst.socket.disconnect();
 
@@ -91,11 +110,63 @@ class PrivateGame extends Game {
   }
 
   static void join(String code) {
+    Map<String, dynamic> requestPackage = {
+      'player': MePlayer.inst.toJSON(),
+      'code': code,
+      'lang': Get.locale!.toString()
+    };
+
+    var banList = Storage.data['ban'];
+    if (banList is List && banList.contains(code)) {
+      var dialog = OverlayController.cache(
+          tag: 'join_but_get_banned',
+          builder: () => GameDialog.error(
+              content: Center(child: Text('dialog_content_join_but_get_banned'.tr))));
+      if (!dialog.isShowing) {
+        dialog.show();
+      }
+      return;
+    }
+
+    var kickMap = Storage.data['kick'];
+    if (kickMap != null) {
+      var ticket = kickMap[code];
+      if (ticket != null) {
+        // check kick interval
+        var system = Storage.data['system'];
+        if (system != null) {
+          var kickInterval = system['kick_interval'];
+          if (kickInterval is int) {
+            var kickDate = DateTime.tryParse(kickMap[code]['date']);
+            if (kickDate != null) {
+              if ((DateTime.now() - kickDate).inSeconds < kickInterval) {
+                // still in kick interval
+                var dialog = OverlayController.cache(
+                    tag: 'kick interval',
+                    builder: () => GameDialog.error(
+                        content: Builder(
+                            builder: (_) =>
+                                Center(child: Text('dialog_content_kick_countdown'.tr)))));
+                if (!dialog.isShowing) {
+                  dialog.show();
+                }
+                return;
+              } else {
+                // modify request package for ticket
+                if (ticket['room_id'] is String && ticket['ticket_id'] is String) {
+                  requestPackage['room_id'] = ticket['room_id'];
+                  requestPackage['ticket_id'] = ticket['ticket_id'];
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
     _connect((data) {
       // emit join private room
-      SocketIO.inst.socket.emitWithAck('join_private_room',
-          {'player': MePlayer.inst.toJSON(), 'code': code, 'lang': Get.locale!.toString()},
-          ack: PrivateGame.load);
+      SocketIO.inst.socket.emitWithAck('join_private_room', requestPackage, ack: PrivateGame.load);
     });
 
     // inst.eventHandlers.onConnect = (_) {
@@ -238,4 +309,8 @@ class PrivateGame extends Game {
   //   }
   //   return result;
   // }
+}
+
+extension _SubDate on DateTime {
+  Duration operator -(DateTime other) => difference(other);
 }

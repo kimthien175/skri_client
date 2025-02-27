@@ -46,6 +46,16 @@ class GameDialog extends OverlayController with GetSingleTickerProviderStateMixi
         content = content.obs,
         buttons = buttons.obs;
 
+  GameDialog.discconected(
+      {required Widget content,
+      RowRenderObjectWidget buttons =
+          const RowRenderObjectWidget(children: [GameDialogButton.okay()]),
+      this.onQuit = GameDialog.onQuitDefault})
+      : title = Builder(builder: (_) => Text('dialog_title_disconnected'.tr)),
+        exitTap = false,
+        content = content.obs,
+        buttons = buttons.obs;
+
   @override
   Widget Function() get widgetBuilder => () => const _Dialog();
 

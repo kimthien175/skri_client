@@ -26,7 +26,8 @@ class ReportFormDialog extends GameDialog {
                       'reasons': [dialog.reason1, dialog.reason2, dialog.reason3]
                     });
                     if (res.statusCode == 200) {
-                      dialog.content.value = Text('Your report has been received, thank you');
+                      dialog.content.value =
+                          Center(child: Text('Your report has been received, thank you'));
                       dialog.buttons.value = null;
                       await Future.delayed(const Duration(seconds: 2));
                       await onQuit();

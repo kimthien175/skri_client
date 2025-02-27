@@ -36,9 +36,11 @@ class SocketIO {
       var victimId = update['victim_id'];
 
       if (victimId == MePlayer.inst.id) {
-        Storage.set([Game.inst.roomCode], {...update, 'type': 'kick'});
+        // find for 'used_by'
+        _setTicket(update);
         Game.leave();
-        GameDialog.error(content: Center(child: Text("dialog_content_got_kicked".tr))).show();
+        GameDialog.discconected(content: Center(child: Text("dialog_content_got_kicked".tr)))
+            .show();
       } else {
         Game.inst.roomCode = update['new_code'];
         Game.inst.removePlayer(victimId);
@@ -54,14 +56,9 @@ class SocketIO {
     //   if (data) state.end(data);
     // });
 
-    // _socket.on('player_leave', onPlayerLeave);
+    _socket.on('player_leave', (data) => onPlayerLeave(data[0]));
 
-    // _socket.on('new_host', onNewHost);
-
-    // _socket.on('host_leave', (hostLeaveEmit) {
-    //   onPlayerLeave(hostLeaveEmit[0]);
-    //   onNewHost(hostLeaveEmit[1]);
-    // });
+    _socket.on('new_host', (data) => onNewHost(data[0]));
 
     socket.on('player_chat', (dataList) {
       var chatMsg = dataList[0];
@@ -121,16 +118,15 @@ class SocketIO {
     var leftPlayerId = playerLeaveEmit['player_id'];
     // player list side
     var inst = Game.inst;
-    inst.playersByList.removeWhere((element) => element.id == leftPlayerId);
 
     // message side
     inst.addMessage((color) => PlayerLeaveMessage(data: playerLeaveEmit, backgroundColor: color));
 
-    inst.playersByMap.removeWhere((key, value) => key == leftPlayerId);
+    inst.removePlayer(leftPlayerId);
   }
 
   // TODO: NOTE STATE
-  onNewHost(dynamic newHostEmit) {
+  onNewHost(newHostEmit) {
     var inst = Game.inst;
     var newHost = inst.playersByMap[newHostEmit['player_id']]!;
     (inst as PrivateGame).hostPlayerId.value = newHost.id;
@@ -149,3 +145,16 @@ class SocketIO {
 }
 
 typedef SocketCallback = dynamic Function(dynamic data);
+
+void _setTicket(dynamic ticket) {
+  var cachedTicket = {'date': DateTime.now().toIso8601String(), ...ticket};
+  if (Storage.data['kick'] != null) {
+    for (var entry in (Storage.data['kick'] as Map<String, dynamic>).entries) {
+      if (entry.value['used_by'] == Game.inst.hashCode) {
+        Storage.set(['kick', entry.key], cachedTicket);
+        return;
+      }
+    }
+  }
+  Storage.set(['kick', Game.inst.roomCode], cachedTicket);
+}

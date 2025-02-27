@@ -13,6 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:skribbl_client/pages/gameplay/widgets/players_list/player_card.dart';
+import 'package:skribbl_client/pages/home/home.dart';
 import 'package:skribbl_client/utils/utils.dart';
 
 // ignore: avoid_web_libraries_in_flutter
@@ -116,7 +117,9 @@ class Game extends GetxController {
     // reset meplayer as well
     MePlayer.inst.points = 0;
 
-    await Get.offAllNamed('/');
+    var homeController = Get.find<HomeController>();
+    await Get.offAllNamed(
+        "/${homeController.isPrivateRoomCodeValid ? '?${homeController.privateRoomCode}' : ''}");
     Game._inst = null;
   }
 

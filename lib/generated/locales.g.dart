@@ -98,7 +98,11 @@ class LocaleKeys {
   static const dialog_button_ok = 'dialog_button_ok';
   static const dialog_button_yes = 'dialog_button_yes';
   static const dialog_button_no = 'dialog_button_no';
+  static const dialog_content_got_kicked = 'dialog_content_got_kicked';
   static const dialog_content_kick_countdown = 'dialog_content_kick_countdown';
+  static const dialog_content_got_banned = 'dialog_content_got_banned';
+  static const dialog_content_join_but_get_banned =
+      'dialog_content_join_but_get_banned';
   static const dialog_title_confirm_leave = 'dialog_title_confirm_leave';
   static const dialog_content_confirm_leave = 'dialog_content_confirm_leave';
   static const invite = 'invite';
@@ -108,7 +112,7 @@ class LocaleKeys {
   static const report_form_reason_spam = 'report_form_reason_spam';
   static const report_form_reason_cheating = 'report_form_reason_cheating';
   static const you_reported = 'you_reported';
-  static const dialog_content_got_kicked = 'dialog_content_got_kicked';
+  static const dialog_title_disconnected = 'dialog_title_disconnected';
   static const You = 'You';
   static const Normal = 'Normal';
   static const Hidden = 'Hidden';
@@ -234,7 +238,10 @@ class Locales {
     'dialog_button_ok': 'Okay!',
     'dialog_button_yes': 'Yes',
     'dialog_button_no': 'No',
+    'dialog_content_got_kicked': 'You has been kicked!',
     'dialog_content_kick_countdown': 'You are on a kick countdown!',
+    'dialog_content_got_banned': 'You has been banned!',
+    'dialog_content_join_but_get_banned': 'You are banned from this room!',
     'dialog_title_confirm_leave': 'You\'re leaving the game',
     'dialog_content_confirm_leave': 'Are you sure?',
     'invite': 'Invite',
@@ -243,7 +250,7 @@ class Locales {
     'report_form_reason_spam': 'Spam',
     'report_form_reason_cheating': 'Botting / Cheating',
     'you_reported': 'You reported',
-    'dialog_content_got_kicked': 'You has been kicked!',
+    'dialog_title_disconnected': 'Disconnected!',
   };
   static const vi_VN = {
     'displayName': 'Tiếng Việt',
@@ -356,8 +363,11 @@ class Locales {
     'dialog_button_ok': 'Okê!',
     'dialog_button_yes': 'Có',
     'dialog_button_no': 'Không',
+    'dialog_content_got_kicked': 'Bạn vừa bị đá khỏi phòng!!',
     'dialog_content_kick_countdown':
         'Bạn còn trong thời gian bị đá khỏi phòng!',
+    'dialog_content_got_banned': 'Bạn vừa bị cấm khỏi phòng này!',
+    'dialog_content_join_but_get_banned': 'Bạn bị cấm khỏi phòng này!',
     'dialog_title_confirm_leave': 'Bạn đang thoát trò chơi',
     'dialog_content_confirm_leave': 'Bạn chắc chứ?',
     'invite': 'Mời',
@@ -372,6 +382,6 @@ class Locales {
     'report_form_reason_spam': 'Spam',
     'report_form_reason_cheating': 'Dùng bot / Gian lận',
     'you_reported': 'Bạn đã báo cáo',
-    'dialog_content_got_kicked': 'Bạn vừa bị đá khỏi phòng!!',
+    'dialog_title_disconnected': 'Ngắt kết nối!',
   };
 }
