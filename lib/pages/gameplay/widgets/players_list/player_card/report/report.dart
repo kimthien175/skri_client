@@ -17,7 +17,7 @@ class ReportFormDialog extends GameDialog {
                     var dialog =
                         Get.find<OverlayController>(tag: 'report ${info.id}') as ReportFormDialog;
                     // switch to loading icon
-                    dialog.content.value = LoadingIndicator();
+                    dialog.content.value = Center(child: LoadingIndicator());
                     dialog.buttons.value = null;
                     // submit report
                     var res = await API.inst.post('report_player', {

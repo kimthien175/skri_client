@@ -352,7 +352,7 @@ class PlayerVoteKick extends Message {
         alignment: Alignment.centerLeft,
         padding: EdgeInsets.only(left: paddingLeft),
         child: Text(
-            'message_player_guess_close'.trParams({
+            'message_player_vote_kick'.trParams({
               "voterName": voterName,
               "victimName": victimName,
               "votedCount": votedCount.toString(),

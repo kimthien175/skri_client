@@ -99,6 +99,11 @@ class SocketIO {
       Get.find<PlayerController>(tag: playerId).showMessage(chatMsg['text']);
     });
 
+    socket.on('system_message', (dataList) {
+      var msg = dataList[0];
+      Game.inst.addMessage((color) => Message.fromJSON(backgroundColor: color, data: msg));
+    });
+
     // _socket.on('choose_word', (chooseWordPkg) {
     //   Game.inst.state.value.next(chooseWordPkg).then((value) => Game.inst.state.value = value);
     // });

@@ -91,25 +91,27 @@ class _InfoDialogContent extends StatelessWidget {
   }
 }
 
-class _VoteKickButton extends StatefulWidget {
+class _VoteKickButton extends StatelessWidget {
   const _VoteKickButton();
 
   @override
-  State<_VoteKickButton> createState() => __VoteKickButtonState();
-}
-
-class __VoteKickButtonState extends State<_VoteKickButton> {
-  @override
   Widget build(BuildContext context) {
     var info = OverlayWidget.of<PlayerInfoDialog>(context).info;
-    return HoverButton(
-        constraints: _InfoDialogContent.inputConstraints,
-        isDisabled: info.isKickVoted == true,
-        onTap: () {
-          info.isKickVoted = true;
-          SocketIO.inst.socket.emitWithAck('vote_kick', info.id, ack: (data) {});
-        },
-        child: Text('Votekick'.tr));
+    return StatefulBuilder(
+        builder: (context, setState) => HoverButton(
+            constraints: _InfoDialogContent.inputConstraints,
+            isDisabled: info.isKickVoted == true,
+            onTap: () {
+              setState(() {
+                info.isKickVoted = true;
+              });
+              SocketIO.inst.socket.emitWithAck('vote_kick', info.id, ack: (data) {
+                if (!data['success']) {
+                  GameDialog.error(content: Center(child: Text(data['reason'].toString()))).show();
+                }
+              });
+            },
+            child: Text('Votekick'.tr)));
   }
 }
 
