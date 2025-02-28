@@ -54,6 +54,7 @@
     "message_player_like": "@playerName thích bức vẽ!",
     "message_player_guessed_right": "@playerName đã đoán đúng!",
     "message_player_got_kicked": "@playerName vừa bị đạp khỏi phòng!",
+    "message_player_got_banned": "@playerName vừa bị cấm khỏi phòng!",
     "message_player_guess_close": "@word gần đúng!",
     "message_player_vote_kick": "@voterName bỏ phiếu kick @victimName! (@votedCount/@notVictimPlayerCount)",
     "message_word_reveal": "Đáp án là '@word'",

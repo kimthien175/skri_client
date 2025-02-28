@@ -45,25 +45,11 @@ class _InfoDialogContent extends StatelessWidget {
           : Column(children: [
               if (gameInst is PrivateGame && (gameInst.hostPlayerId.value == MePlayer.inst.id)) ...[
                 Row(children: [
-                  HoverButton(
-                      constraints:
-                          const BoxConstraints(minWidth: minWidth / 2 - 3, minHeight: minHeight),
-                      onTap: () {
-                        SocketIO.inst.socket.emitWithAck('host_kick', info.id, ack: (data) {
-                          if (!data['success']) {
-                            var dialog = OverlayController.cache(
-                                tag: 'host_kick',
-                                builder: () => GameDialog.error(content: Container()));
-                            if (!dialog.isShowing) dialog.show();
-                          }
-                        });
-                      },
-                      child: Text('Kick'.tr)),
+                  // KICK
+                  _KickButton(id: info.id),
                   space,
-                  HoverButton(
-                      constraints:
-                          const BoxConstraints(minWidth: minWidth / 2 - 3, minHeight: minHeight),
-                      child: Text('Ban'.tr))
+                  // BAN
+                  _BanButton(id: info.id)
                 ]),
                 space
               ],
@@ -146,5 +132,79 @@ class _MePlayerCardInput extends StatelessWidget {
             style: const TextStyle(fontSize: 15),
           ))
     ]);
+  }
+}
+
+class _KickButton extends StatefulWidget {
+  const _KickButton({required this.id});
+  final String id;
+
+  @override
+  State<_KickButton> createState() => __KickButtonState();
+}
+
+class __KickButtonState extends State<_KickButton> {
+  bool isSending = false;
+  @override
+  Widget build(BuildContext context) {
+    return HoverButton(
+        isDisabled: isSending,
+        constraints: const BoxConstraints(
+            minWidth: _InfoDialogContent.minWidth / 2 - 3, minHeight: _InfoDialogContent.minHeight),
+        onTap: () {
+          setState(() {
+            isSending = true;
+          });
+          SocketIO.inst.socket.emitWithAck('host_kick', widget.id, ack: (data) {
+            setState(() {
+              isSending = false;
+            });
+            if (!data['success']) {
+              var dialog = OverlayController.cache(
+                  tag: 'host_kick',
+                  builder: () =>
+                      GameDialog.error(content: Center(child: Text(data['reason'].toString()))));
+              if (!dialog.isShowing) dialog.show();
+            }
+          });
+        },
+        child: Text('Kick'.tr));
+  }
+}
+
+class _BanButton extends StatefulWidget {
+  const _BanButton({required this.id});
+  final String id;
+
+  @override
+  State<_BanButton> createState() => __BanButtonState();
+}
+
+class __BanButtonState extends State<_BanButton> {
+  bool isSending = false;
+  @override
+  Widget build(BuildContext context) {
+    return HoverButton(
+        isDisabled: isSending,
+        constraints: const BoxConstraints(
+            minWidth: _InfoDialogContent.minWidth / 2 - 3, minHeight: _InfoDialogContent.minHeight),
+        child: Text('Ban'.tr),
+        onTap: () {
+          setState(() {
+            isSending = true;
+          });
+          SocketIO.inst.socket.emitWithAck('host_ban', widget.id, ack: (data) {
+            setState(() {
+              isSending = false;
+            });
+            if (!data['success']) {
+              var dialog = OverlayController.cache(
+                  tag: 'host_ban',
+                  builder: () =>
+                      GameDialog.error(content: Center(child: Text(data['reasson'].toString()))));
+              if (!dialog.isShowing) dialog.show();
+            }
+          });
+        });
   }
 }

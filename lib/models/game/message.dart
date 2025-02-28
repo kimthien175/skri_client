@@ -305,6 +305,23 @@ class PlayerGotKicked extends Message {
   }
 }
 
+class PlayerGotBanned extends Message {
+  const PlayerGotBanned({super.key, required super.backgroundColor, required super.data});
+  String get playerName => data['player_name'];
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        color: backgroundColor,
+        alignment: Alignment.centerLeft,
+        padding: EdgeInsets.only(left: paddingLeft),
+        child: Text('message_player_got_banned'.trParams({"playerName": playerName}),
+            style: const TextStyle(
+                color: Message.darkOrange,
+                fontSize: 14,
+                fontVariations: [FontVariation.weight(700)])));
+  }
+}
+
 /// TODO: private message,
 class PlayerGuessClose extends Message {
   const PlayerGuessClose({super.key, required super.data, required super.backgroundColor});

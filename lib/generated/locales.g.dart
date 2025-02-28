@@ -69,6 +69,7 @@ class LocaleKeys {
   static const message_player_like = 'message_player_like';
   static const message_player_guessed_right = 'message_player_guessed_right';
   static const message_player_got_kicked = 'message_player_got_kicked';
+  static const message_player_got_banned = 'message_player_got_banned';
   static const message_player_guess_close = 'message_player_guess_close';
   static const message_player_vote_kick = 'message_player_vote_kick';
   static const message_word_reveal = 'message_word_reveal';
@@ -206,6 +207,7 @@ class Locales {
     'message_player_like': '@playerName liked the drawing!',
     'message_player_guessed_right': '@playerName guessed the word!',
     'message_player_got_kicked': '@playerName has been kicked!',
+    'message_player_got_banned': '@playerName has been banned!',
     'message_player_guess_close': '@word is close!',
     'message_player_vote_kick':
         '@voterName is voting to kick @victimName! (@votedCount/@notVictimPlayerCount)',
@@ -323,6 +325,7 @@ class Locales {
     'message_player_like': '@playerName thích bức vẽ!',
     'message_player_guessed_right': '@playerName đã đoán đúng!',
     'message_player_got_kicked': '@playerName vừa bị đạp khỏi phòng!',
+    'message_player_got_banned': '@playerName vừa bị cấm khỏi phòng!',
     'message_player_guess_close': '@word gần đúng!',
     'message_player_vote_kick':
         '@voterName bỏ phiếu kick @victimName! (@votedCount/@notVictimPlayerCount)',

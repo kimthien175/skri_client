@@ -49,6 +49,37 @@ class SocketIO {
       }
     });
 
+    socket.on('player_got_banned', (dataList) {
+      var data = dataList[0];
+      String victimId = data['victim_id'];
+      if (victimId == MePlayer.inst.id) {
+        //#region save to cache
+        List<dynamic> codes = [Game.inst.roomCode];
+        var homeController = Get.find<HomeController>();
+        if (homeController.hasCode &&
+            homeController.isPrivateRoomCodeValid &&
+            homeController.privateRoomCode != Game.inst.roomCode) {
+          codes.add(homeController.privateRoomCode);
+        }
+
+        var existingBanList = Storage.data['ban'];
+        if (existingBanList is List) {
+          codes.addAll(existingBanList);
+        }
+        Storage.set(['ban'], codes);
+        //#endregion
+
+        Game.leave();
+        GameDialog.discconected(content: Center(child: Text('dialog_content_got_banned'.tr)))
+            .show();
+      } else {
+        Game.inst.roomCode = data['new_code'];
+        Game.inst.removePlayer(victimId);
+        Game.inst
+            .addMessage((color) => PlayerGotBanned(backgroundColor: color, data: data['message']));
+      }
+    });
+
     // _socket.on('start_private_game', (data) {
     //   var state = Game.inst.state.value;
     //   assert(state is PreGameState);
