@@ -14,7 +14,7 @@ class CreditsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ResourcesEnsurance(
+    return Background(
         child: Column(children: [
       const SizedBox(height: 25),
       Logo(() => Get.toNamed('/')),

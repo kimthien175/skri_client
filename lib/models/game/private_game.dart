@@ -1,10 +1,11 @@
+import 'dart:convert';
+
 import 'package:skribbl_client/models/game/game.dart';
 
 import 'package:skribbl_client/pages/pages.dart';
-import 'package:skribbl_client/utils/socket_io.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:skribbl_client/utils/storage.dart';
+import 'package:skribbl_client/utils/utils.dart';
 
 import '../../widgets/widgets.dart';
 
@@ -57,6 +58,17 @@ class PrivateGame extends Game {
   PrivateGame._internal({required super.data}) {
     hostPlayerId = (data['host_player_id'] as String).obs;
   }
+
+  static Future<void> setupTesting() async {
+    String mockData =
+        '{"code":"dlrc","host_player_id":"fDmSIumozqWBdX87AAAE","players":[{"name":"worry","avatar":{"color":15,"eyes":12,"mouth":12},"id":"fDmSIumozqWBdX87AAAE"}],"messages":[{"type":"new_host","timestamp":"2025-04-25T14:16:57.658Z","player_id":"fDmSIumozqWBdX87AAAE","player_name":"worry"}],"options":{"players":{"min":2,"max":20},"language":["en_US","vi_VN"],"rounds":{"min":2,"max":10},"word_mode":["Normal","Hidden","Combination"],"word_count":{"min":1,"max":5},"hints":{"min":0,"max":5},"custom_words_rules":{"min_words":10,"min_char_per_word":1,"max_char_per_word":32,"max_char":20000},"draw_time":[15,20,30,40,50,60,70,80,90,100,120,150,180,210,240]},"system":{"pick_word_time":15,"kick_interval":30},"settings":{"players":8,"language":"en_US","rounds":3,"word_mode":"Normal","word_count":3,"hints":2,"draw_time":80},"henceforth_states":{"680b9959c4a0f77046faa933":{"type":"pre_game","id":"680b9959c4a0f77046faa933"}},"round_white_list":["fDmSIumozqWBdX87AAAE"],"current_round":1,"old_states":[],"status":{"current_state_id":"680b9959c4a0f77046faa933","command":"start","date":"${DateTime.now().toUtc().toIso8601String()}"},"_id":"680b9959c4a0f77046faa934"}';
+    dynamic data = jsonDecode(mockData);
+
+    MePlayer.inst = MePlayer.fromJSON(data['players'][0]);
+    Game.inst = PrivateGame._internal(data: data);
+  }
+
+  static void start() {}
 
   late RxString hostPlayerId;
 
@@ -243,61 +255,30 @@ class PrivateGame extends Game {
     // };
   }
 
-  static int dialogOpenCount = 0;
-  static void handleOnConnectError(String title) {
-    // inst.eventHandlers.onConnectError = (error) {
-    //   if (Get.currentRoute == '/') {
-    //     SocketIO.inst.socket.disconnect();
-    //     // at home page
-    //     if (dialogOpenCount == 0) {
-    //       dialogOpenCount++;
-
-    //       Get.defaultDialog(
-    //           title: title,
-    //           middleText: '${"create_private_room_error_content".tr}\n${error.toString()}',
-    //           onCancel: () {
-    //             LoadingOverlay.inst.hide();
-
-    //             dialogOpenCount = 0;
-    //           },
-    //           barrierDismissible: false);
-    //     }
-    //   } else {
-    //     // at gameplay page
-    //     if (!LoadingOverlay.inst.isShowing) {
-    //       LoadingOverlay.inst.show();
-    //     }
-
-    //     if (dialogOpenCount == 0) {
-    //       dialogOpenCount++;
-    //       Get.defaultDialog(
-    //           title: '${'gameplay_connection_error'.tr}\n',
-    //           middleText: error.toString(),
-    //           onCancel: () {
-    //             Game.inst.leave();
-    //           },
-    //           onConfirm: () {
-    //             Get.back();
-    //           },
-    //           barrierDismissible: false);
-    //     }
-    //   }
-    // };
-
-    // inst.eventHandlers.onReconnect = (_) => dialogOpenCount = 0;
-  }
-
+  static bool _isSendingStartGameRequest = false;
   void startGame() {
     if (playersByList.length < (Game.inst as PrivateGame).options['players']['min']) {
-      addMessage((Color color) => RequiredMinimumPlayersToStartMessage(
-            backgroundColor: color,
-          ));
+      addMessage((Color color) => RequiredMinimumPlayersToStartMessage(backgroundColor: color));
       return;
     }
     // gather settings, settings from dropdown and check button is saved in settings already
     // now have left only the custom words
     if (Get.find<GameSettingsController>().formKey.currentState!.validate()) {
-      SocketIO.inst.socket.emit('start_private_game', Game.inst.settings);
+      // do once
+      if (_isSendingStartGameRequest) return;
+      _isSendingStartGameRequest = true;
+      SocketIO.inst.socket.emitWithAck('start_private_game', Game.inst.settings, ack: (res) {
+        _isSendingStartGameRequest = false;
+        if (!res['success']) {
+          var dialog = OverlayController.cache(
+              tag: 'start_private_game_errror',
+              builder: () =>
+                  GameDialog.error(content: Center(child: Text(res['reason'].toString()))));
+          if (!dialog.isShowing) {
+            dialog.show();
+          }
+        }
+      });
     }
   }
 
@@ -309,8 +290,4 @@ class PrivateGame extends Game {
   //   }
   //   return result;
   // }
-}
-
-extension _SubDate on DateTime {
-  Duration operator -(DateTime other) => difference(other);
 }

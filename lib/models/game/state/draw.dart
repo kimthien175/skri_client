@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:skribbl_client/models/game/game.dart';
-import 'package:skribbl_client/models/game/state/state.dart';
-
-import 'package:skribbl_client/pages/gameplay/widgets/draw_view/draw_view.dart';
+import 'package:skribbl_client/models/models.dart';
 
 import 'package:get/get.dart';
+import 'package:skribbl_client/pages/pages.dart';
 
 class DrawState extends GameState {
   DrawState({required super.data});
@@ -81,7 +79,7 @@ class DrawState extends GameState {
   // }
 
   @override
-  void start() {
+  Future<void> onStart(Duration sinceStartDate, {bool freshStart = false}) async {
     // LIKE_DISLIKE BUTTONS
     if (isSpectator) {
       Get.find<DrawViewController>().buttonsController.controller.forward();
@@ -92,9 +90,8 @@ class DrawState extends GameState {
   }
 
   @override
-  Future<void> end(dynamic data) async {}
-
-  @override
-  // TODO: implement isExpired
-  bool get isExpired => throw UnimplementedError();
+  Future<Duration> onEnd(Duration sinceEndDate) {
+    // TODO: implement onEnd
+    throw UnimplementedError();
+  }
 }

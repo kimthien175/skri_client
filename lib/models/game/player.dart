@@ -48,18 +48,27 @@ class Player {
 }
 
 class MePlayer extends Player {
-  static final MePlayer inst = MePlayer._random();
+  static MePlayer? _inst;
+  static MePlayer get inst => _inst!;
+  static set inst(MePlayer value) {
+    assert(isEmpty);
+    _inst = value;
+  }
 
-  factory MePlayer._random() {
+  static bool get isEmpty => _inst == null;
+
+  static void random() {
     var rd = Random();
     var color = rd.nextInt(GifManager.inst.color.length);
     var eyes = rd.nextInt(GifManager.inst.eyes.length);
     var mouth = rd.nextInt(GifManager.inst.mouth.length);
-
-    return MePlayer._internal(avatarModel: AvatarModel(color, eyes, mouth));
+    _inst = MePlayer(avatarModel: AvatarModel(color, eyes, mouth));
   }
 
-  MePlayer._internal({super.name = '', required super.avatarModel, super.id = ''});
+  MePlayer({super.name = '', required super.avatarModel, super.id = ''});
+
+  factory MePlayer.fromJSON(Map<String, dynamic> data) => MePlayer(
+      name: data['name'], avatarModel: AvatarModel.fromJSON(data['avatar']), id: data['id']);
 
   @override
   String get nameForCard => '$name (${'You'.tr})';

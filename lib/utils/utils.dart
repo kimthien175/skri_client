@@ -9,3 +9,4 @@ export 'socket_io.dart';
 
 export 'styles.dart';
 export 'hex_color.dart';
+export 'storage.dart';

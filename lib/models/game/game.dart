@@ -4,33 +4,23 @@ export 'private_game.dart';
 
 export 'package:skribbl_client/models/game/message.dart';
 export 'package:skribbl_client/models/game/player.dart';
-export 'state/game_state.dart';
-
-import 'dart:collection';
+export 'state/state.dart';
 
 import 'package:skribbl_client/models/models.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:skribbl_client/pages/gameplay/widgets/players_list/player_card.dart';
-import 'package:skribbl_client/pages/home/home.dart';
+import 'package:skribbl_client/pages/pages.dart';
 import 'package:skribbl_client/utils/utils.dart';
 
-// ignore: avoid_web_libraries_in_flutter
-import 'dart:html' as html;
+import 'package:web/web.dart' as html;
 
 import '../../widgets/widgets.dart';
-import 'state/state.dart';
 
 // TODO: lost connection and try to continue the game again
 class Game extends GetxController {
   Game({required this.data}) {
-    state = GameState.fromJSON(data['states'][0]).obs;
-
-    futureStates = Queue<GameState>();
-    for (var jsonState in data['future_states']) {
-      futureStates.add(GameState.fromJSON(jsonState));
-    }
+    state = GameState.fromJSON(henceforthStates[currentStateId]).obs;
 
     playersByList = Player.listFromJSON(data['players']).obs;
     for (int i = 0; i < playersByList.length; i++) {
@@ -56,7 +46,8 @@ class Game extends GetxController {
   }
 
   Map<String, dynamic> get system => data['system'];
-  List<dynamic> get roundWhiteList => data['round_white_list'];
+  List<String> get roundWhiteList => data['round_white_list'];
+
   late final RxInt currentRound;
 
   String get inviteLink => '${html.window.location.host}/?$roomCode';
@@ -92,7 +83,15 @@ class Game extends GetxController {
   }
 
   late Rx<GameState> state;
-  late Queue<GameState> futureStates;
+  Map<String, dynamic> get henceforthStates => data['henceforth_states'];
+
+  Map<String, dynamic> get status => data['status'];
+  set status(Map<String, dynamic> value) => data['status'] = value;
+
+  String get currentStateId => status['current_state_id'];
+  String get nextStateId => status['next_state_id'];
+  String get stateCommand => status['command'];
+  DateTime get stateDate => DateTime.parse(status['date']);
 
   static bool get isEmpty => _inst == null;
 
@@ -123,17 +122,23 @@ class Game extends GetxController {
     Game._inst = null;
   }
 
-  // factory Game.fromJSON(dynamic data) {
-  //   var futureStates = Queue<GameState>();
-  //   for (var state in data) {
-  //     futureStates.add(GameState.fromJSON(data));
-  //   }
-  //   return Game(
-  //       data: data,
-  //       playersByList: Player.listFromJSON(data['players']).obs,
-  //       state: GameState.fromJSON(data['state']).obs,
-  //       futureState: Qu);
-  // }
+  runState() {
+    switch (stateCommand) {
+      case start:
+        state.value.onStart(DateTime.now() - inst.stateDate);
+        break;
+      case end:
+        state.value.onEnd(DateTime.now() - inst.stateDate).then((duration) {
+          henceforthStates.remove(state.value.id);
+          state.value = GameState.fromJSON(henceforthStates[nextStateId]);
+          state.value.onStart(duration);
+        });
+        break;
+    }
+  }
+
+  static const String start = 'start';
+  static const String end = 'end';
 }
 
 typedef GameStateInitCallback = GameState Function();

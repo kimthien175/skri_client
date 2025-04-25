@@ -1,15 +1,16 @@
 import 'dart:core';
+import 'package:get/get.dart';
 import 'package:skribbl_client/utils/read_json.dart';
 import 'package:flutter/services.dart';
 import 'dart:ui' as ui;
 
 import 'gif/gif.dart';
 
-class GifManager {
+class GifManager extends GetxService {
   //#region Singleton
   GifManager._internal();
-  static final GifManager _inst = GifManager._internal();
-  static GifManager get inst => _inst;
+  static GifManager? _inst;
+  static GifManager get inst => _inst!;
   //#endregion
 
   final List<SingleGifModel> color = [];
@@ -22,6 +23,15 @@ class GifManager {
 
   final Map<String, SingleGifModel> _misc = {};
   SingleGifModel misc(String name) => _misc[name]!;
+
+  static bool get isEmpty => _inst == null;
+
+  static Future<GifManager> init() async {
+    assert(_inst == null);
+    _inst = GifManager._internal();
+    await inst.loadResources();
+    return _inst!;
+  }
 
   Future<void> loadResources() async {
     Map info = await readJSON('assets/gif/info.json');

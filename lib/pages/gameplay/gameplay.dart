@@ -9,10 +9,9 @@ import 'package:skribbl_client/pages/pages.dart';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:skribbl_client/widgets/resources_ensurance.dart';
+import 'package:skribbl_client/widgets/page_background.dart';
 
 import 'widgets/draw/manager.dart';
-import 'widgets/draw_view/draw_view.dart';
 
 class GameplayBinding implements Bindings {
   @override
@@ -23,11 +22,14 @@ class GameplayBinding implements Bindings {
 
 class GameplayController extends GetxController {
   GameplayController() : super() {
-    if (ResourcesController.inst.isLoaded.value) {
-      loadChildrenControllers();
-    } else {
-      ResourcesController.inst.onDone.add(loadChildrenControllers);
-    }
+    Get.put(PlayersListController());
+    Get.put(GameClockController());
+    Get.put(GameChatController());
+
+    Get.put(DrawViewController());
+    DrawManager.init();
+
+    Get.put(TopWidgetController());
   }
 
   void loadChildrenControllers() {
@@ -113,22 +115,13 @@ class GameplayController extends GetxController {
 //     // Get.to(() => const GameplayPage(),
 //     //     binding: GameplayBinding(), transition: Transition.noTransition);
 //#endregion
-
-    Get.put(PlayersListController());
-    Get.put(GameClockController());
-    Get.put(GameChatController());
-
-    Get.put(DrawViewController());
-    DrawManager.init();
-
-    Get.put(TopWidgetController());
   }
 
   @override
   void onReady() {
     super.onReady();
 
-    Game.inst.state.value.start();
+    Game.inst.runState();
   }
 }
 
@@ -137,7 +130,7 @@ class GameplayPage extends StatelessWidget {
   const GameplayPage({super.key});
 
   @override
-  Widget build(BuildContext context) => ResourcesEnsurance(
+  Widget build(BuildContext context) => Background(
       child: PopScope(
           canPop: false,
           onPopInvokedWithResult: (didPop, result) async {

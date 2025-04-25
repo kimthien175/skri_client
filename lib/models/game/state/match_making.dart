@@ -5,21 +5,18 @@ class MatchMakingState extends GameState {
   MatchMakingState({required super.data});
 
   @override
-  Future<void> end(data) {
-    // TODO: implement end
-    throw UnimplementedError();
-  }
-
-  @override
-  void start() {
-    // TODO: implement start
-  }
-
-  @override
   // TODO: implement topWidget
   Widget get topWidget => throw UnimplementedError();
 
   @override
-  // TODO: implement isExpired
-  bool get isExpired => throw UnimplementedError();
+  Future<Duration> onEnd(Duration sinceEndDate) {
+    // TODO: implement onEnd
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> onStart(Duration sinceStartDate, {bool freshStart = false}) {
+    // TODO: implement onStart
+    throw UnimplementedError();
+  }
 }

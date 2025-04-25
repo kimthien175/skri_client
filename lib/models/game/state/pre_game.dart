@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:skribbl_client/models/game/game.dart';
-import 'package:skribbl_client/models/game/state/pick_word.dart';
+import 'package:skribbl_client/models/models.dart';
 import 'package:skribbl_client/pages/gameplay/gameplay.dart';
-
-import 'state.dart';
 
 class PreGameState extends GameState {
   PreGameState({required super.data}) {
@@ -15,21 +12,41 @@ class PreGameState extends GameState {
   Widget get topWidget => const GameSettingsWidget();
 
   @override
-  Future<void> end(dynamic data) async {
-    await Get.find<TopWidgetController>().contentController.reverse();
+  Future<void> onStart(Duration sinceStartDate) async {
+    var widgetController = Get.find<TopWidgetController>();
 
-    Game.inst.state.value = PickWordState(data: data);
+    if (Game.inst.stateCommand == Game.start) {
+      // do background
+      if (sinceStartDate < TopWidgetController.backgroundDuration) {
+        await widgetController.backgroundController
+            .forward(from: sinceStartDate / TopWidgetController.backgroundDuration);
+
+        sinceStartDate = Duration.zero;
+      } else {
+        widgetController.backgroundController.value = 1;
+        sinceStartDate -= TopWidgetController.backgroundDuration;
+      }
+    }
+
+    if (sinceStartDate < TopWidgetController.contentDuration) {
+      await widgetController.contentController
+          .forward(from: sinceStartDate / TopWidgetController.contentDuration);
+    } else {
+      widgetController.contentController.value = 1;
+    }
   }
 
   @override
-  void start() {
-    var difference = DateTime.now().difference(DateTime.parse(data['started_at']));
-    Get.find<TopWidgetController>().show(difference);
+  Future<Duration> onEnd(Duration sinceEndDate) async {
+    var controller = Get.find<TopWidgetController>().contentController;
+    if (sinceEndDate < TopWidgetController.contentDuration) {
+      await controller.reverse(from: 1 - sinceEndDate / TopWidgetController.contentDuration);
+      return Duration.zero;
+    } else {
+      controller.value = 0;
+      return sinceEndDate - TopWidgetController.contentDuration;
+    }
   }
-
-  @override
-  // TODO: implement isExpired
-  bool get isExpired => throw UnimplementedError();
 
   // @override
   // Future<void> setup() async {

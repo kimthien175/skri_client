@@ -5,15 +5,18 @@ class WordReveal extends GameState {
   WordReveal({required super.data});
 
   @override
-  Future<void> end(dynamic data) async {}
-
-  @override
-  void start() {}
-
-  @override
+  // TODO: implement topWidget
   Widget get topWidget => throw UnimplementedError();
 
   @override
-  // TODO: implement isExpired
-  bool get isExpired => throw UnimplementedError();
+  Future<Duration> onEnd(Duration sinceEndDate) {
+    // TODO: implement onEnd
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> onStart(Duration sinceStartDate, {bool freshStart = false}) {
+    // TODO: implement onStart
+    throw UnimplementedError();
+  }
 }

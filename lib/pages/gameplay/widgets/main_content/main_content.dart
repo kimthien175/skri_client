@@ -3,13 +3,12 @@ library;
 export 'top_widget.dart';
 
 import 'package:skribbl_client/models/game/game.dart';
-import 'package:skribbl_client/pages/gameplay/gameplay.dart';
-import 'package:skribbl_client/pages/gameplay/widgets/draw/draw.dart';
-import 'package:skribbl_client/pages/gameplay/widgets/draw_view/draw_view.dart';
+import 'package:skribbl_client/pages/pages.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../../models/game/state/draw.dart';
+import '../draw/draw_widget.dart';
 
 class MainContent extends StatelessWidget {
   const MainContent({super.key});

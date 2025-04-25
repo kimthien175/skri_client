@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:skribbl_client/models/game/game.dart';
+
 import 'package:skribbl_client/utils/storage.dart';
 
 import 'package:skribbl_client/utils/utils.dart';
@@ -80,13 +81,6 @@ class SocketIO {
       }
     });
 
-    // _socket.on('start_private_game', (data) {
-    //   var state = Game.inst.state.value;
-    //   assert(state is PreGameState);
-
-    //   if (data) state.end(data);
-    // });
-
     _socket.on('player_leave', (data) => onPlayerLeave(data[0]));
 
     _socket.on('new_host', (data) => onNewHost(data[0]));
@@ -104,8 +98,20 @@ class SocketIO {
       Game.inst.addMessage((color) => Message.fromJSON(backgroundColor: color, data: msg));
     });
 
+    socket.on('new_states', (dataList) {
+      var pkg = dataList[0];
+      var inst = Game.inst;
+      inst.henceforthStates.addAll(pkg['henceforth_states']);
+      inst.status = pkg['status'];
+
+      if (inst.state.value.id != inst.currentStateId) {
+        inst.state.value = GameState.fromJSON(inst.henceforthStates[inst.currentStateId]);
+      }
+
+      inst.runState();
+    });
     // _socket.on('choose_word', (chooseWordPkg) {
-    //   Game.inst.state.value.next(chooseWordPkg).then((value) => Game.inst.state.value = value);
+    //     Game.inst.state.value.next(chooseWordPkg).then((value) => Game.inst.state.value = value);
     // });
   }
 

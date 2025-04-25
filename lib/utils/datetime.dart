@@ -1,3 +1,3 @@
-Duration hasPassed(String mongoTimeString) {
-  return DateTime.now().difference(DateTime.parse(mongoTimeString));
+extension SubDate on DateTime {
+  Duration operator -(DateTime other) => difference(other);
 }

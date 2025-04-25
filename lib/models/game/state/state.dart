@@ -1,5 +1,3 @@
-// ignore_for_file: constant_identifier_names
-
 import 'package:flutter/material.dart';
 import 'package:skribbl_client/models/game/state/draw.dart';
 import 'package:skribbl_client/models/game/state/match_making.dart';
@@ -8,6 +6,8 @@ import 'package:skribbl_client/models/game/state/pre_game.dart';
 
 abstract class GameState {
   GameState({required this.data});
+
+  String get id => data['id'];
 
   /// parse state from server
   factory GameState.fromJSON(dynamic data) {
@@ -29,15 +29,15 @@ abstract class GameState {
     }
   }
 
-  void start();
-  Future<void> end(dynamic data);
+  /// default value of `startedDate` is state.`startedDate`
+  Future<void> onStart(Duration sinceStartDate);
 
-  String get startedDate => data['started_date'];
+  /// `sinceEndDate` always smaller than or equal to `endDuration`
+  Future<Duration> onEnd(Duration sinceEndDate);
+
   final Map<String, dynamic> data;
 
   Widget get topWidget;
-
-  bool get isExpired;
 
   String get status => 'WAITING';
 }
