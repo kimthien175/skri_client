@@ -108,6 +108,11 @@ class DrawManager extends ChangeNotifier {
     lastStepRepaint.notifyListeners();
   }
 
+  void reset() {
+    pastSteps.clear();
+    lastStepRepaint.notifyListeners();
+  }
+
   void clear() {
     if (pastSteps.isEmpty) return;
 

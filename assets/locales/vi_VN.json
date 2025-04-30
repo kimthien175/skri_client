@@ -69,7 +69,7 @@
     "gameplay_connection_error": "Nếu bạn muốn kết nối lại, xin vui lòng kiểm tra kết nối, hoặc nhấn Cancel để thoát",
     "gamebar_round_display": "Vòng @currentRound / @rounds",
     "round_noti": "Vòng @round",
-    "player_choosing": "@playerName đang chọn 1 từ",
+    "player_choosing": "@playerName đang chọn 1 từ!",
     "choose_a_word": "Chọn 1 từ",
     "randomize_your_avatar": "Ngẫu nhiên Avatar của bạn!",
     "news_error": "Không tìm thấy tin tức nào hết!!",

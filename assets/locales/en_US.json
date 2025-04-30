@@ -62,7 +62,7 @@
     "gameplay_connection_error": "If you want to keep trying to reconnect, please hold, or press Cancel to disconnect",
     "gamebar_round_display": "Round @currentRound of @rounds",
     "round_noti": "Round @round",
-    "player_choosing": "@playerName is choosing a word",
+    "player_choosing": "@playerName is choosing a word!",
     "choose_a_word": "Choose a word",
     "randomize_your_avatar": "Randomize your Avatar!",
     "news_error": "Can't get any news!!",

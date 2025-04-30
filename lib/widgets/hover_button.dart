@@ -15,7 +15,9 @@ class HoverButton extends StatefulWidget {
       this.height,
       this.width,
       this.constraints,
-      this.isDisabled = false});
+      this.isDisabled = false,
+      this.controller,
+      this.border});
 
   final Widget? child;
   final Color color;
@@ -28,6 +30,10 @@ class HoverButton extends StatefulWidget {
 
   final BoxConstraints? constraints;
   final bool isDisabled;
+
+  final AnimationController? controller;
+
+  final Border? border;
 
   @override
   State<HoverButton> createState() => _HoverButtonState();
@@ -43,7 +49,8 @@ class _HoverButtonState extends State<HoverButton> with SingleTickerProviderStat
   void initState() {
     super.initState();
 
-    controller = AnimationController(vsync: this, duration: AnimatedButton.duration);
+    controller =
+        widget.controller ?? AnimationController(vsync: this, duration: AnimatedButton.duration);
 
     focusNode = FocusNode(onKeyEvent: (node, event) {
       if (event is KeyDownEvent) {
@@ -88,7 +95,8 @@ class _HoverButtonState extends State<HoverButton> with SingleTickerProviderStat
           alignment: Alignment.center,
           decoration: BoxDecoration(
               color: Color.alphaBlend(Colors.black.withValues(alpha: 0.2), widget.color),
-              borderRadius: widget.borderRadius),
+              borderRadius: widget.borderRadius,
+              border: widget.border),
           child: DefaultTextStyle.merge(
               style: TextStyle(
                   color:
@@ -125,7 +133,8 @@ class _HoverButtonState extends State<HoverButton> with SingleTickerProviderStat
                             ? const EdgeInsets.symmetric(horizontal: 5.85)
                             : null,
                         alignment: Alignment.center,
-                        decoration: BoxDecoration(color: color, borderRadius: widget.borderRadius),
+                        decoration: BoxDecoration(
+                            color: color, borderRadius: widget.borderRadius, border: widget.border),
                         child: DefaultTextStyle.merge(
                             style: const TextStyle(color: PanelStyles.textColor, fontVariations: [
                               FontVariation.weight(800)

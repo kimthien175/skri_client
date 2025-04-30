@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:skribbl_client/models/game/game.dart';
 
-import 'package:skribbl_client/utils/storage.dart';
-
 import 'package:skribbl_client/utils/utils.dart';
 import 'package:skribbl_client/widgets/dialog/dialog.dart';
 
@@ -23,8 +21,6 @@ class SocketIO {
       Get.put(PlayerController(), tag: newPlayer.id);
 
       inst.addMessage((color) => PlayerJoinMessage(data: data['messages'], backgroundColor: color));
-
-      inst.roundWhiteList.add(data['round_white_list']);
     });
 
     socket.on('change_settings', (dataList) {
@@ -98,21 +94,7 @@ class SocketIO {
       Game.inst.addMessage((color) => Message.fromJSON(backgroundColor: color, data: msg));
     });
 
-    socket.on('new_states', (dataList) {
-      var pkg = dataList[0];
-      var inst = Game.inst;
-      inst.henceforthStates.addAll(pkg['henceforth_states']);
-      inst.status = pkg['status'];
-
-      if (inst.state.value.id != inst.currentStateId) {
-        inst.state.value = GameState.fromJSON(inst.henceforthStates[inst.currentStateId]);
-      }
-
-      inst.runState();
-    });
-    // _socket.on('choose_word', (chooseWordPkg) {
-    //     Game.inst.state.value.next(chooseWordPkg).then((value) => Game.inst.state.value = value);
-    // });
+    socket.on('new_states', (dataList) => Game.inst.receiveStatusAndStates(dataList[0]));
   }
 
   static Future<void> initSocket() async {

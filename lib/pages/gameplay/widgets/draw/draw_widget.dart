@@ -90,7 +90,8 @@ class BrushButton extends StatelessWidget {
                     ? const Color.fromRGBO(171, 102, 235, 1)
                     : Colors.white,
                 borderRadius: const BorderRadius.all(Radius.circular(3))),
-            child: GifManager.inst.misc('pen').builder.initWithShadow(height: 48, width: 48))));
+            child:
+                GifManager.inst.misc('pen').builder.initWithShadow().fit(height: 48, width: 48))));
   }
 }
 
@@ -111,7 +112,8 @@ class FillButton extends StatelessWidget {
                     ? const Color.fromRGBO(171, 102, 235, 1)
                     : Colors.white,
                 borderRadius: const BorderRadius.all(Radius.circular(3))),
-            child: GifManager.inst.misc('fill').builder.initWithShadow(height: 48, width: 48))));
+            child:
+                GifManager.inst.misc('fill').builder.initWithShadow().fit(height: 48, width: 48))));
   }
 }
 
@@ -147,7 +149,8 @@ class _UndoButtonState extends State<UndoButton> {
                     child: GifManager.inst
                         .misc('undo')
                         .builder
-                        .initWithShadow(width: 48, height: 48)))));
+                        .initWithShadow()
+                        .fit(width: 48, height: 48)))));
   }
 }
 
@@ -183,6 +186,7 @@ class _ClearButtonState extends State<ClearButton> {
                     child: GifManager.inst
                         .misc('clear')
                         .builder
-                        .initWithShadow(height: 48, width: 48)))));
+                        .initWithShadow()
+                        .fit(height: 48, width: 48)))));
   }
 }

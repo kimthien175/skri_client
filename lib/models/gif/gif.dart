@@ -4,6 +4,7 @@ export 'full_gif/full_gif.dart';
 export 'controlled_gif/controlled_gif.dart';
 export 'single_gif.dart';
 
+import 'package:flutter/foundation.dart';
 import 'package:skribbl_client/models/shadow_info.dart';
 import 'package:flutter/material.dart';
 
@@ -30,16 +31,13 @@ abstract class GifBuilder<MODEL_TYPE extends GifModel<MODEL_TYPE>> extends State
   Color? color;
 
   GifBuilder initWithShadow(
-      {Color? color,
-      ShadowInfo info = const ShadowInfo(),
-      FilterQuality filterQuality,
-      double? height,
-      double? width});
+      {Color? color, ShadowInfo info = const ShadowInfo(), FilterQuality filterQuality});
 
   GifBuilder init({Color? color, double? width, double? height});
 
   GifBuilder doScale(double ratio);
 
+  @nonVirtual
   Widget fit({double? height, double? width}) {
     return SizedBox(height: height, width: width, child: FittedBox(child: this));
   }

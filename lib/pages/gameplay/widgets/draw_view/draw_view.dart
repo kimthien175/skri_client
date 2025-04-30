@@ -9,8 +9,8 @@ import 'like_dislike.dart';
 import 'dart:ui' as ui;
 
 class DrawViewController extends GetxController {
-  late LikeAndDislikeOverlayController buttonsController;
-  late GlobalKey anchorKey;
+  late final LikeAndDislikeOverlayController buttonsController;
+  late final GlobalKey anchorKey;
   @override
   void onInit() {
     super.onInit();
@@ -68,23 +68,25 @@ class DrawViewManager extends ChangeNotifier {
       TempStepView.fromJSON(data);
     });
     SocketIO.inst.socket.on('draw:down_current', (data) {
-      inst.current = CurrentStepView.fromJSON(data);
-      inst.notifyListeners();
+      current = CurrentStepView.fromJSON(data);
+      notifyListeners();
     });
 
     SocketIO.inst.socket.on('draw:update_current', (data) {
-      inst.current!.update(data);
-      inst.notifyListeners();
+      current!.update(data);
+      notifyListeners();
     });
-    SocketIO.inst.socket.on('draw:clear', (_) {
-      inst.current = null;
-      inst.temp = null;
-      inst.notifyListeners();
-    });
+    SocketIO.inst.socket.on('draw:clear', clear);
   }
 
   CurrentStepView? current;
   TempStepView? temp;
+
+  void clear(_) {
+    current = null;
+    temp = null;
+    notifyListeners();
+  }
 
   Map<int, TempStepView> cachedTemp = {};
 }

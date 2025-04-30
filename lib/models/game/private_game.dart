@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:skribbl_client/models/game/game.dart';
 
 import 'package:skribbl_client/pages/pages.dart';
@@ -60,15 +58,108 @@ class PrivateGame extends Game {
   }
 
   static Future<void> setupTesting() async {
-    String mockData =
-        '{"code":"dlrc","host_player_id":"fDmSIumozqWBdX87AAAE","players":[{"name":"worry","avatar":{"color":15,"eyes":12,"mouth":12},"id":"fDmSIumozqWBdX87AAAE"}],"messages":[{"type":"new_host","timestamp":"2025-04-25T14:16:57.658Z","player_id":"fDmSIumozqWBdX87AAAE","player_name":"worry"}],"options":{"players":{"min":2,"max":20},"language":["en_US","vi_VN"],"rounds":{"min":2,"max":10},"word_mode":["Normal","Hidden","Combination"],"word_count":{"min":1,"max":5},"hints":{"min":0,"max":5},"custom_words_rules":{"min_words":10,"min_char_per_word":1,"max_char_per_word":32,"max_char":20000},"draw_time":[15,20,30,40,50,60,70,80,90,100,120,150,180,210,240]},"system":{"pick_word_time":15,"kick_interval":30},"settings":{"players":8,"language":"en_US","rounds":3,"word_mode":"Normal","word_count":3,"hints":2,"draw_time":80},"henceforth_states":{"680b9959c4a0f77046faa933":{"type":"pre_game","id":"680b9959c4a0f77046faa933"}},"round_white_list":["fDmSIumozqWBdX87AAAE"],"current_round":1,"old_states":[],"status":{"current_state_id":"680b9959c4a0f77046faa933","command":"start","date":"${DateTime.now().toUtc().toIso8601String()}"},"_id":"680b9959c4a0f77046faa934"}';
-    dynamic data = jsonDecode(mockData);
+    Map<String, dynamic> data = {
+      "code": "dlrc",
+      "host_player_id": "fDmSIumozqWBdX87AAAE",
+      "players": [
+        {
+          "name": "worry",
+          "avatar": {"color": 15, "eyes": 12, "mouth": 12},
+          "id": "fDmSIumozqWBdX87AAAE"
+        }
+      ],
+      "messages": [
+        {
+          "type": "new_host",
+          "timestamp": "2025-04-25T14:16:57.658Z",
+          "player_id": "fDmSIumozqWBdX87AAAE",
+          "player_name": "worry"
+        }
+      ],
+      "options": {
+        "players": {"min": 2, "max": 20},
+        "language": ["en_US", "vi_VN"],
+        "rounds": {"min": 2, "max": 10},
+        "word_mode": ["Normal", "Hidden", "Combination"],
+        "word_count": {"min": 1, "max": 5},
+        "hints": {"min": 0, "max": 5},
+        "custom_words_rules": {
+          "min_words": 10,
+          "min_char_per_word": 1,
+          "max_char_per_word": 32,
+          "max_char": 20000
+        },
+        "draw_time": [15, 20, 30, 40, 50, 60, 70, 80, 90, 100, 120, 150, 180, 210, 240]
+      },
+      "system": {"pick_word_time": 15, "kick_interval": 30},
+      "settings": {
+        "players": 8,
+        "language": "en_US",
+        "rounds": 3,
+        "word_mode": "Normal",
+        "word_count": 3,
+        "hints": 2,
+        "draw_time": 80
+      },
+      "round_white_list": ["fDmSIumozqWBdX87AAAE"],
+      "current_round": 1,
+      "old_states": [],
+      "_id": "680b9959c4a0f77046faa934",
+      //
+      "status": {
+        "current_state_id": "680b9959c4a0f77046faa933",
+        "command": "end",
+        "date": DateTime.now().toUtc().toIso8601String(),
+        "next_state_id": "680cd9b9b34194c2298d16a4"
+      },
+      "henceforth_states": {
+        "680b9959c4a0f77046faa933": {
+          "type": "pick_word",
+          "id": "680b9959c4a0f77046faa933",
+          "round_notify": null,
+          'player_id': "fDmSIumozqWBdX87AAAE",
+          "words": ["ourselves", "choose", "for"]
+        } as dynamic,
+        "680cd9b9b34194c2298d16a4": {
+          "type": "draw",
+          "id": "680cd9b9b34194c2298d16a4",
+          "player_id": "fDmSIumozqWBdX87AAA",
+          "word": "the fish"
+        } as dynamic
+      }
+    };
 
     MePlayer.inst = MePlayer.fromJSON(data['players'][0]);
     Game.inst = PrivateGame._internal(data: data);
   }
 
-  static void start() {}
+  static trigger() {
+    Map<String, dynamic> mockData = <String, dynamic>{
+      "status": {
+        "current_state_id": "680b9959c4a0f77046faa933",
+        "command": "end",
+        "date": DateTime.now().toUtc().toIso8601String(),
+        "next_state_id": "680cd9b9b34194c2298d16a4"
+      },
+      "henceforth_states": {
+        "680cd9b9b34194c2298d16a4": {
+          "type": "pick_word",
+          "id": "680cd9b9b34194c2298d16a4",
+          "player_id": "lQiMMk8s6BMWIktYAAAK",
+          "words": ["remain", "club", "map"],
+          "round_notify": 1
+        },
+        "680cd9b9b34194c2298d16a5": {
+          "type": "pick_word",
+          "id": "680cd9b9b34194c2298d16a5",
+          "player_id": "QyN_hx0JNrQRLyIHAAAH",
+          "words": ["ourselves", "choose", "for"]
+        }
+      }
+    };
+
+    Game.inst.receiveStatusAndStates(mockData);
+  }
 
   late RxString hostPlayerId;
 

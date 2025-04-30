@@ -23,13 +23,12 @@ class GameBar extends StatelessWidget {
               color: GameplayStyles.colorPlayerBGBase, borderRadius: GlobalStyles.borderRadius),
           child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
             const SizedBox(width: PlayerCard.width),
-            Obx(() => Text(
-                  Game.inst.state.value.status.tr,
-                  style: const TextStyle(
-                      fontFamily: 'Inconsolata',
-                      fontVariations: [FontVariation.weight(700)],
-                      fontSize: 16),
-                )),
+            DefaultTextStyle(
+                style: const TextStyle(
+                    fontFamily: 'Inconsolata',
+                    fontVariations: [FontVariation.weight(700)],
+                    fontSize: 16),
+                child: Obx(() => Game.inst.state.value.status)),
             const SizedBox(width: GameChat.width)
           ])),
       const Positioned(top: -10, left: -8, child: GameClock()),

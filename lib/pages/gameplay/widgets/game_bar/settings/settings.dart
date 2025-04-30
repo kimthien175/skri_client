@@ -67,7 +67,8 @@ class SettingsButton extends StatelessWidget {
         child: GifManager.inst
             .misc('settings')
             .builder
-            .initWithShadow(filterQuality: FilterQuality.none, height: 42, width: 42));
+            .initWithShadow(filterQuality: FilterQuality.none)
+            .fit(height: 42));
   }
 }
 
@@ -82,7 +83,7 @@ class _TittleItem extends StatelessWidget {
     return Padding(
         padding: const EdgeInsets.only(bottom: 1.95),
         child: Row(children: [
-          GifManager.inst.misc(icon).builder.initWithShadow(height: 27.297, width: 27.297),
+          GifManager.inst.misc(icon).builder.initWithShadow().fit(height: 27.297, width: 27.297),
           const SizedBox(width: 5.850),
           Text(
             title,

@@ -1,13 +1,12 @@
 import 'dart:convert';
-// ignore: avoid_web_libraries_in_flutter
-import 'dart:html';
+import 'package:web/web.dart' as web;
 
 class Storage {
   static String get _key => 'smt';
   static Map<String, dynamic> get data {
-    String? smt = window.localStorage[_key];
+    String? smt = web.window.localStorage.getItem(_key);
     if (smt == null) {
-      window.localStorage[_key] = '{}';
+      Storage.data = {};
       return {};
     }
     return jsonDecode(smt);
@@ -25,10 +24,10 @@ class Storage {
     }
 
     subData[keys.last] = value;
-    window.localStorage[_key] = jsonEncode(data);
+    Storage.data = data;
   }
 
   static set data(Map<String, dynamic> value) {
-    window.localStorage[_key] = jsonEncode(value);
+    web.window.localStorage.setItem(_key, jsonEncode(value));
   }
 }

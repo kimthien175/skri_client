@@ -62,51 +62,6 @@ class TopWidgetController extends GetxController with GetTickerProviderStateMixi
     backgroundOpactityAnimation = Tween(begin: 0.0, end: 1.0).animate(backgroundController);
   }
 
-  /// `totalDuration`: scene's timespan of appearance
-  ///
-  /// if soon enough, the function wait or delay till showing done
-  ///
-  ///  return `Duration.zero`
-  ///
-  /// if not enough and `totalDuration` != `null`, then return duration that elapse since showing done and do nothing with background and content visual
-  // Future<Duration> show(Duration fromStartedDate, {Duration? totalDuration}) async {
-  //   assert(fromStartedDate >= Duration.zero);
-
-  //   if (fromStartedDate < TopWidgetController.backgroundDuration) {
-  //     await backgroundController.forward(
-  //         from: fromStartedDate / TopWidgetController.backgroundDuration);
-  //     await contentController.forward();
-
-  //     return Duration.zero;
-  //   }
-
-  //   if (fromStartedDate <
-  //       TopWidgetController.backgroundDuration + TopWidgetController.contentDuration) {
-  //     backgroundController.value = 1;
-  //     await contentController.forward(
-  //         from: (fromStartedDate - TopWidgetController.backgroundDuration) /
-  //             TopWidgetController.contentDuration);
-
-  //     return Duration.zero;
-  //   }
-
-  //   if (totalDuration != null) {
-  //     if (fromStartedDate <= totalDuration) {
-  //       backgroundController.value = 1;
-  //       contentController.value = 1;
-
-  //       Future.delayed(totalDuration - fromStartedDate);
-  //       return Duration.zero;
-  //     }
-  //     // do nothing for animation, just return remaining elapsed time
-  //     return fromStartedDate - totalDuration;
-  //   }
-
-  //   backgroundController.value = 1;
-  //   contentController.value = 1;
-  //   return fromStartedDate - backgroundDuration - contentDuration;
-  // }
-
   Future<void> hideAll() async {
     await contentController.reverse();
     return backgroundController.reverse();
@@ -118,8 +73,4 @@ class TopWidgetController extends GetxController with GetTickerProviderStateMixi
     backgroundController.dispose();
     super.onClose();
   }
-}
-
-extension DurationDivision on Duration {
-  double operator /(Duration other) => inMicroseconds / other.inMicroseconds;
 }

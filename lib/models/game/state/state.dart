@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:skribbl_client/models/game/state/draw.dart';
 import 'package:skribbl_client/models/game/state/match_making.dart';
 import 'package:skribbl_client/models/game/state/pick_word.dart';
@@ -39,5 +40,5 @@ abstract class GameState {
 
   Widget get topWidget;
 
-  String get status => 'WAITING';
+  Widget get status => Builder(builder: (_) => Text('WAITING'.tr));
 }

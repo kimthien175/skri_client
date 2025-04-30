@@ -46,15 +46,15 @@ class Game extends GetxController {
   }
 
   Map<String, dynamic> get system => data['system'];
-  List<String> get roundWhiteList => data['round_white_list'];
+  Map<String, dynamic> get options => data['options'];
 
   late final RxInt currentRound;
 
   String get inviteLink => '${html.window.location.host}/?$roomCode';
 
   copyLink() {
-    Clipboard.setData(ClipboardData(text: Game.inst.inviteLink)).then(
-        (value) => Game.inst.addMessage((color) => LinkCopiedMessage(backgroundColor: color)));
+    Clipboard.setData(ClipboardData(text: inviteLink))
+        .then((value) => addMessage((color) => LinkCopiedMessage(backgroundColor: color)));
   }
 
   late final RxList<Player> playersByList;
@@ -83,9 +83,9 @@ class Game extends GetxController {
   }
 
   late Rx<GameState> state;
-  Map<String, dynamic> get henceforthStates => data['henceforth_states'];
+  Map<String, dynamic> get henceforthStates => data['henceforth_states'] as Map<String, dynamic>;
 
-  Map<String, dynamic> get status => data['status'];
+  Map<String, dynamic> get status => data['status'] as Map<String, dynamic>;
   set status(Map<String, dynamic> value) => data['status'] = value;
 
   String get currentStateId => status['current_state_id'];
@@ -125,10 +125,10 @@ class Game extends GetxController {
   runState() {
     switch (stateCommand) {
       case start:
-        state.value.onStart(DateTime.now() - inst.stateDate);
+        state.value.onStart(DateTime.now() - stateDate);
         break;
       case end:
-        state.value.onEnd(DateTime.now() - inst.stateDate).then((duration) {
+        state.value.onEnd(DateTime.now() - stateDate).then((duration) {
           henceforthStates.remove(state.value.id);
           state.value = GameState.fromJSON(henceforthStates[nextStateId]);
           state.value.onStart(duration);
@@ -139,6 +139,19 @@ class Game extends GetxController {
 
   static const String start = 'start';
   static const String end = 'end';
+
+  void receiveStatusAndStates(dynamic pkg) {
+    henceforthStates.addAll(pkg['henceforth_states']);
+
+    status = pkg['status'];
+
+    if (state.value.id != currentStateId) {
+      henceforthStates.remove(state.value.id);
+      state.value = GameState.fromJSON(henceforthStates[currentStateId]);
+    }
+
+    runState();
+  }
 }
 
 typedef GameStateInitCallback = GameState Function();

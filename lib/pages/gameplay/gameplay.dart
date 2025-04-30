@@ -5,6 +5,7 @@ export 'layouts/mobile.dart';
 export 'widgets/widgets.dart';
 
 import 'package:skribbl_client/models/models.dart';
+import 'package:skribbl_client/pages/gameplay/widgets/draw_view/like_dislike.dart';
 import 'package:skribbl_client/pages/pages.dart';
 
 import 'package:flutter/material.dart';

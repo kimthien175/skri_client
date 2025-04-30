@@ -16,7 +16,7 @@ class GameClock extends GetView<GameClockController> {
         child: ScaleTransition(
             scale: controller.scaleAnimation,
             child: Stack(alignment: Alignment.center, children: [
-              GifManager.inst.misc('clock').builder.initWithShadow(width: 64, height: 64),
+              GifManager.inst.misc('clock').builder.initWithShadow().fit(width: 64, height: 64),
               Positioned(
                   top: 20,
                   child: GetBuilder<GameClockController>(

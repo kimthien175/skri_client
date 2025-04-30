@@ -193,6 +193,14 @@
             {
                 "name":"questionmark",
                 "source":"assets/gif/questionmark.gif"
+            },
+            {
+                "name":"thumb_up",
+                "source":"assets/gif/thumbsup.gif"
+            },
+            {
+                "name":"thumb_down",
+                "source": "assets/gif/thumbsdown.gif"
             }
         ]
     }
