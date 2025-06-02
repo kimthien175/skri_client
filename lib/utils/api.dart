@@ -7,7 +7,7 @@ class API {
   static final API _instance = API._internal();
   static API get inst => _instance;
   final client = Client();
-  final String uri = 'http://127.0.0.1:4000/';
+  String uri = const String.fromEnvironment('SERVER_URI');
   Future<Response> get(String smt) async {
     return client.get(Uri.parse('$uri$smt'));
   }
