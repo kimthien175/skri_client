@@ -7,9 +7,6 @@ import 'package:skribbl_client/pages/pages.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../../../models/game/state/draw.dart';
-import '../draw/draw_widget.dart';
-
 class MainContent extends StatelessWidget {
   const MainContent({super.key});
 
@@ -17,24 +14,12 @@ class MainContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Stack(children: [GameCanvas(), TopWidget()]);
+    return Stack(
+        children: [Obx(() => Game.inst.state.value.canvas), const TopWidget()]);
   }
 }
 
-class GameCanvas extends StatelessWidget {
-  const GameCanvas({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    return Obx(() {
-      var state = Game.inst.state.value;
-      if (state is DrawState && !state.isSpectator) {
-        return const DrawWidget();
-      }
-      return const DrawViewWidget();
-    });
-  }
-}
 
 // class MainContentController extends GetxController {
 //   MainContentController() {

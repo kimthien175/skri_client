@@ -265,7 +265,7 @@ class _SettingsItem extends StatelessWidget {
   List<DropdownItem> getItems() {
     List<DropdownItem> items = [];
     var settings = GameSettingsWidget.fetchedOptions[settingKey];
-    if (settings is List<dynamic>) {
+    if (settings is List) {
       for (dynamic e in settings) {
         items.add(_menuItem(e));
       }

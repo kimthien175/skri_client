@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:skribbl_client/models/game/state/draw.dart';
+import 'package:skribbl_client/models/game/state/draw/draw.dart';
 import 'package:skribbl_client/models/game/state/match_making.dart';
 import 'package:skribbl_client/models/game/state/pick_word.dart';
 import 'package:skribbl_client/models/game/state/pre_game.dart';
+
+import '../../../pages/pages.dart';
 
 abstract class GameState {
   GameState({required this.data});
@@ -21,7 +23,7 @@ abstract class GameState {
         return PickWordState(data: data);
 
       case 'draw':
-        return DrawState(data: data);
+        return DrawState.init(data: data);
 
       case 'match_making':
         return MatchMakingState(data: data);
@@ -41,4 +43,7 @@ abstract class GameState {
   Widget get topWidget;
 
   Widget get status => Builder(builder: (_) => Text('WAITING'.tr));
+
+  ///only DrawState for performer can override this
+  final Widget canvas = const DrawViewWidget();
 }

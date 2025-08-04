@@ -107,12 +107,13 @@ class PrivateGame extends Game {
       "_id": "680b9959c4a0f77046faa934",
       //
       "status": {
-        "current_state_id": "680b9959c4a0f77046faa933",
-        "command": "end",
+        "current_state_id": "pregame_state_id",
+        "command": "start",
         "date": DateTime.now().toUtc().toIso8601String(),
         "next_state_id": "680cd9b9b34194c2298d16a4"
       },
       "henceforth_states": {
+        "pregame_state_id": {"id": "pregame_state_id", "type": "pre_game"} as dynamic,
         "680b9959c4a0f77046faa933": {
           "type": "pick_word",
           "id": "680b9959c4a0f77046faa933",
@@ -162,8 +163,6 @@ class PrivateGame extends Game {
   }
 
   late RxString hostPlayerId;
-
-  Map<String, dynamic> get options => data['options'];
 
   void changeSettings(String key, dynamic value) {
     settings[key] = value;

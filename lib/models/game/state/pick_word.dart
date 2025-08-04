@@ -10,7 +10,8 @@ import 'package:skribbl_client/utils/utils.dart';
 import 'package:skribbl_client/widgets/widgets.dart';
 
 class PickWordState extends GameState {
-  Duration get _fullPickingDuration => Duration(seconds: Game.inst.system['pick_word_time']);
+  Duration get _fullPickingDuration =>
+      Duration(seconds: Game.inst.system['pick_word_time']);
   PickWordState({required super.data});
 
   String get playerId => data['player_id'];
@@ -24,10 +25,12 @@ class PickWordState extends GameState {
           color: Colors.white,
           fontSize: 32,
           fontVariations: [FontVariation.weight(480)]),
-      child: roundNotify != null ? _topWidgetRoundNotify : _topWidgetChooseWord);
+      child:
+          roundNotify != null ? _topWidgetRoundNotify : _topWidgetChooseWord);
 
   Widget get _topWidgetRoundNotify => Text(
-        'round_noti'.trParams({'round': Game.inst.currentRound.value.toString()}),
+        'round_noti'
+            .trParams({'round': Game.inst.currentRound.value.toString()}),
       );
 
   Widget get _topWidgetChooseWord {
@@ -36,7 +39,8 @@ class PickWordState extends GameState {
         mainAxisAlignment: MainAxisAlignment.center,
         children: playerId == MePlayer.inst.id
             ? [
-                Text('choose_a_word'.tr, style: TextStyle(color: Colors.grey.shade300)),
+                Text('choose_a_word'.tr,
+                    style: TextStyle(color: Colors.grey.shade300)),
                 const _WordOptions()
               ]
             : [
@@ -63,8 +67,8 @@ class PickWordState extends GameState {
     if (roundNotify != null) {
       // show round intro
       if (sinceStartDate < TopWidgetController.contentDuration) {
-        await topWidget.contentController
-            .forward(from: sinceStartDate / TopWidgetController.contentDuration);
+        await topWidget.contentController.forward(
+            from: sinceStartDate / TopWidgetController.contentDuration);
         sinceStartDate = Duration.zero;
       } else {
         sinceStartDate -= TopWidgetController.contentDuration;
@@ -81,8 +85,8 @@ class PickWordState extends GameState {
 
       // close up round noti
       if (sinceStartDate < TopWidgetController.contentDuration) {
-        await topWidget.contentController
-            .reverse(from: 1 - sinceStartDate / TopWidgetController.contentDuration);
+        await topWidget.contentController.reverse(
+            from: 1 - sinceStartDate / TopWidgetController.contentDuration);
         sinceStartDate = Duration.zero;
       } else {
         sinceStartDate -= TopWidgetController.contentDuration;
@@ -128,11 +132,13 @@ class PickWordState extends GameState {
 
   @override
   Future<Duration> onEnd(Duration sinceEndDate) async {
+    Get.find<GameClockController>().cancel();
+
     var topWidget = Get.find<TopWidgetController>();
 
     if (sinceEndDate < TopWidgetController.contentDuration) {
-      await topWidget.contentController
-          .reverse(from: 1 - sinceEndDate / TopWidgetController.contentDuration);
+      await topWidget.contentController.reverse(
+          from: 1 - sinceEndDate / TopWidgetController.contentDuration);
       sinceEndDate = Duration.zero;
     } else {
       topWidget.contentController.value = 0;
@@ -140,8 +146,8 @@ class PickWordState extends GameState {
     }
 
     if (sinceEndDate < TopWidgetController.backgroundDuration) {
-      await topWidget.backgroundController
-          .reverse(from: 1 - sinceEndDate / TopWidgetController.backgroundDuration);
+      await topWidget.backgroundController.reverse(
+          from: 1 - sinceEndDate / TopWidgetController.backgroundDuration);
       return Duration.zero;
     } else {
       topWidget.backgroundController.value = 0;
@@ -161,14 +167,17 @@ class _WordButton extends StatefulWidget {
   State<_WordButton> createState() => __WordButtonState();
 }
 
-class __WordButtonState extends State<_WordButton> with SingleTickerProviderStateMixin {
+class __WordButtonState extends State<_WordButton>
+    with SingleTickerProviderStateMixin {
   late final AnimationController controller;
   late final Animation<Color?> textAnimation;
   @override
   void initState() {
     super.initState();
-    controller = AnimationController(vsync: this, duration: AnimatedButton.duration);
-    textAnimation = ColorTween(begin: Colors.white, end: Colors.grey.shade900).animate(controller);
+    controller =
+        AnimationController(vsync: this, duration: AnimatedButton.duration);
+    textAnimation = ColorTween(begin: Colors.white, end: Colors.grey.shade900)
+        .animate(controller);
   }
 
   @override
@@ -237,8 +246,9 @@ class __WordOptionsState extends State<_WordOptions> {
             mainAxisSize: MainAxisSize.min,
             children: (Game.inst.state.value as PickWordState)
                 .words
-                .map((e) =>
-                    Padding(padding: EdgeInsets.all(8), child: _WordButton(word: e as String)))
+                .map((e) => Padding(
+                    padding: EdgeInsets.all(8),
+                    child: _WordButton(word: e as String)))
                 .toList()));
   }
 }
