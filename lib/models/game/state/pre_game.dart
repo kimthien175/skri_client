@@ -19,12 +19,12 @@ class PreGameState extends GameState {
     if (Game.inst.stateCommand == Game.start) {
       // do background
       if (sinceStartDate < TopWidgetController.backgroundDuration) {
-        await widgetController.backgroundController
-            .forward(from: sinceStartDate / TopWidgetController.backgroundDuration);
+        await widgetController.forwardBackground(
+            from: sinceStartDate / TopWidgetController.backgroundDuration);
 
         sinceStartDate = Duration.zero;
       } else {
-        widgetController.backgroundController.value = 1;
+        widgetController.background = 1;
         sinceStartDate -= TopWidgetController.backgroundDuration;
       }
     }

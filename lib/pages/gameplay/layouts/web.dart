@@ -4,7 +4,6 @@ import 'package:skribbl_client/utils/styles.dart';
 import 'package:skribbl_client/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 
-// TODO: test scrollcontroller
 class GameplayWeb extends StatefulWidget {
   const GameplayWeb({super.key});
   static const double width = 1312;

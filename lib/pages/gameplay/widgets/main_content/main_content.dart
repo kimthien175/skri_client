@@ -1,28 +1,39 @@
-library;
-
-export 'top_widget.dart';
-
 import 'package:skribbl_client/models/game/game.dart';
-import 'package:skribbl_client/pages/pages.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:skribbl_client/utils/styles.dart';
+
+part 'top_widget.dart';
 
 class MainContent extends StatelessWidget {
   const MainContent({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Stack(children: [Obx(() => Game.inst.state.value.canvas), const TopWidget()]);
+    return Obx(() => Get.find<_MainContentController>().widget.value);
   }
 }
-// class MainContentController extends GetxController {
-//   MainContentController() {
-//     // ignore: unnecessary_cast
-//     child = (canvas as Widget).obs;
-//   }
 
-//   late final Rx<Widget> child;
-//   final CanvasAndFooter canvas = CanvasAndFooter();
+class _MainContentController extends GetxController {
+  final Widget canvas = Obx(() => Game.inst.state.value.canvas);
+  late final Rx<Widget> widget = canvas.obs;
+
+  bool get hasTopWidget => widget.value != canvas;
+
+  show() {
+    if (hasTopWidget) return;
+
+    widget.value = Stack(
+      children: [canvas, const TopWidget()],
+    );
+  }
+
+  hide() {
+    if (hasTopWidget) {
+      widget.value = canvas;
+    }
+  }
+}
 
   // void showSettings() {
   //   Get.find<CanvasAndFooterController>().child.value = const EmptyCanvasAndInvite();

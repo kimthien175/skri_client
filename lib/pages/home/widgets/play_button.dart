@@ -17,7 +17,6 @@ class PlayButton extends StatelessWidget {
 //#region Private room
           if (homeController.isPrivateRoomCodeValid) {
             // join private room
-            //TODO: TEST JOINING PRIVATE ROOM
             PrivateGame.join(homeController.privateRoomCode);
             return;
           }

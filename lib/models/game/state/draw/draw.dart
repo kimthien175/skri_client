@@ -42,11 +42,11 @@ mixin _DrawStateMixin on GameState {
     var topWidget = Get.find<TopWidgetController>();
     // word reveal
     if (sinceEndDate < TopWidgetController.backgroundDuration) {
-      await topWidget.backgroundController
-          .forward(from: sinceEndDate / TopWidgetController.backgroundDuration);
+      await topWidget.forwardBackground(
+          from: sinceEndDate / TopWidgetController.backgroundDuration);
       sinceEndDate = Duration.zero;
     } else {
-      topWidget.backgroundController.value = 1;
+      topWidget.background = 1;
       sinceEndDate -= TopWidgetController.backgroundDuration;
     }
 

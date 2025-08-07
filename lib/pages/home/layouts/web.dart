@@ -6,7 +6,6 @@ import 'package:skribbl_client/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-// TODO: test scrollcontroller
 class HomeWeb extends StatefulWidget {
   const HomeWeb({super.key});
 

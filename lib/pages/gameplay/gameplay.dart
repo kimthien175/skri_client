@@ -40,8 +40,6 @@ class GameplayController extends GetxController {
   }
 }
 
-// TODO: test changes aft
-//er replacing deprecated property
 class GameplayPage extends StatelessWidget {
   const GameplayPage({super.key});
 

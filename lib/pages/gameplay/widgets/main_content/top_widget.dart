@@ -1,7 +1,4 @@
-import 'package:skribbl_client/models/game/game.dart';
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:skribbl_client/utils/styles.dart';
+part of 'main_content.dart';
 
 class TopWidget extends StatelessWidget {
   const TopWidget({super.key});
@@ -9,8 +6,7 @@ class TopWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var controller = Get.find<TopWidgetController>();
-    return IgnorePointer(
-        child: Stack(children: [
+    return Stack(children: [
       FadeTransition(
           opacity: controller.backgroundOpactityAnimation,
           child: Container(
@@ -28,13 +24,15 @@ class TopWidget extends StatelessWidget {
                   height: 600,
                   width: 800,
                   child: Center(child: Obx(() => Game.inst.state.value.topWidget)))))
-    ]));
+    ]);
   }
 }
 
 class TopWidgetController extends GetxController with GetTickerProviderStateMixin {
+  final mainContentController = Get.put(_MainContentController());
+
   late final AnimationController contentController;
-  late final AnimationController backgroundController;
+  late final AnimationController _backgroundController;
   late final Animation<Offset> offsetAnimation;
   late final Animation<double> backgroundOpactityAnimation;
 
@@ -49,7 +47,7 @@ class TopWidgetController extends GetxController with GetTickerProviderStateMixi
       vsync: this,
     );
 
-    backgroundController = AnimationController(
+    _backgroundController = AnimationController(
       duration: TopWidgetController.backgroundDuration,
       vsync: this,
     );
@@ -59,13 +57,35 @@ class TopWidgetController extends GetxController with GetTickerProviderStateMixi
       end: Offset.zero,
     ).animate(CurvedAnimation(parent: contentController, curve: Curves.easeOutBack));
 
-    backgroundOpactityAnimation = Tween(begin: 0.0, end: 1.0).animate(backgroundController);
+    backgroundOpactityAnimation = Tween(begin: 0.0, end: 1.0).animate(_backgroundController);
   }
 
   @override
   onClose() {
     contentController.dispose();
-    backgroundController.dispose();
+    _backgroundController.dispose();
     super.onClose();
   }
+
+  TickerFuture forwardBackground({required double from}) {
+    mainContentController.show();
+    return _backgroundController.forward(from: from);
+  }
+
+  reverseBackground({required double from}) async {
+    await _backgroundController.reverse(from: from);
+    mainContentController.hide();
+  }
+
+  set background(double value) {
+    if (value == 0) {
+      mainContentController.hide();
+      _backgroundController.value = value;
+    } else {
+      _backgroundController.value = value;
+      mainContentController.show();
+    }
+  }
+
+  double get background => _backgroundController.value;
 }

@@ -17,13 +17,13 @@ import 'pages/pages.dart';
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
 
-  var initialRoute = '/GameplayPage';
+  var initialRoute = '/';
 
   Future.wait([
     GifManager.init().then((_) async {
-      //TODO: FOR TESTING, TO SWITCH TO PRODUCTION, UNCOMMENT THE LINE BELOW AND IT IS THE ONLY LINE IN THIS CALLBACK BODY
-      //MePlayer.random();
-      await PrivateGame.setupTesting();
+      //FOR TESTING, TO SWITCH TO PRODUCTION, UNCOMMENT THE LINE BELOW AND IT IS THE ONLY LINE IN THIS CALLBACK BODY
+      MePlayer.random();
+      //await PrivateGame.setupTesting();
     }),
     SocketIO.initSocket(),
   ]).then((_) {
@@ -65,8 +65,7 @@ void main() {
             middlewares: [GameplayMiddleware()]),
         GetPage(name: '/test', page: () => TestPage()),
         GetPage(
-            name: '/loading',
-            page: () => Background(child: LoadingOverlay.inst.widgetBuilder()))
+            name: '/loading', page: () => Background(child: LoadingOverlay.inst.widgetBuilder()))
       ]));
 }
 
