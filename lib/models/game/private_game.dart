@@ -107,7 +107,7 @@ class PrivateGame extends Game {
       "_id": "680b9959c4a0f77046faa934",
       //
       "status": {
-        "current_state_id": "pregame_state_id",
+        "current_state_id": "680cd9b9b34194c2298d16a4",
         "command": "start",
         "date": DateTime.now().toUtc().toIso8601String(),
         "next_state_id": "680cd9b9b34194c2298d16a4"
@@ -125,7 +125,16 @@ class PrivateGame extends Game {
           "type": "draw",
           "id": "680cd9b9b34194c2298d16a4",
           "player_id": "fDmSIumozqWBdX87AAA",
-          "word": "the fish"
+          "word": "the fish",
+          "hint": "__ ___"
+        } as dynamic,
+        "draw_state_id": {
+          "type": 'draw',
+          "id": "draw_state_id",
+          "word": "abc",
+          'hint': '___',
+          "player_id": "fDmSIumozqWBdX87AAAE",
+          "word_mode": "Normal"
         } as dynamic
       }
     };

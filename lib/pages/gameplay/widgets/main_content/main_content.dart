@@ -10,17 +10,11 @@ import 'package:get/get.dart';
 class MainContent extends StatelessWidget {
   const MainContent({super.key});
 
-  static Duration animationDuration = const Duration(milliseconds: 800);
-
   @override
   Widget build(BuildContext context) {
-    return Stack(
-        children: [Obx(() => Game.inst.state.value.canvas), const TopWidget()]);
+    return Stack(children: [Obx(() => Game.inst.state.value.canvas), const TopWidget()]);
   }
 }
-
-
-
 // class MainContentController extends GetxController {
 //   MainContentController() {
 //     // ignore: unnecessary_cast

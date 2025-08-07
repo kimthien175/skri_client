@@ -8,6 +8,7 @@ abstract class OverlayWidgetPosition {
   const factory OverlayWidgetPosition.centerBotttom() = OverlayWidgetPositionCenterBottom;
   const factory OverlayWidgetPosition.leftBottom() = OverlayWidgetPositionLeftBottom;
   const factory OverlayWidgetPosition.innerTopRight() = OverlayWidgetPositionInnerTopRight;
+  const factory OverlayWidgetPosition.innerTopLeft() = OverlayWidgetPositionInnerTopLeft;
 
   const OverlayWidgetPosition();
   Widget wrapWithZone(Widget aligned, Offset offset, Size size);
@@ -174,4 +175,21 @@ class OverlayWidgetPositionInnerTopRight extends OverlayWidgetPosition {
   Widget wrapWithZone(Widget aligned, Offset offset, Size size) {
     throw UnimplementedError();
   }
+}
+
+class OverlayWidgetPositionInnerTopLeft extends OverlayWidgetPosition {
+  const OverlayWidgetPositionInnerTopLeft();
+  @override
+  Widget build({required Widget child, required RenderBox originalBox, required double scale}) {
+    var coord = originalBox.localToGlobal(Offset.zero);
+    //print('top left');
+    //print(coord);
+    return Positioned(top: coord.dy, left: coord.dx, child: child);
+  }
+
+  @override
+  Alignment get relativeAlignment => throw UnimplementedError();
+
+  @override
+  Widget wrapWithZone(Widget aligned, Offset offset, Size size) => throw UnimplementedError();
 }

@@ -1,5 +1,4 @@
 import 'package:skribbl_client/models/game/game.dart';
-import 'package:skribbl_client/pages/gameplay/widgets/main_content/main_content.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:skribbl_client/utils/styles.dart';
@@ -10,7 +9,8 @@ class TopWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var controller = Get.find<TopWidgetController>();
-    return Stack(children: [
+    return IgnorePointer(
+        child: Stack(children: [
       FadeTransition(
           opacity: controller.backgroundOpactityAnimation,
           child: Container(
@@ -28,7 +28,7 @@ class TopWidget extends StatelessWidget {
                   height: 600,
                   width: 800,
                   child: Center(child: Obx(() => Game.inst.state.value.topWidget)))))
-    ]);
+    ]));
   }
 }
 
@@ -38,8 +38,8 @@ class TopWidgetController extends GetxController with GetTickerProviderStateMixi
   late final Animation<Offset> offsetAnimation;
   late final Animation<double> backgroundOpactityAnimation;
 
-  static Duration get contentDuration => MainContent.animationDuration;
-  static Duration get backgroundDuration => MainContent.animationDuration;
+  static Duration get contentDuration => const Duration(milliseconds: 800);
+  static Duration get backgroundDuration => const Duration(milliseconds: 800);
 
   @override
   void onInit() {
@@ -60,11 +60,6 @@ class TopWidgetController extends GetxController with GetTickerProviderStateMixi
     ).animate(CurvedAnimation(parent: contentController, curve: Curves.easeOutBack));
 
     backgroundOpactityAnimation = Tween(begin: 0.0, end: 1.0).animate(backgroundController);
-  }
-
-  Future<void> hideAll() async {
-    await contentController.reverse();
-    return backgroundController.reverse();
   }
 
   @override

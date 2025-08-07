@@ -26,7 +26,7 @@ class GameplayController extends GetxController {
     Get.put(GameClockController());
     Get.put(GameChatController());
 
-    Get.put(DrawViewController());
+    Get.put(LikeAndDislikeController());
     DrawManager.init();
 
     Get.put(TopWidgetController());

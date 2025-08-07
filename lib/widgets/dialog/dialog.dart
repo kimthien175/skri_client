@@ -57,7 +57,7 @@ class GameDialog extends OverlayController with GetSingleTickerProviderStateMixi
         buttons = buttons.obs;
 
   @override
-  Widget Function() get widgetBuilder => () => const _Dialog();
+  Widget widgetBuilder() => const _Dialog();
 
   final Widget title;
   final Rx<Widget> content;

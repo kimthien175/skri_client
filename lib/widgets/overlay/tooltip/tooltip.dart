@@ -14,7 +14,7 @@ class GameTooltip extends PositionedOverlayController<GameTooltipPosition> {
       required super.anchorKey});
 
   @override
-  Widget Function() get widgetBuilder => () => const _Tooltip();
+  Widget widgetBuilder() => const _Tooltip();
 
   final AnimationController controller;
   Animation<double> get scaleAnimation => controller.drive(Tween<double>(begin: 0, end: 1));
@@ -75,8 +75,9 @@ class GameTooltipWidget extends StatefulWidget {
 
 class __TooltipWithWidgetState extends State<GameTooltipWidget>
     with SingleTickerProviderStateMixin {
-  late final GameTooltip
-      controller; // no need to put in dispose(), when showing, OverlayController put itself in Getx smart management
+  late final GameTooltip controller;
+  // no need to put in dispose(), when showing, OverlayController put itself in Getx smart management
+
   late final GlobalKey key;
   late final AnimationController animController;
   late final FocusNode focusNode;

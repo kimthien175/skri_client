@@ -17,12 +17,10 @@ abstract class DrawState {
   static GameState init({required dynamic data}) {
     return data['player_id'] != MePlayer.inst.id
         ? _SpectatorDrawState(data: data)
-        : isHintHidden
+        : data['word_mode'] == _HiddenHintStatus.value
             ? _PerformerDrawState(data: data)
             : _EmittingPerformerDrawState(data: data);
   }
-
-  static bool get isHintHidden => Game.inst.settings['word_mode'] == _HiddenHintStatus.value;
 }
 
 mixin _DrawStateMixin on GameState {
@@ -30,6 +28,8 @@ mixin _DrawStateMixin on GameState {
 
   @override
   Widget get topWidget => const SizedBox();
+
+  bool get isHintHidden => data['word_mode'] == _HiddenHintStatus.value;
 
   @override
   Future<void> onStart(Duration sinceStartDate) async {
@@ -65,14 +65,13 @@ class _SpectatorDrawState extends GameState with _DrawStateMixin {
   _SpectatorDrawState({required super.data});
 
   @override
-  Widget get status =>
-      DrawState.isHintHidden ? const _HiddenHintStatus() : const _VisibleHintStatus();
+  Widget get status => isHintHidden ? const _HiddenHintStatus() : const _VisibleHintStatus();
 
   @override
   Future<void> onStart(Duration sinceStartDate) async {
     super.onStart(sinceStartDate);
 
     DrawViewManager.inst.clear(null);
-    Get.find<DrawViewController>().buttonsController.show();
+    Get.find<LikeAndDislikeController>().controller.forward();
   }
 }

@@ -1,17 +1,6 @@
-import 'package:get/get.dart';
-import 'package:skribbl_client/models/models.dart';
-import 'package:skribbl_client/widgets/animated_button/animated_button.dart';
-import 'package:flutter/material.dart';
-import 'package:skribbl_client/widgets/overlay/overlay.dart';
-import 'package:skribbl_client/widgets/overlay/position.dart';
+part of 'draw_view.dart';
 
-class LikeAndDislikeOverlayController extends PositionedOverlayController<OverlayWidgetPosition>
-    with GetSingleTickerProviderStateMixin {
-  LikeAndDislikeOverlayController({required super.anchorKey})
-      : super(
-            childBuilder: () => const _LikeAndDislikeButtons(),
-            position: const OverlayWidgetPosition.innerTopRight());
-
+class LikeAndDislikeController extends GetxController with GetSingleTickerProviderStateMixin {
   late final AnimationController controller;
   late final Animation<Offset> offsetAnim;
   late final Animation<double> opacAnim;
@@ -32,15 +21,6 @@ class LikeAndDislikeOverlayController extends PositionedOverlayController<Overla
     controller.dispose();
     super.onClose();
   }
-
-  @override
-  Future<bool> show() async {
-    if (await super.show()) {
-      await controller.forward();
-      return true;
-    }
-    return false;
-  }
 }
 
 class _LikeAndDislikeButtons extends StatelessWidget {
@@ -48,7 +28,7 @@ class _LikeAndDislikeButtons extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var controller = OverlayWidget.of<LikeAndDislikeOverlayController>(context);
+    var controller = Get.find<LikeAndDislikeController>();
     var gif = GifManager.inst.misc;
     return ClipRRect(
         child: SlideTransition(
@@ -60,7 +40,7 @@ class _LikeAndDislikeButtons extends StatelessWidget {
                   children: [
                     AnimatedButton(
                         onTap: () {
-                          controller.hide();
+                          controller.controller.value = 0;
                           // TODO: SEND LIKE MSG
                         },
                         decorators: const [
@@ -70,7 +50,7 @@ class _LikeAndDislikeButtons extends StatelessWidget {
                         child: gif('thumb_up').builder.initWithShadow().fit(height: 50)),
                     AnimatedButton(
                         onTap: () {
-                          controller.hide();
+                          controller.controller.value = 0;
                           // TODO: SEND DISLIKE MSG
                         },
                         decorators: const [

@@ -1,43 +1,37 @@
 import 'dart:typed_data';
 
 import 'package:get/get.dart';
+import 'package:skribbl_client/models/models.dart';
 import 'package:skribbl_client/utils/socket_io.dart';
 import 'package:flutter/material.dart';
+import 'package:skribbl_client/widgets/widgets.dart';
 
 import '../draw/manager.dart';
-import 'like_dislike.dart';
+
 import 'dart:ui' as ui;
 
-class DrawViewController extends GetxController {
-  late final LikeAndDislikeOverlayController buttonsController;
-  late final GlobalKey anchorKey;
-  @override
-  void onInit() {
-    super.onInit();
-    anchorKey = GlobalKey();
-    buttonsController = LikeAndDislikeOverlayController(anchorKey: anchorKey);
-  }
-}
+part 'like_dislike.dart';
 
 class DrawViewWidget extends StatelessWidget {
   const DrawViewWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
-    var controller = Get.find<DrawViewController>();
-    return ClipRRect(
-        key: controller.anchorKey,
-        borderRadius: const BorderRadius.all(Radius.circular(3)),
-        child: Container(
-          height: DrawManager.height,
-          width: DrawManager.width,
-          decoration: const BoxDecoration(
-            color: Colors.white,
-          ),
-          child: CustomPaint(
-              size: const Size(DrawManager.width, DrawManager.height),
-              painter: _DrawViewCustomPainter()),
-        ));
+    return Stack(children: [
+      ClipRRect(
+          borderRadius: const BorderRadius.all(Radius.circular(3)),
+          child: Container(
+            height: DrawManager.height,
+            width: DrawManager.width,
+            decoration: const BoxDecoration(
+              color: Colors.white,
+            ),
+            child: CustomPaint(
+                size: const Size(DrawManager.width, DrawManager.height),
+                painter: _DrawViewCustomPainter()),
+          )),
+      Positioned(right: 0, top: 0, child: const _LikeAndDislikeButtons())
+    ]);
   }
 }
 
