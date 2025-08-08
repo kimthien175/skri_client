@@ -47,7 +47,7 @@ class FullGifBuilder extends GifBuilder<FullGifModel> {
 
   @override
   GifBuilder<GifModel> init({Color? color, double? width, double? height}) {
-    this.color = color;
+    //this.color = color;
     widget = Obx(() => CustomPaint(
         painter: model.getCustomPainter(
             ControlledGifBuilder.controller.currentFrameIndex.value, Paint()),
@@ -63,7 +63,11 @@ class FullGifBuilder extends GifBuilder<FullGifModel> {
       double? width,
       FilterQuality filterQuality = FilterQuality.none}) {
     var size = Size(width ?? model.width, height ?? model.height);
-    this.color = color;
+    //this.color = color;
+    var paint = Paint();
+    if (color != null) {
+      paint.colorFilter = ColorFilter.mode(color, BlendMode.srcIn);
+    }
     widget = Obx(() => Stack(clipBehavior: Clip.none, children: [
           Transform.translate(
               offset: info.offset,
@@ -76,7 +80,7 @@ class FullGifBuilder extends GifBuilder<FullGifModel> {
                   size: size)),
           CustomPaint(
               painter: model.getCustomPainter(
-                  ControlledGifBuilder.controller.currentFrameIndex.value, Paint()),
+                  ControlledGifBuilder.controller.currentFrameIndex.value, paint),
               size: size)
         ]));
     return this;

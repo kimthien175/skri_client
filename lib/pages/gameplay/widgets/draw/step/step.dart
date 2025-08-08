@@ -13,7 +13,9 @@ abstract class DrawStep {
   final recorder = PictureRecorder();
 
   /// addOn, no previous drawing
-  void drawAddon(Canvas canvas){}
+  /// only BrushStep use this
+  void drawAddon(Canvas canvas) {}
+
   late void Function(Canvas canvas) draw;
 
   void drawTemp(Canvas canvas) {
@@ -28,6 +30,7 @@ abstract class DrawStep {
     drawAddon(canvas);
   }
 
+  /// only Fill step can use this
   Future<void> switchToTemp() async {
     var pictureCanvas = Canvas(recorder);
 
@@ -62,6 +65,8 @@ abstract class GestureDrawStep extends DrawStep {
   late bool Function() onEnd;
 
   void changeColor() {}
+
+  /// only Brush step use this
   void changeStrokeSize() {}
 
   /// Can't use before the step is pushed into the list

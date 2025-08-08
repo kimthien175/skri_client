@@ -1,6 +1,7 @@
 import 'package:skribbl_client/models/gif_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:skribbl_client/widgets/overlay/overlay.dart';
 
 import '../manager.dart';
 import 'stroke_value_item.dart';
@@ -8,33 +9,37 @@ import 'stroke_value_item.dart';
 class StrokeValueSelector extends StatelessWidget {
   const StrokeValueSelector({super.key});
 
+  static StrokeValueListController get listController =>
+      OverlayController.cache(tag: 'stroke_list', builder: () => StrokeValueListController());
+
   @override
   Widget build(BuildContext context) {
-    var controller = Get.find<StrokeValueItemController>(tag: 'stroke_value_selector');
     return ClipRRect(
+        key: listController.anchorKey,
         borderRadius: const BorderRadius.all(Radius.circular(3)),
         child: StrokeValueItem(
-          isMain: true,
-          controller: Get.find<StrokeValueItemController>(tag: 'stroke_value_selector'),
-          onTap: () {
-            Get.find<StrokeValueListController>().isOpened.value = true;
-          },
-          child: Obx(() {
-            var size = 48 * controller.value.value / DrawManager.inst.strokeSizeList.last;
-            return GifManager.inst
-                .misc('stroke_size')
-                .builder
-                .initWithShadow(color: DrawManager.inst.currentColor)
-                .fit(height: size, width: size);
-          }
-              // Text(controller.value.value.toStringAsFixed(2)),
-              ),
-        ));
+            isMain: true,
+            controller: Get.find<StrokeValueItemController>(tag: 'stroke_value_selector'),
+            onTap: listController.show,
+            child: Obx(() {
+              var size = 48 *
+                  Get.find<StrokeValueItemController>(tag: 'stroke_value_selector').value.value /
+                  DrawManager.inst.strokeSizeList.last;
+              return GifManager.inst
+                  .misc('stroke_size')
+                  .builder
+                  .initWithShadow(color: DrawManager.inst.currentColor)
+                  .fit(height: size, width: size);
+            })));
   }
 }
 
-class StrokeValueListController extends GetxController {
-  var isOpened = false.obs;
+class StrokeValueListController extends PositionedOverlayController {
+  StrokeValueListController()
+      : super(
+            anchorKey: GlobalKey(),
+            childBuilder: () => const StrokeValueList(),
+            position: OverlayWidgetPosition.centerTop());
 }
 
 class StrokeValueList extends StatelessWidget {
@@ -44,13 +49,14 @@ class StrokeValueList extends StatelessWidget {
   Widget build(BuildContext context) {
     final List<StrokeValueItem> items = [];
     var list = DrawManager.inst.strokeSizeList;
+    var listController = StrokeValueSelector.listController;
     for (int i = 0; i < list.length; i++) {
       var size = 48 * list[i] / list.last;
       items.add(StrokeValueItem(
           controller: StrokeValueItemController(list[i].obs),
           onTap: () {
             DrawManager.inst.currentStrokeSize = DrawManager.inst.strokeSizeList[i];
-            Get.find<StrokeValueListController>().isOpened.value = false;
+            listController.hide();
             Get.find<StrokeValueItemController>(tag: 'stroke_value_selector').value.value =
                 DrawManager.inst.currentStrokeSize;
           },
@@ -67,24 +73,22 @@ class StrokeValueList extends StatelessWidget {
           if (Get.find<StrokeValueItemController>(tag: 'stroke_value_selector').isHovered.value) {
             return;
           }
-          Get.find<StrokeValueListController>().isOpened.value = false;
+          listController.hide();
         },
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-                decoration: const BoxDecoration(
-                    boxShadow: [BoxShadow(color: Color.fromRGBO(0, 0, 0, 0.3), blurRadius: 7)]),
-                child: ClipRRect(
-                    borderRadius: const BorderRadius.all(Radius.circular(3)),
-                    child: Column(mainAxisSize: MainAxisSize.min, children: items))),
-            CustomPaint(painter: StrokeListArrow(), size: const Size(12, 12))
-          ],
-        ));
+        child: Column(mainAxisSize: MainAxisSize.min, children: [
+          Material(
+              child: Container(
+                  decoration: const BoxDecoration(
+                      boxShadow: [BoxShadow(color: Color.fromRGBO(0, 0, 0, 0.3), blurRadius: 7)]),
+                  child: ClipRRect(
+                      borderRadius: const BorderRadius.all(Radius.circular(3)),
+                      child: Column(mainAxisSize: MainAxisSize.min, children: items)))),
+          CustomPaint(painter: _StrokeListArrow(), size: const Size(12, 12))
+        ]));
   }
 }
 
-class StrokeListArrow extends CustomPainter {
+class _StrokeListArrow extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()

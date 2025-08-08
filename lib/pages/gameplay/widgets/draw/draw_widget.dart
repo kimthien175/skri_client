@@ -6,7 +6,6 @@ import 'manager.dart';
 import 'mode.dart';
 import 'widgets/color.dart';
 import 'widgets/stroke.dart';
-import 'widgets/stroke_value_item.dart';
 
 class DrawWidget extends StatelessWidget {
   const DrawWidget({super.key});
@@ -14,62 +13,52 @@ class DrawWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var drawInst = DrawManager.inst;
-    return Obx(() => Stack(children: [
-          Column(children: [
-            ClipRRect(
-                borderRadius: const BorderRadius.all(Radius.circular(3)),
-                child: Container(
-                    decoration: const BoxDecoration(
-                      color: Colors.white,
-                    ),
-                    child: MouseRegion(
-                        cursor: DrawManager.inst.currentMode.cursor,
-                        child: GestureDetector(
-                            onPanDown: (details) {
-                              drawInst.currentStep.onDown(details.localPosition);
-                            },
-                            onPanUpdate: (details) {
-                              drawInst.currentStep.onUpdate(details.localPosition);
-                            },
-                            onPanEnd: (details) {
-                              drawInst.onEnd();
-                            },
-                            child: Stack(
-                              children: [
-                                CustomPaint(
-                                    size: const Size(DrawManager.width, DrawManager.height),
-                                    painter:
-                                        LastStepCustomPainter(repaint: drawInst.lastStepRepaint)),
-                                CustomPaint(
-                                    size: const Size(DrawManager.width, DrawManager.height),
-                                    painter: CurrentStepCustomPainter(repaint: drawInst))
-                              ],
-                            ))))),
-            const SizedBox(height: 6),
-            const SizedBox(
-                width: 800,
-                child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  RecentColor(),
-                  SizedBox(width: 6),
-                  ColorSelector(),
-                  SizedBox(width: 6),
-                  StrokeValueSelector(),
-                  Spacer(),
-                  BrushButton(),
-                  SizedBox(width: 6),
-                  FillButton(),
-                  Spacer(),
-                  UndoButton(),
-                  SizedBox(width: 6),
-                  ClearButton()
-                ]))
-          ]),
-          if (Get.find<StrokeValueListController>().isOpened.value)
-            Positioned(
-                left: 360,
-                top: 610 - 18 - DrawManager.inst.strokeSizeList.length * StrokeValueItem.size,
-                child: const StrokeValueList())
-        ]));
+    var size = const Size(DrawManager.width, DrawManager.height);
+    return Column(children: [
+      ClipRRect(
+          borderRadius: const BorderRadius.all(Radius.circular(3)),
+          child: Container(
+              decoration: const BoxDecoration(
+                color: Colors.white,
+              ),
+              child: Obx(() => MouseRegion(
+                  cursor: DrawManager.inst.currentMode.cursor,
+                  child: GestureDetector(
+                      onPanDown: (details) {
+                        drawInst.currentStep.onDown(details.localPosition);
+                      },
+                      onPanUpdate: (details) {
+                        drawInst.currentStep.onUpdate(details.localPosition);
+                      },
+                      onPanEnd: (details) {
+                        drawInst.onEnd();
+                      },
+                      child: Stack(children: [
+                        CustomPaint(
+                            size: size,
+                            painter: LastStepCustomPainter(repaint: drawInst.lastStepRepaint)),
+                        CustomPaint(
+                            size: size, painter: CurrentStepCustomPainter(repaint: drawInst))
+                      ])))))),
+      const SizedBox(height: 6),
+      const SizedBox(
+          width: 800,
+          child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            RecentColor(),
+            SizedBox(width: 6),
+            ColorSelector(),
+            SizedBox(width: 6),
+            StrokeValueSelector(),
+            Spacer(),
+            BrushButton(),
+            SizedBox(width: 6),
+            FillButton(),
+            Spacer(),
+            UndoButton(),
+            SizedBox(width: 6),
+            ClearButton()
+          ]))
+    ]);
   }
 }
 

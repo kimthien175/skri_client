@@ -107,7 +107,7 @@ class PrivateGame extends Game {
       "_id": "680b9959c4a0f77046faa934",
       //
       "status": {
-        "current_state_id": "680cd9b9b34194c2298d16a4",
+        "current_state_id": "draw_state_id",
         "command": "start",
         "date": DateTime.now().toUtc().toIso8601String(),
         "next_state_id": "680cd9b9b34194c2298d16a4"

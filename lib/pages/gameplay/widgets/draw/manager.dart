@@ -76,7 +76,6 @@ class DrawManager extends ChangeNotifier {
     DrawManager.inst.currentStep.changeStrokeSize();
   }
 
-  // ignore: unnecessary_cast
   final Rx<DrawMode> _currentMode = (BrushMode() as DrawMode).obs;
   DrawMode get currentMode => _currentMode.value;
   GestureDrawStep get newCurrentStep => _currentMode.value.step(id: -2);
@@ -138,9 +137,7 @@ class CurrentStepCustomPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) {
-    return true;
-  }
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
 }
 
 class LastStepCustomPainter extends CustomPainter {
