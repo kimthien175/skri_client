@@ -6,5 +6,8 @@ class ClearStep extends DrawStep {
   ClearStep({required super.id});
 
   @override
-  void drawFresh(Canvas canvas) {}
+  void Function(Canvas) get draw => (_) {};
+
+  @override
+  void Function(Canvas canvas) get drawRecursively => (_) {};
 }

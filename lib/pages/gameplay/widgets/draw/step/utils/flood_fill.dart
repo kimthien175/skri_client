@@ -9,7 +9,7 @@ class FloodFiller {
   //int stackSize = 16777216;
   //int stackPointer = 0;
   List<int> stack = [];
-  void _fill() {
+  Uint8List _fill() {
     //CrissCross fills lines in 4 directions : up(q2 = 2), down(q2=3), left(q2=-2), right(q2=-3)
     int x1, x2, lastminx, lastminy, lastmaxx, lastmaxy, t1, t2, q1, q2;
 
@@ -151,7 +151,7 @@ class FloodFiller {
         if (q1 < lastmaxx && y < h) push4(q1, lastmaxx + 1, y, 3);
       }
     }
-    return;
+    return byteList;
   }
 
   void push4(int x, int y, int z, int q) {
@@ -159,17 +159,6 @@ class FloodFiller {
     stack.add(y);
     stack.add(z);
     stack.add(q);
-  }
-
-  Uint8List prepareAndFill() {
-    // CHECK
-    if (isTheSameColorWithFiller(pointX, pointY)) throw Exception('FloodFill: duplicated color');
-
-    _fill();
-
-    // CONVERT IT BACK AND RETURN
-    //var byteList = img.encodePng(decodedImage);
-    return byteList;
   }
 
   void changeColor(int x, int y) {
@@ -207,8 +196,8 @@ class FloodFiller {
   //       pixel.b == fillColorB &&
   //       pixel.a == fillColorA;
   // }
-  bool isTheSameColorWithFiller(int x, int y) {
-    var index = pixelIndex(x, y);
+  bool get isTheSameColorWithFiller {
+    var index = pixelIndex(pointX, pointY);
     return byteList[index] == fillColorR &&
         byteList[index + 1] == fillColorG &&
         byteList[index + 2] == fillColorB &&
@@ -226,15 +215,17 @@ class FloodFiller {
 
   // final ui.Color fillColor;
 
-  static Future<FloodFiller> init(
+  static Future<Uint8List> fill(
       {required ui.Image image, required ui.Offset point, required ui.Color fillColor}) async {
     var byteData = await image.toByteData();
     if (byteData == null) throw Exception('FloodFill: null byte data');
 
+    // check if fill color and target color are the same or not
+
     // var decodedImage = img.decodeImage(byteData.buffer.asUint8List());
     // if (decodedImage == null) throw Exception('Decode image failed');
 
-    return FloodFiller._internal(
+    var filler = FloodFiller._internal(
         //decodedImage: decodedImage,
         byteList: byteData.buffer.asUint8List(),
         pointX: point.dx.toInt(),
@@ -245,6 +236,10 @@ class FloodFiller {
         fillColorA: fillColor.alpha,
         width: image.width,
         height: image.height);
+
+    if (filler.isTheSameColorWithFiller) throw Exception('FloodFill: duplicated color');
+
+    return filler._fill();
   }
 
   FloodFiller._internal(

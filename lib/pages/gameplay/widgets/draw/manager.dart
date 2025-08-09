@@ -1,3 +1,5 @@
+// ignore_for_file: invalid_use_of_visible_for_testing_member, invalid_use_of_protected_member
+
 import 'package:skribbl_client/pages/gameplay/widgets/draw/step/clear.dart';
 import 'package:skribbl_client/pages/gameplay/widgets/draw/widgets/stroke_value_item.dart';
 import 'package:skribbl_client/utils/socket_io.dart';
@@ -9,7 +11,7 @@ import 'step/step.dart';
 import 'widgets/color.dart';
 import 'widgets/stroke.dart';
 
-class DrawManager extends ChangeNotifier {
+class DrawManager {
   static DrawManager? _inst;
   static DrawManager get inst => _inst!;
   static void init() {
@@ -26,7 +28,7 @@ class DrawManager extends ChangeNotifier {
     _currentStrokeSize = strokeSizeList[1];
   }
 
-  List<Color> colorList = const [
+  final List<Color> colorList = const [
     Color.fromRGBO(255, 255, 255, 1),
     Color.fromRGBO(193, 193, 193, 1),
     Color.fromRGBO(239, 19, 11, 1),
@@ -55,14 +57,24 @@ class DrawManager extends ChangeNotifier {
     Color.fromRGBO(204, 119, 77, 1),
     Color.fromRGBO(99, 48, 13, 1),
   ];
-  List<double> strokeSizeList = [0.2 * 20, (1 / 3) * 20, (5 / 9) * 20, (37 / 45) * 20, 1 * 20];
+
+  final List<double> strokeSizeList = [
+    0.2 * 20,
+    (1 / 3) * 20,
+    (5 / 9) * 20,
+    (37 / 45) * 20,
+    1 * 20
+  ];
 
   late Color _currentColor;
   Color get currentColor => _currentColor;
   set currentColor(Color value) {
     _currentColor = value;
-    DrawManager.inst.currentStep.changeColor();
+
+    currentStep.changeColor();
+
     Get.find<RecentColorController>().addRecent();
+
     var mainStrokeItemController =
         Get.find<StrokeValueItemController>(tag: 'stroke_value_selector');
     mainStrokeItemController.value.refresh();
@@ -73,25 +85,28 @@ class DrawManager extends ChangeNotifier {
   double get currentStrokeSize => _currentStrokeSize;
   set currentStrokeSize(double value) {
     _currentStrokeSize = value;
-    DrawManager.inst.currentStep.changeStrokeSize();
+
+    currentStep.changeStrokeSize();
   }
 
-  final Rx<DrawMode> _currentMode = (BrushMode() as DrawMode).obs;
+  final Rx<DrawMode> _currentMode = DrawMode.brush().obs;
   DrawMode get currentMode => _currentMode.value;
-  GestureDrawStep get newCurrentStep => _currentMode.value.step(id: -2);
-
   set currentMode(DrawMode mode) {
     _currentMode.value = mode;
-    DrawManager.inst.currentStep = newCurrentStep;
+    currentStep = _newCurrentStep;
   }
 
-  void onEnd() {
-    if (!currentStep.onEnd()) return;
+  late GestureDrawStep currentStep = _newCurrentStep;
+  GestureDrawStep get _newCurrentStep => _currentMode.value.stepFactory(id: 0);
 
+  void onEnd(DragEndDetails _) {
+    if (!currentStep.onEnd) return;
+
+    // move step from current to past
     currentStep.id = pastSteps.length;
     pastSteps.add(currentStep);
 
-    currentStep = newCurrentStep;
+    currentStep = _newCurrentStep;
   }
 
   void undo() {
@@ -99,31 +114,31 @@ class DrawManager extends ChangeNotifier {
 
     pastSteps.removeLast();
 
-    lastStepRepaint.notifyListeners();
+    pastStepRepaint.notifyListeners();
   }
 
-  final ChangeNotifier lastStepRepaint = ChangeNotifier();
+  final ChangeNotifier currentStepRepaint = ChangeNotifier();
+  final ChangeNotifier pastStepRepaint = ChangeNotifier();
+
   void rerenderLastStep() {
-    lastStepRepaint.notifyListeners();
+    pastStepRepaint.notifyListeners();
   }
 
   void reset() {
     pastSteps.clear();
-    lastStepRepaint.notifyListeners();
+    pastStepRepaint.notifyListeners();
   }
 
   void clear() {
     if (pastSteps.isEmpty) return;
 
     pastSteps.add(ClearStep(id: pastSteps.length));
-    lastStepRepaint.notifyListeners();
+    pastStepRepaint.notifyListeners();
     SocketIO.inst.socket.emit('draw:clear');
   }
 
   static const double width = 800;
   static const double height = 600;
-
-  late GestureDrawStep currentStep = _currentMode.value.defaultStep(id: -2);
 
   List<DrawStep> pastSteps = [];
 }
@@ -133,20 +148,20 @@ class CurrentStepCustomPainter extends CustomPainter {
   final drawInst = DrawManager.inst;
   @override
   void paint(Canvas canvas, Size size) {
-    drawInst.currentStep.drawAddon(canvas);
+    drawInst.currentStep.draw(canvas);
   }
 
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
 }
 
-class LastStepCustomPainter extends CustomPainter {
-  LastStepCustomPainter({super.repaint});
+class PastStepCustomPainter extends CustomPainter {
+  PastStepCustomPainter({super.repaint});
   final drawInst = DrawManager.inst;
   @override
   void paint(Canvas canvas, Size size) {
     if (drawInst.pastSteps.isNotEmpty) {
-      drawInst.pastSteps.last.draw(canvas);
+      drawInst.pastSteps.last.drawRecursively(canvas);
     }
   }
 

@@ -3,43 +3,62 @@ import 'dart:ui';
 import '../manager.dart';
 
 abstract class DrawStep {
-  DrawStep({required this.id}) {
-    draw = drawFresh;
-  }
+  DrawStep({required this.id});
 
   int id;
-  Picture? temp;
 
-  final recorder = PictureRecorder();
+  late final Picture cachedRecursive;
 
-  /// addOn, no previous drawing
-  /// only BrushStep use this
-  void drawAddon(Canvas canvas) {}
+  //#region For caching
+  Future<void> buildCache() async {
+    var recorder = PictureRecorder();
+    var canvas = Canvas(recorder);
+    drawRecursivelyFreshly(canvas);
+    cachedRecursive = recorder.endRecording();
 
-  late void Function(Canvas canvas) draw;
-
-  void drawTemp(Canvas canvas) {
-    canvas.drawPicture(temp!);
+    drawRecursively = (Canvas canvas) {
+      canvas.drawPicture(cachedRecursive);
+    };
   }
+  //#endregion
 
-  void drawFresh(Canvas canvas) {
+  /// draw what is need for only the step
+  void Function(Canvas) get draw;
+
+  /// `this` has to stay in pastSteps, draw all steps behind `this` in past steps as well
+  late void Function(Canvas) drawRecursively = drawRecursivelyFreshly;
+
+  void drawRecursivelyFreshly(Canvas canvas) {
     if (id > 0) {
-      DrawManager.inst.pastSteps[id - 1].draw(canvas);
+      DrawManager.inst.pastSteps[id - 1].drawRecursively(canvas);
     }
 
-    drawAddon(canvas);
+    draw(canvas);
   }
+
+  // void _drawTemp(Canvas canvas) {
+  //   canvas.drawPicture(temp!);
+  // }
+
+  // void Function(Canvas) get drawFresh => _drawFresh;
+  // void _drawFresh(Canvas canvas) {
+  //   if (id > 0) {
+  //     DrawManager.inst.pastSteps[id - 1].draw(canvas);
+  //   }
+
+  //   drawAddon(canvas);
+  // }
 
   /// only Fill step can use this
-  Future<void> switchToTemp() async {
-    var pictureCanvas = Canvas(recorder);
+  // switchToTemp() {
+  //   var pictureCanvas = Canvas(recorder);
 
-    drawFresh(pictureCanvas);
+  //   drawFresh(pictureCanvas);
 
-    temp = recorder.endRecording();
+  //   temp = recorder.endRecording();
 
-    draw = drawTemp;
-  }
+  //   draw = _drawTemp;
+  // }
 
   // Future<void> emitTemp() async {
   //   temp!
@@ -53,16 +72,16 @@ abstract class DrawStep {
   //   });
   // }
 
-  Future<void> emitDownCurrent(Offset point) async {}
-  Future<void> emitUpdateCurrent(Offset point) async {}
+  // Future<void> emitDownCurrent(Offset point) async {}
+  // Future<void> emitUpdateCurrent(Offset point) async {}
 }
 
 abstract class GestureDrawStep extends DrawStep {
   GestureDrawStep({required super.id});
 
-  late void Function(Offset point) onDown;
-  late void Function(Offset point) onUpdate;
-  late bool Function() onEnd;
+  void Function(Offset point) get onDown;
+  void Function(Offset point) get onUpdate;
+  bool get onEnd;
 
   void changeColor() {}
 

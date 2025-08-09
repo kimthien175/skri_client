@@ -30,15 +30,14 @@ class DrawWidget extends StatelessWidget {
                       onPanUpdate: (details) {
                         drawInst.currentStep.onUpdate(details.localPosition);
                       },
-                      onPanEnd: (details) {
-                        drawInst.onEnd();
-                      },
+                      onPanEnd: drawInst.onEnd,
                       child: Stack(children: [
                         CustomPaint(
                             size: size,
-                            painter: LastStepCustomPainter(repaint: drawInst.lastStepRepaint)),
+                            painter: PastStepCustomPainter(repaint: drawInst.pastStepRepaint)),
                         CustomPaint(
-                            size: size, painter: CurrentStepCustomPainter(repaint: drawInst))
+                            size: size,
+                            painter: CurrentStepCustomPainter(repaint: drawInst.currentStepRepaint))
                       ])))))),
       const SizedBox(height: 6),
       const SizedBox(
@@ -52,7 +51,7 @@ class DrawWidget extends StatelessWidget {
             Spacer(),
             BrushButton(),
             SizedBox(width: 6),
-            FillButton(),
+            //FillButton(),
             Spacer(),
             UndoButton(),
             SizedBox(width: 6),
@@ -70,7 +69,7 @@ class BrushButton extends StatelessWidget {
     return InkWell(
         onTap: () {
           if (DrawManager.inst.currentMode is! BrushMode) {
-            DrawManager.inst.currentMode = BrushMode();
+            DrawManager.inst.currentMode = DrawMode.brush();
           }
         },
         child: Obx(() => Container(
@@ -84,27 +83,27 @@ class BrushButton extends StatelessWidget {
   }
 }
 
-class FillButton extends StatelessWidget {
-  const FillButton({super.key});
+// class FillButton extends StatelessWidget {
+//   const FillButton({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-        onTap: () {
-          if (DrawManager.inst.currentMode is! FillMode) {
-            DrawManager.inst.currentMode = FillMode();
-          }
-        },
-        child: Obx(() => Container(
-            decoration: BoxDecoration(
-                color: DrawManager.inst.currentMode is FillMode
-                    ? const Color.fromRGBO(171, 102, 235, 1)
-                    : Colors.white,
-                borderRadius: const BorderRadius.all(Radius.circular(3))),
-            child:
-                GifManager.inst.misc('fill').builder.initWithShadow().fit(height: 48, width: 48))));
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return InkWell(
+//         onTap: () {
+//           if (DrawManager.inst.currentMode is! FillMode) {
+//             // DrawManager.inst.currentMode = DrawMode.fill();
+//           }
+//         },
+//         child: Obx(() => Container(
+//             decoration: BoxDecoration(
+//                 color: DrawManager.inst.currentMode is FillMode
+//                     ? const Color.fromRGBO(171, 102, 235, 1)
+//                     : Colors.white,
+//                 borderRadius: const BorderRadius.all(Radius.circular(3))),
+//             child:
+//                 GifManager.inst.misc('fill').builder.initWithShadow().fit(height: 48, width: 48))));
+//   }
+// }
 
 class UndoButton extends StatefulWidget {
   const UndoButton({super.key});

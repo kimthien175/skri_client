@@ -7,31 +7,39 @@ import 'step/step.dart';
 typedef GestureStepContructor = GestureDrawStep Function({required int id});
 
 abstract class DrawMode {
-  GestureStepContructor get step;
+  const factory DrawMode.brush() = BrushMode._init;
+  // const factory DrawMode.fill() = FillMode._init;
 
-  GestureStepContructor get defaultStep;
+  const DrawMode();
+
+  GestureStepContructor get stepFactory;
+
+  // GestureStepContructor get defaultStep;
 
   MouseCursor get cursor;
 }
 
 class BrushMode extends DrawMode {
-  @override
-  GestureStepContructor get step => BrushStep.init;
+  const BrushMode._init();
 
   @override
-  GestureStepContructor get defaultStep => BrushStep.defaultInit;
+  GestureStepContructor get stepFactory => BrushStep.init;
+
+  // @override
+  // GestureStepContructor get defaultStep => BrushStep.defaultInit;
 
   @override
   MouseCursor get cursor => SystemMouseCursors.click;
 }
 
-class FillMode extends DrawMode {
-  @override
-  GestureStepContructor get step => FillStep.init;
+// class FillMode extends DrawMode {
+//   const FillMode._init();
+//   @override
+//   GestureStepContructor get stepFactory => FillStep.init;
 
-  @override
-  MouseCursor get cursor => SystemMouseCursors.precise;
+//   @override
+//   MouseCursor get cursor => SystemMouseCursors.precise;
 
-  @override
-  GestureStepContructor get defaultStep => FillStep.init;
-}
+//   // @override
+//   // GestureStepContructor get defaultStep => FillStep.init;
+// }
