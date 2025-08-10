@@ -97,74 +97,166 @@ class DrawManager {
   }
 
   late GestureDrawStep currentStep = _newCurrentStep;
-  GestureDrawStep get _newCurrentStep => _currentMode.value.stepFactory(id: 0);
+  GestureDrawStep get _newCurrentStep => _currentMode.value.stepFactory();
 
   void onEnd(DragEndDetails _) {
     if (!currentStep.onEnd) return;
 
     // move step from current to past
-    currentStep.id = pastSteps.length;
-    pastSteps.add(currentStep);
+    pushTail(currentStep);
 
     currentStep = _newCurrentStep;
   }
 
-  void undo() {
-    if (pastSteps.isEmpty) return;
-
-    pastSteps.removeLast();
-
-    pastStepRepaint.notifyListeners();
-  }
-
   final ChangeNotifier currentStepRepaint = ChangeNotifier();
-  final ChangeNotifier pastStepRepaint = ChangeNotifier();
 
-  void rerenderLastStep() {
-    pastStepRepaint.notifyListeners();
-  }
-
-  void reset() {
-    pastSteps.clear();
-    pastStepRepaint.notifyListeners();
-  }
-
+  // add ClearStep to past
   void clear() {
-    if (pastSteps.isEmpty) return;
+    // if past is empty, return
+    if (_tail == null) return;
 
-    pastSteps.add(ClearStep(id: pastSteps.length));
-    pastStepRepaint.notifyListeners();
+    _pushTailToNonEmptyData(ClearStep());
+
     SocketIO.inst.socket.emit('draw:clear');
   }
 
   static const double width = 800;
   static const double height = 600;
 
-  List<DrawStep> pastSteps = [];
+  printFromTailToHead() {
+    DrawStep? node = _tail;
+    while (node != null) {
+      print(node.hashCode);
+      node = node.prev;
+    }
+  }
+
+  //#region Linked List
+
+  /// push new tail, set id for the tail
+  void pushTail(DrawStep newTail) {
+    if (_tail == null) {
+      // which mean pointer is also null
+      assert(_drawFrom == null);
+
+      newTail.id = 0;
+
+      _tail = newTail;
+      updatePointer(newTail);
+    } else {
+      _pushTailToNonEmptyData(newTail);
+    }
+  }
+
+  void _pushTailToNonEmptyData(DrawStep newTail) {
+    // just update tail and re render
+    assert(_tail != null);
+    _tail = _tail!.chainUp(newTail);
+
+    _pastStepRepaint.notifyListeners();
+  }
+
+  void popTail() {
+    // if past is empty, which mean nothing to undo
+    if (_tail == null) return;
+
+    // shift tail backword and delete old tail
+    DrawStep target = _tail!;
+
+    var newTail = _tail!.prev;
+
+    if (newTail == null) {
+      reset();
+    } else {
+      target.unlink();
+
+      // check pointer first
+      if (target == _drawFrom) {
+        _drawFrom = newTail;
+      }
+
+      _tail = newTail;
+      _pastStepRepaint.notifyListeners();
+    }
+  }
+
+  /// clear the past
+  void reset() {
+    _tail = null;
+    _drawFrom = null;
+    _pastStepRepaint.notifyListeners();
+  }
+
+  DrawStep? _tail;
+  DrawStep? _drawFrom;
+  bool get isEmpty => _drawFrom == null;
+
+  final ChangeNotifier _pastStepRepaint = ChangeNotifier();
+
+  /// shift _drawFrom to another step in the chain, re render
+  updatePointer(DrawStep newStep) {
+    _drawFrom = newStep;
+    _pastStepRepaint.notifyListeners();
+  }
+  //#endregion
 }
 
-class CurrentStepCustomPainter extends CustomPainter {
-  CurrentStepCustomPainter({super.repaint});
-  final drawInst = DrawManager.inst;
+class _CurrentStepCustomPainter extends CustomPainter {
+  _CurrentStepCustomPainter() : super(repaint: DrawManager.inst.currentStepRepaint);
+
   @override
   void paint(Canvas canvas, Size size) {
-    drawInst.currentStep.draw(canvas);
+    DrawManager.inst.currentStep.draw(canvas);
   }
 
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
 }
 
-class PastStepCustomPainter extends CustomPainter {
-  PastStepCustomPainter({super.repaint});
-  final drawInst = DrawManager.inst;
+class _PastStepCustomPainter extends CustomPainter {
+  _PastStepCustomPainter() : super(repaint: DrawManager.inst._pastStepRepaint);
+
   @override
   void paint(Canvas canvas, Size size) {
-    if (drawInst.pastSteps.isNotEmpty) {
-      drawInst.pastSteps.last.drawRecursively(canvas);
+    var drawInst = DrawManager.inst;
+
+    if (ClearStep.latestStep != null && ClearStep.latestStep!.id >= drawInst._drawFrom!.id) {
+      ClearStep.latestStep!.next?.drawChain(canvas);
+    } else {
+      drawInst._drawFrom?.drawChain(canvas);
     }
   }
 
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
+}
+
+class DrawWidgetCanvas extends StatelessWidget {
+  const DrawWidgetCanvas({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    var drawInst = DrawManager.inst;
+    var size = const Size(DrawManager.width, DrawManager.height);
+    return ClipRRect(
+        borderRadius: const BorderRadius.all(Radius.circular(3)),
+        child: Container(
+            decoration: const BoxDecoration(
+              color: Colors.white,
+            ),
+            child: Obx(() => MouseRegion(
+                cursor: DrawManager.inst.currentMode.cursor,
+                child: GestureDetector(
+                    onPanDown: (details) {
+                      drawInst.currentStep.onDown(details.localPosition);
+                    },
+                    onPanUpdate: (details) {
+                      drawInst.currentStep.onUpdate(details.localPosition);
+                    },
+                    onPanEnd: drawInst.onEnd,
+                    child: Stack(children: [
+                      CustomPaint(size: size, painter: _PastStepCustomPainter()),
+                      CustomPaint(size: size, painter: _CurrentStepCustomPainter())
+                    ]))))));
+  }
 }

@@ -12,35 +12,10 @@ class DrawWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var drawInst = DrawManager.inst;
-    var size = const Size(DrawManager.width, DrawManager.height);
-    return Column(children: [
-      ClipRRect(
-          borderRadius: const BorderRadius.all(Radius.circular(3)),
-          child: Container(
-              decoration: const BoxDecoration(
-                color: Colors.white,
-              ),
-              child: Obx(() => MouseRegion(
-                  cursor: DrawManager.inst.currentMode.cursor,
-                  child: GestureDetector(
-                      onPanDown: (details) {
-                        drawInst.currentStep.onDown(details.localPosition);
-                      },
-                      onPanUpdate: (details) {
-                        drawInst.currentStep.onUpdate(details.localPosition);
-                      },
-                      onPanEnd: drawInst.onEnd,
-                      child: Stack(children: [
-                        CustomPaint(
-                            size: size,
-                            painter: PastStepCustomPainter(repaint: drawInst.pastStepRepaint)),
-                        CustomPaint(
-                            size: size,
-                            painter: CurrentStepCustomPainter(repaint: drawInst.currentStepRepaint))
-                      ])))))),
-      const SizedBox(height: 6),
-      const SizedBox(
+    return const Column(children: [
+      DrawWidgetCanvas(),
+      SizedBox(height: 6),
+      SizedBox(
           width: 800,
           child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
             RecentColor(),
@@ -128,7 +103,7 @@ class _UndoButtonState extends State<UndoButton> {
           });
         },
         child: InkWell(
-            onTap: DrawManager.inst.undo,
+            onTap: DrawManager.inst.popTail,
             child: Container(
                 decoration: const BoxDecoration(
                     color: Colors.white, borderRadius: BorderRadius.all(Radius.circular(3))),

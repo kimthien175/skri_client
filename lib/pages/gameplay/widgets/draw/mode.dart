@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'step/fill.dart';
 import 'step/step.dart';
 
-typedef GestureStepContructor = GestureDrawStep Function({required int id});
+typedef GestureStepContructor = GestureDrawStep Function();
 
 abstract class DrawMode {
   const factory DrawMode.brush() = BrushMode._init;
@@ -25,11 +25,11 @@ class BrushMode extends DrawMode {
   @override
   GestureStepContructor get stepFactory => BrushStep.init;
 
-  // @override
-  // GestureStepContructor get defaultStep => BrushStep.defaultInit;
-
   @override
   MouseCursor get cursor => SystemMouseCursors.click;
+
+  // @override
+  // GestureStepContructor get defaultStep => BrushStep.defaultInit;
 }
 
 // class FillMode extends DrawMode {

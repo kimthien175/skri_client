@@ -9,7 +9,7 @@ import '../manager.dart';
 import 'step.dart';
 
 class BrushStep extends GestureDrawStep {
-  BrushStep.init({required super.id}) {
+  BrushStep.init() {
     var drawTools = DrawManager.inst;
     _brush = Paint()
       ..strokeWidth = drawTools.currentStrokeSize
@@ -27,8 +27,7 @@ class BrushStep extends GestureDrawStep {
   late final Paint _brush;
 
   @override
-  void Function(Canvas canvas) get draw => _draw;
-  void _draw(Canvas canvas) {
+  void drawFreshly(Canvas canvas) {
     if (_points.length == 1) {
       canvas.drawPoints(PointMode.points, _points, _brush);
       return;
@@ -45,16 +44,14 @@ class BrushStep extends GestureDrawStep {
   ///
   /// Otherwise good to go
   bool get isReady {
-    var pastSteps = DrawManager.inst.pastSteps;
-
-    if (pastSteps.isEmpty) {
+    if (DrawManager.inst.isEmpty) {
       if (_brush.color == Colors.white) return false;
       return true;
     }
 
-    // if (pastSteps.last is! FillStep) return true;
+    // if (prev is! FillStep) return true;
 
-    // if ((pastSteps.last as FillStep).isFullfillScreenWithSameColor(_brush.color)) return false;
+    // if ((prev as FillStep).isFullfillScreenWithSameColor(_brush.color)) return false;
 
     return true;
   }

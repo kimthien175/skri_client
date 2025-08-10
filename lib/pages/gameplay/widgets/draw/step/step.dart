@@ -1,40 +1,78 @@
 import 'dart:ui';
 
-import '../manager.dart';
+import 'package:flutter/foundation.dart';
+import 'package:skribbl_client/pages/gameplay/widgets/draw/manager.dart';
 
 abstract class DrawStep {
-  DrawStep({required this.id});
+  late final int id;
 
-  int id;
+  //#region For linked list
+  DrawStep? prev;
+  DrawStep? next;
 
-  late final Picture cachedRecursive;
+  void unlink() {
+    prev?.next = next;
+    next?.prev = prev;
+  }
+
+  /// chain up, set id, return `newStep`
+  DrawStep chainUp(DrawStep newStep) {
+    next = newStep;
+
+    newStep.prev = this;
+    newStep.id = id + 1;
+
+    return newStep;
+  }
+
+  //#endregion
 
   //#region For caching
+  late final Picture cache;
+
+  /// use when current draw is fresh,
+  /// build cache and change current draw to drawing cache
   Future<void> buildCache() async {
     var recorder = PictureRecorder();
     var canvas = Canvas(recorder);
-    drawRecursivelyFreshly(canvas);
-    cachedRecursive = recorder.endRecording();
 
-    drawRecursively = (Canvas canvas) {
-      canvas.drawPicture(cachedRecursive);
-    };
+    // loop from this to last
+    draw(canvas);
+
+    cache = recorder.endRecording();
+
+    // switch to draw cache
+    draw = _drawCache;
   }
   //#endregion
 
   /// draw what is need for only the step
-  void Function(Canvas) get draw;
+  late void Function(Canvas) draw = drawFreshly;
+
+  /// draw from `this` to last tail
+  @nonVirtual
+  void drawChain(Canvas canvas) {
+    draw(canvas);
+    next?.drawChain(canvas);
+  }
+
+  void drawFreshly(Canvas canvas);
+
+  @nonVirtual
+  void _drawCache(Canvas canvas) {
+    canvas.drawPicture(cache);
+  }
 
   /// `this` has to stay in pastSteps, draw all steps behind `this` in past steps as well
-  late void Function(Canvas) drawRecursively = drawRecursivelyFreshly;
+  // late void Function(Canvas) drawRecursively = drawRecursivelyFreshly;
 
-  void drawRecursivelyFreshly(Canvas canvas) {
-    if (id > 0) {
-      DrawManager.inst.pastSteps[id - 1].drawRecursively(canvas);
-    }
+  // void drawRecursivelyFreshly(Canvas canvas) {
+  //   if (id > 0) {
+  //     DrawManager.inst.pastSteps[id - 1].drawRecursively(canvas);
+  //   }
 
-    draw(canvas);
-  }
+  //   draw(canvas);
+  // }
 
   // void _drawTemp(Canvas canvas) {
   //   canvas.drawPicture(temp!);
@@ -77,8 +115,6 @@ abstract class DrawStep {
 }
 
 abstract class GestureDrawStep extends DrawStep {
-  GestureDrawStep({required super.id});
-
   void Function(Offset point) get onDown;
   void Function(Offset point) get onUpdate;
   bool get onEnd;
@@ -87,7 +123,4 @@ abstract class GestureDrawStep extends DrawStep {
 
   /// only Brush step use this
   void changeStrokeSize() {}
-
-  /// Can't use before the step is pushed into the list
-  DrawStep get prevStep => DrawManager.inst.pastSteps[id - 1];
 }
