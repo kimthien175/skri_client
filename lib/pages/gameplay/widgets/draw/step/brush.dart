@@ -3,12 +3,12 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:skribbl_client/pages/gameplay/widgets/draw/step/fill.dart';
+import 'package:skribbl_client/pages/gameplay/widgets/draw/step/plain.dart';
 
 import '../manager.dart';
 import 'step.dart';
 
-class BrushStep extends GestureDrawStep {
+class BrushStep extends DrawStep with GestureDrawStep {
   BrushStep.init() {
     var drawTools = DrawManager.inst;
     _brush = Paint()
@@ -37,6 +37,7 @@ class BrushStep extends GestureDrawStep {
     }
   }
 
+  // TODO: in case user change color with shortcut, while not release mouse when drawing, what would happen?
   /// If prev step is fillstep having color is the same with this color, return false,
   ///
   /// Or `this` as only step in data that have color is white -
@@ -44,14 +45,11 @@ class BrushStep extends GestureDrawStep {
   ///
   /// Otherwise good to go
   bool get isReady {
-    if (DrawManager.inst.isEmpty) {
-      if (_brush.color == Colors.white) return false;
-      return true;
-    }
+    var tail = DrawManager.inst.tail;
 
-    // if (prev is! FillStep) return true;
+    if (tail == null) return (_brush.color != Colors.white);
 
-    // if ((prev as FillStep).isFullfillScreenWithSameColor(_brush.color)) return false;
+    if (tail is PlainDrawStep && tail.color == _brush.color) return false;
 
     return true;
   }

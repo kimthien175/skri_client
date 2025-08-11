@@ -26,7 +26,7 @@ class DrawWidget extends StatelessWidget {
             Spacer(),
             BrushButton(),
             SizedBox(width: 6),
-            //FillButton(),
+            FillButton(),
             Spacer(),
             UndoButton(),
             SizedBox(width: 6),
@@ -58,27 +58,27 @@ class BrushButton extends StatelessWidget {
   }
 }
 
-// class FillButton extends StatelessWidget {
-//   const FillButton({super.key});
+class FillButton extends StatelessWidget {
+  const FillButton({super.key});
 
-//   @override
-//   Widget build(BuildContext context) {
-//     return InkWell(
-//         onTap: () {
-//           if (DrawManager.inst.currentMode is! FillMode) {
-//             // DrawManager.inst.currentMode = DrawMode.fill();
-//           }
-//         },
-//         child: Obx(() => Container(
-//             decoration: BoxDecoration(
-//                 color: DrawManager.inst.currentMode is FillMode
-//                     ? const Color.fromRGBO(171, 102, 235, 1)
-//                     : Colors.white,
-//                 borderRadius: const BorderRadius.all(Radius.circular(3))),
-//             child:
-//                 GifManager.inst.misc('fill').builder.initWithShadow().fit(height: 48, width: 48))));
-//   }
-// }
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+        onTap: () {
+          if (DrawManager.inst.currentMode is! FillMode) {
+            DrawManager.inst.currentMode = DrawMode.fill();
+          }
+        },
+        child: Obx(() => Container(
+            decoration: BoxDecoration(
+                color: DrawManager.inst.currentMode is FillMode
+                    ? const Color.fromRGBO(171, 102, 235, 1)
+                    : Colors.white,
+                borderRadius: const BorderRadius.all(Radius.circular(3))),
+            child:
+                GifManager.inst.misc('fill').builder.initWithShadow().fit(height: 48, width: 48))));
+  }
+}
 
 class UndoButton extends StatefulWidget {
   const UndoButton({super.key});

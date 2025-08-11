@@ -1,27 +1,16 @@
-import 'dart:ui';
+import 'package:flutter/material.dart';
+import 'package:skribbl_client/pages/gameplay/widgets/draw/step/plain.dart';
 
 import 'step.dart';
 
-class ClearStep extends DrawStep {
+class ClearStep extends DrawStep with PlainDrawStep {
   ClearStep() {
-    _prevClearStep = _latestStep;
-    _latestStep = this;
+    track();
   }
 
   @override
-  void unlink() {
-    _latestStep = _prevClearStep;
-    super.unlink();
-  }
-
-  ClearStep? _prevClearStep;
-  ClearStep? get prevClearStep => _prevClearStep;
-
-  static ClearStep? _latestStep;
-  static ClearStep? get latestStep => _latestStep;
-
-  @override
-  void Function(Canvas) get draw => (_) {};
+  void Function(Canvas) get draw =>
+      (_) => throw Exception('I think overriding `drawChain` would make `draw` useless');
 
   @override
   void drawFreshly(Canvas canvas) =>
@@ -29,4 +18,13 @@ class ClearStep extends DrawStep {
 
   @override
   Future<void> buildCache() async {}
+
+  @override
+  void drawChain(Canvas canvas) {
+    next?.drawChain(canvas);
+  }
+
+  /// considerd white for later fullfill step can check this
+  @override
+  Color get color => Colors.white;
 }

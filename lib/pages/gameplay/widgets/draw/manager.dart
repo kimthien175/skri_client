@@ -1,5 +1,6 @@
 // ignore_for_file: invalid_use_of_visible_for_testing_member, invalid_use_of_protected_member
 
+import 'package:skribbl_client/pages/gameplay/widgets/draw/step/plain.dart';
 import 'package:skribbl_client/pages/gameplay/widgets/draw/step/clear.dart';
 import 'package:skribbl_client/pages/gameplay/widgets/draw/widgets/stroke_value_item.dart';
 import 'package:skribbl_client/utils/socket_io.dart';
@@ -113,7 +114,10 @@ class DrawManager {
   // add ClearStep to past
   void clear() {
     // if past is empty, return
-    if (_tail == null) return;
+    if (_tail == null ||
+        (_tail is PlainDrawStep && (_tail as PlainDrawStep).color == Colors.white)) {
+      return;
+    }
 
     _pushTailToNonEmptyData(ClearStep());
 
@@ -127,6 +131,10 @@ class DrawManager {
     DrawStep? node = _tail;
     while (node != null) {
       print(node.hashCode);
+      if (node is PlainDrawStep) {
+        print(node);
+        print(node.color);
+      }
       node = node.prev;
     }
   }
@@ -180,15 +188,19 @@ class DrawManager {
     }
   }
 
-  /// clear the past
+  /// clear the past, current step unlink to tail (DrawStep constructor always link its prev to tail)
   void reset() {
     _tail = null;
     _drawFrom = null;
     _pastStepRepaint.notifyListeners();
   }
 
+  /// this node is not really tail, just have next == null,
+  /// currentStep.prev == tail
   DrawStep? _tail;
+  DrawStep? get tail => _tail;
   DrawStep? _drawFrom;
+  DrawStep? get drawFrom => _drawFrom;
   bool get isEmpty => _drawFrom == null;
 
   final ChangeNotifier _pastStepRepaint = ChangeNotifier();
@@ -220,8 +232,9 @@ class _PastStepCustomPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     var drawInst = DrawManager.inst;
 
-    if (ClearStep.latestStep != null && ClearStep.latestStep!.id >= drawInst._drawFrom!.id) {
-      ClearStep.latestStep!.next?.drawChain(canvas);
+    PlainDrawStep? latestPlainStep = PlainDrawStep.latestStep;
+    if (latestPlainStep != null && latestPlainStep.id >= drawInst._drawFrom!.id) {
+      latestPlainStep.drawChain(canvas);
     } else {
       drawInst._drawFrom?.drawChain(canvas);
     }

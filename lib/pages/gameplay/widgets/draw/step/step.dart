@@ -1,7 +1,8 @@
-import 'dart:ui';
+import 'dart:ui' as ui;
 
-import 'package:flutter/foundation.dart';
-import 'package:skribbl_client/pages/gameplay/widgets/draw/manager.dart';
+import 'package:flutter/material.dart';
+
+import '../manager.dart';
 
 abstract class DrawStep {
   late final int id;
@@ -28,29 +29,29 @@ abstract class DrawStep {
   //#endregion
 
   //#region For caching
-  late final Picture cache;
+  late final ui.Picture cache;
 
   /// use when current draw is fresh,
   /// build cache and change current draw to drawing cache
   Future<void> buildCache() async {
-    var recorder = PictureRecorder();
-    var canvas = Canvas(recorder);
+    var recorder = ui.PictureRecorder();
+    var canvas = ui.Canvas(recorder);
 
     // loop from this to last
-    draw(canvas);
+    // draw(canvas);
 
     cache = recorder.endRecording();
 
     // switch to draw cache
-    draw = _drawCache;
+    draw = drawCache;
   }
   //#endregion
 
   /// draw what is need for only the step
-  late void Function(Canvas) draw = drawFreshly;
+  late void Function(ui.Canvas) draw = drawFreshly;
 
   /// draw from `this` to last tail
-  @nonVirtual
+  /// only ClearStep override this
   void drawChain(Canvas canvas) {
     draw(canvas);
     next?.drawChain(canvas);
@@ -58,8 +59,8 @@ abstract class DrawStep {
 
   void drawFreshly(Canvas canvas);
 
-  @nonVirtual
-  void _drawCache(Canvas canvas) {
+  void drawCache(Canvas canvas) {
+    assert(DrawManager.inst.drawFrom!.id >= id);
     canvas.drawPicture(cache);
   }
 
@@ -114,12 +115,12 @@ abstract class DrawStep {
   // Future<void> emitUpdateCurrent(Offset point) async {}
 }
 
-abstract class GestureDrawStep extends DrawStep {
+mixin GestureDrawStep on DrawStep {
   void Function(Offset point) get onDown;
   void Function(Offset point) get onUpdate;
   bool get onEnd;
 
-  void changeColor() {}
+  void changeColor();
 
   /// only Brush step use this
   void changeStrokeSize() {}

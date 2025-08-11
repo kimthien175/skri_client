@@ -1,20 +1,18 @@
 import 'package:skribbl_client/pages/gameplay/widgets/draw/step/brush.dart';
 import 'package:flutter/material.dart';
 
-import 'step/fill.dart';
+import 'step/fill/fill.dart';
 import 'step/step.dart';
 
 typedef GestureStepContructor = GestureDrawStep Function();
 
 abstract class DrawMode {
   const factory DrawMode.brush() = BrushMode._init;
-  // const factory DrawMode.fill() = FillMode._init;
+  const factory DrawMode.fill() = FillMode._init;
 
   const DrawMode();
 
   GestureStepContructor get stepFactory;
-
-  // GestureStepContructor get defaultStep;
 
   MouseCursor get cursor;
 }
@@ -27,19 +25,14 @@ class BrushMode extends DrawMode {
 
   @override
   MouseCursor get cursor => SystemMouseCursors.click;
-
-  // @override
-  // GestureStepContructor get defaultStep => BrushStep.defaultInit;
 }
 
-// class FillMode extends DrawMode {
-//   const FillMode._init();
-//   @override
-//   GestureStepContructor get stepFactory => FillStep.init;
+class FillMode extends DrawMode {
+  const FillMode._init();
 
-//   @override
-//   MouseCursor get cursor => SystemMouseCursors.precise;
+  @override
+  GestureStepContructor get stepFactory => FillStep.init;
 
-//   // @override
-//   // GestureStepContructor get defaultStep => FillStep.init;
-// }
+  @override
+  MouseCursor get cursor => SystemMouseCursors.precise;
+}
