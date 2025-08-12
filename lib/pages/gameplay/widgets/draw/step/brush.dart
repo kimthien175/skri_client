@@ -1,6 +1,5 @@
-// ignore_for_file: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
-
-import 'dart:ui';
+import 'dart:async';
+import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:skribbl_client/pages/gameplay/widgets/draw/step/plain.dart';
@@ -26,10 +25,9 @@ class BrushStep extends DrawStep with GestureDrawStep {
   final List<Offset> _points = [];
   late final Paint _brush;
 
-  @override
-  void drawFreshly(Canvas canvas) {
+  void _drawFreshly(Canvas canvas) {
     if (_points.length == 1) {
-      canvas.drawPoints(PointMode.points, _points, _brush);
+      canvas.drawPoints(ui.PointMode.points, _points, _brush);
       return;
     }
     for (int i = 0; i < _points.length - 1; i++) {
@@ -77,6 +75,7 @@ class BrushStep extends DrawStep with GestureDrawStep {
 
   void _updatePoint(Offset point) {
     _points.add(point);
+    // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
     DrawManager.inst.currentStepRepaint.notifyListeners();
   }
 
@@ -95,6 +94,43 @@ class BrushStep extends DrawStep with GestureDrawStep {
 
   @override
   void Function(Offset point) get onUpdate => _onDown;
+
+  //#region Cache
+
+  final Completer<ui.Image> _completer = Completer<ui.Image>();
+
+  @override
+  Future<ui.Image> get cache => _completer.future;
+
+  @override
+  Future<void> buildCache() async {
+    var recorder = ui.PictureRecorder();
+    var canvas = ui.Canvas(recorder);
+
+    drawBackward(canvas);
+
+    var result = recorder.endRecording();
+
+    // cache done
+    _completer.complete(result.toImage(DrawManager.width.toInt(), DrawManager.height.toInt()));
+
+    _drawBackward = (Canvas canvas) {
+      canvas.drawPicture(result);
+    };
+  }
+
+  late void Function(Canvas) _drawBackward = (Canvas canvas) {
+    prev?.drawBackward(canvas);
+    _drawFreshly(canvas);
+  };
+
+  @override
+  void Function(Canvas) get drawBackward => _drawBackward;
+
+  @override
+  void Function(ui.Canvas p1) get draw => _drawFreshly;
+
+  //#endregion
 
   // @override
   // Future<void> emitUpdateCurrent(Offset point) async {

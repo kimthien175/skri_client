@@ -109,7 +109,10 @@ class DrawManager {
     currentStep = _newCurrentStep;
   }
 
-  final ChangeNotifier currentStepRepaint = ChangeNotifier();
+  final ChangeNotifier _currentStepRepaint = ChangeNotifier();
+
+  /// Only BrushStep can access this
+  ChangeNotifier get currentStepRepaint => _currentStepRepaint;
 
   // add ClearStep to past
   void clear() {
@@ -128,13 +131,10 @@ class DrawManager {
   static const double height = 600;
 
   printFromTailToHead() {
+    print('[START PRINT]');
     DrawStep? node = _tail;
     while (node != null) {
-      print(node.hashCode);
-      if (node is PlainDrawStep) {
-        print(node);
-        print(node.color);
-      }
+      print(node);
       node = node.prev;
     }
   }
@@ -144,16 +144,17 @@ class DrawManager {
   /// push new tail, set id for the tail
   void pushTail(DrawStep newTail) {
     if (_tail == null) {
-      // which mean pointer is also null
-      assert(_drawFrom == null);
-
       newTail.id = 0;
 
       _tail = newTail;
-      updatePointer(newTail);
+
+      _pastStepRepaint.notifyListeners();
+      //updatePointer(newTail);
     } else {
       _pushTailToNonEmptyData(newTail);
     }
+
+    newTail.buildCache();
   }
 
   void _pushTailToNonEmptyData(DrawStep newTail) {
@@ -179,9 +180,9 @@ class DrawManager {
       target.unlink();
 
       // check pointer first
-      if (target == _drawFrom) {
-        _drawFrom = newTail;
-      }
+      // if (target == drawFrom) {
+      //   drawFrom = newTail;
+      // }
 
       _tail = newTail;
       _pastStepRepaint.notifyListeners();
@@ -191,7 +192,7 @@ class DrawManager {
   /// clear the past, current step unlink to tail (DrawStep constructor always link its prev to tail)
   void reset() {
     _tail = null;
-    _drawFrom = null;
+    //drawFrom = null;
     _pastStepRepaint.notifyListeners();
   }
 
@@ -199,22 +200,33 @@ class DrawManager {
   /// currentStep.prev == tail
   DrawStep? _tail;
   DrawStep? get tail => _tail;
-  DrawStep? _drawFrom;
-  DrawStep? get drawFrom => _drawFrom;
-  bool get isEmpty => _drawFrom == null;
+  //DrawStep? drawFrom;
+
+  //#region only DrawStep can access this
+  /// only DrawStep can access this
+  // set drawFrom(DrawStep? value) => _drawFrom = value;
+
+  // DrawStep? get drawFrom => _drawFrom;
+
+  /// only FloodFillStep can access this
+  ChangeNotifier get pastStepRepaint => _pastStepRepaint;
+  //#endregion
+
+  //bool get isEmpty => drawFrom == null;
 
   final ChangeNotifier _pastStepRepaint = ChangeNotifier();
 
   /// shift _drawFrom to another step in the chain, re render
-  updatePointer(DrawStep newStep) {
-    _drawFrom = newStep;
-    _pastStepRepaint.notifyListeners();
-  }
+  /// only FloodFillStep can access this from outside
+  // updatePointer(DrawStep newStep) {
+  //   drawFrom = newStep;
+  //   _pastStepRepaint.notifyListeners();
+  // }
   //#endregion
 }
 
 class _CurrentStepCustomPainter extends CustomPainter {
-  _CurrentStepCustomPainter() : super(repaint: DrawManager.inst.currentStepRepaint);
+  _CurrentStepCustomPainter() : super(repaint: DrawManager.inst._currentStepRepaint);
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -230,14 +242,7 @@ class _PastStepCustomPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    var drawInst = DrawManager.inst;
-
-    PlainDrawStep? latestPlainStep = PlainDrawStep.latestStep;
-    if (latestPlainStep != null && latestPlainStep.id >= drawInst._drawFrom!.id) {
-      latestPlainStep.drawChain(canvas);
-    } else {
-      drawInst._drawFrom?.drawChain(canvas);
-    }
+    DrawManager.inst.tail?.drawBackward(canvas);
   }
 
   @override

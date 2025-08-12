@@ -2,8 +2,6 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 
-import '../manager.dart';
-
 abstract class DrawStep {
   late final int id;
 
@@ -29,75 +27,15 @@ abstract class DrawStep {
   //#endregion
 
   //#region For caching
-  late final ui.Picture cache;
+  Future<void> buildCache();
 
-  /// use when current draw is fresh,
-  /// build cache and change current draw to drawing cache
-  Future<void> buildCache() async {
-    var recorder = ui.PictureRecorder();
-    var canvas = ui.Canvas(recorder);
-
-    // loop from this to last
-    // draw(canvas);
-
-    cache = recorder.endRecording();
-
-    // switch to draw cache
-    draw = drawCache;
-  }
+  /// for FloodFillStep as next DrawStep to access
+  Future<ui.Image> get cache;
   //#endregion
 
-  /// draw what is need for only the step
-  late void Function(ui.Canvas) draw = drawFreshly;
-
-  /// draw from `this` to last tail
-  /// only ClearStep override this
-  void drawChain(Canvas canvas) {
-    draw(canvas);
-    next?.drawChain(canvas);
-  }
-
-  void drawFreshly(Canvas canvas);
-
-  void drawCache(Canvas canvas) {
-    assert(DrawManager.inst.drawFrom!.id >= id);
-    canvas.drawPicture(cache);
-  }
-
-  /// `this` has to stay in pastSteps, draw all steps behind `this` in past steps as well
-  // late void Function(Canvas) drawRecursively = drawRecursivelyFreshly;
-
-  // void drawRecursivelyFreshly(Canvas canvas) {
-  //   if (id > 0) {
-  //     DrawManager.inst.pastSteps[id - 1].drawRecursively(canvas);
-  //   }
-
-  //   draw(canvas);
-  // }
-
-  // void _drawTemp(Canvas canvas) {
-  //   canvas.drawPicture(temp!);
-  // }
-
-  // void Function(Canvas) get drawFresh => _drawFresh;
-  // void _drawFresh(Canvas canvas) {
-  //   if (id > 0) {
-  //     DrawManager.inst.pastSteps[id - 1].draw(canvas);
-  //   }
-
-  //   drawAddon(canvas);
-  // }
-
-  /// only Fill step can use this
-  // switchToTemp() {
-  //   var pictureCanvas = Canvas(recorder);
-
-  //   drawFresh(pictureCanvas);
-
-  //   temp = recorder.endRecording();
-
-  //   draw = _drawTemp;
-  // }
+  /// loop to this into previous step, finally draw freshly
+  /// expected to be that when previous step have temp or plain draw, the loop would stop
+  void Function(Canvas) get drawBackward;
 
   // Future<void> emitTemp() async {
   //   temp!
@@ -124,4 +62,6 @@ mixin GestureDrawStep on DrawStep {
 
   /// only Brush step use this
   void changeStrokeSize() {}
+
+  void Function(Canvas) get draw;
 }

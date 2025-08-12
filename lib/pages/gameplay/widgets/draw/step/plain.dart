@@ -1,21 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:skribbl_client/pages/gameplay/widgets/draw/step/step.dart';
+import 'dart:ui' as ui;
 
 mixin PlainDrawStep on DrawStep {
-  void track() {
-    prevPlainStep = PlainDrawStep.latestStep;
-    PlainDrawStep.latestStep = this;
-  }
+  Color get color;
 
-  PlainDrawStep? prevPlainStep;
-
-  static PlainDrawStep? latestStep;
+  /// do nothing, for plain color just let steps draw its nature, no need cache
+  @override
+  Future<void> buildCache() async {}
 
   @override
-  void unlink() {
-    PlainDrawStep.latestStep = prevPlainStep;
-    super.unlink();
-  }
-
-  Color get color;
+  Future<ui.Image> get cache => throw Exception('PlainDrawStep never be previous of FloodFillStep');
 }

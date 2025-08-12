@@ -12,25 +12,9 @@ import '../step.dart';
 part 'fullfill.dart';
 part 'floodfill.dart';
 
-abstract class FillStep extends DrawStep with GestureDrawStep {
-  factory FillStep.init() {
-    var drawInst = DrawManager.inst;
-    // figure which type to draw: flood fill or full fill
-
-    if (drawInst.isEmpty) return _FirstFullFillStep();
-
-    var tail = drawInst.tail!;
-
-    if (tail is PlainDrawStep) return _NonFirstFullFillStep();
-
-    return _FloodFillStep._init();
-  }
-
-  FillStep() {
-    changeColor();
-  }
-
-  late Color _color;
+// this object never be added to tail, except its children
+class FillStep extends DrawStep with GestureDrawStep {
+  FillStep.init();
 
   @nonVirtual
   @override
@@ -38,21 +22,48 @@ abstract class FillStep extends DrawStep with GestureDrawStep {
 
   @nonVirtual
   @override
-  void Function(Canvas) get draw => entryDraw;
+  bool get onEnd {
+    // check which type should fill, full or flood fill
+    var drawInst = DrawManager.inst;
+    var tail = drawInst.tail;
+
+    drawInst.pushTail(((tail == null && drawInst.currentColor != Colors.white) ||
+            (tail is PlainDrawStep && tail.color != drawInst.currentColor))
+        ? _FullFillStep()
+        : _FloodFillStep(point: _point));
+
+    return false;
+  }
 
   @nonVirtual
   @override
-  set draw(void Function(Canvas) value) => throw Exception('forbided');
+  void Function(ui.Offset point) get onDown => (point) => _point = point;
 
-  /// main draw, child class can set it new callback to draw anything
-  /// in onDown
-  void Function(Canvas) entryDraw = (_) {};
+  late Offset _point;
 
-  /// only `_FullFillStep` can override this
+  //#region USELESS STUFF
+
+  @nonVirtual
   @override
-  changeColor() {
-    _color = DrawManager.inst.currentColor;
-  }
+  void changeColor() {}
+
+  @nonVirtual
+  @override
+  void Function(ui.Canvas p1) get draw => (_) {};
+
+  @nonVirtual
+  @override
+  Future<void> buildCache() => throw UnimplementedError();
+
+  @nonVirtual
+  @override
+  Future<ui.Image> get cache => throw UnimplementedError();
+
+  @nonVirtual
+  @override
+  void Function(ui.Canvas p1) get drawBackward => throw UnimplementedError();
+
+  //#endregion
 
   // @override
   // Future<void> emitTemp() async {
