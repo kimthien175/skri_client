@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:skribbl_client/models/game/game.dart';
+import 'package:skribbl_client/pages/gameplay/widgets/utils.dart';
 
 import 'package:skribbl_client/utils/utils.dart';
 import 'package:skribbl_client/widgets/dialog/dialog.dart';
@@ -95,6 +96,12 @@ class SocketIO {
     });
 
     socket.on('new_states', (dataList) => Game.inst.receiveStatusAndStates(dataList[0]));
+
+    // socket.on('draw:send_past', (data) => DrawReceiver.inst.addToPastSteps(data[0]));
+    // socket.on('draw:remove_past', (data) => DrawReceiver.inst.removePastStep(data[0]));
+
+    socket.on('draw:start_current', (dataList) => DrawReceiver.inst.startCurrent(dataList[0]));
+    socket.on('draw:update_current', (dataList) => DrawReceiver.inst.updateCurrent(dataList[0]));
   }
 
   static Future<void> initSocket() async {

@@ -1,7 +1,18 @@
 part of 'fill.dart';
 
-class _FloodFillStep extends DrawStep {
-  _FloodFillStep({required this.point});
+class FloodFillStep extends DrawStep {
+  FloodFillStep({required this.point});
+
+  factory FloodFillStep.fromJSON(dynamic json) =>
+      FloodFillStep(point: JSONOffset.fromJSON(json['point']));
+
+  @override
+  Map<String, dynamic> get toPrivateJSON => {'point': point.toJSON, 'color': color.toJSON};
+
+  @override
+  String get type => TYPE;
+  // ignore: constant_identifier_names
+  static const String TYPE = 'flood_fill';
 
   final Offset point;
 
@@ -25,7 +36,7 @@ class _FloodFillStep extends DrawStep {
 
   /// set _image, complete _completer, switch entryDraw to drawCache
   @override
-  Future<void> buildCache() async {
+  Future<bool> buildCache() async {
     try {
       var image = await _compileTemp();
 
@@ -37,10 +48,12 @@ class _FloodFillStep extends DrawStep {
 
       // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
       DrawManager.inst.pastStepRepaint.notifyListeners();
+      return true;
     } catch (e) {
       _completer.complete(prev!.cache);
 
       unlink();
+      return false;
     }
   }
 

@@ -1,8 +1,10 @@
 import 'dart:ui' as ui;
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 abstract class DrawStep {
+  DrawStep();
   late final int id;
 
   //#region For linked list
@@ -27,7 +29,7 @@ abstract class DrawStep {
   //#endregion
 
   //#region For caching
-  Future<void> buildCache();
+  Future<bool> buildCache();
 
   /// for FloodFillStep as next DrawStep to access
   Future<ui.Image> get cache;
@@ -37,20 +39,17 @@ abstract class DrawStep {
   /// expected to be that when previous step have temp or plain draw, the loop would stop
   void Function(Canvas) get drawBackward;
 
-  // Future<void> emitTemp() async {
-  //   temp!
-  //       .toImage(DrawManager.width.toInt(), DrawManager.height.toInt())
-  //       .then((value) => value.toByteData(format: ImageByteFormat.png))
-  //       .then((value) {
-  //     if (value != null) {
-  //       SocketIO.inst.socket.emit('draw:temp',
-  //           {'type': 'Uint8List', 'hashCode': hashCode, 'Uint8List': value.buffer.asUint8List()});
-  //     }
-  //   });
-  // }
+  /// have private child content, don't include `id`, `type`, `prevID`, `nextID`
+  Map<String, dynamic> get toPrivateJSON;
 
-  // Future<void> emitDownCurrent(Offset point) async {}
-  // Future<void> emitUpdateCurrent(Offset point) async {}
+  @nonVirtual
+  Map<String, dynamic> get toJSON {
+    var result = toPrivateJSON;
+    result.addAll({'id': id, 'type': type, 'prev_id': prev?.id, 'next_id': next?.id});
+    return result;
+  }
+
+  String get type;
 }
 
 mixin GestureDrawStep on DrawStep {

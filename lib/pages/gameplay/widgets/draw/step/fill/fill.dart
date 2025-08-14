@@ -3,9 +3,10 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:skribbl_client/pages/gameplay/widgets/draw/step/plain.dart';
 
+import '../../../utils.dart';
 import '../../manager.dart';
+import '../plain.dart';
 import 'flood_fill.dart';
 import '../step.dart';
 
@@ -29,8 +30,8 @@ class FillStep extends DrawStep with GestureDrawStep {
 
     drawInst.pushTail(((tail == null && drawInst.currentColor != Colors.white) ||
             (tail is PlainDrawStep && tail.color != drawInst.currentColor))
-        ? _FullFillStep()
-        : _FloodFillStep(point: _point));
+        ? FullFillStep()
+        : FloodFillStep(point: _point));
 
     return false;
   }
@@ -53,7 +54,7 @@ class FillStep extends DrawStep with GestureDrawStep {
 
   @nonVirtual
   @override
-  Future<void> buildCache() => throw UnimplementedError();
+  Future<bool> buildCache() => throw UnimplementedError();
 
   @nonVirtual
   @override
@@ -62,6 +63,12 @@ class FillStep extends DrawStep with GestureDrawStep {
   @nonVirtual
   @override
   void Function(ui.Canvas p1) get drawBackward => throw UnimplementedError();
+
+  @override
+  Map<String, dynamic> get toPrivateJSON => throw UnimplementedError();
+
+  @override
+  String get type => throw UnimplementedError();
 
   //#endregion
 

@@ -7,6 +7,7 @@ import 'package:skribbl_client/models/models.dart';
 import 'package:get/get.dart';
 import 'package:skribbl_client/pages/gameplay/widgets/draw/draw_widget.dart';
 import 'package:skribbl_client/pages/gameplay/widgets/draw/manager.dart';
+import 'package:skribbl_client/pages/gameplay/widgets/utils.dart';
 import 'package:skribbl_client/pages/pages.dart';
 import 'package:skribbl_client/utils/utils.dart';
 
@@ -62,7 +63,9 @@ mixin _DrawStateMixin on GameState {
 }
 
 class _SpectatorDrawState extends GameState with _DrawStateMixin {
-  _SpectatorDrawState({required super.data});
+  _SpectatorDrawState({required super.data}) {
+    DrawReceiver.inst.load(data['draw_data']);
+  }
 
   @override
   Widget get status => isHintHidden ? const _HiddenHintStatus() : const _VisibleHintStatus();
@@ -71,7 +74,6 @@ class _SpectatorDrawState extends GameState with _DrawStateMixin {
   Future<void> onStart(Duration sinceStartDate) async {
     super.onStart(sinceStartDate);
 
-    DrawViewManager.inst.clear(null);
     Get.find<LikeAndDislikeController>().controller.forward();
   }
 }

@@ -2,12 +2,34 @@ import 'dart:async';
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
-import 'package:skribbl_client/pages/gameplay/widgets/draw/step/plain.dart';
 
+import '../../utils.dart';
 import '../manager.dart';
+import 'plain.dart';
 import 'step.dart';
 
 class BrushStep extends DrawStep with GestureDrawStep {
+  @override
+  String get type => TYPE;
+
+  // ignore: constant_identifier_names
+  static const String TYPE = 'brush';
+
+  @override
+  Map<String, dynamic> get toPrivateJSON =>
+      {'stroke_width': _brush.strokeWidth, 'color': _brush.color.toJSON, 'points': _points.toJSON};
+
+  BrushStep.fromJSON(dynamic json) {
+    _brush = Paint()
+      ..strokeCap = StrokeCap.round
+      ..strokeWidth = json['stroke_width']
+      ..color = JSONColor.fromJSON(json['color']);
+
+    for (var point in json['points']) {
+      _points.add(JSONOffset.fromJSON(point));
+    }
+  }
+
   BrushStep.init() {
     var drawTools = DrawManager.inst;
     _brush = Paint()
@@ -53,7 +75,8 @@ class BrushStep extends DrawStep with GestureDrawStep {
   }
 
   enable() {
-    _onDown = _updatePoint;
+    _onDown = _startPoint;
+    _onUpdate = _updatePoint;
     _onEnd = true;
   }
 
@@ -73,10 +96,24 @@ class BrushStep extends DrawStep with GestureDrawStep {
     }
   }
 
+  void _startPoint(Offset point) {
+    _points.add(point);
+    // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
+    DrawManager.inst.currentStepRepaint.notifyListeners();
+
+    DrawEmitter.inst.startCurrent({
+      'stroke_width': _brush.strokeWidth,
+      'color': _brush.color.toJSON,
+      'points': [point.toJSON]
+    });
+  }
+
   void _updatePoint(Offset point) {
     _points.add(point);
     // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
     DrawManager.inst.currentStepRepaint.notifyListeners();
+
+    DrawEmitter.inst.updateCurrent({'point': point.toJSON});
   }
 
   @override
@@ -93,7 +130,8 @@ class BrushStep extends DrawStep with GestureDrawStep {
   late bool _onEnd;
 
   @override
-  void Function(Offset point) get onUpdate => _onDown;
+  void Function(Offset point) get onUpdate => _onUpdate;
+  late void Function(Offset point) _onUpdate;
 
   //#region Cache
 
@@ -103,7 +141,7 @@ class BrushStep extends DrawStep with GestureDrawStep {
   Future<ui.Image> get cache => _completer.future;
 
   @override
-  Future<void> buildCache() async {
+  Future<bool> buildCache() async {
     var recorder = ui.PictureRecorder();
     var canvas = ui.Canvas(recorder);
 
@@ -117,6 +155,8 @@ class BrushStep extends DrawStep with GestureDrawStep {
     _drawBackward = (Canvas canvas) {
       canvas.drawPicture(result);
     };
+
+    return true;
   }
 
   late void Function(Canvas) _drawBackward = (Canvas canvas) {
@@ -132,21 +172,5 @@ class BrushStep extends DrawStep with GestureDrawStep {
 
   //#endregion
 
-  // @override
-  // Future<void> emitUpdateCurrent(Offset point) async {
-  //   SocketIO.inst.socket.emit('draw:update_current', {'x': point.dx, 'y': point.dy});
-  // }
-
-  // @override
-  // Future<void> emitDownCurrent(Offset point) async {
-  //   SocketIO.inst.socket.emit('draw:down', {
-  //     'type': 'brush',
-  //     'size': _brush.strokeWidth,
-  //     'r': _brush.color.red,
-  //     'g': _brush.color.green,
-  //     'b': _brush.color.blue,
-  //     'a': _brush.color.alpha,
-  //     'point': {'x': point.dx, 'y': point.dy}
-  //   });
-  // }
+  void Function(Offset) get receivePoint => _points.add;
 }

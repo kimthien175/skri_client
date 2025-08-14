@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:skribbl_client/pages/gameplay/widgets/draw/step/plain.dart';
 
+import 'plain.dart';
 import 'step.dart';
 
 class ClearStep extends DrawStep with PlainDrawStep {
@@ -10,4 +10,12 @@ class ClearStep extends DrawStep with PlainDrawStep {
   /// considerd white for later fullfill step can check this
   @override
   Color get color => Colors.white;
+
+  @override
+  String get type => TYPE;
+  // ignore: constant_identifier_names
+  static const String TYPE = 'clear';
+
+  @override
+  Map<String, dynamic> get toPrivateJSON => {};
 }

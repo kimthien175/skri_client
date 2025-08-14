@@ -1,13 +1,13 @@
 // ignore_for_file: invalid_use_of_visible_for_testing_member, invalid_use_of_protected_member
 
-import 'package:skribbl_client/pages/gameplay/widgets/draw/step/plain.dart';
-import 'package:skribbl_client/pages/gameplay/widgets/draw/step/clear.dart';
 import 'package:skribbl_client/pages/gameplay/widgets/draw/widgets/stroke_value_item.dart';
-import 'package:skribbl_client/utils/socket_io.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../utils.dart';
 import 'mode.dart';
+import 'step/clear.dart';
+import 'step/plain.dart';
 import 'step/step.dart';
 import 'widgets/color.dart';
 import 'widgets/stroke.dart';
@@ -122,22 +122,20 @@ class DrawManager {
       return;
     }
 
-    _pushTailToNonEmptyData(ClearStep());
-
-    SocketIO.inst.socket.emit('draw:clear');
+    pushTail(ClearStep());
   }
 
   static const double width = 800;
   static const double height = 600;
 
-  printFromTailToHead() {
-    print('[START PRINT]');
-    DrawStep? node = _tail;
-    while (node != null) {
-      print(node);
-      node = node.prev;
-    }
-  }
+  // printFromTailToHead() {
+  //   print('[START PRINT]');
+  //   DrawStep? node = _tail;
+  //   while (node != null) {
+  //     print(node);
+  //     node = node.prev;
+  //   }
+  // }
 
   //#region Linked List
 
@@ -154,7 +152,9 @@ class DrawManager {
       _pushTailToNonEmptyData(newTail);
     }
 
-    newTail.buildCache();
+    newTail.buildCache().then((value) {
+      if (value) DrawEmitter.inst.emitStep(newTail);
+    });
   }
 
   void _pushTailToNonEmptyData(DrawStep newTail) {
@@ -187,6 +187,8 @@ class DrawManager {
       _tail = newTail;
       _pastStepRepaint.notifyListeners();
     }
+
+    DrawEmitter.inst.removeStep(target.id);
   }
 
   /// clear the past, current step unlink to tail (DrawStep constructor always link its prev to tail)

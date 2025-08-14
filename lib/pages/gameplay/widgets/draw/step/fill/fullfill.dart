@@ -1,8 +1,12 @@
 part of 'fill.dart';
 
 /// this class exist in case previous step is `PlainDrawStep` as well
-class _FullFillStep extends DrawStep with PlainDrawStep {
-  final Color _color = DrawManager.inst.currentColor;
+class FullFillStep extends DrawStep with PlainDrawStep {
+  FullFillStep() {
+    _color = DrawManager.inst.currentColor;
+  }
+
+  late final Color _color;
 
   @override
   void Function(ui.Canvas p1) get drawBackward => (Canvas canvas) {
@@ -11,4 +15,16 @@ class _FullFillStep extends DrawStep with PlainDrawStep {
 
   @override
   Color get color => _color;
+
+  @override
+  Map<String, dynamic> get toPrivateJSON => {'color': _color.toJSON};
+
+  @override
+  String get type => TYPE;
+  // ignore: constant_identifier_names
+  static const String TYPE = 'full_fill';
+
+  FullFillStep.fromJSON(dynamic json) {
+    _color = JSONColor.fromJSON(json['color']);
+  }
 }
