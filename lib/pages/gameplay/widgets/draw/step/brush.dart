@@ -77,12 +77,15 @@ class BrushStep extends DrawStep with GestureDrawStep {
   enable() {
     _onDown = _startPoint;
     _onUpdate = _updatePoint;
-    _onEnd = true;
+    _onEnd = () {
+      DrawEmitter.inst.endCurrent();
+      return true;
+    };
   }
 
   disable() {
     _onDown = (_) {};
-    _onEnd = false;
+    _onEnd = () => false;
   }
 
   @override
@@ -126,8 +129,8 @@ class BrushStep extends DrawStep with GestureDrawStep {
   late void Function(Offset point) _onDown;
 
   @override
-  bool get onEnd => _onEnd;
-  late bool _onEnd;
+  bool get onEnd => _onEnd();
+  late bool Function() _onEnd;
 
   @override
   void Function(Offset point) get onUpdate => _onUpdate;

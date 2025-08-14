@@ -31,6 +31,10 @@ class DrawEmitter {
   Future<void> updateCurrent(dynamic data) async {
     SocketIO.inst.socket.emit('draw:update_current', data);
   }
+
+  Future<void> endCurrent() async {
+    SocketIO.inst.socket.emit('draw:end_current');
+  }
 }
 
 class DrawReceiver {
@@ -43,6 +47,10 @@ class DrawReceiver {
     startCurrent(drawData['current_step']);
 
     tailID = drawData['tail_id'];
+    pastSteps = {};
+
+    _stepsBlackList = {};
+    _stepsWhiteList = {};
     _initPastSteps(drawData['past_steps']);
   }
 
@@ -79,19 +87,15 @@ class DrawReceiver {
     return _prevRawStep(rawPastSteps, prevStepID - 1);
   }
 
-  int tailID = 0;
+  late int tailID;
 
   //#region Past steps
-  final Map<int, DrawStep> pastSteps = {};
+  late Map<int, DrawStep> pastSteps;
+
   final ChangeNotifier pastStepsNotifier = ChangeNotifier();
 
   void addToPastSteps(dynamic json) {
-    if (pastSteps[json['id']] != null) return;
-
-    print('[NEW RAW STEP]');
-    print(json['id']);
-    print(json['prev_id']);
-    print(json['next_id']);
+    if (_stepsBlackList.contains(json['secondary_id'])) return;
 
     late DrawStep step;
 
@@ -117,26 +121,37 @@ class DrawReceiver {
     }
 
     step.id = json['id'];
+    step.secId = json['secondary_id'];
 
     // patch into linked list, the pastStep always is linked list itself ending with tail
 
     int? performerPrevID = json['prev_id'];
-    DrawStep? spectatorPrevStep;
-
-    //#region set spectatorPrevStep
-    for (var i = performerPrevID ?? step.id - 1; i >= 0; i--) {
-      spectatorPrevStep = pastSteps[i];
-      if (spectatorPrevStep != null) break;
-    }
-    //#endregion
-
     int? performerNextID = json['next_id'];
+
+    DrawStep? spectatorPrevStep;
     DrawStep? spectatorNextStep;
 
-    //#region set nextStep
-    for (var i = performerNextID ?? step.id + 1; i <= tailID; i++) {
-      spectatorNextStep = pastSteps[i];
-      if (spectatorNextStep != null) break;
+    //#region find spectatorPrevStep and spectatorNextStep
+    var replacedTarget = pastSteps[step.id];
+    if (replacedTarget != null) {
+      spectatorPrevStep = replacedTarget.prev;
+      spectatorNextStep = replacedTarget.next;
+
+      _stepsBlackList.add(replacedTarget.secId);
+    } else {
+      //#region find spectatorPrevStep
+      for (var i = performerPrevID ?? step.id - 1; i >= 0; i--) {
+        spectatorPrevStep = pastSteps[i];
+        if (spectatorPrevStep != null) break;
+      }
+      //#endregion
+
+      //#region find spectatorNextStep
+      for (var i = performerNextID ?? step.id + 1; i <= tailID; i++) {
+        spectatorNextStep = pastSteps[i];
+        if (spectatorNextStep != null) break;
+      }
+      //#endregion
     }
     //#endregion
 
@@ -153,11 +168,7 @@ class DrawReceiver {
     }
 
     pastSteps[step.id] = step;
-
-    print('[NEW STEP AFTER PATCHING]');
-    print(step);
-    print(step.prev);
-    print(step.next);
+    _stepsWhiteList[step.secId] = step;
 
     // re render
     pastStepsNotifier.notifyListeners();
@@ -172,25 +183,48 @@ class DrawReceiver {
     if (spectatorNextStep != null && spectatorNextStep.id == performerNextID) {
       spectatorNextStep.buildCache();
     }
-
-    printFromTailToHead();
   }
 
-  printFromTailToHead() {
-    print('[PRINT CHAIN]');
-    DrawStep? node = pastSteps[tailID];
-    while (node != null) {
-      print(node);
-      node = node.prev;
+  /// keys as secondaryId, values as id
+  late Set<String> _stepsBlackList;
+
+  /// keys as secondaryId, values as DrawStep
+  late Map<String, DrawStep> _stepsWhiteList;
+
+  void removePastStep(String targetSecondaryId) {
+    // check in black list firstly
+    if (_stepsBlackList.contains(targetSecondaryId)) {
+      // Case 1: which means already killed it or ignored it
+      return;
     }
-  }
 
-  void removePastStep(int targetID) {
-    var target = pastSteps[targetID];
-    if (target == null) return;
+    // have to look in past steps for the target by 2nd id, when done, add to black list to prevent the name comes 1 more time
+    // past step have keys as id, not 2nd id, i don't want to check every item in past step by 2nd id
+    // have map<2nd id, DrawStep> , faster in looking it and kill it
 
-    target.prev?.next = target.next;
-    target.next?.prev = target.prev;
+    var target = _stepsWhiteList[targetSecondaryId];
+
+    if (target == null) {
+      // case 2: which means the target did not come early before the undo signal
+      // add to black list for addToPastSteps to ignore
+      _stepsBlackList.add(targetSecondaryId);
+      return;
+    }
+
+    // case 3: found it, start to kill
+
+    pastSteps.remove(target.id);
+
+    _stepsBlackList.add(targetSecondaryId);
+    //_stepsWhiteList.remove(targetSecondaryId);
+
+    var prev = target.prev;
+    // before unlink, check tailIO to set new one
+    if (target.id == tailID) {
+      tailID = prev != null ? prev.id : 0;
+    }
+
+    target.unlink();
 
     pastStepsNotifier.notifyListeners();
   }
@@ -205,6 +239,11 @@ class DrawReceiver {
 
     // update as BrushStep
     currentStep?.receivePoint(JSONOffset.fromJSON(data['point']));
+    currentStepNotifier.notifyListeners();
+  }
+
+  void endCurrent() {
+    currentStep = null;
     currentStepNotifier.notifyListeners();
   }
 

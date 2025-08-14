@@ -2,6 +2,7 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:uuid/uuid.dart';
 
 abstract class DrawStep {
   DrawStep();
@@ -45,11 +46,22 @@ abstract class DrawStep {
   @nonVirtual
   Map<String, dynamic> get toJSON {
     var result = toPrivateJSON;
-    result.addAll({'id': id, 'type': type, 'prev_id': prev?.id, 'next_id': next?.id});
+
+    result['id'] = id;
+    result['type'] = type;
+    result['prev_id'] = prev?.id;
+    result['next_id'] = next?.id;
+    result['secondary_id'] = _secIdGenerator.v1();
+
     return result;
   }
 
   String get type;
+
+  //#region For Spectator side
+  static final Uuid _secIdGenerator = Uuid();
+  late final String secId;
+  //#endregion
 }
 
 mixin GestureDrawStep on DrawStep {

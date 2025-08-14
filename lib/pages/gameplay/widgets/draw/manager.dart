@@ -169,7 +169,7 @@ class DrawManager {
     // if past is empty, which mean nothing to undo
     if (_tail == null) return;
 
-    // shift tail backword and delete old tail
+    // shift tail backward and delete old tail
     DrawStep target = _tail!;
 
     var newTail = _tail!.prev;
