@@ -97,8 +97,8 @@ class SocketIO {
 
     socket.on('new_states', (dataList) => Game.inst.receiveStatusAndStates(dataList[0]));
 
-    // socket.on('draw:send_past', (data) => DrawReceiver.inst.addToPastSteps(data[0]));
-    // socket.on('draw:remove_past', (data) => DrawReceiver.inst.removePastStep(data[0]));
+    socket.on('draw:send_past', (dataList) => DrawReceiver.inst.addToPastSteps(dataList[0]));
+    //socket.on('draw:remove_past', (dataList) => DrawReceiver.inst.removePastStep(dataList[0]));
 
     socket.on('draw:start_current', (dataList) => DrawReceiver.inst.startCurrent(dataList[0]));
     socket.on('draw:update_current', (dataList) => DrawReceiver.inst.updateCurrent(dataList[0]));

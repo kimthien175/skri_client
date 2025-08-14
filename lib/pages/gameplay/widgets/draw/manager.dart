@@ -153,7 +153,7 @@ class DrawManager {
     }
 
     newTail.buildCache().then((value) {
-      if (value) DrawEmitter.inst.emitStep(newTail);
+      if (value) DrawEmitter.inst.sendPast(newTail);
     });
   }
 

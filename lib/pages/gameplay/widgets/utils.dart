@@ -14,7 +14,7 @@ class DrawEmitter {
   DrawEmitter._internal();
 
   /// insert step
-  Future<void> emitStep(DrawStep newStep) async =>
+  Future<void> sendPast(DrawStep newStep) async =>
       SocketIO.inst.socket.emit('draw:send_past', newStep.toJSON);
 
   //final Queue<Map<String, dynamic>> _errorOperations = Queue();
@@ -41,9 +41,9 @@ class DrawReceiver {
 
   Future<void> load(dynamic drawData) async {
     startCurrent(drawData['current_step']);
-    //tailID = drawData['tail_id'];
 
-    //   _initPastSteps(drawData['past_steps']);
+    tailID = drawData['tail_id'];
+    _initPastSteps(drawData['past_steps']);
   }
 
   // ignore: non_constant_identifier_names
@@ -64,7 +64,7 @@ class DrawReceiver {
         rawStep = _prevRawStep(past_steps, prevStepID);
       } else {
         // this step is performer head
-        break;
+        return;
       }
     }
   }
@@ -86,81 +86,102 @@ class DrawReceiver {
   final ChangeNotifier pastStepsNotifier = ChangeNotifier();
 
   void addToPastSteps(dynamic json) {
-    if (pastSteps[json['id'] as int] != null) return;
+    if (pastSteps[json['id']] != null) return;
 
-    late DrawStep newStep;
+    print('[NEW RAW STEP]');
+    print(json['id']);
+    print(json['prev_id']);
+    print(json['next_id']);
+
+    late DrawStep step;
 
     switch (json['type']) {
       case ClearStep.TYPE:
-        newStep = ClearStep();
+        step = ClearStep();
         break;
 
       case BrushStep.TYPE:
-        newStep = BrushStep.fromJSON(json);
+        step = BrushStep.fromJSON(json);
         break;
 
       case FullFillStep.TYPE:
-        newStep = FullFillStep.fromJSON(json);
+        step = FullFillStep.fromJSON(json);
         break;
 
       case FloodFillStep.TYPE:
-        newStep = FloodFillStep.fromJSON(json);
+        step = FloodFillStep.fromJSON(json);
         break;
 
       default:
         return;
     }
 
-    newStep.id = json['id'];
+    step.id = json['id'];
 
     // patch into linked list, the pastStep always is linked list itself ending with tail
 
     int? performerPrevID = json['prev_id'];
-    DrawStep? prevStep;
+    DrawStep? spectatorPrevStep;
 
-    //#region set prevStep
-    if (performerPrevID == null) {
-      for (var id = newStep.id - 1; id >= 0; id--) {
-        prevStep = pastSteps[id];
-        if (prevStep != null) break;
-      }
-    } else {
-      prevStep = pastSteps[performerPrevID];
+    //#region set spectatorPrevStep
+    for (var i = performerPrevID ?? step.id - 1; i >= 0; i--) {
+      spectatorPrevStep = pastSteps[i];
+      if (spectatorPrevStep != null) break;
     }
     //#endregion
 
     int? performerNextID = json['next_id'];
-    DrawStep? nextStep;
+    DrawStep? spectatorNextStep;
 
     //#region set nextStep
-    if (performerNextID == null) {
-      for (var id = newStep.id + 1; id <= tailID; id++) {
-        nextStep = pastSteps[id];
-        if (nextStep != null) break;
-      }
-    } else {
-      nextStep = pastSteps[performerNextID];
+    for (var i = performerNextID ?? step.id + 1; i <= tailID; i++) {
+      spectatorNextStep = pastSteps[i];
+      if (spectatorNextStep != null) break;
     }
     //#endregion
 
-    // patch newStep
-    newStep.next = nextStep;
-    newStep.prev = prevStep;
+    //#region patch newStep
+    step.next = spectatorNextStep;
+    step.prev = spectatorPrevStep;
 
-    nextStep?.prev = newStep;
-    prevStep?.next = newStep;
+    spectatorNextStep?.prev = step;
+    spectatorPrevStep?.next = step;
+    //#endregion
+
+    if (step.id > tailID) {
+      tailID = step.id;
+    }
+
+    pastSteps[step.id] = step;
+
+    print('[NEW STEP AFTER PATCHING]');
+    print(step);
+    print(step.prev);
+    print(step.next);
 
     // re render
     pastStepsNotifier.notifyListeners();
 
     // newStep is head, or its prevStep is really the previous of newStep
-    if (performerPrevID == null || (prevStep != null && performerPrevID == prevStep.id)) {
-      newStep.buildCache();
+    if (performerPrevID == null ||
+        (spectatorPrevStep != null && performerPrevID == spectatorPrevStep.id)) {
+      step.buildCache();
     }
 
     // consider next step should build cache or not
-    if (nextStep != null && performerNextID == nextStep.id) {
-      nextStep.buildCache();
+    if (spectatorNextStep != null && spectatorNextStep.id == performerNextID) {
+      spectatorNextStep.buildCache();
+    }
+
+    printFromTailToHead();
+  }
+
+  printFromTailToHead() {
+    print('[PRINT CHAIN]');
+    DrawStep? node = pastSteps[tailID];
+    while (node != null) {
+      print(node);
+      node = node.prev;
     }
   }
 
@@ -175,47 +196,20 @@ class DrawReceiver {
   }
 
   Future<void> startCurrent(dynamic step) async {
-    if (currentStep != null) {
-      if (step != null) {
-        // case 1
-        // replace ??
-        return;
-      }
-
-      // case 2
-      // currentStep != null, step ==null
-      currentStep = null;
-      return;
-    }
-
-    if (step != null) {
-      // case 3
-      currentStep = BrushStep.fromJSON(step);
-      return;
-    }
-
-    // case 4
-    // both are null, do nothing then
-
-    return;
+    currentStep = step != null ? BrushStep.fromJSON(step) : null;
+    currentStepNotifier.notifyListeners();
   }
 
   void updateCurrent(dynamic data) {
     if (currentStep == null) return;
-    print('point');
-    print(data);
-    // currentStep?.receivePoint(JSONOffset.fromJSON(point));
-    // currentStepNotifier.notifyListeners();
+
+    // update as BrushStep
+    currentStep?.receivePoint(JSONOffset.fromJSON(data['point']));
+    currentStepNotifier.notifyListeners();
   }
 
   //#endregion
-  BrushStep? _currentStep;
-  BrushStep? get currentStep => _currentStep;
-
-  set currentStep(BrushStep? newStep) {
-    _currentStep = newStep;
-    currentStepNotifier.notifyListeners();
-  }
+  BrushStep? currentStep;
 
   final ChangeNotifier currentStepNotifier = ChangeNotifier();
 }

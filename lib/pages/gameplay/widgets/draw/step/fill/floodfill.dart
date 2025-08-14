@@ -1,10 +1,14 @@
 part of 'fill.dart';
 
 class FloodFillStep extends DrawStep {
-  FloodFillStep({required this.point});
+  FloodFillStep({required this.point}) {
+    color = DrawManager.inst.currentColor;
+  }
 
-  factory FloodFillStep.fromJSON(dynamic json) =>
-      FloodFillStep(point: JSONOffset.fromJSON(json['point']));
+  FloodFillStep.fromJSON(dynamic json) {
+    point = JSONOffset.fromJSON(json['point']);
+    color = JSONColor.fromJSON(json['color']);
+  }
 
   @override
   Map<String, dynamic> get toPrivateJSON => {'point': point.toJSON, 'color': color.toJSON};
@@ -14,9 +18,8 @@ class FloodFillStep extends DrawStep {
   // ignore: constant_identifier_names
   static const String TYPE = 'flood_fill';
 
-  final Offset point;
-
-  late final Color color = DrawManager.inst.currentColor;
+  late final Offset point;
+  late final Color color;
 
   final Completer<ui.Image> _completer = Completer<ui.Image>();
 
