@@ -43,14 +43,30 @@ class DrawReceiver {
 
   DrawReceiver._internal();
 
-  Future<void> load(dynamic drawData) async {
-    startCurrent(drawData['current_step']);
+  void reset() {
+    pastSteps = {};
+    _stepsBlackList = {};
+    _archivedSteps = {};
+    tailID = 0;
+    currentStep = null;
+
+    pastStepsNotifier.notifyListeners();
+    currentStepNotifier.notifyListeners();
+  }
+
+  void load(dynamic drawData) async {
+    if (drawData == null) {
+      reset();
+      return;
+    }
+
+    pastSteps = {};
+    _stepsBlackList = {};
+    _archivedSteps = {};
 
     tailID = drawData['tail_id'];
-    pastSteps = {};
 
-    _stepsBlackList = {};
-    _stepsWhiteList = {};
+    startCurrent(drawData['current_step']);
     _initPastSteps(drawData['past_steps']);
   }
 
@@ -168,7 +184,7 @@ class DrawReceiver {
     }
 
     pastSteps[step.id] = step;
-    _stepsWhiteList[step.secId] = step;
+    _archivedSteps[step.secId] = step;
 
     // re render
     pastStepsNotifier.notifyListeners();
@@ -188,8 +204,14 @@ class DrawReceiver {
   /// keys as secondaryId, values as id
   late Set<String> _stepsBlackList;
 
-  /// keys as secondaryId, values as DrawStep
-  late Map<String, DrawStep> _stepsWhiteList;
+  /// Store all `DrawStep` ever exist or even got deleted in `pastSteps`
+  ///
+  /// (not necessary to delete targets everytime a DrawStep get deleted or replaced to have the same children amount as `pastSteps`,
+  ///
+  /// if plan to have new feature as redo, then leave it be to be able to restore to `pastSteps`).
+  ///
+  /// `key` as `DrawStep.secondaryId`
+  late Map<String, DrawStep> _archivedSteps;
 
   void removePastStep(String targetSecondaryId) {
     // check in black list firstly
@@ -202,7 +224,7 @@ class DrawReceiver {
     // past step have keys as id, not 2nd id, i don't want to check every item in past step by 2nd id
     // have map<2nd id, DrawStep> , faster in looking it and kill it
 
-    var target = _stepsWhiteList[targetSecondaryId];
+    var target = _archivedSteps[targetSecondaryId];
 
     if (target == null) {
       // case 2: which means the target did not come early before the undo signal

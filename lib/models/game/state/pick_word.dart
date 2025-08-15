@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:skribbl_client/models/models.dart';
+import 'package:skribbl_client/pages/gameplay/widgets/utils.dart';
 import 'package:skribbl_client/pages/pages.dart';
 import 'package:skribbl_client/utils/utils.dart';
 import 'package:skribbl_client/widgets/widgets.dart';
@@ -144,6 +145,10 @@ class PickWordState extends GameState {
     if (sinceEndDate < TopWidgetController.backgroundDuration) {
       await topWidget.reverseBackground(
           from: 1 - sinceEndDate / TopWidgetController.backgroundDuration);
+
+      // for spectators watching the transtion from PickWordState to DrawState, the draw data would reset
+      // for spectator join mid game, of course this would be skipped
+      DrawReceiver.inst.reset();
       return Duration.zero;
     } else {
       topWidget.background = 0;

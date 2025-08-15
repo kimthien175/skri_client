@@ -10,6 +10,7 @@ import 'package:skribbl_client/models/models.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:skribbl_client/pages/gameplay/widgets/utils.dart';
 import 'package:skribbl_client/pages/pages.dart';
 import 'package:skribbl_client/utils/utils.dart';
 
@@ -33,6 +34,8 @@ class Game extends GetxController {
     messages = Message.listFromJSON(data['messages']).obs;
 
     currentRound = (data['current_round'] as int).obs;
+
+    DrawReceiver.inst.load(data['latest_draw_data']);
   }
   static Game? _inst;
   static Game get inst => _inst!;
@@ -91,7 +94,7 @@ class Game extends GetxController {
   String get currentStateId => status['current_state_id'];
   String get nextStateId => status['next_state_id'];
   String get stateCommand => status['command'];
-  DateTime get stateDate => DateTime.parse(status['date']);
+  DateTime get date => DateTime.parse(status['date']);
 
   static bool get isEmpty => _inst == null;
 
@@ -122,17 +125,20 @@ class Game extends GetxController {
     Game._inst = null;
   }
 
+  /// trigger at GameplayerPage controller onStart, or SocketIO receive new state
   runState() {
     switch (stateCommand) {
       case start:
-        state.value.onStart(DateTime.now() - stateDate);
+        state.value.onStart(DateTime.now() - date);
         break;
       case end:
-        state.value.onEnd(DateTime.now() - stateDate).then((duration) {
+        state.value.onEnd(DateTime.now() - date).then((duration) {
           henceforthStates.remove(state.value.id);
           state.value = GameState.fromJSON(henceforthStates[nextStateId]);
           state.value.onStart(duration);
         });
+        break;
+      default:
         break;
     }
   }
