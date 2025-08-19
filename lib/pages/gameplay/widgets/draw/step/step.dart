@@ -2,7 +2,6 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:uuid/uuid.dart';
 
 abstract class DrawStep {
   DrawStep();
@@ -15,16 +14,6 @@ abstract class DrawStep {
   void unlink() {
     prev?.next = next;
     next?.prev = prev;
-  }
-
-  /// chain up, set id, return `newStep`
-  DrawStep chainUp(DrawStep newStep) {
-    next = newStep;
-
-    newStep.prev = this;
-    newStep.id = id + 1;
-
-    return newStep;
   }
 
   //#endregion
@@ -50,18 +39,17 @@ abstract class DrawStep {
     result['id'] = id;
     result['type'] = type;
     result['prev_id'] = prev?.id;
-    result['next_id'] = next?.id;
-    result['secondary_id'] = _secIdGenerator.v1();
+    //result['next_id'] = next?.id;
 
     return result;
   }
 
   String get type;
+  int? performerPrevID;
+  //int? performerNextID;
 
-  //#region For Spectator side
-  static final Uuid _secIdGenerator = Uuid();
-  late final String secId;
-  //#endregion
+  /// until receiving undo signal
+  bool isHardLinkedWithPrev(int newStepId) => prev!.id == performerPrevID && newStepId < id;
 }
 
 mixin GestureDrawStep on DrawStep {

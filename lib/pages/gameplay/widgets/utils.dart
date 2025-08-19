@@ -46,8 +46,8 @@ class DrawReceiver {
   void reset() {
     pastSteps = {};
     _stepsBlackList = {};
-    _archivedSteps = {};
-    tailID = 0;
+    tail = null;
+    _head = null;
     currentStep = null;
 
     pastStepsNotifier.notifyListeners();
@@ -62,56 +62,52 @@ class DrawReceiver {
 
     pastSteps = {};
     _stepsBlackList = {};
-    _archivedSteps = {};
-
-    tailID = drawData['tail_id'];
 
     startCurrent(drawData['current_step']);
-    _initPastSteps(drawData['past_steps']);
+    _initPastSteps(drawData['past_steps'], drawData['tail_id']);
   }
 
   // ignore: non_constant_identifier_names
-  Future<void> _initPastSteps(dynamic past_steps) async {
+  Future<void> _initPastSteps(dynamic past_steps, int? tailId) async {
     // convert json.past_steps into widget
     // add to pastSteps, also chain to linked list
     // start from tailID
 
-    var rawStep = past_steps[tailID];
+    // server told you there is no tail, which means data is empty
+    if (tailId == null) return;
+
+    var rawStep = past_steps[tailId];
 
     while (rawStep != null) {
       addToPastSteps(rawStep);
 
-      // get new raw step
-      int? prevStepID = rawStep['prev_id'];
+      int? prevStepId = rawStep['prev_id'];
 
-      if (prevStepID != null) {
-        rawStep = _prevRawStep(past_steps, prevStepID);
+      if (prevStepId != null) {
+        rawStep = _getStepBackward(past_steps, prevStepId);
       } else {
-        // this step is performer head
         return;
       }
     }
   }
 
-  dynamic _prevRawStep(dynamic rawPastSteps, int prevStepID) {
-    if (prevStepID < 0) return null;
-
-    var rawStep = rawPastSteps[prevStepID];
-
-    if (rawStep != null) return rawStep;
-
-    return _prevRawStep(rawPastSteps, prevStepID - 1);
+  // ignore: non_constant_identifier_names
+  dynamic _getStepBackward(dynamic past_steps, stepId) {
+    if (stepId < 0) return null;
+    return past_steps[stepId] ?? _getStepBackward(past_steps, stepId - 1);
   }
 
-  late int tailID;
-
+  DrawStep? tail;
   //#region Past steps
   late Map<int, DrawStep> pastSteps;
 
   final ChangeNotifier pastStepsNotifier = ChangeNotifier();
 
   void addToPastSteps(dynamic json) {
-    if (_stepsBlackList.contains(json['secondary_id'])) return;
+    var id = json['id'];
+
+    // if blacklist has it, ignore
+    if (_stepsBlackList.contains(id) || pastSteps[id] != null) return;
 
     late DrawStep step;
 
@@ -136,115 +132,198 @@ class DrawReceiver {
         return;
     }
 
-    step.id = json['id'];
-    step.secId = json['secondary_id'];
+    step.id = id;
 
-    // patch into linked list, the pastStep always is linked list itself ending with tail
+    step.performerPrevID = json['prev_id'];
 
-    int? performerPrevID = json['prev_id'];
-    int? performerNextID = json['next_id'];
+    //#region IF FIRST SPECTATOR STEP THEN SET HEAD AND TAIL
+    if (tail == null) {
+      tail = step;
+      _head = step;
+      pastSteps[step.id] = step;
+      pastStepsNotifier.notifyListeners();
 
-    DrawStep? spectatorPrevStep;
-    DrawStep? spectatorNextStep;
-
-    //#region find spectatorPrevStep and spectatorNextStep
-    var replacedTarget = pastSteps[step.id];
-    if (replacedTarget != null) {
-      spectatorPrevStep = replacedTarget.prev;
-      spectatorNextStep = replacedTarget.next;
-
-      _stepsBlackList.add(replacedTarget.secId);
-    } else {
-      //#region find spectatorPrevStep
-      for (var i = performerPrevID ?? step.id - 1; i >= 0; i--) {
-        spectatorPrevStep = pastSteps[i];
-        if (spectatorPrevStep != null) break;
+      if (step.performerPrevID == null) {
+        step.buildCache();
       }
-      //#endregion
-
-      //#region find spectatorNextStep
-      for (var i = performerNextID ?? step.id + 1; i <= tailID; i++) {
-        spectatorNextStep = pastSteps[i];
-        if (spectatorNextStep != null) break;
-      }
-      //#endregion
+      return;
     }
     //#endregion
 
-    //#region patch newStep
-    step.next = spectatorNextStep;
-    step.prev = spectatorPrevStep;
+    //#region IF STEP IS SPECTATOR HEAD
+    assert(_head != null);
+    if (id < _head!.id) {
+      if (_head!.performerPrevID == null || _head!.performerPrevID! < id) {
+        // current performer head is newer, or step is in old branch, ignore
+        _stepsBlackList.add(id);
+        return;
+      }
 
-    spectatorNextStep?.prev = step;
-    spectatorPrevStep?.next = step;
+      // ok now, add head
+      step.next = _head;
+      _head!.prev = step;
+
+      pastSteps[id] = step;
+      _head = step;
+
+      pastStepsNotifier.notifyListeners();
+
+      if (step.performerPrevID == null) {
+        step.buildCache();
+      }
+      if (step.next?.performerPrevID == id) {
+        step.next?.buildCache();
+      }
+      return;
+    }
     //#endregion
 
-    if (step.id > tailID) {
-      tailID = step.id;
+    //#region IF STEP IS SPECTATOR TAIL
+    assert(tail != null);
+    if (tail!.id < id) {
+      var pPrevId = step.performerPrevID;
+      if (pPrevId == null) {
+        // latest performer head, clear all and set step as first step
+        pastSteps.clear();
+        _head = step;
+        tail = step;
+        pastSteps[id] = step;
+        pastStepsNotifier.notifyListeners();
+        step.buildCache();
+        return;
+      }
+
+      // remove steps after pPrev, cause they are old branch
+      var oldBranchStep = tail;
+      while (oldBranchStep != null && oldBranchStep.id > pPrevId) {
+        // delete oldBranchStep
+        pastSteps.remove(oldBranchStep.id);
+        _stepsBlackList.add(oldBranchStep.id);
+        oldBranchStep = oldBranchStep.prev;
+      }
+
+      // spectatorPrev at this line is oldBranchStep
+      if (oldBranchStep != null) {
+        // patch with this
+        oldBranchStep.next = step;
+        step.prev = oldBranchStep;
+
+        pastSteps[id] = step;
+        tail = step;
+
+        pastStepsNotifier.notifyListeners();
+
+        if (pPrevId == oldBranchStep.id) {
+          step.buildCache();
+        }
+        return;
+      }
+
+      // new step is head as well
+      // spectatorPrev == null which means pastSteps is already empty
+      _head = step;
+      tail = step;
+      pastSteps[id] = step;
+      pastStepsNotifier.notifyListeners();
+      // pPrev != null which mean no need to build cache
+      return;
+    }
+    //#endregion
+
+    //#region FINAL CASE: STEP STAY IN THE MIDDLE
+    assert(_head != null && tail != null);
+    var pPrevId = step.performerPrevID;
+    DrawStep? spectatorNext;
+
+    for (var i = id + 1; i <= tail!.id; i++) {
+      spectatorNext = pastSteps[i];
+      if (spectatorNext != null) {
+        // step is in old branch, which mean found spectatorNext is new branch, then ignore
+        // and since spectatorNext always has DrawStep before it, which mean its performerPrevId is always != null,
+        // other wise it would be spectatorHead base on case 2, not this case
+        if (spectatorNext.performerPrevID! < id) {
+          _stepsBlackList.add(id);
+          return;
+        }
+        break;
+      }
     }
 
-    pastSteps[step.id] = step;
-    _archivedSteps[step.secId] = step;
+    // step stay in the middle, which mean spectatorNext always != null
+    var prevTarget = spectatorNext!.prev;
 
-    // re render
+    // new performer head
+    if (pPrevId == null) {
+      // for step as new head, then delete everything backward starts from spectatorPrev
+      while (prevTarget != null) {
+        pastSteps.remove(prevTarget.id);
+        _stepsBlackList.add(prevTarget.id);
+        prevTarget = prevTarget.prev;
+      }
+
+      // patch and set head
+      step.next = spectatorNext;
+      spectatorNext.prev = step;
+
+      _head = step;
+
+      pastSteps[id] = step;
+
+      pastStepsNotifier.notifyListeners();
+
+      // new performer head, which mean it's time to build cache
+      step.buildCache();
+      if (spectatorNext.performerPrevID == id) {
+        spectatorNext.buildCache();
+      }
+      return;
+    }
+
+    // not performer head
+    // delete everything backward from prevTarget to the step after pPrev cause it is old branch
+    while (prevTarget != null && pPrevId < prevTarget.id) {
+      pastSteps.remove(prevTarget.id);
+      _stepsBlackList.add(prevTarget.id);
+      prevTarget = prevTarget.prev;
+    }
+
+    // prevTarget maybe null due to the head maybe in old branch as well
+    if (prevTarget != null) {
+      // patch with this
+      prevTarget.next = step;
+      step.prev = prevTarget;
+    }
+
+    // patch next
+    spectatorNext.prev = step;
+    step.next = spectatorNext;
+
+    pastSteps[id] = step;
+
     pastStepsNotifier.notifyListeners();
 
-    // newStep is head, or its prevStep is really the previous of newStep
-    if (performerPrevID == null ||
-        (spectatorPrevStep != null && performerPrevID == spectatorPrevStep.id)) {
-      step.buildCache();
-    }
+    if (prevTarget != null && prevTarget.id == pPrevId) step.buildCache();
+    if (spectatorNext.performerPrevID == id) spectatorNext.buildCache();
 
-    // consider next step should build cache or not
-    if (spectatorNextStep != null && spectatorNextStep.id == performerNextID) {
-      spectatorNextStep.buildCache();
-    }
+    //#endregion
   }
 
-  /// keys as secondaryId, values as id
-  late Set<String> _stepsBlackList;
+  DrawStep? _head;
 
-  /// Store all `DrawStep` ever exist or even got deleted in `pastSteps`
-  ///
-  /// (not necessary to delete targets everytime a DrawStep get deleted or replaced to have the same children amount as `pastSteps`,
-  ///
-  /// if plan to have new feature as redo, then leave it be to be able to restore to `pastSteps`).
-  ///
-  /// `key` as `DrawStep.secondaryId`
-  late Map<String, DrawStep> _archivedSteps;
+  late Set<int> _stepsBlackList;
 
-  void removePastStep(String targetSecondaryId) {
-    // check in black list firstly
-    if (_stepsBlackList.contains(targetSecondaryId)) {
-      // Case 1: which means already killed it or ignored it
-      return;
-    }
-
-    // have to look in past steps for the target by 2nd id, when done, add to black list to prevent the name comes 1 more time
-    // past step have keys as id, not 2nd id, i don't want to check every item in past step by 2nd id
-    // have map<2nd id, DrawStep> , faster in looking it and kill it
-
-    var target = _archivedSteps[targetSecondaryId];
+  void removePastStep(int targetId) {
+    var target = pastSteps[targetId];
 
     if (target == null) {
-      // case 2: which means the target did not come early before the undo signal
       // add to black list for addToPastSteps to ignore
-      _stepsBlackList.add(targetSecondaryId);
+      _stepsBlackList.add(targetId);
       return;
     }
-
-    // case 3: found it, start to kill
 
     pastSteps.remove(target.id);
 
-    _stepsBlackList.add(targetSecondaryId);
-    //_stepsWhiteList.remove(targetSecondaryId);
-
-    var prev = target.prev;
-    // before unlink, check tailIO to set new one
-    if (target.id == tailID) {
-      tailID = prev != null ? prev.id : 0;
-    }
+    if (tail == target.prev) tail = target.prev;
 
     target.unlink();
 

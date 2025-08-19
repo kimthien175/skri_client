@@ -53,9 +53,9 @@ class FloodFillStep extends DrawStep {
       DrawManager.inst.pastStepRepaint.notifyListeners();
       return true;
     } catch (e) {
+      unlink();
       _completer.complete(prev!.cache);
 
-      unlink();
       return false;
     }
   }

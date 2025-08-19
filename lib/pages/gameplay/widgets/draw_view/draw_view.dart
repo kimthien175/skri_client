@@ -35,8 +35,7 @@ class _PastStepsCustomPainter extends CustomPainter {
   _PastStepsCustomPainter() : super(repaint: DrawReceiver.inst.pastStepsNotifier);
   @override
   void paint(Canvas canvas, Size size) {
-    var inst = DrawReceiver.inst;
-    inst.pastSteps[inst.tailID]?.drawBackward(canvas);
+    DrawReceiver.inst.tail?.drawBackward(canvas);
   }
 
   @override

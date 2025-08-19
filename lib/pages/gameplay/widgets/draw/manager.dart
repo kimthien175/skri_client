@@ -141,74 +141,53 @@ class DrawManager {
 
   /// push new tail, set id for the tail
   void pushTail(DrawStep newTail) {
-    if (_tail == null) {
-      newTail.id = 0;
+    _tail?.next = newTail;
+    newTail.prev = _tail;
 
-      _tail = newTail;
+    newTail.id = newStepId;
 
-      _pastStepRepaint.notifyListeners();
-      //updatePointer(newTail);
-    } else {
-      _pushTailToNonEmptyData(newTail);
-    }
-
-    newTail.buildCache().then((value) {
-      if (value) DrawEmitter.inst.sendPast(newTail);
-    });
-  }
-
-  void _pushTailToNonEmptyData(DrawStep newTail) {
-    // just update tail and re render
-    assert(_tail != null);
-    _tail = _tail!.chainUp(newTail);
+    _tail = newTail;
 
     _pastStepRepaint.notifyListeners();
+
+    newTail.buildCache().then((success) {
+      if (success) {
+        DrawEmitter.inst.sendPast(newTail);
+      } else {}
+    });
   }
 
   void popTail() {
     // if past is empty, which mean nothing to undo
     if (_tail == null) return;
 
-    // shift tail backward and delete old tail
-    DrawStep target = _tail!;
+    var oldTail = _tail!;
+    var newTail = oldTail.prev;
 
-    var newTail = _tail!.prev;
+    oldTail.unlink();
 
-    if (newTail == null) {
-      reset();
-    } else {
-      target.unlink();
+    _tail = newTail;
 
-      // check pointer first
-      // if (target == drawFrom) {
-      //   drawFrom = newTail;
-      // }
+    pastStepRepaint.notifyListeners();
 
-      _tail = newTail;
-      _pastStepRepaint.notifyListeners();
-    }
-
-    DrawEmitter.inst.removeStep(target.id);
+    DrawEmitter.inst.removeStep(oldTail.id);
   }
+
+  int _maxStepIdEver = 0;
+  int get newStepId => _maxStepIdEver++;
 
   /// clear the past, current step unlink to tail (DrawStep constructor always link its prev to tail)
   void reset() {
     _tail = null;
-    //drawFrom = null;
+    _maxStepIdEver = 0;
     _pastStepRepaint.notifyListeners();
   }
 
-  /// this node is not really tail, just have next == null,
-  /// currentStep.prev == tail
   DrawStep? _tail;
   DrawStep? get tail => _tail;
   //DrawStep? drawFrom;
 
   //#region only DrawStep can access this
-  /// only DrawStep can access this
-  // set drawFrom(DrawStep? value) => _drawFrom = value;
-
-  // DrawStep? get drawFrom => _drawFrom;
 
   /// only FloodFillStep can access this
   ChangeNotifier get pastStepRepaint => _pastStepRepaint;
@@ -218,12 +197,6 @@ class DrawManager {
 
   final ChangeNotifier _pastStepRepaint = ChangeNotifier();
 
-  /// shift _drawFrom to another step in the chain, re render
-  /// only FloodFillStep can access this from outside
-  // updatePointer(DrawStep newStep) {
-  //   drawFrom = newStep;
-  //   _pastStepRepaint.notifyListeners();
-  // }
   //#endregion
 }
 
