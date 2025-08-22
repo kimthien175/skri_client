@@ -38,7 +38,7 @@ class PickWordState extends GameState {
         children: playerId == MePlayer.inst.id
             ? [
                 Text('choose_a_word'.tr, style: TextStyle(color: Colors.grey.shade300)),
-                const _WordOptions()
+                _WordOptions(words: words)
               ]
             : [
                 Text(
@@ -204,7 +204,9 @@ class __WordButtonState extends State<_WordButton> with SingleTickerProviderStat
 }
 
 class _WordOptions extends StatefulWidget {
-  const _WordOptions();
+  const _WordOptions({required this.words});
+
+  final List<dynamic> words;
 
   @override
   State<_WordOptions> createState() => __WordOptionsState();
@@ -240,10 +242,8 @@ class __WordOptionsState extends State<_WordOptions> {
   Widget build(BuildContext context) {
     return FocusScope(
         node: focusNode,
-        child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: (Game.inst.state.value as PickWordState)
-                .words
+        child: Wrap(
+            children: widget.words
                 .map((e) =>
                     Padding(padding: EdgeInsets.all(8), child: _WordButton(word: e as String)))
                 .toList()));

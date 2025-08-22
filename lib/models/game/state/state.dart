@@ -4,6 +4,7 @@ import 'package:skribbl_client/models/game/state/draw/draw.dart';
 import 'package:skribbl_client/models/game/state/match_making.dart';
 import 'package:skribbl_client/models/game/state/pick_word.dart';
 import 'package:skribbl_client/models/game/state/pre_game.dart';
+import 'package:skribbl_client/utils/socket_io.dart';
 
 import '../../../pages/pages.dart';
 
@@ -46,4 +47,8 @@ abstract class GameState {
 
   ///only DrawState for performer can override this
   final Widget canvas = const DrawViewWidget();
+
+  /// only DrawState can override this
+  void Function(String) get submitMessage =>
+      (String text) => SocketIO.inst.socket.emit('player_chat', text);
 }

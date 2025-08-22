@@ -22,9 +22,7 @@ class GameChatController extends GetxController {
     super.onInit();
     _scrollController = ScrollController();
     _textController = TextEditingController();
-    _textController.addListener(
-      () => counter.value = _textController.text.length,
-    );
+    _textController.addListener(() => counter.value = _textController.text.length);
     focusNode = FocusNode();
   }
 
@@ -51,7 +49,7 @@ class GameChatController extends GetxController {
             ));
         Get.find<PlayerController>(tag: MePlayer.inst.id).showMessage(text);
         // emit to server
-        SocketIO.inst.socket.emit('player_chat', text);
+        Game.inst.state.value.submitMessage(text);
       }
 
       _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
@@ -79,8 +77,7 @@ class GameChat extends StatelessWidget {
             height: 600,
             color: Colors.white,
             child: const Column(
-              children: [Expanded(child: Center(child: Messages())), GuessInput()],
-            )));
+                children: [Expanded(child: Center(child: Messages())), GuessInput()])));
   }
 }
 
@@ -94,10 +91,9 @@ class Messages extends StatelessWidget {
         controller: controller._scrollController,
         thumbVisibility: true,
         child: Obx(() => ListView(
-              controller: controller._scrollController,
-              shrinkWrap: true,
-              children: Game.inst.messages,
-            )));
+            controller: controller._scrollController,
+            shrinkWrap: true,
+            children: Game.inst.messages)));
   }
 }
 
@@ -111,43 +107,39 @@ class GuessInput extends StatelessWidget {
       Container(
           margin: const EdgeInsets.only(left: 2.8, right: 2.8, bottom: 2.8),
           child: TextField(
-            // cursorColor: Colors.blue.shade900,
-            focusNode: controller.focusNode,
-            textInputAction: TextInputAction.send,
-            onSubmitted: controller.submit,
-            controller: controller._textController,
-            maxLength: 100,
-            minLines: 1,
-            maxLines: 3, // Allow for multiple lines
-            //keyboardType: TextInputType.multiline, // Enable multiline input
-            style: const TextStyle(
-                fontSize: 14,
-                fontVariations: [FontVariation.weight(800)]), // Set text and hint text font size
-            decoration: InputDecoration(
-              counterText: '',
-              border: InputBorder.none,
-              isDense: true,
-              contentPadding: const EdgeInsets.only(left: 10, top: 10, bottom: 10, right: 22),
-              hintText: 'guess_input_placeholder'.tr, // Use the hint text from the image
-              hintStyle: const TextStyle(
+              // cursorColor: Colors.blue.shade900,
+              focusNode: controller.focusNode,
+              textInputAction: TextInputAction.send,
+              onSubmitted: controller.submit,
+              controller: controller._textController,
+              maxLength: 100,
+              minLines: 1,
+              maxLines: 3, // Allow for multiple lines
+              //keyboardType: TextInputType.multiline, // Enable multiline input
+              style: const TextStyle(
                   fontSize: 14,
-                  fontVariations: [FontVariation.weight(700)]), // Set hint text font size
-              focusedBorder: const OutlineInputBorder(
-                borderSide: BorderSide(
-                  color: Colors.blueAccent, // Adjust color as desired
-                  width: 1.0,
-                ),
-                borderRadius: BorderRadius.all(Radius.circular(3)), // Set border radius
-              ),
-              enabledBorder: const OutlineInputBorder(
-                borderSide: BorderSide(
-                  color: Colors.black87, // Adjust color as desired
-                  width: 1.0,
-                ),
-                borderRadius: BorderRadius.all(Radius.circular(3)), // Set border radius
-              ),
-            ),
-          )),
+                  fontVariations: [FontVariation.weight(800)]), // Set text and hint text font size
+              decoration: InputDecoration(
+                  counterText: '',
+                  border: InputBorder.none,
+                  isDense: true,
+                  contentPadding: const EdgeInsets.only(left: 10, top: 10, bottom: 10, right: 22),
+                  hintText: 'guess_input_placeholder'.tr, // Use the hint text from the image
+                  hintStyle: const TextStyle(
+                      fontSize: 14,
+                      fontVariations: [FontVariation.weight(700)]), // Set hint text font size
+                  focusedBorder: const OutlineInputBorder(
+                      borderSide: BorderSide(
+                          color: Colors.blueAccent, // Adjust color as desired
+                          width: 1.0),
+                      borderRadius: BorderRadius.all(Radius.circular(3)) // Set border radius
+                      ),
+                  enabledBorder: const OutlineInputBorder(
+                      borderSide: BorderSide(
+                          color: Colors.black87, // Adjust color as desired
+                          width: 1.0),
+                      borderRadius: BorderRadius.all(Radius.circular(3)) // Set border radius
+                      )))),
       Positioned(
           right: 2.8,
           child: Container(

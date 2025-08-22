@@ -5,7 +5,7 @@ class _DropdownList<T> extends PositionedOverlayController<OverlayWidgetPosition
       : super(
             anchorKey: parent.key,
             position: const OverlayWidgetPosition.leftBottom(),
-            childBuilder: () => const _DropdownListWidget.init(),
+            childBuilder: () => const _DropdownListWidget(),
             tapOutsideToClose: true,
             scale: parent.widget.scale);
 
@@ -65,7 +65,7 @@ class _DropdownList<T> extends PositionedOverlayController<OverlayWidgetPosition
 
 class _DropdownListWidget<T> extends StatelessWidget {
   //OverlayChildWidget<_DropdownList<T>> {
-  const _DropdownListWidget.init();
+  const _DropdownListWidget();
 
   @override
   Widget build(BuildContext context) {

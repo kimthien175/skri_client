@@ -18,7 +18,7 @@ class PlayersListController extends GetxController {
 
     // find winner
     for (int i = 0; i < players.length; i++) {
-      if (players[i].points > players[winnerId].points) {
+      if (players[i].score > players[winnerId].score) {
         winnerId = i;
       }
     }

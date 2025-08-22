@@ -104,26 +104,7 @@ class PositionedOverlayController<P extends OverlayWidgetPosition> extends Overl
       this.tapOutsideToClose = false});
 
   @override
-  Widget widgetBuilder() {
-    Widget child = DefaultTextStyle(
-        style: const TextStyle(
-            color: Color.fromRGBO(240, 240, 240, 1),
-            fontVariations: [FontVariation.weight(700)],
-            fontSize: 13.0,
-            fontFamily: 'Nunito-var'),
-        child: const _PositionedOverlayChildWidget());
-
-    if (tapOutsideToClose) {
-      return TapRegion(
-        onTapOutside: (PointerDownEvent event) {
-          hide();
-        },
-        child: child,
-      );
-    }
-
-    return child;
-  }
+  Widget widgetBuilder() => const _PositionedOverlayChildWidget();
 
   final Widget Function() childBuilder;
   final P position;
@@ -166,6 +147,27 @@ class __PositionedOverlayChildWidgetState extends State<_PositionedOverlayChildW
   @override
   Widget build(BuildContext context) {
     var c = OverlayWidget.of<PositionedOverlayController>(context);
-    return c.position.build(originalBox: c.originalBox, scale: c.scale(), child: c.childBuilder());
+
+    var child = c.childBuilder();
+
+    if (c.tapOutsideToClose) {
+      child = TapRegion(
+        onTapOutside: (PointerDownEvent event) {
+          c.hide();
+        },
+        child: child,
+      );
+    }
+
+    return c.position.build(
+        originalBox: c.originalBox,
+        scale: c.scale(),
+        child: DefaultTextStyle(
+            style: const TextStyle(
+                color: Color.fromRGBO(240, 240, 240, 1),
+                fontVariations: [FontVariation.weight(700)],
+                fontSize: 13.0,
+                fontFamily: 'Nunito-var'),
+            child: child));
   }
 }

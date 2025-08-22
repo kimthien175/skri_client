@@ -1,6 +1,6 @@
 part of 'draw.dart';
 
-mixin _PerformerMixin on _DrawStateMixin {
+mixin _PerformerMixin on DrawStateMixin {
   String get word => data['word'];
 
   @override
@@ -15,13 +15,17 @@ mixin _PerformerMixin on _DrawStateMixin {
 
   @override
   Widget get status => const _WordIndicatorStatus();
+
+  /// performer can't send messages to server
+  @override
+  void Function(String) get submitMessage => (_) {};
 }
 
-class _PerformerDrawState extends GameState with _DrawStateMixin, _PerformerMixin {
+class _PerformerDrawState extends GameState with DrawStateMixin, _PerformerMixin {
   _PerformerDrawState({required super.data});
 }
 
-class _EmittingPerformerDrawState extends GameState with _DrawStateMixin, _PerformerMixin {
+class _EmittingPerformerDrawState extends GameState with DrawStateMixin, _PerformerMixin {
   _EmittingPerformerDrawState({required super.data});
 
   int get revealedHintCount => RegExp(r'[^\s_]').allMatches(hint).length;
@@ -50,7 +54,7 @@ class _EmittingPerformerDrawState extends GameState with _DrawStateMixin, _Perfo
                 sinceStartDate.inMilliseconds),
         revealRandomCharacter);
 
-    loopRandomizingCharacterWithHintDuration();
+    //loopRandomizingCharacterWithHintDuration();
   }
 
   @override
@@ -59,14 +63,14 @@ class _EmittingPerformerDrawState extends GameState with _DrawStateMixin, _Perfo
     return super.onEnd(sinceEndDate);
   }
 
-  void loopRandomizingCharacterWithHintDuration() {
-    if (hintCap == revealedHintCount) return;
+  // void loopRandomizingCharacterWithHintDuration() {
+  //   if (hintCap == revealedHintCount) return;
 
-    timer = Timer(Duration(milliseconds: (hintDuration * 1000).toInt()), () {
-      revealRandomCharacter();
-      loopRandomizingCharacterWithHintDuration();
-    });
-  }
+  //   timer = Timer(Duration(milliseconds: (hintDuration * 1000).toInt()), () {
+  //     revealRandomCharacter();
+  //     loopRandomizingCharacterWithHintDuration();
+  //   });
+  // }
 
   void revealRandomCharacter() {
     var rand = Random();
@@ -79,5 +83,8 @@ class _EmittingPerformerDrawState extends GameState with _DrawStateMixin, _Perfo
 
     // emit
     SocketIO.inst.socket.emit('hint', charIndex);
+
+    if (hintCap == revealedHintCount) return;
+    timer = Timer(Duration(milliseconds: (hintDuration * 1000).toInt()), revealRandomCharacter);
   }
 }

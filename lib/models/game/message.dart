@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:skribbl_client/models/game/game.dart';
+import 'package:skribbl_client/models/game/state/draw/draw.dart';
 
 const Map<String, dynamic> _emptyData = {};
 
@@ -34,6 +35,9 @@ abstract class Message extends StatelessWidget {
       case Message.playerGotKicked:
         return PlayerGotKicked(backgroundColor: backgroundColor, data: data);
 
+      case Message.playerGuessRight:
+        return PlayerGuessedRight(data: data);
+
       default:
         throw Exception('undefined message');
     }
@@ -53,6 +57,7 @@ abstract class Message extends StatelessWidget {
   static const String playerDraw = 'player_draw';
   static const String playerVotekick = 'player_votekick';
   static const String playerGotKicked = 'player_got_kicked';
+  static const String playerGuessRight = 'player_guess_right';
 
   static const Color darkOrange = Color.fromRGBO(206, 79, 10, 1);
   static const Color orange = Color.fromRGBO(255, 168, 68, 1);
@@ -269,11 +274,21 @@ class PlayerLikeMessage extends Message {
   }
 }
 
-// TODO: APPLY
 class PlayerGuessedRight extends Message {
-  const PlayerGuessedRight({super.key, required super.data})
-      : super(backgroundColor: Message.guessedRightBackgroundColor);
+  PlayerGuessedRight({super.key, required super.data})
+      : super(backgroundColor: Message.guessedRightBackgroundColor) {
+    var state = Game.inst.state.value;
+    if (state is DrawStateMixin && state.points[playerId] == null) {
+      state.points[playerId] = point;
+      var player = Game.inst.playersByMap[playerId] as Player;
+      player.score += point;
+      Game.inst.playersByList.refresh();
+    }
+  }
+
   String get playerName => data['player_name'];
+  String get playerId => data['player_id'];
+  int get point => data['point'];
 
   @override
   Widget build(BuildContext context) {
@@ -322,10 +337,10 @@ class PlayerGotBanned extends Message {
   }
 }
 
-/// TODO: private message,
-class PlayerGuessClose extends Message {
-  const PlayerGuessClose({super.key, required super.data, required super.backgroundColor});
-  String get word => data['word'];
+class MePlayerGuessClose extends Message {
+  const MePlayerGuessClose({super.key, required this.word, required super.backgroundColor})
+      : super(data: const {});
+  final String word;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -337,6 +352,21 @@ class PlayerGuessClose extends Message {
                 color: Message.yellow, fontSize: 14, fontVariations: [FontVariation.weight(700)])));
   }
 }
+
+// class OtherPlayerGuessClose extends Message {
+//   const OtherPlayerGuessClose({super.key, required super.data, required super.backgroundColor});
+//   String get playerName => data['player_name'];
+//   @override
+//   Widget build(BuildContext context) {
+//     return Container(
+//         color: backgroundColor,
+//         alignment: Alignment.centerLeft,
+//         padding: EdgeInsets.only(left: paddingLeft),
+//         child: Text('message_player_guess_close'.trParams({"word": word}),
+//             style: const TextStyle(
+//                 color: Message.yellow, fontSize: 14, fontVariations: [FontVariation.weight(700)])));
+//   }
+// }
 
 // TODO: APPLY
 class PlayerVoteKick extends Message {

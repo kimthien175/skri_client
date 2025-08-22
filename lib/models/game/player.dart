@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import 'package:skribbl_client/models/gif_manager.dart';
 
 class Player {
-  Player({required this.id, required this.name, required this.avatarModel, this.points = 0});
+  Player({required this.id, required this.name, required this.avatarModel, this.score = 0});
   final AvatarModel avatarModel;
   String name;
   String get nameForCard => name;
@@ -19,25 +19,27 @@ class Player {
   //   return (inst as PrivateGame).hostPlayerId.value == id;
   // }
 
-  int points;
+  int score;
   String id;
   static Player fromJSON(rawPlayer) {
     var rawAvatar = rawPlayer['avatar'];
     return Player(
         id: rawPlayer['id'],
         name: rawPlayer['name'],
-        avatarModel: AvatarModel(rawAvatar['color'], rawAvatar['eyes'], rawAvatar['mouth']));
+        avatarModel: AvatarModel(rawAvatar['color'], rawAvatar['eyes'], rawAvatar['mouth']),
+        score: rawPlayer['score'] ?? 0);
   }
 
-  static List<Player> listFromJSON(List<dynamic> rawPlayers) {
+  static List<Player> listFromJSON(dynamic rawPlayers) {
     List<Player> players = [];
-    for (dynamic rawPlayer in rawPlayers) {
-      if (rawPlayer['id'] == MePlayer.inst.id) {
+
+    (rawPlayers as Map).forEach((id, player) {
+      if (id == MePlayer.inst.id) {
         players.add(MePlayer.inst);
       } else {
-        players.add(Player.fromJSON(rawPlayer));
+        players.add(Player.fromJSON(player));
       }
-    }
+    });
 
     return players;
   }

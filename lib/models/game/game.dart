@@ -117,7 +117,7 @@ class Game extends GetxController {
     SocketIO.inst.socket.disconnect();
 
     // reset meplayer as well
-    MePlayer.inst.points = 0;
+    MePlayer.inst.score = 0;
 
     var homeController = Get.find<HomeController>();
     await Get.offAllNamed(

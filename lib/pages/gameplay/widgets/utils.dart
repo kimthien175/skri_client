@@ -292,6 +292,8 @@ class DrawReceiver {
       // patch with this
       prevTarget.next = step;
       step.prev = prevTarget;
+    } else {
+      _head = step;
     }
 
     // patch next
@@ -313,6 +315,8 @@ class DrawReceiver {
   late Set<int> _stepsBlackList;
 
   void removePastStep(int targetId) {
+    if (_stepsBlackList.contains(targetId)) return;
+
     var target = pastSteps[targetId];
 
     if (target == null) {
@@ -321,11 +325,18 @@ class DrawReceiver {
       return;
     }
 
-    pastSteps.remove(target.id);
-
-    if (tail == target.prev) tail = target.prev;
+    if (tail == target) {
+      tail = target.prev;
+      if (tail == null) _head = null;
+    } else if (_head == target) {
+      _head = target.next;
+      if (_head == null) tail == null;
+    }
 
     target.unlink();
+
+    pastSteps.remove(targetId);
+    _stepsBlackList.add(targetId);
 
     pastStepsNotifier.notifyListeners();
   }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:skribbl_client/models/game/game.dart';
+import 'package:skribbl_client/models/game/state/draw/draw.dart';
 import 'package:skribbl_client/pages/gameplay/widgets/utils.dart';
 
 import 'package:skribbl_client/utils/utils.dart';
@@ -16,12 +17,12 @@ class SocketIO {
     socket.on('player_join', (dataList) {
       var data = (dataList as List<dynamic>).first;
       var inst = Game.inst;
-      var newPlayer = Player.fromJSON(data['players']);
+      var newPlayer = Player.fromJSON(data['player']);
       inst.playersByList.add(newPlayer);
       inst.playersByMap[newPlayer.id] = newPlayer;
       Get.put(PlayerController(), tag: newPlayer.id);
 
-      inst.addMessage((color) => PlayerJoinMessage(data: data['messages'], backgroundColor: color));
+      inst.addMessage((color) => PlayerJoinMessage(data: data['message'], backgroundColor: color));
     });
 
     socket.on('change_settings', (dataList) {
@@ -103,6 +104,8 @@ class SocketIO {
     socket.on('draw:start_current', (dataList) => DrawReceiver.inst.startCurrent(dataList[0]));
     socket.on('draw:update_current', (dataList) => DrawReceiver.inst.updateCurrent(dataList[0]));
     socket.on('draw:end_current', (_) => DrawReceiver.inst.endCurrent());
+
+    socket.on('hint', (dataList) => {Get.find<HintController>().setHint(dataList[0], dataList[1])});
   }
 
   static Future<void> initSocket() async {
