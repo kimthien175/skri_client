@@ -1,5 +1,7 @@
 // ignore_for_file: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:skribbl_client/utils/socket_io.dart';
 
@@ -32,8 +34,8 @@ class DrawEmitter {
     SocketIO.inst.socket.emit('draw:update_current', data);
   }
 
-  Future<void> endCurrent() async {
-    SocketIO.inst.socket.emit('draw:end_current');
+  Future<void> endCurrent(int privateId) async {
+    SocketIO.inst.socket.emit('draw:end_current', privateId);
   }
 }
 
@@ -48,7 +50,9 @@ class DrawReceiver {
     _stepsBlackList = {};
     tail = null;
     _head = null;
-    currentStep = null;
+
+    currentStep = {};
+    _brushBlackList = {};
 
     pastStepsNotifier.notifyListeners();
     currentStepNotifier.notifyListeners();
@@ -62,6 +66,9 @@ class DrawReceiver {
 
     pastSteps = {};
     _stepsBlackList = {};
+
+    currentStep = {};
+    _brushBlackList = {};
 
     startCurrent(drawData['current_step']);
     _initPastSteps(drawData['past_steps'], drawData['tail_id']);
@@ -143,9 +150,12 @@ class DrawReceiver {
       pastSteps[step.id] = step;
       pastStepsNotifier.notifyListeners();
 
+      _updateBrushStep(step);
+
       if (step.performerPrevID == null) {
         step.buildCache();
       }
+
       return;
     }
     //#endregion
@@ -167,6 +177,7 @@ class DrawReceiver {
       _head = step;
 
       pastStepsNotifier.notifyListeners();
+      _updateBrushStep(step);
 
       if (step.performerPrevID == null) {
         step.buildCache();
@@ -189,6 +200,7 @@ class DrawReceiver {
         tail = step;
         pastSteps[id] = step;
         pastStepsNotifier.notifyListeners();
+        _updateBrushStep(step);
         step.buildCache();
         return;
       }
@@ -212,6 +224,7 @@ class DrawReceiver {
         tail = step;
 
         pastStepsNotifier.notifyListeners();
+        _updateBrushStep(step);
 
         if (pPrevId == oldBranchStep.id) {
           step.buildCache();
@@ -225,6 +238,7 @@ class DrawReceiver {
       tail = step;
       pastSteps[id] = step;
       pastStepsNotifier.notifyListeners();
+      _updateBrushStep(step);
       // pPrev != null which mean no need to build cache
       return;
     }
@@ -270,6 +284,7 @@ class DrawReceiver {
       pastSteps[id] = step;
 
       pastStepsNotifier.notifyListeners();
+      _updateBrushStep(step);
 
       // new performer head, which mean it's time to build cache
       step.buildCache();
@@ -303,6 +318,7 @@ class DrawReceiver {
     pastSteps[id] = step;
 
     pastStepsNotifier.notifyListeners();
+    _updateBrushStep(step);
 
     if (prevTarget != null && prevTarget.id == pPrevId) step.buildCache();
     if (spectatorNext.performerPrevID == id) spectatorNext.buildCache();
@@ -339,28 +355,58 @@ class DrawReceiver {
     _stepsBlackList.add(targetId);
 
     pastStepsNotifier.notifyListeners();
+    _updateBrushStep(target);
   }
 
   Future<void> startCurrent(dynamic step) async {
-    currentStep = step != null ? BrushStep.fromJSON(step) : null;
+    if (step == null) return;
+    if (_brushBlackList.contains(step['private_id'])) return;
+
+    currentStep.clear();
+
+    var brush = SpectatorBrushStep.fromJSON(step);
+    currentStep[brush.privateId] = brush;
+
     currentStepNotifier.notifyListeners();
   }
 
   void updateCurrent(dynamic data) {
-    if (currentStep == null) return;
-
     // update as BrushStep
-    currentStep?.receivePoint(JSONOffset.fromJSON(data['point']));
-    currentStepNotifier.notifyListeners();
+    var step = currentStep[data['private_id']];
+    if (step != null) {
+      step.receivePoint(data);
+      currentStepNotifier.notifyListeners();
+    }
   }
 
-  void endCurrent() {
-    currentStep = null;
+  Future<void> endCurrent(int privateId) async {
+    var target = currentStep[privateId];
+    if (target == null) {
+      _brushBlackList.add(privateId);
+      return;
+    }
+    await target.clear.future;
+    currentStep.remove(privateId);
     currentStepNotifier.notifyListeners();
   }
 
   //#endregion
-  BrushStep? currentStep;
+
+  late Map<int, SpectatorBrushStep> currentStep;
+
+  late Set<int> _brushBlackList;
+
+  _updateBrushStep(DrawStep step) async {
+    if (step is BrushStep) {
+      var brush = currentStep[step.privateId];
+      if (brush == null) {
+        _brushBlackList.add(step.privateId);
+        return;
+      }
+
+      brush.clear.complete();
+    }
+  }
 
   final ChangeNotifier currentStepNotifier = ChangeNotifier();
 }

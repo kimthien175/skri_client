@@ -103,7 +103,7 @@ class SocketIO {
 
     socket.on('draw:start_current', (dataList) => DrawReceiver.inst.startCurrent(dataList[0]));
     socket.on('draw:update_current', (dataList) => DrawReceiver.inst.updateCurrent(dataList[0]));
-    socket.on('draw:end_current', (_) => DrawReceiver.inst.endCurrent());
+    socket.on('draw:end_current', (dataList) => DrawReceiver.inst.endCurrent(dataList[0]));
 
     socket.on('hint', (dataList) => {Get.find<HintController>().setHint(dataList[0], dataList[1])});
   }

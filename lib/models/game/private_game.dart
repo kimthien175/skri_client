@@ -61,13 +61,13 @@ class PrivateGame extends Game {
     Map<String, dynamic> data = {
       "code": "dlrc",
       "host_player_id": "fDmSIumozqWBdX87AAAE",
-      "players": [
-        {
+      "players": {
+        "fDmSIumozqWBdX87AAAE": {
           "name": "worry",
           "avatar": {"color": 15, "eyes": 12, "mouth": 12},
           "id": "fDmSIumozqWBdX87AAAE"
         }
-      ],
+      },
       "messages": [
         {
           "type": "new_host",
@@ -139,7 +139,7 @@ class PrivateGame extends Game {
       }
     };
 
-    MePlayer.inst = MePlayer.fromJSON(data['players'][0]);
+    MePlayer.inst = MePlayer.fromJSON(data['players']["fDmSIumozqWBdX87AAAE"]);
     Game.inst = PrivateGame._internal(data: data);
   }
 

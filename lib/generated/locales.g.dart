@@ -137,6 +137,7 @@ class LocaleKeys {
   static const Mute = 'Mute';
   static const Unmute = 'Unmute';
   static const Report = 'Report';
+  static const points = 'points';
 }
 
 class Locales {
@@ -386,5 +387,6 @@ class Locales {
     'report_form_reason_cheating': 'Dùng bot / Gian lận',
     'you_reported': 'Bạn đã báo cáo',
     'dialog_title_disconnected': 'Ngắt kết nối!',
+    'points': 'điểm',
   };
 }

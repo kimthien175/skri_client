@@ -1,3 +1,4 @@
+import 'package:skribbl_client/models/game/state/draw/draw.dart';
 import 'package:skribbl_client/models/models.dart';
 import 'package:skribbl_client/utils/styles.dart';
 import 'package:skribbl_client/widgets/widgets.dart';
@@ -65,6 +66,7 @@ class PlayerCard extends StatelessWidget {
         var inst = Game.inst;
         var lastIndex = inst.playersByList.length - 1;
         var controller = Get.find<PlayerController>(tag: info.id);
+        var state = inst.state.value;
         return GestureDetector(
             key: controller.anchorKey,
             onTap: showInfo,
@@ -103,13 +105,18 @@ class PlayerCard extends StatelessWidget {
                                       ? GameplayStyles.colorPlayerMe
                                       : Colors.black,
                                   height: 1.1)),
-                          const Text('0 points',
+                          Text('${info.score.toString()} ${'points'.tr}',
                               style: TextStyle(
                                   fontSize: 12.6,
                                   height: 1,
                                   fontVariations: [FontVariation.weight(600)]))
                         ],
                       )),
+                  if (state is DrawStateMixin && state.performerId == info.id)
+                    Positioned(
+                        bottom: 0,
+                        right: 38,
+                        child: GifManager.inst.misc('pen').builder.init().fit(width: 32)),
                   Positioned(
                       top: -1,
                       right: 0,

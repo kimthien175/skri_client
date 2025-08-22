@@ -64,6 +64,8 @@ mixin DrawStateMixin on GameState {
       return sinceEndDate - TopWidgetController.contentDuration;
     }
   }
+
+  String get performerId => data['player_id'];
 }
 
 class SpectatorDrawState extends GameState with DrawStateMixin {

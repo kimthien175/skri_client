@@ -47,7 +47,7 @@ class _CurrentStepCustomPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    DrawReceiver.inst.currentStep?.draw(canvas);
+    DrawReceiver.inst.currentStep.forEach((key, value) => value.draw(canvas));
   }
 
   @override

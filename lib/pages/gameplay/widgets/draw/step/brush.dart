@@ -16,8 +16,12 @@ class BrushStep extends DrawStep with GestureDrawStep {
   static const String TYPE = 'brush';
 
   @override
-  Map<String, dynamic> get toPrivateJSON =>
-      {'stroke_width': _brush.strokeWidth, 'color': _brush.color.toJSON, 'points': _points.toJSON};
+  Map<String, dynamic> get toPrivateJSON => {
+        'stroke_width': _brush.strokeWidth,
+        'color': _brush.color.toJSON,
+        'points': _points.toJSON,
+        'private_id': privateId
+      };
 
   BrushStep.fromJSON(dynamic json) {
     _brush = Paint()
@@ -28,6 +32,7 @@ class BrushStep extends DrawStep with GestureDrawStep {
     for (var point in json['points']) {
       _points.add(JSONOffset.fromJSON(point));
     }
+    privateId = json['private_id'];
   }
 
   BrushStep.init() {
@@ -42,6 +47,7 @@ class BrushStep extends DrawStep with GestureDrawStep {
     } else {
       disable();
     }
+    privateId = hashCode;
   }
 
   final List<Offset> _points = [];
@@ -78,7 +84,7 @@ class BrushStep extends DrawStep with GestureDrawStep {
     _onDown = _startPoint;
     _onUpdate = _updatePoint;
     _onEnd = () {
-      DrawEmitter.inst.endCurrent();
+      DrawEmitter.inst.endCurrent(privateId);
       return true;
     };
   }
@@ -107,7 +113,8 @@ class BrushStep extends DrawStep with GestureDrawStep {
     DrawEmitter.inst.startCurrent({
       'stroke_width': _brush.strokeWidth,
       'color': _brush.color.toJSON,
-      'points': [point.toJSON]
+      'points': [point.toJSON],
+      'private_id': privateId
     });
   }
 
@@ -116,7 +123,8 @@ class BrushStep extends DrawStep with GestureDrawStep {
     // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
     DrawManager.inst.currentStepRepaint.notifyListeners();
 
-    DrawEmitter.inst.updateCurrent({'point': point.toJSON});
+    DrawEmitter.inst
+        .updateCurrent({'private_id': privateId, 'i': _points.length - 1, 'point': point.toJSON});
   }
 
   @override
@@ -175,5 +183,66 @@ class BrushStep extends DrawStep with GestureDrawStep {
 
   //#endregion
 
-  void Function(Offset) get receivePoint => _points.add;
+  late final int privateId;
+}
+
+class SpectatorBrushStep extends DrawStep with GestureDrawStep {
+  SpectatorBrushStep.fromJSON(dynamic json) {
+    brush = Paint()
+      ..strokeCap = StrokeCap.round
+      ..strokeWidth = json['stroke_width']
+      ..color = JSONColor.fromJSON(json['color']);
+
+    pointsMap = {0: JSONOffset.fromJSON(json['points'][0])};
+
+    privateId = json['private_id'];
+  }
+
+  Completer<void> clear = Completer();
+
+  late final int privateId;
+
+  late final Map<int, Offset> pointsMap;
+  late final Paint brush;
+
+  void Function(dynamic) get receivePoint => (data) {
+        var i = data['i'];
+        var point = JSONOffset.fromJSON(data['point']);
+        pointsMap[i] = point;
+      };
+
+  @override
+  void Function(Canvas) get draw => (Canvas canvas) {
+        pointsMap.forEach((index, point) {
+          var nextPoint = pointsMap[index + 1];
+          if (nextPoint != null) canvas.drawLine(pointsMap[index]!, nextPoint, brush);
+        });
+      };
+
+  @override
+  Future<bool> buildCache() => throw UnimplementedError();
+
+  @override
+  Future<ui.Image> get cache => throw UnimplementedError();
+
+  @override
+  void Function(ui.Canvas p1) get drawBackward => throw UnimplementedError();
+
+  @override
+  Map<String, dynamic> get toPrivateJSON => throw UnimplementedError();
+
+  @override
+  String get type => throw UnimplementedError();
+
+  @override
+  void changeColor() => throw UnimplementedError();
+
+  @override
+  void Function(ui.Offset point) get onDown => throw UnimplementedError();
+
+  @override
+  bool get onEnd => throw UnimplementedError();
+
+  @override
+  void Function(ui.Offset point) get onUpdate => throw UnimplementedError();
 }
