@@ -23,11 +23,19 @@ class Game extends GetxController {
   Game({required this.data}) {
     state = GameState.fromJSON(henceforthStates[currentStateId]).obs;
 
-    playersByList = Player.listFromJSON(data['players']).obs;
-    for (int i = 0; i < playersByList.length; i++) {
-      var rxPlayer = playersByList[i];
-      playersByMap[rxPlayer.id] = rxPlayer;
-    }
+    var playersByList = <Player>[];
+    playersByMap = {};
+    (data['players'] as Map).forEach((id, rawPlayer) {
+      Player player = id == MePlayer.inst.id ? MePlayer.inst : Player.fromJSON(rawPlayer);
+
+      playersByList.add(player);
+      playersByMap[id] = player;
+    });
+    this.playersByList = playersByList.obs;
+
+    quitPlayers = {};
+    (data['quit_players'] as Map?)
+        ?.forEach((id, rawPlayer) => quitPlayers[id] = Player.fromJSON(rawPlayer));
 
     settings = (data['settings'] as Map<String, dynamic>).obs;
 
@@ -61,10 +69,10 @@ class Game extends GetxController {
   }
 
   late final RxList<Player> playersByList;
-  final Map<String, Player> playersByMap = {};
+  late final Map<String, Player> playersByMap;
   void removePlayer(String id) {
     playersByList.removeWhere((player) => player.id == id);
-    playersByMap.remove(id);
+    quitPlayers[id] = playersByMap.remove(id)!;
 
     // remove PlayerController
     Get.delete<PlayerController>(tag: id);
@@ -75,6 +83,8 @@ class Game extends GetxController {
     // remove report dialog controller
     OverlayController.deleteCache('report $id');
   }
+
+  late Map<String, Player> quitPlayers;
 
   late final RxMap<String, dynamic> settings;
 
@@ -128,23 +138,20 @@ class Game extends GetxController {
   /// trigger at GameplayerPage controller onStart, or SocketIO receive new state
   runState() {
     switch (stateCommand) {
-      case start:
+      case 'start':
         state.value.onStart(DateTime.now() - date);
         break;
-      case end:
+      case 'end':
         state.value.onEnd(DateTime.now() - date).then((duration) {
-          henceforthStates.remove(state.value.id);
-          state.value = GameState.fromJSON(henceforthStates[nextStateId]);
-          state.value.onStart(duration);
+          // henceforthStates.remove(state.value.id);
+          // state.value = GameState.fromJSON(henceforthStates[nextStateId]);
+          // state.value.onStart(duration);
         });
         break;
       default:
         break;
     }
   }
-
-  static const String start = 'start';
-  static const String end = 'end';
 
   void receiveStatusAndStates(dynamic pkg) {
     henceforthStates.addAll(pkg['henceforth_states']);

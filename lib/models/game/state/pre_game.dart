@@ -16,7 +16,7 @@ class PreGameState extends GameState {
   Future<void> onStart(Duration sinceStartDate) async {
     var widgetController = Get.find<TopWidgetController>();
 
-    if (Game.inst.stateCommand == Game.start) {
+    if (Game.inst.stateCommand == 'start') {
       // do background
       if (sinceStartDate < TopWidgetController.backgroundDuration) {
         await widgetController.forwardBackground(

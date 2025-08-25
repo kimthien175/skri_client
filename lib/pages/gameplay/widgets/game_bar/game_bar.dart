@@ -10,7 +10,6 @@ import 'package:skribbl_client/utils/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-// TODO: SYNC TO GAME
 class GameBar extends StatelessWidget {
   const GameBar({super.key});
   static const double height = 48.0;

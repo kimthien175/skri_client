@@ -90,5 +90,6 @@
     "report_form_reason_spam": "Spam",
     "report_form_reason_cheating": "Botting / Cheating",
     "you_reported": "You reported",
-    "dialog_title_disconnected":"Disconnected!"
+    "dialog_title_disconnected":"Disconnected!",
+    "the_word_is": "The word is"
 }

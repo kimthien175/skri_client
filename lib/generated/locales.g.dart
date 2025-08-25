@@ -114,6 +114,7 @@ class LocaleKeys {
   static const report_form_reason_cheating = 'report_form_reason_cheating';
   static const you_reported = 'you_reported';
   static const dialog_title_disconnected = 'dialog_title_disconnected';
+  static const the_word_is = 'the_word_is';
   static const You = 'You';
   static const Normal = 'Normal';
   static const Hidden = 'Hidden';
@@ -254,6 +255,7 @@ class Locales {
     'report_form_reason_cheating': 'Botting / Cheating',
     'you_reported': 'You reported',
     'dialog_title_disconnected': 'Disconnected!',
+    'the_word_is': 'The word is',
   };
   static const vi_VN = {
     'displayName': 'Tiếng Việt',
@@ -388,5 +390,6 @@ class Locales {
     'you_reported': 'Bạn đã báo cáo',
     'dialog_title_disconnected': 'Ngắt kết nối!',
     'points': 'điểm',
+    'the_word_is': 'Đáp án là',
   };
 }

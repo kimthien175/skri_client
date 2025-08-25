@@ -66,7 +66,167 @@ class PrivateGame extends Game {
           "name": "worry",
           "avatar": {"color": 15, "eyes": 12, "mouth": 12},
           "id": "fDmSIumozqWBdX87AAAE"
-        }
+        },
+        "WWEAmL4U": {
+          "id": "WWEAmL4U",
+          "name": "Flcpmizdv",
+          "avatar": {"color": 15, "eyes": 12, "mouth": 12}
+        },
+        "iBnJ6uBN": {
+          "id": "iBnJ6uBN",
+          "name": "D Myfqwslktfmrwhfhou",
+          "avatar": {"color": 15, "eyes": 12, "mouth": 12}
+        },
+        "04lxSxZa": {
+          "id": "04lxSxZa",
+          "name": "Sntxufnvx",
+          "avatar": {"color": 15, "eyes": 12, "mouth": 12}
+        },
+        "StzosDkc": {
+          "id": "StzosDkc",
+          "name": "Tkizn",
+          "avatar": {"color": 15, "eyes": 12, "mouth": 12}
+        },
+        "ENrBp2BG": {
+          "id": "ENrBp2BG",
+          "name": "Assyahsierlpe",
+          "avatar": {"color": 15, "eyes": 12, "mouth": 12}
+        },
+        "xHfT4tvh": {
+          "id": "xHfT4tvh",
+          "name": "Hxjcmjonpmem",
+          "avatar": {"color": 15, "eyes": 12, "mouth": 12}
+        },
+        "8X1u11Wq": {
+          "id": "8X1u11Wq",
+          "name": "Qntkfz Bflsgrf",
+          "avatar": {"color": 15, "eyes": 12, "mouth": 12}
+        },
+        "uZoEeKMu": {
+          "id": "uZoEeKMu",
+          "name": "Gdctykvlsibolu",
+          "avatar": {"color": 15, "eyes": 12, "mouth": 12}
+        },
+        "ViWToJfv": {
+          "id": "ViWToJfv",
+          "name": "Ovnjr",
+          "avatar": {"color": 15, "eyes": 12, "mouth": 12}
+        },
+        "5YX6ryba": {
+          "id": "5YX6ryba",
+          "name": "Tqeiuhrrgtroy O",
+          "avatar": {"color": 15, "eyes": 12, "mouth": 12}
+        },
+        "PSS6IMpo": {
+          "id": "PSS6IMpo",
+          "name": "Ameyytha",
+          "avatar": {"color": 15, "eyes": 12, "mouth": 12}
+        },
+        "1GdAjnIA": {
+          "id": "1GdAjnIA",
+          "name": "Zrhw",
+          "avatar": {"color": 15, "eyes": 12, "mouth": 12}
+        },
+        "i0ocogCF": {
+          "id": "i0ocogCF",
+          "name": "Jjlgarnbwf",
+          "avatar": {"color": 15, "eyes": 12, "mouth": 12}
+        },
+        "c9wOaQfP": {
+          "id": "c9wOaQfP",
+          "name": "Tyvd Ahceldjua",
+          "avatar": {"color": 15, "eyes": 12, "mouth": 12}
+        },
+        "cfQZxYk4": {
+          "id": "cfQZxYk4",
+          "name": "Szmwxdzds",
+          "avatar": {"color": 15, "eyes": 12, "mouth": 12}
+        },
+        "rneIFu8k": {
+          "id": "rneIFu8k",
+          "name": "Kegqhalv",
+          "avatar": {"color": 15, "eyes": 12, "mouth": 12}
+        },
+        "BChA55fj": {
+          "id": "BChA55fj",
+          "name": "Mbw",
+          "avatar": {"color": 15, "eyes": 12, "mouth": 12}
+        },
+        "e71C9iWw": {
+          "id": "e71C9iWw",
+          "name": "Ori  Zoftai",
+          "avatar": {"color": 15, "eyes": 12, "mouth": 12}
+        },
+        "lvEf8oRL": {
+          "id": "lvEf8oRL",
+          "name": "Ydldaueiefyxrjcmv",
+          "avatar": {"color": 15, "eyes": 12, "mouth": 12}
+        },
+        "HHl2q4QN": {
+          "id": "HHl2q4QN",
+          "name": "Fsslulvhqzdhapal",
+          "avatar": {"color": 15, "eyes": 12, "mouth": 12}
+        },
+        "QKyqXknH": {
+          "id": "QKyqXknH",
+          "name": "Faeavp",
+          "avatar": {"color": 15, "eyes": 12, "mouth": 12}
+        },
+        "vfnTmOpu": {
+          "id": "vfnTmOpu",
+          "name": "Qqn S",
+          "avatar": {"color": 15, "eyes": 12, "mouth": 12}
+        },
+        "QX6MHu2w": {
+          "id": "QX6MHu2w",
+          "name": "Gaizxfxwgscucydqp",
+          "avatar": {"color": 15, "eyes": 12, "mouth": 12}
+        },
+        "2uqWGm0r": {
+          "id": "2uqWGm0r",
+          "name": "Zake",
+          "avatar": {"color": 15, "eyes": 12, "mouth": 12}
+        },
+        "KHnGbLQd": {
+          "id": "KHnGbLQd",
+          "name": "Ks Shtpmm",
+          "avatar": {"color": 15, "eyes": 12, "mouth": 12}
+        },
+        "ER3emqQc": {
+          "id": "ER3emqQc",
+          "name": "Ymztrwlrwfsbl Exfroj",
+          "avatar": {"color": 15, "eyes": 12, "mouth": 12}
+        },
+        "29juyknw": {
+          "id": "29juyknw",
+          "name": "Vuaefwnclfyxagt",
+          "avatar": {"color": 15, "eyes": 12, "mouth": 12}
+        },
+        "VvFoDY11": {
+          "id": "VvFoDY11",
+          "name": "Jrq ",
+          "avatar": {"color": 15, "eyes": 12, "mouth": 12}
+        },
+        "WgRuBj1z": {
+          "id": "WgRuBj1z",
+          "name": "Qnrsiywg Fiuxthkt",
+          "avatar": {"color": 15, "eyes": 12, "mouth": 12}
+        },
+        "AwROhV4k": {
+          "id": "AwROhV4k",
+          "name": "Aasmcyykrjlgtigupncx",
+          "avatar": {"color": 15, "eyes": 12, "mouth": 12}
+        },
+        "EU2WT4NI": {
+          "id": "EU2WT4NI",
+          "name": "Fhmfpdpos",
+          "avatar": {"color": 15, "eyes": 12, "mouth": 12}
+        },
+        "oKxPJ1c8": {
+          "id": "oKxPJ1c8",
+          "name": "Qpwe",
+          "avatar": {"color": 15, "eyes": 12, "mouth": 12}
+        },
       },
       "messages": [
         {
@@ -108,9 +268,10 @@ class PrivateGame extends Game {
       //
       "status": {
         "current_state_id": "draw_state_id",
-        "command": "start",
+        "command": "end",
         "date": DateTime.now().toUtc().toIso8601String(),
-        "next_state_id": "680cd9b9b34194c2298d16a4"
+        "next_state_id": "680cd9b9b34194c2298d16a4",
+        "bonus": "abc"
       },
       "henceforth_states": {
         "pregame_state_id": {"id": "pregame_state_id", "type": "pre_game"} as dynamic,
@@ -121,21 +282,106 @@ class PrivateGame extends Game {
           'player_id': "fDmSIumozqWBdX87AAAE",
           "words": ["ourselves", "choose", "for"]
         } as dynamic,
-        "680cd9b9b34194c2298d16a4": {
-          "type": "draw",
-          "id": "680cd9b9b34194c2298d16a4",
-          "player_id": "fDmSIumozqWBdX87AAA",
-          "word": "the fish",
-          "hint": "__ ___"
-        } as dynamic,
+        // "680cd9b9b34194c2298d16a4": {
+        //   "type": "draw",
+        //   "id": "680cd9b9b34194c2298d16a4",
+        //   "player_id": "fDmSIumozqWBdX87AAA",
+        //   "word": "the fish",
+        //   "hint": "__ ___"
+        // } as dynamic,
         "draw_state_id": {
           "type": 'draw',
           "id": "draw_state_id",
           "word": "abc",
           'hint': '___',
           "player_id": "fDmSIumozqWBdX87AAAE",
-          "word_mode": "Normal"
+          "word_mode": "Normal",
+          "points": {
+            "WWEAmL4U": 76,
+            "iBnJ6uBN": 63,
+            "04lxSxZa": 1,
+            "StzosDkc": 55,
+            "ENrBp2BG": 10,
+            "xHfT4tvh": 91,
+            "8X1u11Wq": 44,
+            "uZoEeKMu": 42,
+            "ViWToJfv": 69,
+            "5YX6ryba": 26,
+            "PSS6IMpo": 81,
+            "1GdAjnIA": 47,
+            "i0ocogCF": 41,
+            "c9wOaQfP": 56,
+            "cfQZxYk4": 3,
+            "rneIFu8k": 84,
+            "BChA55fj": 19,
+            "e71C9iWw": 39,
+            "lvEf8oRL": 7,
+            "HHl2q4QN": 51,
+            "QKyqXknH": 35,
+            "vfnTmOpu": 65,
+            "QX6MHu2w": 58,
+            "2uqWGm0r": 93,
+            "KHnGbLQd": 52,
+            "ER3emqQc": 19,
+            "29juyknw": 22,
+            "VvFoDY11": 34,
+            "WgRuBj1z": 23,
+            "AwROhV4k": 99,
+            "EU2WT4NI": 11,
+            "oKxPJ1c8": 17,
+            "ahpR2f5C": 63,
+            "MKxOJJPe": 6,
+            "EevsJxoa": 24,
+            "idYsCkH2": 11,
+            "4BGszt2g": 75,
+            "QzhpPWWl": 37,
+            "GicOaeYT": 0,
+            "zf7o7o1X": 9,
+            "fDmSIumozqWBdX87AAAE": 100,
+          }
         } as dynamic
+      },
+      "quit_players": {
+        "ahpR2f5C": {
+          "id": "ahpR2f5C",
+          "name": "quit player 1",
+          "avatar": {"color": 15, "eyes": 12, "mouth": 12}
+        },
+        "MKxOJJPe": {
+          "id": "MKxOJJPe",
+          "name": "quit player 2",
+          "avatar": {"color": 15, "eyes": 12, "mouth": 12}
+        },
+        "EevsJxoa": {
+          "id": "EevsJxoa",
+          "name": "quit player 3",
+          "avatar": {"color": 15, "eyes": 12, "mouth": 12}
+        },
+        "idYsCkH2": {
+          "id": "idYsCkH2",
+          "name": "quit player 4",
+          "avatar": {"color": 15, "eyes": 12, "mouth": 12}
+        },
+        "4BGszt2g": {
+          "id": "4BGszt2g",
+          "name": "quit player 5",
+          "avatar": {"color": 15, "eyes": 12, "mouth": 12}
+        },
+        "QzhpPWWl": {
+          "id": "QzhpPWWl",
+          "name": "quit playuer 6",
+          "avatar": {"color": 15, "eyes": 12, "mouth": 12}
+        },
+        "GicOaeYT": {
+          "id": "GicOaeYT",
+          "name": "quit player 7",
+          "avatar": {"color": 15, "eyes": 12, "mouth": 12}
+        },
+        "zf7o7o1X": {
+          "id": "zf7o7o1X",
+          "name": "quit player 8",
+          "avatar": {"color": 15, "eyes": 12, "mouth": 12}
+        }
       }
     };
 

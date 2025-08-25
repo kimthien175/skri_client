@@ -288,7 +288,7 @@ class PlayerGuessedRight extends Message {
 
   String get playerName => data['player_name'];
   String get playerId => data['player_id'];
-  int get point => data['point'];
+  int get point => data['point'] as int;
 
   @override
   Widget build(BuildContext context) {

@@ -17,13 +17,13 @@ import 'pages/pages.dart';
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
 
-  var initialRoute = '/';
+  var initialRoute = '/GameplayPage';
 
   Future.wait([
     GifManager.init().then((_) async {
       //FOR TESTING, TO SWITCH TO PRODUCTION, UNCOMMENT THE LINE BELOW AND IT IS THE ONLY LINE IN THIS CALLBACK BODY
-      MePlayer.random();
-      //await PrivateGame.setupTesting();
+      //MePlayer.random();
+      await PrivateGame.setupTesting();
     }),
     SocketIO.initSocket(),
   ]).then((_) {

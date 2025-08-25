@@ -5,7 +5,8 @@ import 'package:get/get.dart';
 import 'package:skribbl_client/models/gif_manager.dart';
 
 class Player {
-  Player({required this.id, required this.name, required this.avatarModel, this.score = 0});
+  Player({required this.name, required this.id, required this.score, required this.avatarModel});
+
   final AvatarModel avatarModel;
   String name;
   String get nameForCard => name;
@@ -13,36 +14,31 @@ class Player {
   bool? isReported;
   bool? isKickVoted;
 
-  // bool get isOwner {
-  //   var inst = Game.inst;
-  //   assert(inst is PrivateGame);
-  //   return (inst as PrivateGame).hostPlayerId.value == id;
-  // }
-
   int score;
+
   String id;
-  static Player fromJSON(rawPlayer) {
+  factory Player.fromJSON(rawPlayer) {
     var rawAvatar = rawPlayer['avatar'];
     return Player(
-        id: rawPlayer['id'],
         name: rawPlayer['name'],
-        avatarModel: AvatarModel(rawAvatar['color'], rawAvatar['eyes'], rawAvatar['mouth']),
-        score: rawPlayer['score'] ?? 0);
+        id: rawPlayer['id'],
+        score: rawPlayer['score'] ?? 0,
+        avatarModel: AvatarModel(rawAvatar['color'], rawAvatar['eyes'], rawAvatar['mouth']));
   }
 
-  static List<Player> listFromJSON(dynamic rawPlayers) {
-    List<Player> players = [];
+  // static List<Player> listFromJSON(dynamic rawPlayers) {
+  //   List<Player> players = [];
 
-    (rawPlayers as Map).forEach((id, player) {
-      if (id == MePlayer.inst.id) {
-        players.add(MePlayer.inst);
-      } else {
-        players.add(Player.fromJSON(player));
-      }
-    });
+  //   (rawPlayers as Map).forEach((id, player) {
+  //     if (id == MePlayer.inst.id) {
+  //       players.add(MePlayer.inst);
+  //     } else {
+  //       players.add(Player.fromJSON(player));
+  //     }
+  //   });
 
-    return players;
-  }
+  //   return players;
+  // }
 
   Map<String, dynamic> toJSON() {
     return {'name': name, 'avatar': avatarModel.toJSON(), 'id': id};
@@ -64,13 +60,17 @@ class MePlayer extends Player {
     var color = rd.nextInt(GifManager.inst.color.length);
     var eyes = rd.nextInt(GifManager.inst.eyes.length);
     var mouth = rd.nextInt(GifManager.inst.mouth.length);
-    _inst = MePlayer(avatarModel: AvatarModel(color, eyes, mouth));
+    _inst = MePlayer(name: '', id: '', score: 0, avatarModel: AvatarModel(color, eyes, mouth));
   }
 
-  MePlayer({super.name = '', required super.avatarModel, super.id = ''});
+  MePlayer(
+      {required super.name, required super.id, required super.score, required super.avatarModel});
 
   factory MePlayer.fromJSON(Map<String, dynamic> data) => MePlayer(
-      name: data['name'], avatarModel: AvatarModel.fromJSON(data['avatar']), id: data['id']);
+      name: data['name'],
+      id: data['id'],
+      score: data['score'] ?? 0,
+      avatarModel: AvatarModel.fromJSON(data['avatar']));
 
   @override
   String get nameForCard => '$name (${'You'.tr})';

@@ -36,7 +36,7 @@ class _EmittingPerformerDrawState extends GameState with DrawStateMixin, _Perfor
   /// in seconds
   double get hintDuration => Game.inst.settings['draw_time'] / (hintCap + 1);
 
-  late Timer timer;
+  Timer? timer;
 
   @override
   Future<void> onStart(Duration sinceStartDate) async {
@@ -53,24 +53,13 @@ class _EmittingPerformerDrawState extends GameState with DrawStateMixin, _Perfor
             milliseconds: (hintDuration * (revealedHintCount + 1) * 1000).toInt() -
                 sinceStartDate.inMilliseconds),
         revealRandomCharacter);
-
-    //loopRandomizingCharacterWithHintDuration();
   }
 
   @override
   Future<Duration> onEnd(Duration sinceEndDate) {
-    timer.cancel();
+    timer?.cancel();
     return super.onEnd(sinceEndDate);
   }
-
-  // void loopRandomizingCharacterWithHintDuration() {
-  //   if (hintCap == revealedHintCount) return;
-
-  //   timer = Timer(Duration(milliseconds: (hintDuration * 1000).toInt()), () {
-  //     revealRandomCharacter();
-  //     loopRandomizingCharacterWithHintDuration();
-  //   });
-  // }
 
   void revealRandomCharacter() {
     var rand = Random();

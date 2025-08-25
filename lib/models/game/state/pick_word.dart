@@ -62,6 +62,7 @@ class PickWordState extends GameState {
 
     //#region ROUND NOTI
     if (roundNotify != null) {
+      Game.inst.currentRound.value = roundNotify!;
       // show round intro
       if (sinceStartDate < TopWidgetController.contentDuration) {
         await topWidget.contentController
