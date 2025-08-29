@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:skribbl_client/models/game/game.dart';
-import 'package:skribbl_client/models/game/state/draw/draw.dart';
 
 const Map<String, dynamic> _emptyData = {};
 
@@ -38,6 +37,12 @@ abstract class Message extends StatelessWidget {
       case Message.playerGuessRight:
         return PlayerGuessedRight(data: data);
 
+      case Message.playerLike:
+        return PlayerLikeMessage(backgroundColor: backgroundColor, data: data);
+
+      case Message.playerDislike:
+        return PlayerDislikeMessage(backgroundColor: backgroundColor, data: data);
+
       default:
         throw Exception('undefined message');
     }
@@ -58,6 +63,8 @@ abstract class Message extends StatelessWidget {
   static const String playerVotekick = 'player_votekick';
   static const String playerGotKicked = 'player_got_kicked';
   static const String playerGuessRight = 'player_guess_right';
+  static const String playerLike = 'player_like';
+  static const String playerDislike = 'player_dislike';
 
   static const Color darkOrange = Color.fromRGBO(206, 79, 10, 1);
   static const Color orange = Color.fromRGBO(255, 168, 68, 1);
@@ -240,7 +247,6 @@ class PlayerSpamMessage extends Message {
   }
 }
 
-// TODO: APPLY
 class PlayerDislikeMessage extends Message {
   const PlayerDislikeMessage({super.key, required super.backgroundColor, required super.data});
   String get playerName => data['player_name'];
@@ -258,10 +264,12 @@ class PlayerDislikeMessage extends Message {
   }
 }
 
-// TODO: APPLY
 class PlayerLikeMessage extends Message {
   const PlayerLikeMessage({super.key, required super.backgroundColor, required super.data});
+
   String get playerName => data['player_name'];
+  int get performerPoint => data['performer_point'] as int;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -275,16 +283,8 @@ class PlayerLikeMessage extends Message {
 }
 
 class PlayerGuessedRight extends Message {
-  PlayerGuessedRight({super.key, required super.data})
-      : super(backgroundColor: Message.guessedRightBackgroundColor) {
-    var state = Game.inst.state.value;
-    if (state is DrawStateMixin && state.points[playerId] == null) {
-      state.points[playerId] = point;
-      var player = Game.inst.playersByMap[playerId] as Player;
-      player.score += point;
-      Game.inst.playersByList.refresh();
-    }
-  }
+  const PlayerGuessedRight({super.key, required super.data})
+      : super(backgroundColor: Message.guessedRightBackgroundColor);
 
   String get playerName => data['player_name'];
   String get playerId => data['player_id'];
@@ -302,7 +302,6 @@ class PlayerGuessedRight extends Message {
   }
 }
 
-// TODO: kick countdown
 class PlayerGotKicked extends Message {
   const PlayerGotKicked({super.key, required super.backgroundColor, required super.data});
   String get playerName => data['player_name'];
@@ -352,21 +351,6 @@ class MePlayerGuessClose extends Message {
                 color: Message.yellow, fontSize: 14, fontVariations: [FontVariation.weight(700)])));
   }
 }
-
-// class OtherPlayerGuessClose extends Message {
-//   const OtherPlayerGuessClose({super.key, required super.data, required super.backgroundColor});
-//   String get playerName => data['player_name'];
-//   @override
-//   Widget build(BuildContext context) {
-//     return Container(
-//         color: backgroundColor,
-//         alignment: Alignment.centerLeft,
-//         padding: EdgeInsets.only(left: paddingLeft),
-//         child: Text('message_player_guess_close'.trParams({"word": word}),
-//             style: const TextStyle(
-//                 color: Message.yellow, fontSize: 14, fontVariations: [FontVariation.weight(700)])));
-//   }
-// }
 
 // TODO: APPLY
 class PlayerVoteKick extends Message {

@@ -12,7 +12,7 @@ class AvatarModel extends GifModel<AvatarModel> {
   bool winner;
 
   factory AvatarModel.fromJSON(Map<String, dynamic> data) =>
-      AvatarModel(data['color'], data['eyes'], data['mouth']);
+      AvatarModel(data['color'], data['eyes'], data['mouth'], winner: data['winner'] ?? false);
 
   factory AvatarModel(int color, int eyes, int mouth, {bool winner = false}) {
     var gif = GifManager.inst;

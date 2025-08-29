@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:skribbl_client/models/sound.dart';
+import 'package:skribbl_client/pages/gameplay/widgets/draw/draw_widget.dart';
+import 'package:skribbl_client/pages/gameplay/widgets/draw/widgets/color.dart';
 import 'package:skribbl_client/pages/gameplay/widgets/game_bar/settings/slider.dart';
 import 'package:skribbl_client/widgets/widgets.dart';
 
@@ -28,16 +31,7 @@ class SettingsButton extends StatelessWidget {
                     onTap: SystemSettings.inst.resetKeyMaps,
                     child: Text('Reset'.tr),
                   ),
-                  tooltipContentBuilder: () => Text('reset_hotkeys_tooltip'.tr)),
-              // AnimatedButton(
-              //   onTap: SystemSettings.inst.resetKeyMaps,
-              //   decorators: [
-              //    // const AnimatedButtonBackgroundColorDecorator(),
-              //     AnimatedButtonTooltipDecorator(
-              //         childBuilder: () => Text('reset_hotkeys_tooltip'.tr))
-              //   ],
-              //   child: Text('Reset'.tr),
-              // )
+                  tooltipContentBuilder: () => Text('reset_hotkeys_tooltip'.tr))
             ]),
             Obx(() => Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -98,16 +92,21 @@ class SystemSettings extends GetxController {
   static final SystemSettings _inst = SystemSettings._internal();
   static SystemSettings get inst => _inst;
 
-  RxDouble volume = 0.4.obs;
+  final RxDouble _volume = 0.5.obs;
+  double get volume => _volume.value;
+  set volume(double value) {
+    _volume.value = value;
+    Sound.inst.setVolume(value);
+  }
 
   String get volumeToString => (volume * 100).toStringAsFixed(0);
 
   final Map<LogicalKeyboardKey, KeyMap> _defaultKeyMaps = {
-    LogicalKeyboardKey.keyB: KeyMap(title: 'Brush', act: () {}, order: 0),
-    LogicalKeyboardKey.keyF: KeyMap(title: 'Fill', act: () {}, order: 1),
-    LogicalKeyboardKey.keyU: KeyMap(title: 'Undo', act: () {}, order: 2),
-    LogicalKeyboardKey.keyC: KeyMap(title: 'Clear', act: () {}, order: 3),
-    LogicalKeyboardKey.keyS: KeyMap(title: 'Swap', act: () {}, order: 4),
+    LogicalKeyboardKey.keyB: BrushButton.KEYMAP,
+    LogicalKeyboardKey.keyF: FillButton.KEYMAP,
+    LogicalKeyboardKey.keyU: UndoButton.KEYMAP,
+    LogicalKeyboardKey.keyC: ClearButton.KEYMAP,
+    LogicalKeyboardKey.keyS: RecentColor.KEYMAP,
   };
 
   resetKeyMaps() {
@@ -126,8 +125,8 @@ class SystemSettings extends GetxController {
 }
 
 class KeyMap {
-  KeyMap({required this.title, required this.act, required this.order});
+  const KeyMap({required this.title, required this.act, required this.order});
   final String title;
-  void Function() act;
-  int order;
+  final void Function() act;
+  final int order;
 }

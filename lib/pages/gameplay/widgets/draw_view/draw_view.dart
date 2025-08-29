@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:skribbl_client/models/models.dart';
 import 'package:flutter/material.dart';
+import 'package:skribbl_client/utils/socket_io.dart';
 import 'package:skribbl_client/widgets/widgets.dart';
 
 import '../draw/manager.dart';

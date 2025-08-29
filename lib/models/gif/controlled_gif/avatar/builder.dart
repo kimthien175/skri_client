@@ -8,7 +8,8 @@ class AvatarBuilder extends ControlledGifBuilder<AvatarModel> {
 
   @override
   AvatarBuilder doScale(double ratio) {
-    widget = Transform.scale(scale: ratio, child: widget);
+    widget = SizedBox(
+        height: model.height * ratio, width: model.width * ratio, child: FittedBox(child: widget));
     return this;
   }
 

@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 // ignore: depend_on_referenced_packages
 import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:skribbl_client/models/models.dart';
+import 'package:skribbl_client/models/sound.dart';
 import 'package:skribbl_client/test.dart';
 import 'package:skribbl_client/utils/socket_io.dart';
 import 'package:skribbl_client/widgets/widgets.dart';
@@ -17,15 +18,16 @@ import 'pages/pages.dart';
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
 
-  var initialRoute = '/GameplayPage';
+  var initialRoute = '/';
 
   Future.wait([
     GifManager.init().then((_) async {
       //FOR TESTING, TO SWITCH TO PRODUCTION, UNCOMMENT THE LINE BELOW AND IT IS THE ONLY LINE IN THIS CALLBACK BODY
-      //MePlayer.random();
-      await PrivateGame.setupTesting();
+      MePlayer.random();
+      //await PrivateGame.setupTesting();
     }),
     SocketIO.initSocket(),
+    Sound.inst.load()
   ]).then((_) {
     var next = Get.arguments['next'];
     if (Get.currentRoute == '/loading' && next != null) {

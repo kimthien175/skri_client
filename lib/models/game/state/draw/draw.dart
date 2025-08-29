@@ -1,8 +1,9 @@
 import 'dart:async';
-import 'dart:math';
-import 'dart:ui';
+import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import 'package:skribbl_client/models/game/state/draw/draw_state_result.dart';
+import 'package:skribbl_client/models/game/state/draw/game_result.dart';
 import 'package:skribbl_client/models/models.dart';
 
 import 'package:get/get.dart';
@@ -25,12 +26,17 @@ abstract class DrawState {
 }
 
 mixin DrawStateMixin on GameState {
-  Map<String, int> get points => data['points'];
+  /// Map<String, number>
+  dynamic get points => data['points'];
 
   String get hint => data['hint'];
 
+  List<dynamic> get likedBy => data['liked_by'];
+
   @override
-  Widget get topWidget => WordResult();
+  Widget get topWidget => Obx(() => _topWidgetController.child.value);
+
+  final _TopWidgetController _topWidgetController = _TopWidgetController();
 
   bool get isHintHidden => data['word_mode'] == _HiddenHintStatus.value;
 
@@ -41,13 +47,20 @@ mixin DrawStateMixin on GameState {
         onEnd: () => onEnd(Duration.zero));
   }
 
+  Duration get waitDuration => const Duration(seconds: 3);
+
   @override
   Future<Duration> onEnd(Duration sinceEndDate) async {
     Get.find<GameClockController>().cancel();
     var topWidget = Get.find<TopWidgetController>();
     // word reveal
-    // ignore: invalid_use_of_protected_member
-    _WordResultState._inst?.setState(() {});
+
+    DrawStateResult.init().then((widget) => _topWidgetController.child.value = widget);
+    if (endState == 'end_game') {
+      GameResult.init();
+    }
+
+    //#region FORWARD BACKGROUND
     if (sinceEndDate < TopWidgetController.backgroundDuration) {
       await topWidget.forwardBackground(
           from: sinceEndDate / TopWidgetController.backgroundDuration);
@@ -56,18 +69,86 @@ mixin DrawStateMixin on GameState {
       topWidget.background = 1;
       sinceEndDate -= TopWidgetController.backgroundDuration;
     }
+    //#endregion
 
+    //#region FORWARD WORD REVEAL
     if (sinceEndDate < TopWidgetController.contentDuration) {
       await topWidget.contentController
           .forward(from: sinceEndDate / TopWidgetController.contentDuration);
-      return Duration.zero;
+      sinceEndDate = Duration.zero;
     } else {
       topWidget.contentController.value = 1;
-      return sinceEndDate - TopWidgetController.contentDuration;
+      sinceEndDate -= TopWidgetController.contentDuration;
     }
+    //#endregion
+
+    //#region WAIT
+    if (sinceEndDate < waitDuration) {
+      await Future.delayed(waitDuration - sinceEndDate);
+      sinceEndDate = Duration.zero;
+    } else {
+      sinceEndDate -= waitDuration;
+    }
+    //#endregion
+
+    //#region REVERSE WORD REVEAL
+    if (sinceEndDate < TopWidgetController.contentDuration) {
+      await topWidget.contentController
+          .reverse(from: 1 - sinceEndDate / TopWidgetController.contentDuration);
+      sinceEndDate = Duration.zero;
+    } else {
+      topWidget.contentController.value = 0;
+      sinceEndDate -= TopWidgetController.contentDuration;
+    }
+    //#endregion
+
+    if (endState == 'end_game') {
+      //#region FORWARD GAME RESULT
+      if (sinceEndDate < TopWidgetController.contentDuration) {
+        GameResult.completer!.future.then((widget) => _topWidgetController.child.value = widget);
+        await topWidget.contentController
+            .forward(from: sinceEndDate / TopWidgetController.contentDuration);
+        sinceEndDate = Duration.zero;
+      } else {
+        topWidget.contentController.value = 1;
+        sinceEndDate -= TopWidgetController.contentDuration;
+      }
+      //#endregion
+
+      //#region WAIT
+      if (sinceEndDate < waitDuration) {
+        await Future.delayed(waitDuration - sinceEndDate);
+        sinceEndDate = Duration.zero;
+      } else {
+        sinceEndDate -= waitDuration;
+      }
+      //#endregion
+
+      //#region REVERSE GAME RESULT
+      if (sinceEndDate < TopWidgetController.contentDuration) {
+        await topWidget.contentController
+            .reverse(from: 1 - sinceEndDate / TopWidgetController.contentDuration);
+        sinceEndDate = Duration.zero;
+
+        //reset all player score to 0
+        for (var player in Game.inst.playersByList) {
+          player.score = 0;
+        }
+        Game.inst.playersByList.refresh();
+      } else {
+        topWidget.contentController.value = 0;
+        sinceEndDate -= TopWidgetController.contentDuration;
+      }
+      //#endregion
+
+      GameResult.completer = null;
+    }
+
+    return sinceEndDate;
   }
 
   String get performerId => data['player_id'];
+  String? get endState => data['end_state']; // end_round | end_game | null
 }
 
 class SpectatorDrawState extends GameState with DrawStateMixin {
@@ -133,169 +214,6 @@ class HintController extends GetxController {
   }
 }
 
-class WordResult extends StatefulWidget {
-  const WordResult({super.key});
-
-  @override
-  State<WordResult> createState() => _WordResultState();
-}
-
-class _WordResultState extends State<WordResult> {
-  static _WordResultState? _inst;
-  @override
-  void initState() {
-    super.initState();
-    _inst = this;
-  }
-
-  _addWidgets(List<Widget> playersName, List<Widget> playersPoint, Player player, int point,
-      {bool quitPlayer = false}) {
-    late TextStyle? nameStyle;
-    if (player.id == MePlayer.inst.id) {
-      nameStyle = TextStyle(color: Colors.blue);
-    } else if (quitPlayer) {
-      nameStyle = TextStyle(color: Colors.white.withValues(alpha: 0.5));
-    } else {
-      nameStyle = null;
-    }
-    playersName.add(Container(
-        constraints: BoxConstraints(minWidth: 100),
-        child: Text('${player.name} :', style: nameStyle)));
-    playersPoint.add(Text(point.toString(), style: const TextStyle(color: Colors.green)));
-  }
-
-  Widget _multiColumnScoreBoard(List<String> iDs, int from) {
-    List<Widget> playersName = [];
-    List<Widget> playersPoint = [];
-    final pointsMap = (Game.inst.state.value as DrawStateMixin).points;
-    var players = Game.inst.playersByMap;
-    var quitPlayers = Game.inst.quitPlayers;
-    // 2 columns
-    int i = from;
-    for (; i < from + 15; i++) {
-      var player = players[iDs[i]];
-      if (player != null) {
-        _addWidgets(playersName, playersPoint, player, pointsMap[iDs[i]]!);
-      } else {
-        _addWidgets(playersName, playersPoint, quitPlayers[iDs[i]]!, pointsMap[iDs[i]]!,
-            quitPlayer: true);
-      }
-    }
-
-    List<Widget> playersName2 = [];
-    List<Widget> playersPoint2 = [];
-    var end = min(from + 30, iDs.length);
-    for (; i < end; i++) {
-      var player = players[iDs[i]];
-      if (player != null) {
-        _addWidgets(playersName2, playersPoint2, player, pointsMap[iDs[i]]!);
-      } else {
-        _addWidgets(playersName2, playersPoint2, quitPlayers[iDs[i]]!, pointsMap[iDs[i]]!,
-            quitPlayer: true);
-      }
-    }
-    // if from != 0 => show fading overlay on top
-    // if i != iDs.length => show fading overlay on bottom
-
-    Widget child = Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-      Column(crossAxisAlignment: CrossAxisAlignment.start, children: playersName),
-      const SizedBox(width: 20),
-      Column(crossAxisAlignment: CrossAxisAlignment.end, children: playersPoint),
-      const SizedBox(width: 50),
-      Column(crossAxisAlignment: CrossAxisAlignment.start, children: playersName2),
-      const SizedBox(width: 20),
-      Column(crossAxisAlignment: CrossAxisAlignment.end, children: playersPoint2),
-    ]);
-
-    List<Color> colors = [];
-    List<double> stops = [];
-    if (from != 0) {
-      colors.addAll([Colors.transparent, Colors.black]);
-      stops.addAll([0, 50 / DrawManager.height]);
-    }
-    if (i != iDs.length) {
-      colors.addAll([Colors.black, Colors.transparent]);
-      stops.addAll([1.0 - 50 / DrawManager.height, 1.0]);
-    }
-    if (colors.isNotEmpty) {
-      child = ShaderMask(
-          shaderCallback: (bounds) {
-            return LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: colors,
-              stops: stops,
-            ).createShader(bounds);
-          },
-          blendMode: BlendMode.dstIn, // keep destination (child) with alpha mask
-          child: child);
-    }
-    return child;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    var bonus = Game.inst.status['bonus'] as String?;
-    if (bonus == null) return Container();
-
-    final players = Game.inst.playersByMap;
-    final pointsMap = (Game.inst.state.value as DrawStateMixin).points;
-    late final Widget scoreBoard;
-
-    if (pointsMap.length <= 15) {
-      // 1 column
-      List<Widget> playersName = [];
-      List<Widget> playersPoint = [];
-      pointsMap.forEach((id, point) {
-        var player = players[id];
-        if (player != null) _addWidgets(playersName, playersPoint, player, point);
-      });
-
-      scoreBoard = Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-        Column(crossAxisAlignment: CrossAxisAlignment.start, children: playersName),
-        const SizedBox(width: 20),
-        Column(crossAxisAlignment: CrossAxisAlignment.end, children: playersPoint)
-      ]);
-    } else {
-      final List<String> iDs = pointsMap.keys.toList();
-      late int from;
-
-      if (pointsMap[MePlayer.inst.id] == null || iDs.length <= 30) {
-        from = 0;
-      } else {
-        var mePos = iDs.indexOf(MePlayer.inst.id);
-        from = mePos - 15;
-        if (from < 0) {
-          from = 0;
-        } else if (from > iDs.length - 30) {
-          from = iDs.length - 30;
-        }
-      }
-      scoreBoard = _multiColumnScoreBoard(iDs, from);
-    }
-
-    return DefaultTextStyle.merge(
-        style: const TextStyle(
-            color: Colors.white, fontSize: 20, fontVariations: [FontVariation.weight(700)]),
-        child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Row(
-                  textBaseline: TextBaseline.alphabetic,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.baseline,
-                  children: [
-                    Text('the_word_is'.tr, style: const TextStyle(fontSize: 25)),
-                    const SizedBox(width: 20),
-                    Text(bonus,
-                        style: const TextStyle(
-                            fontSize: 40,
-                            color: Colors.green,
-                            fontVariations: [FontVariation.weight(750)]))
-                  ]),
-              const SizedBox(height: 18),
-              scoreBoard
-            ]));
-  }
+class _TopWidgetController extends GetxController {
+  Rx<Widget> child = (Container() as Widget).obs;
 }

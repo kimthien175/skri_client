@@ -44,6 +44,7 @@ dependencies:
   flutter_svg: ^2.0.16
   flutter_udid: ^4.0.0
   web: ^1.1.1
+  soundpool: ^2.4.1
 
 dev_dependencies:
   flutter_test:
@@ -69,49 +70,13 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - assets/locales/en_US.json
-    - assets/locales/vi_VN.json
-    - assets/background.png
-    - assets/gif/logo.gif
-    - assets/gif/info.json
-    - assets/gif/avatar/color.gif
-    - assets/gif/avatar/eyes.gif
-    - assets/gif/avatar/mouth.gif
-    - assets/gif/avatar/crown.gif
-    - assets/gif/avatar/special.gif
-    - assets/gif/randomize.gif
-    - assets/gif/arrow.gif
-    - assets/gif/about.gif
-    - assets/gif/news.gif
-    - assets/gif/how.gif
-    - assets/gif/tutorial/step1.gif
-    - assets/gif/tutorial/step2.gif
-    - assets/gif/tutorial/step3.gif
-    - assets/gif/tutorial/step4.gif
-    - assets/gif/tutorial/step5.gif
-    - assets/gif/load.gif
-    - assets/gif/clock.gif
-    - assets/gif/settings.gif
-    - assets/gif/owner.gif
-    - assets/gif/setting/setting_0.gif
-    - assets/gif/setting/setting_1.gif
-    - assets/gif/setting/setting_2.gif
-    - assets/gif/setting/setting_3.gif
-    - assets/gif/setting/setting_4.gif
-    - assets/gif/setting/setting_5.gif
-    - assets/gif/setting/setting_6.gif
-    - assets/gif/size.gif
-    - assets/gif/pen.gif
-    - assets/gif/fill.gif
-    - assets/gif/undo.gif
-    - assets/gif/clear.gif
-    - assets/gif/thumbsup.gif
-    - assets/gif/thumbsdown.gif
-    - assets/gif/audio.gif
-    - assets/gif/key.gif
-    - assets/gif/questionmark.gif
-    - assets/link.svg
-
+    - assets/
+    - assets/sound/
+    - assets/locales/
+    - assets/gif/
+    - assets/gif/avatar/
+    - assets/gif/tutorial/
+    - assets/gif/setting/
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

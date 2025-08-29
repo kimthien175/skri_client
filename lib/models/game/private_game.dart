@@ -225,7 +225,8 @@ class PrivateGame extends Game {
         "oKxPJ1c8": {
           "id": "oKxPJ1c8",
           "name": "Qpwe",
-          "avatar": {"color": 15, "eyes": 12, "mouth": 12}
+          "avatar": {"color": 15, "eyes": 12, "mouth": 12},
+          "score": 0
         },
       },
       "messages": [
@@ -268,10 +269,38 @@ class PrivateGame extends Game {
       //
       "status": {
         "current_state_id": "draw_state_id",
-        "command": "end",
+        "command": "start",
         "date": DateTime.now().toUtc().toIso8601String(),
-        "next_state_id": "680cd9b9b34194c2298d16a4",
-        "bonus": "abc"
+        "next_state_id": "draw_state_id",
+        "bonus": {
+          "end_state": "abc",
+          "end_game": {
+            "WgRuBj1z": {
+              "id": "WgRuBj1z",
+              "name": "Qnrsiywg Fiuxthkt",
+              "avatar": {"color": 15, "eyes": 12, "mouth": 12},
+              "score": 1,
+            },
+            "AwROhV4k": {
+              "id": "AwROhV4k",
+              "name": "Aasmcyykrjlgtigupncx",
+              "avatar": {"color": 15, "eyes": 12, "mouth": 12},
+              "score": 1,
+            },
+            "EU2WT4NI": {
+              "id": "EU2WT4NI",
+              "name": "Fhmfpdpos",
+              "avatar": {"color": 15, "eyes": 12, "mouth": 12},
+              "score": 1,
+            },
+            "oKxPJ1c8": {
+              "id": "oKxPJ1c8",
+              "name": "Qpwe",
+              "avatar": {"color": 15, "eyes": 12, "mouth": 12},
+              "score": 0
+            },
+          }
+        }
       },
       "henceforth_states": {
         "pregame_state_id": {"id": "pregame_state_id", "type": "pre_game"} as dynamic,
@@ -296,6 +325,7 @@ class PrivateGame extends Game {
           'hint': '___',
           "player_id": "fDmSIumozqWBdX87AAAE",
           "word_mode": "Normal",
+          "end_state": "end_game",
           "points": {
             "WWEAmL4U": 76,
             "iBnJ6uBN": 63,

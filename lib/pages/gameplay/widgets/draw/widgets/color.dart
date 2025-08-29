@@ -1,22 +1,47 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:skribbl_client/pages/gameplay/widgets/draw/draw_widget.dart';
+import 'package:skribbl_client/pages/gameplay/widgets/game_bar/settings/settings.dart';
 
 import '../manager.dart';
 
-class RecentColor extends StatelessWidget {
+class RecentColor extends StatelessWidget with KeyMapWrapper {
   const RecentColor({super.key});
+
+  // ignore: non_constant_identifier_names
+  static final KeyMap KEYMAP =
+      KeyMap(title: 'Swap', act: () => Get.find<RecentColorController>().switchColor(), order: 4);
+
+  @override
+  KeyMap get keyMap => KEYMAP;
+
+  @override
+  Widget get child => throw Exception('no need');
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.find<RecentColorController>();
-    return Obx(() => InkWell(
-        onTap: controller.switchColor,
-        child: ClipRRect(
-            borderRadius: const BorderRadius.all(Radius.circular(3)),
-            child: CustomPaint(
-                size: const Size(48, 48),
-                painter: RecentColorCustomPainter(
-                    controller.last2Colors[1], controller.last2Colors[0])))));
+    return GestureDetector(
+        onTap: keyMap.act,
+        child: Obx(() {
+          var keyMaps = SystemSettings.inst.keyMaps;
+          final controller = Get.find<RecentColorController>();
+          var currentColor = controller.last2Colors[1];
+          return Stack(children: [
+            ClipRRect(
+                borderRadius: const BorderRadius.all(Radius.circular(3)),
+                child: CustomPaint(
+                    size: const Size(48, 48),
+                    painter: RecentColorCustomPainter(currentColor, controller.last2Colors[0]))),
+            Positioned(
+                right: 2,
+                top: -2,
+                child: Text(keyMaps.keys.firstWhere((key) => keyMaps[key] == keyMap).keyLabel,
+                    style: TextStyle(
+                        color: currentColor == Colors.black ? Colors.white : null,
+                        fontSize: 13,
+                        fontVariations: [FontVariation.weight(900)])))
+          ]);
+        }));
   }
 }
 

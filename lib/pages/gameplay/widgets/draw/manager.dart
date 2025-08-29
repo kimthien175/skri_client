@@ -100,7 +100,7 @@ class DrawManager {
   late GestureDrawStep currentStep = _newCurrentStep;
   GestureDrawStep get _newCurrentStep => _currentMode.value.stepFactory();
 
-  void onEnd(DragEndDetails _) {
+  void onEnd() {
     if (!currentStep.onEnd) return;
 
     // move step from current to past
@@ -246,7 +246,7 @@ class DrawWidgetCanvas extends StatelessWidget {
                     onPanUpdate: (details) {
                       drawInst.currentStep.onUpdate(details.localPosition);
                     },
-                    onPanEnd: drawInst.onEnd,
+                    onPanEnd: (_) => drawInst.onEnd(),
                     child: Stack(children: [
                       CustomPaint(size: size, painter: _PastStepCustomPainter()),
                       CustomPaint(size: size, painter: _CurrentStepCustomPainter())

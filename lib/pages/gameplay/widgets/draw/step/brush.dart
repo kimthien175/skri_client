@@ -63,7 +63,6 @@ class BrushStep extends DrawStep with GestureDrawStep {
     }
   }
 
-  // TODO: in case user change color with shortcut, while not release mouse when drawing, what would happen?
   /// If prev step is fillstep having color is the same with this color, return false,
   ///
   /// Or `this` as only step in data that have color is white -
@@ -84,10 +83,15 @@ class BrushStep extends DrawStep with GestureDrawStep {
     _onDown = _startPoint;
     _onUpdate = _updatePoint;
     _onEnd = () {
+      if (_points.isEmpty) return false;
+
+      isEnded = true;
       DrawEmitter.inst.endCurrent(privateId);
       return true;
     };
   }
+
+  bool isEnded = true;
 
   disable() {
     _onDown = (_) {};
@@ -96,6 +100,8 @@ class BrushStep extends DrawStep with GestureDrawStep {
 
   @override
   void changeColor() {
+    if (!isEnded) return DrawManager.inst.onEnd();
+
     _brush.color = DrawManager.inst.currentColor;
 
     if (isReady) {
@@ -106,6 +112,7 @@ class BrushStep extends DrawStep with GestureDrawStep {
   }
 
   void _startPoint(Offset point) {
+    isEnded = false;
     _points.add(point);
     // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
     DrawManager.inst.currentStepRepaint.notifyListeners();
@@ -119,6 +126,8 @@ class BrushStep extends DrawStep with GestureDrawStep {
   }
 
   void _updatePoint(Offset point) {
+    if (isEnded) return _startPoint(point);
+
     _points.add(point);
     // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
     DrawManager.inst.currentStepRepaint.notifyListeners();

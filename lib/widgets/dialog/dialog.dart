@@ -196,6 +196,7 @@ class _Dialog extends StatelessWidget {
     if (c.exitTap) {
       dialog = TapRegion(
           onTapOutside: (event) {
+            if (c.completer.isCompleted || c.animController.velocity < 0) return;
             c.completer.complete(c.onQuit(c.hide));
           },
           child: dialog);
@@ -248,7 +249,9 @@ class _CloseButtonState extends State<_CloseButton> with SingleTickerProviderSta
       if (key is KeyDownEvent) {
         if (key.logicalKey == LogicalKeyboardKey.enter) {
           var c = OverlayWidget.of<GameDialog>(context);
-          if (c.completer.isCompleted) return KeyEventResult.ignored;
+          if (c.completer.isCompleted || c.animController.velocity < 0) {
+            return KeyEventResult.ignored;
+          }
           c.completer.complete(c.onQuit(c.hide));
           return KeyEventResult.handled;
         }
@@ -281,7 +284,7 @@ class _CloseButtonState extends State<_CloseButton> with SingleTickerProviderSta
             focusNode: focusNode,
             child: GestureDetector(
                 onTap: () {
-                  if (c.completer.isCompleted) return;
+                  if (c.completer.isCompleted || c.animController.velocity < 0) return;
                   c.completer.complete(c.onQuit(c.hide));
                 },
                 child: MouseRegion(

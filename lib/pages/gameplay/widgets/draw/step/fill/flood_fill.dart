@@ -226,10 +226,10 @@ class FloodFiller {
         byteList: byteData.buffer.asUint8List(),
         pointX: point.dx.toInt(),
         pointY: point.dy.toInt(),
-        fillColorR: fillColor.red,
-        fillColorB: fillColor.blue,
-        fillColorG: fillColor.green,
-        fillColorA: fillColor.alpha,
+        fillColorR: (fillColor.r * 255.0).round() & 0xff,
+        fillColorB: (fillColor.b * 255.0).round() & 0xff,
+        fillColorG: (fillColor.g * 255.0).round() & 0xff,
+        fillColorA: (fillColor.a * 255.0).round() & 0xff,
         width: image.width,
         height: image.height);
 

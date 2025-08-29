@@ -118,12 +118,7 @@ class PickWordState extends GameState {
 
   void sendWord(String word) {
     _wordStatus = _WordSendingStatus.sending;
-    SocketIO.inst.socket.emitWithAck('pick_word', word, ack: (data) {
-      if (!data['success']) {
-        //  TODO
-        throw Exception('pick word error');
-      }
-    });
+    SocketIO.inst.socket.emitWithAck('pick_word', word, ack: (data) {});
   }
 
   _WordSendingStatus _wordStatus = _WordSendingStatus.notSent;

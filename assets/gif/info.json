@@ -201,6 +201,10 @@
             {
                 "name":"thumb_down",
                 "source": "assets/gif/thumbsdown.gif"
+            },
+            {
+                "name": "trophy",
+                "source":"assets/gif/trophy.gif"
             }
         ]
     }

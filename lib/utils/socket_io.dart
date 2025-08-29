@@ -18,9 +18,7 @@ class SocketIO {
       var data = (dataList as List<dynamic>).first;
       var inst = Game.inst;
       var newPlayer = Player.fromJSON(data['player']);
-      inst.playersByList.add(newPlayer);
-      inst.playersByMap[newPlayer.id] = newPlayer;
-      Get.put(PlayerController(), tag: newPlayer.id);
+      inst.addPlayer(newPlayer);
 
       inst.addMessage((color) => PlayerJoinMessage(data: data['message'], backgroundColor: color));
     });
@@ -106,6 +104,46 @@ class SocketIO {
     socket.on('draw:end_current', (dataList) => DrawReceiver.inst.endCurrent(dataList[0]));
 
     socket.on('hint', (dataList) => {Get.find<HintController>().setHint(dataList[0], dataList[1])});
+
+    socket.on('like_dislike', (dataList) {
+      var msg = Game.inst
+          .addMessage((color) => Message.fromJSON(backgroundColor: color, data: dataList[0]));
+
+      if (msg is PlayerLikeMessage) {
+        var state = Game.inst.state.value;
+        if (state is DrawStateMixin) {
+          if (state.likedBy.contains(MePlayer.inst.id)) return;
+          state.likedBy.add(MePlayer.inst.id);
+
+          var performerStateScore = state.points[state.performerId] ?? 0;
+
+          state.points[state.performerId] = performerStateScore + msg.performerPoint;
+
+          var inst = Game.inst;
+          var performer = inst.playersByMap[state.performerId] as Player;
+          performer.score += msg.performerPoint;
+
+          Game.inst.playersByList.sort((before, after) => after.score.compareTo(before.score));
+          Game.inst.playersByList.refresh();
+        }
+      }
+    });
+
+    socket.on('guess_right', (dataList) {
+      var msg = Game.inst
+          .addMessage((color) => Message.fromJSON(backgroundColor: color, data: dataList[0]));
+      if (msg is PlayerGuessedRight) {
+        var state = Game.inst.state.value;
+        if (state is DrawStateMixin && state.points[msg.playerId] == null) {
+          state.points[msg.playerId] = msg.point;
+          var player = Game.inst.playersByMap[msg.playerId] as Player;
+          player.score += msg.point;
+
+          Game.inst.playersByList.sort((before, after) => after.score.compareTo(before.score));
+          Game.inst.playersByList.refresh();
+        }
+      }
+    });
   }
 
   static Future<void> initSocket() async {
@@ -132,22 +170,6 @@ class SocketIO {
 
   late final IO.Socket _socket;
   IO.Socket get socket => _socket;
-
-  // void connect() {
-  //   _socket.onConnectError((data) {
-  //     GameDialog.cache(
-  //         tag: data.toString(),
-  //         builder: () => GameDialog.error(
-  //             content: Text(data.toString()),
-  //             buttons: GameDialogButtons.okay(onTap: (quit) async {
-  //               _socket.disconnect();
-  //               quit();
-  //             }))).showOnce();
-  //   });
-  //   socket.connect();
-  // }
-
-  // late final SessionEventHandlers eventHandlers;
 
   onPlayerLeave(dynamic playerLeaveEmit) {
     var leftPlayerId = playerLeaveEmit['player_id'];

@@ -115,6 +115,7 @@ class LocaleKeys {
   static const you_reported = 'you_reported';
   static const dialog_title_disconnected = 'dialog_title_disconnected';
   static const the_word_is = 'the_word_is';
+  static const is_the_winner = 'is_the_winner';
   static const You = 'You';
   static const Normal = 'Normal';
   static const Hidden = 'Hidden';
@@ -256,6 +257,7 @@ class Locales {
     'you_reported': 'You reported',
     'dialog_title_disconnected': 'Disconnected!',
     'the_word_is': 'The word is',
+    'is_the_winner': 'is the winner',
   };
   static const vi_VN = {
     'displayName': 'Tiếng Việt',
@@ -391,5 +393,6 @@ class Locales {
     'dialog_title_disconnected': 'Ngắt kết nối!',
     'points': 'điểm',
     'the_word_is': 'Đáp án là',
+    'is_the_winner': 'là người chiến thắng',
   };
 }

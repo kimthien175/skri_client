@@ -29,11 +29,11 @@ class _SettingsSliderState extends State<SettingsSlider> with SingleTickerProvid
         if (event is KeyDownEvent || event is KeyRepeatEvent) {
           if (event.logicalKey == LogicalKeyboardKey.arrowLeft) {
             // decrease volume
-            SystemSettings.inst.volume.value = clampDouble(volume - 0.01, 0.0, 1.0);
+            SystemSettings.inst.volume = clampDouble(volume - 0.01, 0.0, 1.0);
             return KeyEventResult.handled;
           } else if (event.logicalKey == LogicalKeyboardKey.arrowRight) {
             // increase volume
-            SystemSettings.inst.volume.value = clampDouble(volume + 0.01, 0.0, 1.0);
+            SystemSettings.inst.volume = clampDouble(volume + 0.01, 0.0, 1.0);
             return KeyEventResult.handled;
           }
         }
@@ -58,7 +58,7 @@ class _SettingsSliderState extends State<SettingsSlider> with SingleTickerProvid
     super.dispose();
   }
 
-  double get volume => SystemSettings.inst.volume.value;
+  double get volume => SystemSettings.inst.volume;
 
   double newVolume(double dx, double maxWidth) {
     if (dx <= _thumbSize / 2) return 0.0;
@@ -90,7 +90,7 @@ class _SettingsSliderState extends State<SettingsSlider> with SingleTickerProvid
                 focusNode.requestFocus();
               },
               onPanUpdate: (details) {
-                SystemSettings.inst.volume.value = newVolume(details.localPosition.dx, maxWidth);
+                SystemSettings.inst.volume = newVolume(details.localPosition.dx, maxWidth);
               },
               onPanEnd: (details) {
                 onInteracting = false;
@@ -100,7 +100,7 @@ class _SettingsSliderState extends State<SettingsSlider> with SingleTickerProvid
               },
               onTapDown: (details) {
                 focusNode.requestFocus();
-                SystemSettings.inst.volume.value = newVolume(details.localPosition.dx, maxWidth);
+                SystemSettings.inst.volume = newVolume(details.localPosition.dx, maxWidth);
               },
               child: Container(
                   margin: const EdgeInsets.symmetric(vertical: 10),

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:skribbl_client/models/sound.dart';
 
 import '../../../../models/models.dart';
 
@@ -79,6 +80,8 @@ class GameClockController extends GetxController with GetSingleTickerProviderSta
     update();
 
     if (displayedSeconds >= 10) return;
+
+    Sound.inst.play(Sound.inst.tick);
 
     await controller.forward();
     await controller.reverse();

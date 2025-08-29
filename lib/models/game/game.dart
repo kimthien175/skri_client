@@ -34,8 +34,6 @@ class Game extends GetxController {
     this.playersByList = playersByList.obs;
 
     quitPlayers = {};
-    (data['quit_players'] as Map?)
-        ?.forEach((id, rawPlayer) => quitPlayers[id] = Player.fromJSON(rawPlayer));
 
     settings = (data['settings'] as Map<String, dynamic>).obs;
 
@@ -84,6 +82,12 @@ class Game extends GetxController {
     OverlayController.deleteCache('report $id');
   }
 
+  void addPlayer(Player player) {
+    playersByList.add(player);
+    playersByMap[player.id] = player;
+    Get.put(PlayerController(), tag: player.id);
+  }
+
   late Map<String, Player> quitPlayers;
 
   late final RxMap<String, dynamic> settings;
@@ -91,8 +95,10 @@ class Game extends GetxController {
   /// edit on this won't cause emiting to socketio
   late final RxList<Message> messages;
 
-  void addMessage(Message Function(Color color) callback) {
-    messages.add(callback(messages.length % 2 == 0 ? Colors.white : const Color(0xffececec)));
+  Message addMessage(Message Function(Color color) callback) {
+    var msg = callback(messages.length % 2 == 0 ? Colors.white : const Color(0xffececec));
+    messages.add(msg);
+    return msg;
   }
 
   late Rx<GameState> state;
@@ -143,9 +149,9 @@ class Game extends GetxController {
         break;
       case 'end':
         state.value.onEnd(DateTime.now() - date).then((duration) {
-          // henceforthStates.remove(state.value.id);
-          // state.value = GameState.fromJSON(henceforthStates[nextStateId]);
-          // state.value.onStart(duration);
+          henceforthStates.remove(state.value.id);
+          state.value = GameState.fromJSON(henceforthStates[nextStateId]);
+          state.value.onStart(duration);
         });
         break;
       default:

@@ -34,7 +34,7 @@ class _KeyBindingState extends State<KeyBinding> with SingleTickerProviderStateM
   bool isModifying = false;
 
   late final Widget questionMark =
-      GifManager.inst.misc('questionmark').builder.init(width: 20, height: 20);
+      FittedBox(child: GifManager.inst.misc('questionmark').builder.init());
 
   @override
   void initState() {

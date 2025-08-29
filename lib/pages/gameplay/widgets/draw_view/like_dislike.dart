@@ -41,7 +41,8 @@ class _LikeAndDislikeButtons extends StatelessWidget {
                     AnimatedButton(
                         onTap: () {
                           controller.controller.value = 0;
-                          // TODO: SEND LIKE MSG
+
+                          SocketIO.inst.socket.emit('like_dislike', true);
                         },
                         decorators: const [
                           AnimatedButtonOpacityDecorator(minOpacity: 0.6),
@@ -51,7 +52,8 @@ class _LikeAndDislikeButtons extends StatelessWidget {
                     AnimatedButton(
                         onTap: () {
                           controller.controller.value = 0;
-                          // TODO: SEND DISLIKE MSG
+
+                          SocketIO.inst.socket.emit('like_dislike', false);
                         },
                         decorators: const [
                           AnimatedButtonOpacityDecorator(minOpacity: 0.6),
