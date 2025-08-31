@@ -396,7 +396,7 @@ class DrawReceiver {
 
   late Set<int> _brushBlackList;
 
-  _updateBrushStep(DrawStep step) async {
+  void _updateBrushStep(DrawStep step) async {
     if (step is BrushStep) {
       var brush = currentStep[step.privateId];
       if (brush == null) {

@@ -239,9 +239,12 @@ class __WordOptionsState extends State<_WordOptions> {
     return FocusScope(
         node: focusNode,
         child: Wrap(
+            alignment: WrapAlignment.center,
+            crossAxisAlignment: WrapCrossAlignment.center,
             children: widget.words
-                .map((e) =>
-                    Padding(padding: EdgeInsets.all(8), child: _WordButton(word: e as String)))
+                .map((e) => Padding(
+                    padding: EdgeInsets.all(8),
+                    child: UnconstrainedBox(child: _WordButton(word: e as String))))
                 .toList()));
   }
 }

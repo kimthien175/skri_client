@@ -61,7 +61,7 @@ class Game extends GetxController {
 
   String get inviteLink => '${html.window.location.host}/?$roomCode';
 
-  copyLink() {
+  void copyLink() {
     Clipboard.setData(ClipboardData(text: inviteLink))
         .then((value) => addMessage((color) => LinkCopiedMessage(backgroundColor: color)));
   }
@@ -142,7 +142,7 @@ class Game extends GetxController {
   }
 
   /// trigger at GameplayerPage controller onStart, or SocketIO receive new state
-  runState() {
+  void runState() {
     switch (stateCommand) {
       case 'start':
         state.value.onStart(DateTime.now() - date);

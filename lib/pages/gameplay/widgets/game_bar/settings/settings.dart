@@ -109,7 +109,7 @@ class SystemSettings extends GetxController {
     LogicalKeyboardKey.keyS: RecentColor.KEYMAP,
   };
 
-  resetKeyMaps() {
+  void resetKeyMaps() {
     keyMaps.value = _defaultKeyMaps;
   }
 

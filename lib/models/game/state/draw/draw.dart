@@ -26,8 +26,7 @@ abstract class DrawState {
 }
 
 mixin DrawStateMixin on GameState {
-  /// Map<String, number>
-  dynamic get points => data['points'];
+  Map get points => data['points'];
 
   String get hint => data['hint'];
 
@@ -42,9 +41,8 @@ mixin DrawStateMixin on GameState {
 
   @override
   Future<void> onStart(Duration sinceStartDate) async {
-    Get.find<GameClockController>().start(
-        Duration(seconds: Game.inst.settings['draw_time']) - sinceStartDate,
-        onEnd: () => onEnd(Duration.zero));
+    Get.find<GameClockController>()
+        .start(Duration(seconds: Game.inst.settings['draw_time']) - sinceStartDate);
   }
 
   Duration get waitDuration => const Duration(seconds: 3);

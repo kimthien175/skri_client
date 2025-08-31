@@ -92,7 +92,7 @@ class GifManager extends GetxService {
     }
   }
 
-  loadByName(Map<String, SingleGifModel> map, List info) async {
+  Future<void> loadByName(Map<String, SingleGifModel> map, List info) async {
     for (Map element in info) {
       String name = element['name'];
       if (element.containsKey('rect')) {

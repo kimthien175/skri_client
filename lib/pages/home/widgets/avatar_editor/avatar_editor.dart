@@ -240,7 +240,7 @@ class _SwitchButtonState extends State<_SwitchButton> with SingleTickerProviderS
     super.dispose();
   }
 
-  change(Widget newWidget) {
+  void change(Widget newWidget) {
     setState(() {
       visual = Stack(
         children: [

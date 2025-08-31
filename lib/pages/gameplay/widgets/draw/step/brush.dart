@@ -79,7 +79,7 @@ class BrushStep extends DrawStep with GestureDrawStep {
     return true;
   }
 
-  enable() {
+  void enable() {
     _onDown = _startPoint;
     _onUpdate = _updatePoint;
     _onEnd = () {
@@ -93,7 +93,7 @@ class BrushStep extends DrawStep with GestureDrawStep {
 
   bool isEnded = true;
 
-  disable() {
+  void disable() {
     _onDown = (_) {};
     _onEnd = () => false;
   }

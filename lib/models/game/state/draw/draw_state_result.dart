@@ -11,7 +11,7 @@ import 'package:skribbl_client/pages/gameplay/widgets/draw/manager.dart';
 class DrawStateResult extends StatelessWidget {
   const DrawStateResult({super.key, required this.scoreBoard, required this.word});
 
-  static _addWidgets(
+  static void _addWidgets(
       List<Widget> playersName, List<Widget> playersPoint, Player player, int point) {
     playersName.add(_ScoredPlayerName(player: player));
     playersPoint.add(Text('+$point', style: const TextStyle(color: Colors.green)));

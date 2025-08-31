@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:get/get.dart';
 
 class GifController extends GetxController {
-  GifController(){
-     timer = Timer.periodic(frameTime, switchFrame);
+  GifController() {
+    timer = Timer.periodic(frameTime, switchFrame);
   }
   static const Duration frameTime = Duration(milliseconds: 200);
   static const int frameCount = 2;
@@ -13,7 +13,7 @@ class GifController extends GetxController {
 
   late Timer timer;
 
-  switchFrame(Timer timer) {
+  void switchFrame(Timer timer) {
     if (currentFrameIndex.value == frameCount - 1) {
       currentFrameIndex.value = 0;
     } else {
@@ -33,5 +33,3 @@ class GifController extends GetxController {
     super.dispose();
   }
 }
-
-

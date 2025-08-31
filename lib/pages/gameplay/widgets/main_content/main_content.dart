@@ -20,7 +20,7 @@ class _MainContentController extends GetxController {
 
   bool get hasTopWidget => widget.value != canvas;
 
-  show() {
+  void show() {
     if (hasTopWidget) return;
 
     widget.value = Stack(
@@ -28,7 +28,7 @@ class _MainContentController extends GetxController {
     );
   }
 
-  hide() {
+  void hide() {
     if (hasTopWidget) {
       widget.value = canvas;
     }

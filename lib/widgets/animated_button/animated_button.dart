@@ -80,14 +80,14 @@ class AnimatedButtonState extends State<AnimatedButton> with SingleTickerProvide
     super.dispose();
   }
 
-  active() {
+  void active() {
     for (var callback in onEnterCallbacks) {
       callback();
     }
     controller.forward();
   }
 
-  unactive() {
+  void unactive() {
     for (var callback in onExitCallbacks) {
       callback();
     }

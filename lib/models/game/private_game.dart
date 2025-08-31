@@ -8,7 +8,7 @@ import 'package:skribbl_client/utils/utils.dart';
 import '../../widgets/widgets.dart';
 
 class PrivateGame extends Game {
-  static load(Map<String, dynamic> roomResult) {
+  static void load(Map<String, dynamic> roomResult) {
     if (roomResult['success']) {
       var data = roomResult['data'];
 
@@ -309,7 +309,23 @@ class PrivateGame extends Game {
           "id": "680b9959c4a0f77046faa933",
           "round_notify": null,
           'player_id': "fDmSIumozqWBdX87AAAE",
-          "words": ["ourselves", "choose", "for"]
+          "words": [
+            "ourselves",
+            "choose",
+            "for",
+            "ourselves",
+            "choose",
+            "for",
+            "ourselves",
+            "choose",
+            "for",
+            "ourselves",
+            "choose",
+            "for",
+            "ourselves",
+            "choose",
+            "for"
+          ]
         } as dynamic,
         // "680cd9b9b34194c2298d16a4": {
         //   "type": "draw",
@@ -368,7 +384,7 @@ class PrivateGame extends Game {
             "GicOaeYT": 0,
             "zf7o7o1X": 9,
             "fDmSIumozqWBdX87AAAE": 100,
-          }
+          } as dynamic
         } as dynamic
       },
       "quit_players": {
@@ -419,7 +435,7 @@ class PrivateGame extends Game {
     Game.inst = PrivateGame._internal(data: data);
   }
 
-  static trigger() {
+  static void trigger() {
     Map<String, dynamic> mockData = <String, dynamic>{
       "status": {
         "current_state_id": "680b9959c4a0f77046faa933",

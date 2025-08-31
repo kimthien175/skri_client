@@ -5,7 +5,9 @@ mixin _PerformerMixin on DrawStateMixin {
 
   @override
   Future<void> onStart(Duration sinceStartDate) async {
-    super.onStart(sinceStartDate);
+    Get.find<GameClockController>().start(
+        Duration(seconds: Game.inst.settings['draw_time']) - sinceStartDate,
+        onEnd: () => SocketIO.inst.socket.emit('end_draw_state'));
 
     DrawManager.inst.reset();
   }

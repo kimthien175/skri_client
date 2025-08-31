@@ -15,12 +15,12 @@ class StrokeValueItemController extends GetxController with GetSingleTickerProvi
 
   var isHovered = false.obs;
 
-  hover() {
+  void hover() {
     isHovered.value = true;
     controller.forward();
   }
 
-  unHover() {
+  void unHover() {
     controller.reverse();
     isHovered.value = false;
   }

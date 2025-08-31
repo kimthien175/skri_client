@@ -72,7 +72,7 @@ class TopWidgetController extends GetxController with GetTickerProviderStateMixi
     return _backgroundController.forward(from: from);
   }
 
-  reverseBackground({required double from}) async {
+  Future<void> reverseBackground({required double from}) async {
     await _backgroundController.reverse(from: from);
     mainContentController.hide();
   }

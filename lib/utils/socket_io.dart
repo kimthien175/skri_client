@@ -171,7 +171,7 @@ class SocketIO {
   late final IO.Socket _socket;
   IO.Socket get socket => _socket;
 
-  onPlayerLeave(dynamic playerLeaveEmit) {
+  void onPlayerLeave(dynamic playerLeaveEmit) {
     var leftPlayerId = playerLeaveEmit['player_id'];
     // player list side
     var inst = Game.inst;
@@ -183,7 +183,7 @@ class SocketIO {
   }
 
   // TODO: NOTE STATE
-  onNewHost(newHostEmit) {
+  void onNewHost(dynamic newHostEmit) {
     var inst = Game.inst;
     var newHost = inst.playersByMap[newHostEmit['player_id']]!;
     (inst as PrivateGame).hostPlayerId.value = newHost.id;

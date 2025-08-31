@@ -17,7 +17,7 @@ class Player {
   int score;
 
   String id;
-  factory Player.fromJSON(rawPlayer) {
+  factory Player.fromJSON(dynamic rawPlayer) {
     var rawAvatar = rawPlayer['avatar'];
     return Player(
         name: rawPlayer['name'],

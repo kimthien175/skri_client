@@ -49,7 +49,7 @@ class _GameCheckboxState extends State<GameCheckbox> with SingleTickerProviderSt
     animation = CurvedAnimation(parent: controller, curve: Curves.easeInOut);
   }
 
-  toggle() {
+  void toggle() {
     value = !value;
     if (widget.onChanged != null) {
       widget.onChanged!(value);
