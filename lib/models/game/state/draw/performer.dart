@@ -32,7 +32,7 @@ class _EmittingPerformerDrawState extends GameState with DrawStateMixin, _Perfor
 
   int get revealedHintCount => RegExp(r'[^\s_]').allMatches(hint).length;
 
-  int get hintCap => Game.inst.settings['hints'];
+  late final int hintCap = min(Game.inst.settings['hints'], word.length - word.countSpaces - 1);
   set hint(String value) => data['hint'] = value;
 
   /// in seconds
@@ -77,5 +77,15 @@ class _EmittingPerformerDrawState extends GameState with DrawStateMixin, _Perfor
 
     if (hintCap == revealedHintCount) return;
     timer = Timer(Duration(milliseconds: (hintDuration * 1000).toInt()), revealRandomCharacter);
+  }
+}
+
+extension Spaces on String {
+  int get countSpaces {
+    var result = 0;
+    for (var i = 0; i < length; i++) {
+      if (this[i] == ' ') result++;
+    }
+    return result;
   }
 }

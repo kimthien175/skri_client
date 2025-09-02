@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:math' as math;
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:skribbl_client/models/game/state/draw/draw_state_result.dart';
@@ -30,7 +31,7 @@ mixin DrawStateMixin on GameState {
 
   String get hint => data['hint'];
 
-  List<dynamic> get likedBy => data['liked_by'];
+  List get likedBy => data['liked_by'] as List;
 
   @override
   Widget get topWidget => Obx(() => _topWidgetController.child.value);
@@ -129,10 +130,8 @@ mixin DrawStateMixin on GameState {
         sinceEndDate = Duration.zero;
 
         //reset all player score to 0
-        for (var player in Game.inst.playersByList) {
-          player.score = 0;
-        }
-        Game.inst.playersByList.refresh();
+        Game.inst.playersByMap.forEach((key, value) => value.score = 0);
+        Get.find<PlayersListController>().list.refresh();
       } else {
         topWidget.contentController.value = 0;
         sinceEndDate -= TopWidgetController.contentDuration;
@@ -151,7 +150,7 @@ mixin DrawStateMixin on GameState {
 
 class SpectatorDrawState extends GameState with DrawStateMixin {
   SpectatorDrawState({required super.data}) {
-    if (!isHintHidden) Get.put(HintController(hint: hint));
+    if (!isHintHidden) Get.find<HintController>().newHint(hint);
   }
 
   @override
@@ -202,13 +201,17 @@ enum GuessResult {
 }
 
 class HintController extends GetxController {
-  HintController({required String hint}) {
-    this.hint = hint.obs;
+  HintController();
+  final RxString _hint = ''.obs;
+
+  String get hint => _hint.value;
+
+  void newHint(String hint) {
+    _hint.value = hint;
   }
-  late RxString hint;
 
   void setHint(int charIndex, String char) {
-    hint.value = hint.value.replaceRange(charIndex, charIndex + 1, char);
+    _hint.value = _hint.value.replaceRange(charIndex, charIndex + 1, char);
   }
 }
 

@@ -1,5 +1,6 @@
 import 'package:skribbl_client/models/game/state/draw/draw.dart';
 import 'package:skribbl_client/models/models.dart';
+import 'package:skribbl_client/pages/gameplay/widgets/players_list/players_list.dart';
 import 'package:skribbl_client/utils/styles.dart';
 import 'package:skribbl_client/widgets/widgets.dart';
 import 'package:flutter/material.dart';
@@ -56,15 +57,15 @@ class PlayerCard extends StatelessWidget {
 
   static const double width = 200.0;
 
-  // TODO: DIALOG CONTENT DIFFERENT DEPENDS ON STATE
   void showInfo() {
     PlayerInfoDialog.factory(info).show();
   }
 
+  bool get isLast => Get.find<PlayersListController>().list.length - 1 == index;
+
   @override
   Widget build(BuildContext context) => Obx(() {
         var inst = Game.inst;
-        var lastIndex = inst.playersByList.length - 1;
         var controller = Get.find<PlayerController>(tag: info.id);
         var state = inst.state.value;
         return GestureDetector(
@@ -82,10 +83,10 @@ class PlayerCard extends StatelessWidget {
                   Container(
                       decoration: BoxDecoration(
                           borderRadius: index == 0
-                              ? (index == lastIndex
+                              ? (isLast
                                   ? BorderRadius.circular(3)
                                   : const BorderRadiusDirectional.vertical(top: Radius.circular(3)))
-                              : (index == lastIndex
+                              : (isLast
                                   ? const BorderRadiusDirectional.vertical(
                                       bottom: Radius.circular(3))
                                   : BorderRadius.zero),

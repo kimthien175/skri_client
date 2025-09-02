@@ -32,7 +32,8 @@ class PickWordState extends GameState {
       );
 
   Widget get _topWidgetChooseWord {
-    var player = Game.inst.playersByMap[playerId]!;
+    var inst = Game.inst;
+    var player = inst.playersByMap[playerId] ?? inst.quitPlayers[playerId]!;
     return Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: playerId == MePlayer.inst.id

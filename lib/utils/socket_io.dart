@@ -17,8 +17,7 @@ class SocketIO {
     socket.on('player_join', (dataList) {
       var data = (dataList as List<dynamic>).first;
       var inst = Game.inst;
-      var newPlayer = Player.fromJSON(data['player']);
-      inst.addPlayer(newPlayer);
+      inst.addPlayer(data['player']);
 
       inst.addMessage((color) => PlayerJoinMessage(data: data['message'], backgroundColor: color));
     });
@@ -28,7 +27,7 @@ class SocketIO {
       Game.inst.settings[setting['key']] = setting['value'];
     });
 
-    socket.on('player_got_kicked', (dataList) async {
+    socket.on('player_got_kicked', (dataList) {
       var update = (dataList as List).first;
       var victimId = update['victim_id'];
 
@@ -77,22 +76,41 @@ class SocketIO {
       }
     });
 
-    _socket.on('player_leave', (data) => onPlayerLeave(data[0]));
+    _socket.on('player_leave', (dataList) {
+      var playerLeaveEmit = dataList[0];
+      var leftPlayerId = playerLeaveEmit['player_id'];
+      // player list side
+      var inst = Game.inst;
 
-    _socket.on('new_host', (data) => onNewHost(data[0]));
+      // message side
+      inst.addMessage((color) => PlayerLeaveMessage(data: playerLeaveEmit, backgroundColor: color));
+
+      inst.removePlayer(leftPlayerId);
+    });
+
+    _socket.on('new_host', (dataList) {
+      var inst = Game.inst;
+
+      var msg =
+          inst.addMessage((color) => NewHostMessage(data: dataList[0], backgroundColor: color));
+
+      var newHost = inst.playersByMap[msg.playerId] ?? inst.quitPlayers[msg.playerId]!;
+      (inst as PrivateGame).hostPlayerId.value = newHost.id;
+    });
 
     socket.on('player_chat', (dataList) {
       var chatMsg = dataList[0];
       var playerId = chatMsg['player_id'];
-      if (Game.inst.playersByMap[playerId]?.isMuted == true) return;
+      if (MePlayer.inst.mutedPlayerIds.contains(playerId)) return;
+
       Game.inst.addMessage((color) => PlayerChatMessage(data: chatMsg, backgroundColor: color));
       Get.find<PlayerController>(tag: playerId).showMessage(chatMsg['text']);
     });
 
-    socket.on('system_message', (dataList) {
-      var msg = dataList[0];
-      Game.inst.addMessage((color) => Message.fromJSON(backgroundColor: color, data: msg));
-    });
+    socket.on(
+        'system_message',
+        (dataList) => Game.inst
+            .addMessage((color) => Message.fromJSON(backgroundColor: color, data: dataList[0])));
 
     socket.on('new_states', (dataList) => Game.inst.receiveStatusAndStates(dataList[0]));
 
@@ -103,28 +121,22 @@ class SocketIO {
     socket.on('draw:update_current', (dataList) => DrawReceiver.inst.updateCurrent(dataList[0]));
     socket.on('draw:end_current', (dataList) => DrawReceiver.inst.endCurrent(dataList[0]));
 
-    socket.on('hint', (dataList) => {Get.find<HintController>().setHint(dataList[0], dataList[1])});
+    socket.on('hint', (dataList) => Get.find<HintController>().setHint(dataList[0], dataList[1]));
 
     socket.on('like_dislike', (dataList) {
       var msg = Game.inst
           .addMessage((color) => Message.fromJSON(backgroundColor: color, data: dataList[0]));
 
       if (msg is PlayerLikeMessage) {
-        var state = Game.inst.state.value;
+        var inst = Game.inst;
+        var state = inst.state.value;
+
         if (state is DrawStateMixin) {
-          if (state.likedBy.contains(MePlayer.inst.id)) return;
-          state.likedBy.add(MePlayer.inst.id);
+          if (state.likedBy.contains(msg.playerId)) return;
+          state.likedBy.add(msg.playerId);
 
-          var performerStateScore = state.points[state.performerId] ?? 0;
-
-          state.points[state.performerId] = performerStateScore + msg.performerPoint;
-
-          var inst = Game.inst;
-          var performer = inst.playersByMap[state.performerId] as Player;
-          performer.score += msg.performerPoint;
-
-          Game.inst.playersByList.sort((before, after) => after.score.compareTo(before.score));
-          Game.inst.playersByList.refresh();
+          state.points[state.performerId] = msg.performerPoint;
+          inst.playerPlusPoint(state.performerId, msg.performerPoint);
         }
       }
     });
@@ -136,11 +148,8 @@ class SocketIO {
         var state = Game.inst.state.value;
         if (state is DrawStateMixin && state.points[msg.playerId] == null) {
           state.points[msg.playerId] = msg.point;
-          var player = Game.inst.playersByMap[msg.playerId] as Player;
-          player.score += msg.point;
 
-          Game.inst.playersByList.sort((before, after) => after.score.compareTo(before.score));
-          Game.inst.playersByList.refresh();
+          Game.inst.playerPlusPoint(msg.playerId, msg.point);
         }
       }
     });
@@ -170,35 +179,6 @@ class SocketIO {
 
   late final IO.Socket _socket;
   IO.Socket get socket => _socket;
-
-  void onPlayerLeave(dynamic playerLeaveEmit) {
-    var leftPlayerId = playerLeaveEmit['player_id'];
-    // player list side
-    var inst = Game.inst;
-
-    // message side
-    inst.addMessage((color) => PlayerLeaveMessage(data: playerLeaveEmit, backgroundColor: color));
-
-    inst.removePlayer(leftPlayerId);
-  }
-
-  // TODO: NOTE STATE
-  void onNewHost(dynamic newHostEmit) {
-    var inst = Game.inst;
-    var newHost = inst.playersByMap[newHostEmit['player_id']]!;
-    (inst as PrivateGame).hostPlayerId.value = newHost.id;
-    inst.playersByList.refresh();
-
-    inst.addMessage((color) => NewHostMessage(data: newHostEmit, backgroundColor: color));
-
-    // if (MePlayer.inst.isOwner == true) {
-    //   var game = (Game.inst as PrivateGame);
-    //   game.settings.value = newHostEmit['settings'];
-    //   if (game.state.value is WaitForSetupState) {
-    //     Get.find<GameSettingsController>().isCovered.value = false;
-    //   }
-    // }
-  }
 }
 
 typedef SocketCallback = dynamic Function(dynamic data);

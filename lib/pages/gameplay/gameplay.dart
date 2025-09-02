@@ -4,6 +4,7 @@ export 'layouts/web.dart';
 export 'layouts/mobile.dart';
 export 'widgets/widgets.dart';
 
+import 'package:skribbl_client/models/game/state/draw/draw.dart';
 import 'package:skribbl_client/models/models.dart';
 import 'package:skribbl_client/pages/pages.dart';
 
@@ -30,6 +31,7 @@ class GameplayController extends GetxController {
     DrawManager.init();
 
     Get.put(TopWidgetController());
+    Get.put(HintController());
   }
 
   @override

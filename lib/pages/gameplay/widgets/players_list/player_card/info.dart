@@ -58,15 +58,21 @@ class _InfoDialogContent extends StatelessWidget {
               _VoteKickButton(),
               space,
               // mute
-              StatefulBuilder(
-                  builder: (ct, setState) => HoverButton(
-                      constraints: inputConstraints,
-                      onTap: () {
-                        setState(() {
-                          info.isMuted = !(info.isMuted ?? false);
-                        });
-                      },
-                      child: Text((info.isMuted == true ? 'Unmute' : 'Mute').tr))),
+              StatefulBuilder(builder: (ct, setState) {
+                var mutedPlayerIds = MePlayer.inst.mutedPlayerIds;
+                return HoverButton(
+                    constraints: inputConstraints,
+                    onTap: () {
+                      setState(() {
+                        if (mutedPlayerIds.contains(info.id)) {
+                          mutedPlayerIds.remove(info.id);
+                        } else {
+                          mutedPlayerIds.add(info.id);
+                        }
+                      });
+                    },
+                    child: Text((mutedPlayerIds.contains(info.id) ? 'Unmute' : 'Mute').tr));
+              }),
               space,
               // report
               info.isReported == true

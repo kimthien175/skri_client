@@ -26,21 +26,21 @@ class GameResult extends StatelessWidget {
   }
 
   static List<Player> _scoreBoardList() {
-    var endGameData = Game.inst.status['bonus']['end_game'] as Map<String, dynamic>;
     List<Player> scoreBoardPlayers = [];
 
     var players = Game.inst.playersByMap;
-    for (var entry in endGameData.entries) {
-      var existingPlayer = players[entry.key];
+
+    (Game.inst.status['bonus']['end_game'] as Map<String, dynamic>).forEach((id, rawPlayer) {
+      var existingPlayer = players[id];
       if (existingPlayer != null) {
-        existingPlayer.score = entry.value['score'];
+        existingPlayer.score = rawPlayer['score'];
       } else {
         // buble insertion
-        existingPlayer = Player.fromJSON(entry.value);
+        existingPlayer = Player.fromJSON(rawPlayer);
       }
 
       _bubbleInsert(scoreBoardPlayers, existingPlayer);
-    }
+    });
 
     return scoreBoardPlayers;
   }
@@ -54,9 +54,7 @@ class GameResult extends StatelessWidget {
     //#region WINNER TITLE and TOP 1 visualization
 
     // clear crown
-    for (var player in Game.inst.playersByList) {
-      player.avatarModel.winner = false;
-    }
+    Game.inst.playersByMap.forEach((id, player) => player.avatarModel.winner = false);
 
     var firstWinner = scoreBoardList.first;
     Game.inst.playersByMap[firstWinner.id]?.avatarModel.winner = true;
@@ -89,7 +87,7 @@ class GameResult extends StatelessWidget {
 
       visualization.insert(0, _PlayerVisualization.top2(player: firstTop2Winner, head: true));
 
-      for (i + 1; i < scoreBoardList.length; i++) {
+      for (i++; i < scoreBoardList.length; i++) {
         var player = scoreBoardList[i];
         if (player.score == firstTop2Winner.score) {
           visualization.insert(0, _PlayerVisualization.top2(player: player, head: true));
@@ -104,7 +102,7 @@ class GameResult extends StatelessWidget {
     if (i < scoreBoardList.length) {
       var firstTop3Winner = scoreBoardList[i];
       visualization.add(_PlayerVisualization.top3(player: firstTop3Winner, tail: true));
-      for (i + 1; i < scoreBoardList.length; i++) {
+      for (i++; i < scoreBoardList.length; i++) {
         var player = scoreBoardList[i];
         if (player.score == firstTop3Winner.score) {
           visualization.add(_PlayerVisualization.top3(player: player, tail: true));

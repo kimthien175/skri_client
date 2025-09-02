@@ -21,9 +21,7 @@ class GameClock extends GetView<GameClockController> {
               Positioned(
                   top: 20,
                   child: GetBuilder<GameClockController>(
-                      builder: (c) => Text(
-                          c.displayedSeconds
-                              .toString(), //Game.inst.remainingTime.seconds.value.toString(),
+                      builder: (c) => Text(c.displayedSeconds.toString(),
                           style: const TextStyle(
                               fontSize: 22, fontVariations: [FontVariation.weight(800)]))))
             ])));
@@ -67,6 +65,7 @@ class GameClockController extends GetxController with GetSingleTickerProviderSta
     stopWatch.reset();
     clockTimer?.cancel();
     remainingTimeSinceStart = Duration.zero;
+    update();
   }
 
   Duration remainingTimeSinceStart = Duration.zero;

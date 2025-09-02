@@ -10,7 +10,6 @@ class Player {
   final AvatarModel avatarModel;
   String name;
   String get nameForCard => name;
-  bool? isMuted;
   bool? isReported;
   bool? isKickVoted;
 
@@ -22,8 +21,9 @@ class Player {
     return Player(
         name: rawPlayer['name'],
         id: rawPlayer['id'],
-        score: rawPlayer['score'] ?? 0,
-        avatarModel: AvatarModel(rawAvatar['color'], rawAvatar['eyes'], rawAvatar['mouth']));
+        score: rawPlayer['score'],
+        avatarModel: AvatarModel(rawAvatar['color'], rawAvatar['eyes'], rawAvatar['mouth'],
+            winner: rawPlayer['winner'] ?? false));
   }
 
   // static List<Player> listFromJSON(dynamic rawPlayers) {
@@ -74,4 +74,6 @@ class MePlayer extends Player {
 
   @override
   String get nameForCard => '$name (${'You'.tr})';
+
+  List<String> mutedPlayerIds = [];
 }

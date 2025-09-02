@@ -648,7 +648,7 @@ class PrivateGame extends Game {
 
   static bool _isSendingStartGameRequest = false;
   void startGame() {
-    if (playersByList.length < (Game.inst as PrivateGame).options['players']['min']) {
+    if (playersByMap.length < (Game.inst as PrivateGame).options['players']['min']) {
       addMessage((Color color) => RequiredMinimumPlayersToStartMessage(backgroundColor: color));
       return;
     }

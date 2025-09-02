@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:skribbl_client/models/game/game.dart';
-import 'package:skribbl_client/models/game/state/draw/draw.dart';
 import 'dart:math' as math;
 
 import 'package:skribbl_client/pages/gameplay/widgets/draw/manager.dart';
@@ -14,12 +13,16 @@ class DrawStateResult extends StatelessWidget {
   static void _addWidgets(
       List<Widget> playersName, List<Widget> playersPoint, Player player, int point) {
     playersName.add(_ScoredPlayerName(player: player));
-    playersPoint.add(Text('+$point', style: const TextStyle(color: Colors.green)));
+    var pointText = point == 0
+        ? Text('0', style: TextStyle(color: Colors.red))
+        : Text('+$point', style: const TextStyle(color: Colors.green));
+    playersPoint.add(pointText);
   }
 
   static Future<DrawStateResult> init() async {
+    var endStateData = Game.inst.status['bonus']['end_state'];
     final players = Game.inst.playersByMap;
-    final pointsMap = (Game.inst.state.value as DrawStateMixin).points;
+    var pointsMap = endStateData['points'] as Map<String, dynamic>;
     late Widget scoreBoard;
 
     if (pointsMap.length <= 15) {
@@ -31,6 +34,15 @@ class DrawStateResult extends StatelessWidget {
         if (player != null) _addWidgets(playersName, playersPoint, player, point);
       });
 
+      // add some player with no point
+      for (var entry in players.entries) {
+        if (playersName.length == 15) break;
+        if (pointsMap[entry.key] == null) {
+          // this is player with no point
+          _addWidgets(playersName, playersPoint, entry.value, 0);
+        }
+      }
+
       scoreBoard = Row(mainAxisAlignment: MainAxisAlignment.center, children: [
         Column(crossAxisAlignment: CrossAxisAlignment.start, children: playersName),
         const SizedBox(width: 20),
@@ -38,9 +50,10 @@ class DrawStateResult extends StatelessWidget {
       ]);
     } else {
       List<String> iDs = [];
-      for (var entry in pointsMap.entries) {
-        if (players[entry.key] != null) iDs.add(entry.key);
-      }
+      pointsMap.forEach((id, point) {
+        if (players[id] != null) iDs.add(id);
+      });
+
       late int from;
 
       if (pointsMap[MePlayer.inst.id] == null || iDs.length <= 30) {
@@ -72,6 +85,16 @@ class DrawStateResult extends StatelessWidget {
       for (; i < end; i++) {
         _addWidgets(playersName2, playersPoint2, players[iDs[i]]!, pointsMap[iDs[i]]!);
       }
+
+      // add some player with no point
+      for (var entry in players.entries) {
+        if (playersName2.length == 15) break;
+        if (pointsMap[entry.key] == null) {
+          // this is player with no point
+          _addWidgets(playersName2, playersPoint2, entry.value, 0);
+        }
+      }
+
       // if from != 0 => show fading overlay on top
       // if i != iDs.length => show fading overlay on bottom
 
@@ -116,7 +139,7 @@ class DrawStateResult extends StatelessWidget {
       //#endregion
     }
 
-    return DrawStateResult(scoreBoard: scoreBoard, word: Game.inst.status['bonus']['end_state']);
+    return DrawStateResult(scoreBoard: scoreBoard, word: endStateData['word']);
   }
 
   final String word;

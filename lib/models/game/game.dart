@@ -23,17 +23,18 @@ class Game extends GetxController {
   Game({required this.data}) {
     state = GameState.fromJSON(henceforthStates[currentStateId]).obs;
 
-    var playersByList = <Player>[];
-    playersByMap = {};
+    //var playersByList = <Player>[];
+    Map<String, Player> playersByMap = {};
     (data['players'] as Map).forEach((id, rawPlayer) {
       Player player = id == MePlayer.inst.id ? MePlayer.inst : Player.fromJSON(rawPlayer);
 
-      playersByList.add(player);
+      //playersByList.add(player);
       playersByMap[id] = player;
     });
-    this.playersByList = playersByList.obs;
+    this.playersByMap = playersByMap.obs;
+    //this.playersByList = playersByList.obs;
 
-    quitPlayers = {};
+    //quitPlayers = {};
 
     settings = (data['settings'] as Map<String, dynamic>).obs;
 
@@ -66,36 +67,36 @@ class Game extends GetxController {
         .then((value) => addMessage((color) => LinkCopiedMessage(backgroundColor: color)));
   }
 
-  late final RxList<Player> playersByList;
-  late final Map<String, Player> playersByMap;
+  //late final RxList<Player> playersByList;
+  late final RxMap<String, Player> playersByMap;
+  Map<String, Player> quitPlayers = {};
   void removePlayer(String id) {
-    playersByList.removeWhere((player) => player.id == id);
-    quitPlayers[id] = playersByMap.remove(id)!;
-
-    // remove PlayerController
-    Get.delete<PlayerController>(tag: id);
-
-    // remove info dialog controller
-    OverlayController.deleteCache('card_info_$id');
-
-    // remove report dialog controller
-    OverlayController.deleteCache('report $id');
+    var removed = playersByMap.remove(id);
+    if (removed != null) {
+      quitPlayers[id] = removed;
+      Get.find<PlayersListController>().remove(id);
+    }
   }
 
-  void addPlayer(Player player) {
-    playersByList.add(player);
+  void addPlayer(dynamic rawPlayer) {
+    var player = Player.fromJSON(rawPlayer);
     playersByMap[player.id] = player;
-    Get.put(PlayerController(), tag: player.id);
+
+    Get.find<PlayersListController>().add(player);
   }
 
-  late Map<String, Player> quitPlayers;
+  void playerPlusPoint(String id, int point) {
+    playersByMap[id]!.score += point;
+
+    Get.find<PlayersListController>().sortFrom(id);
+  }
 
   late final RxMap<String, dynamic> settings;
 
   /// edit on this won't cause emiting to socketio
   late final RxList<Message> messages;
 
-  Message addMessage(Message Function(Color color) callback) {
+  T addMessage<T extends Message>(T Function(Color color) callback) {
     var msg = callback(messages.length % 2 == 0 ? Colors.white : const Color(0xffececec));
     messages.add(msg);
     return msg;

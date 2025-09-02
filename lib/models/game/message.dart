@@ -89,6 +89,8 @@ class NewHostMessage extends Message {
   const NewHostMessage({super.key, required super.data, required super.backgroundColor});
   String get playerName => data['player_name'];
 
+  String get playerId => data['player_id'];
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -267,6 +269,7 @@ class PlayerDislikeMessage extends Message {
 class PlayerLikeMessage extends Message {
   const PlayerLikeMessage({super.key, required super.backgroundColor, required super.data});
 
+  String get playerId => data['player_id'];
   String get playerName => data['player_name'];
   int get performerPoint => data['performer_point'] as int;
 

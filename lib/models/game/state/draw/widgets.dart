@@ -21,7 +21,7 @@ class _VisibleHintStatus extends StatelessWidget {
     return Column(mainAxisSize: MainAxisSize.min, children: [
       Text('GUESS_THIS'.tr),
       Obx(() {
-        var hint = Get.find<HintController>().hint.value;
+        var hint = Get.find<HintController>().hint;
         return Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Text(hint),
           Text(hint.length.toString(),
