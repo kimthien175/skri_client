@@ -39,6 +39,9 @@ class GameplayController extends GetxController {
     super.onReady();
 
     Game.inst.runState();
+
+    // scroll to bottom
+    Get.find<GameChatController>().scrollToBottom();
   }
 }
 

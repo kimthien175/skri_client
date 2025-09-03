@@ -6,7 +6,6 @@ import 'package:skribbl_client/utils/utils.dart';
 
 import 'players_list/player_card.dart';
 
-// TODO: LAZY LOADING OLD MSG
 class GameChatController extends GetxController {
   late final ScrollController _scrollController;
   late final TextEditingController _textController;
@@ -21,9 +20,49 @@ class GameChatController extends GetxController {
   void onInit() {
     super.onInit();
     _scrollController = ScrollController();
+    _scrollController.addListener(() {
+      if ( // check scrolling touch the top the continue
+          _scrollController.position.pixels != 0 ||
+              // if the msg is first msg of game data then skip
+              Game.inst.messages.first.data['first'] == true ||
+              // if the loading progress is running then skip
+              Game.inst.messages.first is DummyLoadingIndicator) {
+        return;
+      }
+
+      _loadMoreMessages();
+    });
+
     _textController = TextEditingController();
     _textController.addListener(() => counter.value = _textController.text.length);
     focusNode = FocusNode();
+  }
+
+  // TODO: SMOOTH LOADING, SAVE OLD PIXELS, ADD BUNCH OF MSG THEN JUMPTO OLD POSITION
+  void _loadMoreMessages() {
+    // add dummy loading indicator
+    Game.inst.messages.insert(0, const DummyLoadingIndicator());
+
+    SocketIO.inst.socket.emitWithAck('load_messages', Game.inst.messages[1].id, ack: (List list) {
+      // remove dummy loading indicator
+      if (Game.inst.messages.first is! DummyLoadingIndicator) {
+        // we have a problem here
+        return;
+      }
+
+      Game.inst.messages.removeAt(0);
+
+      if (list.isEmpty) {
+        // whatever it is error or not, turn off loading feature by setting isFirst = true
+        Game.inst.messages.first.data['first'] = true;
+        return;
+      }
+
+      for (var i = list.length - 1; i >= 0; i--) {
+        Game.inst.addMessage((color) => Message.fromJSON(data: list[i], backgroundColor: color),
+            head: true);
+      }
+    });
   }
 
   @override
@@ -32,6 +71,11 @@ class GameChatController extends GetxController {
     _textController.dispose();
     focusNode.dispose();
     super.dispose();
+  }
+
+  void scrollToBottom() {
+    _scrollController.animateTo(_scrollController.position.maxScrollExtent + 50,
+        duration: const Duration(milliseconds: 200), curve: Curves.linear);
   }
 
   void submit(String text) {
@@ -44,15 +88,11 @@ class GameChatController extends GetxController {
       } else {
         // submit
         Game.inst.addMessage((color) => PlayerChatMessage(
-              data: {'player_name': MePlayer.inst.name, 'text': text},
-              backgroundColor: color,
-            ));
+            data: {'player_name': MePlayer.inst.name, 'text': text}, backgroundColor: color));
         Get.find<PlayerController>(tag: MePlayer.inst.id).showMessage(text);
         // emit to server
         Game.inst.state.value.submitMessage(text);
       }
-
-      _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
 
       lastMsgDate = now;
     }
@@ -76,8 +116,11 @@ class GameChat extends StatelessWidget {
             width: width,
             height: 600,
             color: Colors.white,
-            child: const Column(
-                children: [Expanded(child: Center(child: Messages())), GuessInput()])));
+            child: const Column(children: [
+              Expanded(child: Center(child: Messages())),
+              SizedBox(height: 10),
+              GuessInput()
+            ])));
   }
 }
 

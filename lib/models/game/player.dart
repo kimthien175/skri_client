@@ -26,20 +26,6 @@ class Player {
             winner: rawPlayer['winner'] ?? false));
   }
 
-  // static List<Player> listFromJSON(dynamic rawPlayers) {
-  //   List<Player> players = [];
-
-  //   (rawPlayers as Map).forEach((id, player) {
-  //     if (id == MePlayer.inst.id) {
-  //       players.add(MePlayer.inst);
-  //     } else {
-  //       players.add(Player.fromJSON(player));
-  //     }
-  //   });
-
-  //   return players;
-  // }
-
   Map<String, dynamic> toJSON() {
     return {'name': name, 'avatar': avatarModel.toJSON(), 'id': id};
   }

@@ -23,18 +23,13 @@ class Game extends GetxController {
   Game({required this.data}) {
     state = GameState.fromJSON(henceforthStates[currentStateId]).obs;
 
-    //var playersByList = <Player>[];
     Map<String, Player> playersByMap = {};
     (data['players'] as Map).forEach((id, rawPlayer) {
       Player player = id == MePlayer.inst.id ? MePlayer.inst : Player.fromJSON(rawPlayer);
 
-      //playersByList.add(player);
       playersByMap[id] = player;
     });
     this.playersByMap = playersByMap.obs;
-    //this.playersByList = playersByList.obs;
-
-    //quitPlayers = {};
 
     settings = (data['settings'] as Map<String, dynamic>).obs;
 
@@ -96,9 +91,23 @@ class Game extends GetxController {
   /// edit on this won't cause emiting to socketio
   late final RxList<Message> messages;
 
-  T addMessage<T extends Message>(T Function(Color color) callback) {
-    var msg = callback(messages.length % 2 == 0 ? Colors.white : const Color(0xffececec));
-    messages.add(msg);
+  Color get secondaryColor => const Color(0xffececec);
+
+  T addMessage<T extends Message>(T Function(Color color) callback, {bool head = false}) {
+    late T msg;
+    if (head) {
+      msg =
+          callback(messages.first.backgroundColor == Colors.white ? secondaryColor : Colors.white);
+      messages.insert(0, msg);
+    } else {
+      msg = callback(messages.isEmpty
+          ? Colors.white
+          : (messages.last.backgroundColor == Colors.white ? secondaryColor : Colors.white));
+      messages.add(msg);
+
+      Get.find<GameChatController>().scrollToBottom();
+    }
+
     return msg;
   }
 

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:skribbl_client/models/game/game.dart';
+import 'package:skribbl_client/widgets/overlay/loading.dart';
 
 const Map<String, dynamic> _emptyData = {};
 
@@ -80,6 +81,26 @@ abstract class Message extends StatelessWidget {
           backgroundColor: i % 2 == 0 ? Colors.white : const Color(0xffececec), data: messages[i]));
     }
     return result;
+  }
+
+  //String get timeStamp => data['timestamp'];
+  String get id => data['id'];
+}
+
+class DummyLoadingIndicator extends Message {
+  const DummyLoadingIndicator({super.key}) : super(data: const {}, backgroundColor: Colors.white);
+
+  static const double height = 40;
+
+  @override
+  String get id => throw Exception(
+      'this is just dummy for showing msg loading indicator, not a real msg, so id is not valid here');
+
+  @override
+  Widget build(BuildContext context) {
+    return const Padding(
+        padding: EdgeInsetsGeometry.only(top: 5, bottom: 5),
+        child: Center(child: LoadingIndicator(height: 30, width: 30)));
   }
 }
 

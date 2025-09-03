@@ -4,7 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:skribbl_client/widgets/overlay/overlay.dart';
 
 class LoadingIndicator extends StatefulWidget {
-  const LoadingIndicator({super.key});
+  const LoadingIndicator({super.key, this.height, this.width});
+
+  final double? height;
+  final double? width;
 
   @override
   State<LoadingIndicator> createState() => _LoadingState();
@@ -39,12 +42,15 @@ class _LoadingState extends State<LoadingIndicator> with TickerProviderStateMixi
               child: Image.asset(
                 'assets/gif/load.gif',
                 color: const Color.fromRGBO(0, 0, 0, 0.5),
-                width: 128,
-                height: 128,
+                width: widget.width,
+                height: widget.height,
                 fit: BoxFit.contain,
               )),
           Image.asset('assets/gif/load.gif',
-              width: 128, height: 128, fit: BoxFit.contain, filterQuality: FilterQuality.none)
+              width: widget.width,
+              height: widget.height,
+              fit: BoxFit.contain,
+              filterQuality: FilterQuality.none)
         ]));
   }
 }
@@ -68,7 +74,7 @@ class _LoadingWidget extends StatelessWidget {
           child: BackdropFilter(
               filter: ImageFilter.blur(sigmaX: 6, sigmaY: 6),
               child: Container(color: const Color.fromRGBO(255, 255, 255, 0.2)))),
-      const Center(child: LoadingIndicator())
+      const Center(child: LoadingIndicator(height: 128, width: 128))
     ]);
   }
 }
