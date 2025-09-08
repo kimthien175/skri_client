@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:skribbl_client/models/game/state/draw/game_result.dart';
 import 'package:skribbl_client/models/models.dart';
 import 'package:skribbl_client/pages/gameplay/widgets/utils.dart';
 import 'package:skribbl_client/pages/pages.dart';
@@ -129,6 +130,8 @@ class PickWordState extends GameState {
     Get.find<GameClockController>().cancel();
 
     var topWidget = Get.find<TopWidgetController>();
+
+    if (Game.inst.status['bonus'] != null) GameResult.init();
 
     if (sinceEndDate < TopWidgetController.contentDuration) {
       await topWidget.contentController

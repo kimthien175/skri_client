@@ -44,6 +44,8 @@ abstract class Message extends StatelessWidget {
       case Message.playerDislike:
         return PlayerDislikeMessage(backgroundColor: backgroundColor, data: data);
 
+      case Message.playerGotBanned:
+        return PlayerGotBanned(backgroundColor: backgroundColor, data: data);
       default:
         throw Exception('undefined message');
     }
@@ -66,6 +68,7 @@ abstract class Message extends StatelessWidget {
   static const String playerGuessRight = 'player_guess_right';
   static const String playerLike = 'player_like';
   static const String playerDislike = 'player_dislike';
+  static const String playerGotBanned = 'player_got_banned';
 
   static const Color darkOrange = Color.fromRGBO(206, 79, 10, 1);
   static const Color orange = Color.fromRGBO(255, 168, 68, 1);
@@ -376,7 +379,6 @@ class MePlayerGuessClose extends Message {
   }
 }
 
-// TODO: APPLY
 class PlayerVoteKick extends Message {
   const PlayerVoteKick({super.key, required super.data, required super.backgroundColor});
   String get voterName => data['voter_name'];

@@ -47,7 +47,7 @@ class PrivateGame extends Game {
     } else {
       SocketIO.inst.socket.disconnect();
 
-      GameDialog.error(content: Center(child: Text(roomResult['data'].toString()))).show();
+      GameDialog.error(content: Center(child: Text(roomResult['reason'].toString()))).show();
     }
 
     LoadingOverlay.inst.hide();
@@ -521,13 +521,10 @@ class PrivateGame extends Game {
 
     var banList = Storage.data['ban'];
     if (banList is List && banList.contains(code)) {
-      var dialog = OverlayController.cache(
+      OverlayController.cache(
           tag: 'join_but_get_banned',
           builder: () => GameDialog.error(
-              content: Center(child: Text('dialog_content_join_but_get_banned'.tr))));
-      if (!dialog.isShowing) {
-        dialog.show();
-      }
+              content: Center(child: Text('dialog_content_join_but_get_banned'.tr)))).show();
       return;
     }
 
@@ -544,21 +541,20 @@ class PrivateGame extends Game {
             if (kickDate != null) {
               if ((DateTime.now() - kickDate).inSeconds < kickInterval) {
                 // still in kick interval
-                var dialog = OverlayController.cache(
+                OverlayController.cache(
                     tag: 'kick interval',
                     builder: () => GameDialog.error(
                         content: Builder(
                             builder: (_) =>
-                                Center(child: Text('dialog_content_kick_countdown'.tr)))));
-                if (!dialog.isShowing) {
-                  dialog.show();
-                }
+                                Center(child: Text('dialog_content_kick_countdown'.tr))))).show();
                 return;
               } else {
                 // modify request package for ticket
-                if (ticket['room_id'] is String && ticket['ticket_id'] is String) {
-                  requestPackage['room_id'] = ticket['room_id'];
-                  requestPackage['ticket_id'] = ticket['ticket_id'];
+                var ticketId = ticket['id'];
+                var victimId = ticket['victim_id'];
+                if (ticketId is String && victimId is String) {
+                  requestPackage['id'] = ticketId;
+                  requestPackage['victim_id'] = victimId;
                 }
               }
             }
@@ -661,13 +657,7 @@ class PrivateGame extends Game {
       SocketIO.inst.socket.emitWithAck('start_private_game', Game.inst.settings, ack: (res) {
         _isSendingStartGameRequest = false;
         if (!res['success']) {
-          var dialog = OverlayController.cache(
-              tag: 'start_private_game_errror',
-              builder: () =>
-                  GameDialog.error(content: Center(child: Text(res['reason'].toString()))));
-          if (!dialog.isShowing) {
-            dialog.show();
-          }
+          GameDialog.error(content: Center(child: Text(res['reason'].toString()))).show();
         }
       });
     }

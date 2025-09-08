@@ -23,9 +23,14 @@ abstract class OverlayController extends GetxController {
     return inst;
   }
 
-  static void deleteCache(String tag) {
-    _cache.remove(tag);
-    Get.delete<OverlayController>(tag: tag, force: true);
+  static P? get<P extends OverlayController>(String tag) => _cache[tag] as P?;
+
+  static Future<void> deleteCache(String tag) async {
+    var controller = _cache.remove(tag);
+    if (controller != null) {
+      if (controller.isShowing) await controller.hide();
+      Get.delete<OverlayController>(tag: tag, force: true);
+    }
   }
 
   String? cachedTag;

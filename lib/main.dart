@@ -18,7 +18,13 @@ import 'pages/pages.dart';
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
 
-  var initialRoute = '/';
+  String? parameter;
+  if (const bool.hasEnvironment('code')) {
+    var fromHost = const String.fromEnvironment('code');
+    parameter = fromHost.substring(fromHost.indexOf('?'));
+  }
+
+  var initialRoute = "/${parameter ?? ''}";
 
   Future.wait([
     GifManager.init().then((_) async {

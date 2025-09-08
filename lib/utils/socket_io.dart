@@ -28,20 +28,22 @@ class SocketIO {
     });
 
     socket.on('player_got_kicked', (dataList) {
-      var update = (dataList as List).first;
-      var victimId = update['victim_id'];
+      var data = dataList[0];
+      var newCode = data['new_code'];
+      var message = data['message'];
+      var ticket = data['ticket'];
 
-      if (victimId == MePlayer.inst.id) {
+      if (newCode == null || message == null) {
         // find for 'used_by'
-        _setTicket(update);
+        _setTicket(ticket);
         Game.leave();
         GameDialog.discconected(content: Center(child: Text("dialog_content_got_kicked".tr)))
             .show();
       } else {
-        Game.inst.roomCode = update['new_code'];
-        Game.inst.removePlayer(victimId);
-        Game.inst.addMessage(
-            (color) => PlayerGotKicked(backgroundColor: color, data: update['message']));
+        Game.inst.roomCode = data['new_code'];
+        Game.inst.removePlayer(ticket['victim_id']);
+        Game.inst
+            .addMessage((color) => PlayerGotKicked(backgroundColor: color, data: data['message']));
       }
     });
 

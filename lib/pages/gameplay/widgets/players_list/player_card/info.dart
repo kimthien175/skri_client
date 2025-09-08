@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:skribbl_client/models/game/game.dart';
@@ -37,19 +38,19 @@ class _InfoDialogContent extends StatelessWidget {
     var gameInst = Game.inst;
     var infoDialog = OverlayWidget.of<PlayerInfoDialog>(context);
     var info = infoDialog.info;
-    var space = const SizedBox(width: 6, height: 6);
+    const space = SizedBox(width: 6, height: 6);
     return Row(mainAxisSize: MainAxisSize.min, children: [
       info.avatarModel.builder.init().fit(width: GameDialog.minWidth - 240),
       (info.id == MePlayer.inst.id)
           ? const _MePlayerCardInput()
           : Column(children: [
               if (gameInst is PrivateGame && (gameInst.hostPlayerId.value == MePlayer.inst.id)) ...[
-                Row(children: [
+                const Row(children: [
                   // KICK
-                  _KickButton(id: info.id),
+                  _KickButton(),
                   space,
                   // BAN
-                  _BanButton(id: info.id)
+                  _BanButton()
                 ]),
                 space
               ],
@@ -97,27 +98,52 @@ class _InfoDialogContent extends StatelessWidget {
   }
 }
 
-class _VoteKickButton extends StatelessWidget {
+class _VoteKickButton extends StatefulWidget {
   const _VoteKickButton();
 
   @override
+  State<_VoteKickButton> createState() => __VoteKickButtonState();
+}
+
+class __VoteKickButtonState extends State<_VoteKickButton>
+    with APIButtonStateMixin<_VoteKickButton> {
+  @override
   Widget build(BuildContext context) {
-    var info = OverlayWidget.of<PlayerInfoDialog>(context).info;
-    return StatefulBuilder(
-        builder: (context, setState) => HoverButton(
-            constraints: _InfoDialogContent.inputConstraints,
-            isDisabled: info.isKickVoted == true,
-            onTap: () {
-              setState(() {
-                info.isKickVoted = true;
-              });
-              SocketIO.inst.socket.emitWithAck('vote_kick', info.id, ack: (data) {
-                if (!data['success']) {
-                  GameDialog.error(content: Center(child: Text(data['reason'].toString()))).show();
-                }
-              });
-            },
-            child: Text('Votekick'.tr)));
+    var dialog = OverlayWidget.of<PlayerInfoDialog>(context);
+
+    return HoverButton(
+        constraints: _InfoDialogContent.inputConstraints,
+        isDisabled: dialog.info.isKickVoted == true || isDisabled,
+        onTap: () {
+          if (isDisabled) return;
+          pauseFncBeforeSending();
+
+          SocketIO.inst.socket.emitWithAck('vote_kick', dialog.info.id, ack: (data) {
+            if (data['success']) {
+              onSuccess(dialog);
+            } else {
+              onFailed(dialog);
+              GameDialog.error(content: Center(child: Text(data['reason'].toString()))).show();
+            }
+          });
+        },
+        child: child);
+  }
+
+  @override
+  Widget get primaryChild => Text(key: key, 'Votekick'.tr);
+
+  @override
+  void onSuccess(PlayerInfoDialog dialog) {
+    if (OverlayController.get<PlayerInfoDialog>(dialog.tag) != null) {
+      setState(() {
+        if (child == loadingChild) {
+          child = primaryChild;
+        }
+
+        dialog.info.isKickVoted = true;
+      });
+    }
   }
 }
 
@@ -144,75 +170,127 @@ class _MePlayerCardInput extends StatelessWidget {
 }
 
 class _KickButton extends StatefulWidget {
-  const _KickButton({required this.id});
-  final String id;
+  const _KickButton();
 
   @override
   State<_KickButton> createState() => __KickButtonState();
 }
 
-class __KickButtonState extends State<_KickButton> {
-  bool isSending = false;
+class __KickButtonState extends State<_KickButton> with APIButtonStateMixin<_KickButton> {
   @override
   Widget build(BuildContext context) {
+    var dialog = OverlayWidget.of<PlayerInfoDialog>(context);
     return HoverButton(
-        isDisabled: isSending,
+        isDisabled: isDisabled,
         constraints: const BoxConstraints(
             minWidth: _InfoDialogContent.minWidth / 2 - 3, minHeight: _InfoDialogContent.minHeight),
         onTap: () {
-          setState(() {
-            isSending = true;
-          });
-          SocketIO.inst.socket.emitWithAck('host_kick', widget.id, ack: (data) {
-            setState(() {
-              isSending = false;
-            });
-            if (!data['success']) {
-              var dialog = OverlayController.cache(
-                  tag: 'host_kick',
-                  builder: () =>
-                      GameDialog.error(content: Center(child: Text(data['reason'].toString()))));
-              if (!dialog.isShowing) dialog.show();
+          if (isDisabled) return;
+          pauseFncBeforeSending();
+
+          SocketIO.inst.socket.emitWithAck('host_kick', dialog.info.id, ack: (data) {
+            if (data['success']) {
+              onSuccess(dialog);
+            } else {
+              onFailed(dialog);
+              GameDialog.error(content: Center(child: Text(data['reason'].toString()))).show();
             }
           });
         },
-        child: Text('Kick'.tr));
+        child: child);
   }
+
+  @override
+  Widget get primaryChild => Text(key: key, 'Kick'.tr);
 }
 
 class _BanButton extends StatefulWidget {
-  const _BanButton({required this.id});
-  final String id;
+  const _BanButton();
 
   @override
   State<_BanButton> createState() => __BanButtonState();
 }
 
-class __BanButtonState extends State<_BanButton> {
-  bool isSending = false;
+class __BanButtonState extends State<_BanButton> with APIButtonStateMixin<_BanButton> {
   @override
   Widget build(BuildContext context) {
+    var dialog = OverlayWidget.of<PlayerInfoDialog>(context);
     return HoverButton(
-        isDisabled: isSending,
+        isDisabled: isDisabled,
         constraints: const BoxConstraints(
             minWidth: _InfoDialogContent.minWidth / 2 - 3, minHeight: _InfoDialogContent.minHeight),
-        child: Text('Ban'.tr),
+        child: child,
         onTap: () {
-          setState(() {
-            isSending = true;
-          });
-          SocketIO.inst.socket.emitWithAck('host_ban', widget.id, ack: (data) {
-            setState(() {
-              isSending = false;
-            });
-            if (!data['success']) {
-              var dialog = OverlayController.cache(
-                  tag: 'host_ban',
-                  builder: () =>
-                      GameDialog.error(content: Center(child: Text(data['reasson'].toString()))));
-              if (!dialog.isShowing) dialog.show();
+          if (isDisabled) return;
+          pauseFncBeforeSending();
+
+          SocketIO.inst.socket.emitWithAck('host_ban', dialog.info.id, ack: (data) {
+            if (data['success']) {
+              onSuccess(dialog);
+            } else {
+              onFailed(dialog);
+              GameDialog.error(content: Center(child: Text(data['reasson'].toString()))).show();
             }
           });
         });
+  }
+
+  @override
+  Widget get primaryChild => Text(key: key, 'Ban'.tr);
+}
+
+mixin APIButtonStateMixin<T extends StatefulWidget> on State<T> {
+  bool isDisabled = false;
+
+  /// attach this key to child
+  final GlobalKey key = GlobalKey();
+
+  LoadingIndicator? loadingChild;
+
+  late Widget child = primaryChild;
+
+  Widget get primaryChild;
+
+  @nonVirtual
+  void pauseFncBeforeSending() {
+    setState(() {
+      if (loadingChild != null) {
+        child = loadingChild!;
+      }
+      isDisabled = true;
+    });
+  }
+
+  void onSuccess(PlayerInfoDialog dialog) {
+    if (OverlayController.get<PlayerInfoDialog>(dialog.tag) != null) {
+      setState(() {
+        if (child == loadingChild) {
+          child = primaryChild;
+        }
+      });
+    }
+  }
+
+  void onFailed(PlayerInfoDialog dialog) {
+    if (OverlayController.get<PlayerInfoDialog>(dialog.tag) != null) {
+      setState(() {
+        if (child == loadingChild) {
+          child = primaryChild;
+        }
+        isDisabled = false;
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      var size = (key.currentContext?.findRenderObject() as RenderBox?)?.size;
+      if (size != null) {
+        loadingChild = LoadingIndicator(height: size.height, width: size.width);
+      }
+    });
   }
 }
