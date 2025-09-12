@@ -5,7 +5,7 @@ class LikeAndDislikeController extends GetxController with GetSingleTickerProvid
   late final Animation<Offset> offsetAnim;
   late final Animation<double> opacAnim;
 
-  static Duration get duration => const Duration(milliseconds: 300);
+  final Duration duration = const Duration(milliseconds: 300);
 
   @override
   void onInit() {
@@ -35,32 +35,29 @@ class _LikeAndDislikeButtons extends StatelessWidget {
             position: controller.offsetAnim,
             child: FadeTransition(
                 opacity: controller.opacAnim,
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    AnimatedButton(
-                        onTap: () {
-                          controller.controller.value = 0;
+                child: Row(mainAxisSize: MainAxisSize.min, children: [
+                  AnimatedButton(
+                      onTap: () {
+                        controller.controller.value = 0;
 
-                          SocketIO.inst.socket.emit('like_dislike', true);
-                        },
-                        decorators: const [
-                          AnimatedButtonOpacityDecorator(minOpacity: 0.6),
-                          AnimatedButtonScaleDecorator()
-                        ],
-                        child: gif('thumb_up').builder.initWithShadow().fit(height: 50)),
-                    AnimatedButton(
-                        onTap: () {
-                          controller.controller.value = 0;
+                        SocketIO.inst.socket.emit('like_dislike', true);
+                      },
+                      decorators: const [
+                        AnimatedButtonOpacityDecorator(minOpacity: 0.6),
+                        AnimatedButtonScaleDecorator()
+                      ],
+                      child: gif('thumb_up').builder.initWithShadow().fit(height: 50)),
+                  AnimatedButton(
+                      onTap: () {
+                        controller.controller.value = 0;
 
-                          SocketIO.inst.socket.emit('like_dislike', false);
-                        },
-                        decorators: const [
-                          AnimatedButtonOpacityDecorator(minOpacity: 0.6),
-                          AnimatedButtonScaleDecorator()
-                        ],
-                        child: gif('thumb_down').builder.initWithShadow().fit(height: 50))
-                  ],
-                ))));
+                        SocketIO.inst.socket.emit('like_dislike', false);
+                      },
+                      decorators: const [
+                        AnimatedButtonOpacityDecorator(minOpacity: 0.6),
+                        AnimatedButtonScaleDecorator()
+                      ],
+                      child: gif('thumb_down').builder.initWithShadow().fit(height: 50))
+                ]))));
   }
 }

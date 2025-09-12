@@ -49,7 +49,14 @@ class GameClockController extends GetxController with GetSingleTickerProviderSta
 
   void start(Duration remainingTime, {void Function()? onEnd}) {
     remainingTimeSinceStart = remainingTime;
-    preciseTimer = Timer(remainingTime, onEnd ?? cancel);
+    preciseTimer = Timer(
+        remainingTime,
+        onEnd != null
+            ? () {
+                cancel();
+                onEnd();
+              }
+            : cancel);
 
     stopWatch
       ..reset()

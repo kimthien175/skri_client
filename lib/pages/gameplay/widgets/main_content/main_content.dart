@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:skribbl_client/models/game/game.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';

@@ -4,7 +4,6 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:skribbl_client/models/game/state/draw/draw_state_result.dart';
-import 'package:skribbl_client/models/game/state/draw/game_result.dart';
 import 'package:skribbl_client/models/models.dart';
 
 import 'package:get/get.dart';
@@ -16,16 +15,6 @@ import 'package:skribbl_client/utils/utils.dart';
 part 'performer.dart';
 part 'widgets.dart';
 
-abstract class DrawState {
-  static GameState init({required dynamic data}) {
-    return data['player_id'] != MePlayer.inst.id
-        ? SpectatorDrawState(data: data)
-        : data['word_mode'] == _HiddenHintStatus.value
-            ? _PerformerDrawState(data: data)
-            : _EmittingPerformerDrawState(data: data);
-  }
-}
-
 mixin DrawStateMixin on GameState {
   Map get points => data['points'];
 
@@ -33,31 +22,34 @@ mixin DrawStateMixin on GameState {
 
   List get likedBy => data['liked_by'] as List;
 
+  bool get isHintHidden => data['word_mode'] == HiddenHintStatus.value;
+
+  /// START CLOCK
   @override
-  Widget get topWidget => Obx(() => _topWidgetController.child.value);
+  Future<DateTime> onStart(DateTime startDate) async {
+    var drawDuration = Duration(seconds: Game.inst.settings['draw_time']) - startDate.fromNow();
+    if (drawDuration > Duration.zero) {
+      Get.find<GameClockController>().start(drawDuration);
+    }
 
-  final _TopWidgetController _topWidgetController = _TopWidgetController();
-
-  bool get isHintHidden => data['word_mode'] == _HiddenHintStatus.value;
-
-  @override
-  Future<void> onStart(Duration sinceStartDate) async {
-    Get.find<GameClockController>()
-        .start(Duration(seconds: Game.inst.settings['draw_time']) - sinceStartDate);
+    return startDate;
   }
 
-  Duration get waitDuration => const Duration(seconds: 3);
-
+  /// CANCEL CLOCK
+  ///
+  /// (SHOW GAME RESULT IF ENDGAME IN EMERGENCY)
+  ///
+  /// SHOW WORD, SHOW GAME RESULT IF NEEDED
   @override
-  Future<Duration> onEnd(Duration sinceEndDate) async {
-    Get.find<GameClockController>().cancel();
-    var topWidget = Get.find<TopWidgetController>();
-    // word reveal
+  Future<DateTime> onEnd(DateTime endDate) async {
+    if (Game.inst.status['bonus']['end_state'] == null) return super.onEnd(endDate);
 
-    DrawStateResult.init().then((widget) => _topWidgetController.child.value = widget);
-    if (endState == 'end_game') {
-      GameResult.init();
-    }
+    var topWidget = Get.find<TopWidgetController>();
+
+    // word reveal
+    DrawStateResult.init().then((widget) => topWidget.child.value = widget);
+
+    var sinceEndDate = DateTime.now() - endDate;
 
     //#region FORWARD BACKGROUND
     if (sinceEndDate < TopWidgetController.backgroundDuration) {
@@ -72,18 +64,17 @@ mixin DrawStateMixin on GameState {
 
     //#region FORWARD WORD REVEAL
     if (sinceEndDate < TopWidgetController.contentDuration) {
-      await topWidget.contentController
-          .forward(from: sinceEndDate / TopWidgetController.contentDuration);
+      await topWidget.forwardContent(from: sinceEndDate / TopWidgetController.contentDuration);
       sinceEndDate = Duration.zero;
     } else {
-      topWidget.contentController.value = 1;
+      topWidget.content = 1;
       sinceEndDate -= TopWidgetController.contentDuration;
     }
     //#endregion
 
     //#region WAIT
     if (sinceEndDate < waitDuration) {
-      await Future.delayed(waitDuration - sinceEndDate);
+      await topWidget.wait(waitDuration - sinceEndDate);
       sinceEndDate = Duration.zero;
     } else {
       sinceEndDate -= waitDuration;
@@ -92,60 +83,22 @@ mixin DrawStateMixin on GameState {
 
     //#region REVERSE WORD REVEAL
     if (sinceEndDate < TopWidgetController.contentDuration) {
-      await topWidget.contentController
-          .reverse(from: 1 - sinceEndDate / TopWidgetController.contentDuration);
+      await topWidget.reverseContent(from: 1 - sinceEndDate / TopWidgetController.contentDuration);
       sinceEndDate = Duration.zero;
     } else {
-      topWidget.contentController.value = 0;
+      topWidget.content = 0;
       sinceEndDate -= TopWidgetController.contentDuration;
     }
     //#endregion
 
-    if (endState == 'end_game') {
-      //#region FORWARD GAME RESULT
-      if (sinceEndDate < TopWidgetController.contentDuration) {
-        GameResult.completer!.future.then((widget) => _topWidgetController.child.value = widget);
-        await topWidget.contentController
-            .forward(from: sinceEndDate / TopWidgetController.contentDuration);
-        sinceEndDate = Duration.zero;
-      } else {
-        topWidget.contentController.value = 1;
-        sinceEndDate -= TopWidgetController.contentDuration;
-      }
-      //#endregion
-
-      //#region WAIT
-      if (sinceEndDate < waitDuration) {
-        await Future.delayed(waitDuration - sinceEndDate);
-        sinceEndDate = Duration.zero;
-      } else {
-        sinceEndDate -= waitDuration;
-      }
-      //#endregion
-
-      //#region REVERSE GAME RESULT
-      if (sinceEndDate < TopWidgetController.contentDuration) {
-        await topWidget.contentController
-            .reverse(from: 1 - sinceEndDate / TopWidgetController.contentDuration);
-        sinceEndDate = Duration.zero;
-
-        //reset all player score to 0
-        Game.inst.playersByMap.forEach((key, value) => value.score = 0);
-        Get.find<PlayersListController>().list.refresh();
-      } else {
-        topWidget.contentController.value = 0;
-        sinceEndDate -= TopWidgetController.contentDuration;
-      }
-      //#endregion
-
-      GameResult.completer = null;
-    }
-
-    return sinceEndDate;
+    var afterWordRevealDate = endDate.add(TopWidgetController.contentDuration * 2 +
+        waitDuration +
+        TopWidgetController.backgroundDuration);
+    if (Game.inst.endGameData != null) return super.onEnd(afterWordRevealDate);
+    return afterWordRevealDate;
   }
 
   String get performerId => data['player_id'];
-  String? get endState => data['end_state']; // end_round | end_game | null
 }
 
 class SpectatorDrawState extends GameState with DrawStateMixin {
@@ -154,13 +107,25 @@ class SpectatorDrawState extends GameState with DrawStateMixin {
   }
 
   @override
-  Widget get status => isHintHidden ? const _HiddenHintStatus() : const _VisibleHintStatus();
+  Widget get status => isHintHidden ? const HiddenHintStatus() : const _VisibleHintStatus();
 
   @override
-  Future<void> onStart(Duration sinceStartDate) async {
-    super.onStart(sinceStartDate);
+  Future<DateTime> onStart(DateTime startDate) async {
+    var likeController = Get.find<LikeAndDislikeController>();
 
-    Get.find<LikeAndDislikeController>().controller.forward();
+    var sinceDate = DateTime.now() - startDate;
+    if (sinceDate < likeController.duration) {
+      likeController.controller.forward(from: sinceDate / likeController.duration);
+    } else {
+      likeController.controller.value = 1;
+    }
+
+    return super.onStart(startDate);
+  }
+
+  @override
+  void onClose() {
+    Get.find<LikeAndDislikeController>().controller.value = 0;
   }
 
   @override
@@ -213,8 +178,4 @@ class HintController extends GetxController {
   void setHint(int charIndex, String char) {
     _hint.value = _hint.value.replaceRange(charIndex, charIndex + 1, char);
   }
-}
-
-class _TopWidgetController extends GetxController {
-  Rx<Widget> child = (Container() as Widget).obs;
 }

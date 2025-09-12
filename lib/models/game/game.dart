@@ -6,6 +6,9 @@ export 'package:skribbl_client/models/game/message.dart';
 export 'package:skribbl_client/models/game/player.dart';
 export 'state/state.dart';
 
+import 'package:async/async.dart';
+import 'package:skribbl_client/models/game/state/draw/game_result.dart';
+
 import 'package:skribbl_client/models/models.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -18,7 +21,6 @@ import 'package:web/web.dart' as html;
 
 import '../../widgets/widgets.dart';
 
-// TODO: lost connection and try to continue the game again
 class Game extends GetxController {
   Game({required this.data}) {
     state = GameState.fromJSON(henceforthStates[currentStateId]).obs;
@@ -41,7 +43,7 @@ class Game extends GetxController {
   }
   static Game? _inst;
   static Game get inst => _inst!;
-  static set inst(Game game) => _inst = game;
+  static set inst(Game? game) => _inst = game;
 
   final Map<String, dynamic> data;
 
@@ -116,6 +118,11 @@ class Game extends GetxController {
 
   Map<String, dynamic> get status => data['status'] as Map<String, dynamic>;
   set status(Map<String, dynamic> value) => data['status'] = value;
+  Map<String, dynamic>? get endGameData {
+    var bonus = status['bonus'];
+    if (bonus == null) return null;
+    return bonus['end_game'];
+  }
 
   String get currentStateId => status['current_state_id'];
   String get nextStateId => status['next_state_id'];
@@ -146,33 +153,49 @@ class Game extends GetxController {
     MePlayer.inst.score = 0;
 
     var homeController = Get.find<HomeController>();
-    await Get.offAllNamed(
-        "/${homeController.isPrivateRoomCodeValid ? '?${homeController.privateRoomCode}' : ''}");
-    Game._inst = null;
+    await Future.wait([
+      Get.offAllNamed(
+              "/${homeController.isPrivateRoomCodeValid ? '?${homeController.privateRoomCode}' : ''}")
+          as Future<void>,
+      Game.inst.stopState()
+    ]);
+
+    await LoadingOverlay.inst.show();
+
+    Game.inst = null;
+    await LoadingOverlay.inst.hide();
   }
 
-  /// trigger at GameplayerPage controller onStart, or SocketIO receive new state
   void runState() {
-    switch (stateCommand) {
-      case 'start':
-        state.value.onStart(DateTime.now() - date);
-        break;
-      case 'end':
-        state.value.onEnd(DateTime.now() - date).then((duration) {
-          henceforthStates.remove(state.value.id);
-          state.value = GameState.fromJSON(henceforthStates[nextStateId]);
-          state.value.onStart(duration);
-        });
-        break;
-      default:
-        break;
+    if (stateCommand == 'start') {
+      return _start(date);
     }
+
+    // ignore: body_might_complete_normally_catch_error
+    _onEndOperation = CancelableOperation.fromFuture(state.value.onEnd(date))
+      ..then((date) {
+        henceforthStates.remove(state.value.id);
+        state.value = GameState.fromJSON(henceforthStates[nextStateId]);
+        _start(date);
+      }, onError: (e, _) {
+        assert(e is TickerCanceled);
+      });
   }
 
-  void receiveStatusAndStates(dynamic pkg) {
+  void _start(DateTime date) {
+    // ignore: body_might_complete_normally_catch_error
+    _onStartOperation = CancelableOperation.fromFuture(state.value.onStart(date).catchError((e) {
+      assert(e is TickerCanceled);
+    }));
+  }
+
+  Future<void> receiveStatusAndStates(dynamic pkg) async {
+    await stopState();
+
     henceforthStates.addAll(pkg['henceforth_states']);
 
     status = pkg['status'];
+    if (Game.inst.endGameData != null) GameResult.init();
 
     if (state.value.id != currentStateId) {
       henceforthStates.remove(state.value.id);
@@ -181,6 +204,22 @@ class Game extends GetxController {
 
     runState();
   }
+
+  Future<void> stopState() async {
+    // close logic of current state immediately
+    state.value.onClose();
+
+    // cancel animation chain
+    Get.find<TopWidgetController>().stop();
+    await _onStartOperation?.cancel();
+    await _onEndOperation?.cancel();
+  }
+
+  CancelableOperation? _onStartOperation;
+  CancelableOperation<DateTime>? _onEndOperation;
+
+  // TODO: RELOAD GAME
+  void reload() {}
 }
 
 typedef GameStateInitCallback = GameState Function();

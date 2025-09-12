@@ -96,8 +96,11 @@ class SocketIO {
       var msg =
           inst.addMessage((color) => NewHostMessage(data: dataList[0], backgroundColor: color));
 
-      var newHost = inst.playersByMap[msg.playerId] ?? inst.quitPlayers[msg.playerId]!;
-      (inst as PrivateGame).hostPlayerId.value = newHost.id;
+      if (inst.playersByMap[msg.playerId] != null) {
+        (inst as PrivateGame).hostPlayerId.value = msg.playerId;
+      } else {
+        inst.reload();
+      }
     });
 
     socket.on('player_chat', (dataList) {

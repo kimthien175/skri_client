@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:skribbl_client/models/models.dart';
 import 'package:skribbl_client/pages/gameplay/gameplay.dart';
@@ -10,44 +9,68 @@ class PreGameState extends GameState {
   }
 
   @override
-  Widget get topWidget => const GameSettingsWidget();
+  Future<DateTime> onStart(DateTime startDate) async {
+    var sinceStartDate = DateTime.now() - startDate;
 
-  @override
-  Future<void> onStart(Duration sinceStartDate) async {
-    var widgetController = Get.find<TopWidgetController>();
+    topWidgetController.child.value = const GameSettingsWidget();
+
+    var consumedDuration = TopWidgetController.contentDuration;
 
     if (Game.inst.stateCommand == 'start') {
-      // do background
+      //#region FORWARD BACKGROUND
       if (sinceStartDate < TopWidgetController.backgroundDuration) {
-        await widgetController.forwardBackground(
+        await topWidgetController.forwardBackground(
             from: sinceStartDate / TopWidgetController.backgroundDuration);
 
         sinceStartDate = Duration.zero;
       } else {
-        widgetController.background = 1;
+        topWidgetController.background = 1;
         sinceStartDate -= TopWidgetController.backgroundDuration;
       }
+      //#endregion
+
+      consumedDuration += TopWidgetController.backgroundDuration;
+    } else {
+      // require background
+      topWidgetController.background = 1;
     }
 
+    //#region FORWARD CONTENT
     if (sinceStartDate < TopWidgetController.contentDuration) {
-      await widgetController.contentController
-          .forward(from: sinceStartDate / TopWidgetController.contentDuration);
+      await topWidgetController.forwardContent(
+          from: sinceStartDate / TopWidgetController.contentDuration);
     } else {
-      widgetController.contentController.value = 1;
+      topWidgetController.content = 1;
     }
+    //#endregion
+
+    return startDate.add(consumedDuration);
   }
 
   @override
-  Future<Duration> onEnd(Duration sinceEndDate) async {
-    var controller = Get.find<TopWidgetController>().contentController;
+  Future<DateTime> onEnd(DateTime endDate) async {
+    if (Game.inst.endGameData != null) return super.onEnd(endDate);
+
+    // required background
+    topWidgetController.background = 1;
+
+    var sinceEndDate = DateTime.now() - endDate;
+    //#region REVERSE CONTENT
     if (sinceEndDate < TopWidgetController.contentDuration) {
-      await controller.reverse(from: 1 - sinceEndDate / TopWidgetController.contentDuration);
-      return Duration.zero;
+      await topWidgetController.reverseContent(
+          from: 1 - sinceEndDate / TopWidgetController.contentDuration);
+      sinceEndDate = Duration.zero;
     } else {
-      controller.value = 0;
-      return sinceEndDate - TopWidgetController.contentDuration;
+      topWidgetController.content = 0;
+      sinceEndDate -= TopWidgetController.contentDuration;
     }
+    //#endregion
+
+    return endDate.add(TopWidgetController.contentDuration);
   }
+
+  @override
+  void onClose() {}
 
   // @override
   // Future<void> setup() async {

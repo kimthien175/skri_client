@@ -14,7 +14,6 @@ import 'package:skribbl_client/widgets/widgets.dart';
 
 import 'pages/pages.dart';
 
-// TODO: reload gameplay page feature
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -69,7 +68,6 @@ void main() {
         GetPage(
             name: '/GameplayPage',
             page: () => const GameplayPage(),
-            binding: GameplayBinding(),
             middlewares: [GameplayMiddleware()]),
         GetPage(name: '/test', page: () => TestPage()),
         GetPage(

@@ -4,7 +4,6 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:skribbl_client/models/game/state/draw/game_result.dart';
 import 'package:skribbl_client/models/models.dart';
 import 'package:skribbl_client/pages/gameplay/widgets/utils.dart';
 import 'package:skribbl_client/pages/pages.dart';
@@ -19,104 +18,88 @@ class PickWordState extends GameState {
   List<dynamic> get words => data['words'];
   bool get isPicker => MePlayer.inst.id == playerId;
 
-  @override
-  Widget get topWidget => DefaultTextStyle.merge(
-      style: TextStyle(
-          shadows: [ShadowInfo.shadow],
-          color: Colors.white,
-          fontSize: 32,
-          fontVariations: [FontVariation.weight(480)]),
-      child: roundNotify != null ? _topWidgetRoundNotify : _topWidgetChooseWord);
-
-  Widget get _topWidgetRoundNotify => Text(
-        'round_noti'.trParams({'round': Game.inst.currentRound.value.toString()}),
-      );
-
-  Widget get _topWidgetChooseWord {
-    var inst = Game.inst;
-    var player = inst.playersByMap[playerId] ?? inst.quitPlayers[playerId]!;
-    return Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: playerId == MePlayer.inst.id
-            ? [
-                Text('choose_a_word'.tr, style: TextStyle(color: Colors.grey.shade300)),
-                _WordOptions(words: words)
-              ]
-            : [
-                Text(
-                  'player_choosing'.trParams({'playerName': player.name}),
-                ),
-                player.avatarModel.builder.initWithShadow().fit(height: 75)
-              ]);
-  }
-
   late int? roundNotify = data['round_notify'];
 
-  void changeTopWidget() {
-    roundNotify = null;
-    Game.inst.state.refresh();
-  }
-
   @override
-  Future<void> onStart(Duration sinceStartDate) async {
-    var topWidget = Get.find<TopWidgetController>();
-    assert(topWidget.background == 1);
+  Future<DateTime> onStart(DateTime startDate) async {
+    var sinceStartDate = DateTime.now() - startDate;
+
+    // required background
+    topWidgetController.background = 1;
+
+    var consumedDuration = TopWidgetController.contentDuration;
 
     //#region ROUND NOTI
     if (roundNotify != null) {
       Game.inst.currentRound.value = roundNotify!;
-      // show round intro
+
+      topWidgetController.child.value = _TopWidget.roundNoti();
+
+      //#region SHOW ROUND NOTI
       if (sinceStartDate < TopWidgetController.contentDuration) {
-        await topWidget.contentController
-            .forward(from: sinceStartDate / TopWidgetController.contentDuration);
+        await topWidgetController.forwardContent(
+            from: sinceStartDate / TopWidgetController.contentDuration);
         sinceStartDate = Duration.zero;
       } else {
+        topWidgetController.content = 1;
         sinceStartDate -= TopWidgetController.contentDuration;
       }
+      //#endregion
 
-      // hold round intro for 1s - contentDuration
-      if (sinceStartDate < _roundNotiDuration) {
-        topWidget.contentController.value = 1;
-        await Future.delayed(const Duration(seconds: 1) - sinceStartDate);
+      //#region WATI FOR DURATION
+      if (sinceStartDate < waitDuration) {
+        await topWidgetController.wait(waitDuration - sinceStartDate);
         sinceStartDate = Duration.zero;
       } else {
-        sinceStartDate -= _roundNotiDuration;
+        sinceStartDate -= waitDuration;
       }
+      //#endregion
 
-      // close up round noti
+      //#region REVERSE ROUND NOTI
       if (sinceStartDate < TopWidgetController.contentDuration) {
-        await topWidget.contentController
-            .reverse(from: 1 - sinceStartDate / TopWidgetController.contentDuration);
+        await topWidgetController.reverseContent(
+            from: 1 - sinceStartDate / TopWidgetController.contentDuration);
         sinceStartDate = Duration.zero;
       } else {
+        topWidgetController.content = 0;
         sinceStartDate -= TopWidgetController.contentDuration;
       }
+      //#endregion
 
-      changeTopWidget();
+      consumedDuration += TopWidgetController.contentDuration * 2 + waitDuration;
     }
     //#endregion
 
+    topWidgetController.child.value = _TopWidget.wordOptions();
+
+    //#region FORWARD CONTENT
     if (sinceStartDate < TopWidgetController.contentDuration) {
-      await topWidget.contentController
-          .forward(from: sinceStartDate / TopWidgetController.contentDuration);
+      await topWidgetController.forwardContent(
+          from: sinceStartDate / TopWidgetController.contentDuration);
       sinceStartDate = Duration.zero;
     } else {
       sinceStartDate -= TopWidgetController.contentDuration;
-      topWidget.contentController.value = 1;
+      topWidgetController.content = 1;
     }
+    //#endregion
 
-    var clockController = Get.find<GameClockController>();
+    //#region START CLOCK
+    var clockDuration = _fullPickingDuration - sinceStartDate;
+    if (clockDuration > Duration.zero) {
+      Get.find<GameClockController>().start(clockDuration, onEnd: () {
+        // send random word
+        if (isPicker && _wordStatus == _WordSendingStatus.notSent) {
+          sendWord(words[Random().nextInt(words.length)]);
+        }
+      });
+    }
+    //#endregion
 
-    clockController.start(_fullPickingDuration - sinceStartDate, onEnd: () {
-      clockController.cancel();
-      // send random word
-      if (isPicker && _wordStatus == _WordSendingStatus.notSent) {
-        sendWord(words[Random().nextInt(words.length)]);
-      }
-    });
+    return startDate.add(consumedDuration);
   }
 
-  Duration get _roundNotiDuration => const Duration(seconds: 1);
+  @override
+  Duration get waitDuration => const Duration(seconds: 2);
 
   void sendWord(String word) {
     _wordStatus = _WordSendingStatus.sending;
@@ -126,34 +109,45 @@ class PickWordState extends GameState {
   _WordSendingStatus _wordStatus = _WordSendingStatus.notSent;
 
   @override
-  Future<Duration> onEnd(Duration sinceEndDate) async {
-    Get.find<GameClockController>().cancel();
+  Future<DateTime> onEnd(DateTime endDate) async {
+    if (Game.inst.endGameData != null) return super.onEnd(endDate);
 
-    var topWidget = Get.find<TopWidgetController>();
+    // require background
+    topWidgetController.background = 1;
 
-    if (Game.inst.status['bonus'] != null) GameResult.init();
+    var sinceEndDate = endDate.fromNow();
 
+    //#region REVERSE CONTENT
     if (sinceEndDate < TopWidgetController.contentDuration) {
-      await topWidget.contentController
-          .reverse(from: 1 - sinceEndDate / TopWidgetController.contentDuration);
+      await topWidgetController.reverseContent(
+          from: 1 - sinceEndDate / TopWidgetController.contentDuration);
       sinceEndDate = Duration.zero;
     } else {
-      topWidget.contentController.value = 0;
+      topWidgetController.content = 0;
       sinceEndDate -= TopWidgetController.contentDuration;
     }
+    //#endregion
 
+    //#region REVERSE BACKGROUND
     if (sinceEndDate < TopWidgetController.backgroundDuration) {
-      await topWidget.reverseBackground(
+      await topWidgetController.reverseBackground(
           from: 1 - sinceEndDate / TopWidgetController.backgroundDuration);
 
       // for spectators watching the transtion from PickWordState to DrawState, the draw data would reset
       // for spectator join mid game, of course this would be skipped
       DrawReceiver.inst.reset();
-      return Duration.zero;
     } else {
-      topWidget.background = 0;
-      return sinceEndDate - TopWidgetController.backgroundDuration;
+      topWidgetController.background = 0;
     }
+    //#endregion
+
+    return endDate
+        .add(TopWidgetController.contentDuration + TopWidgetController.backgroundDuration);
+  }
+
+  @override
+  void onClose() {
+    Get.find<GameClockController>().cancel();
   }
 }
 
@@ -250,5 +244,45 @@ class __WordOptionsState extends State<_WordOptions> {
                     padding: EdgeInsets.all(8),
                     child: UnconstrainedBox(child: _WordButton(word: e as String))))
                 .toList()));
+  }
+}
+
+class _TopWidget extends StatelessWidget {
+  _TopWidget.roundNoti() {
+    child = Text(
+      'round_noti'.trParams({'round': Game.inst.currentRound.value.toString()}),
+    );
+  }
+
+  _TopWidget.wordOptions() {
+    var inst = Game.inst;
+    var state = inst.state.value as PickWordState;
+    var player = inst.playersByMap[state.playerId] ?? inst.quitPlayers[state.playerId]!;
+    child = Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: state.playerId == MePlayer.inst.id
+            ? [
+                Text('choose_a_word'.tr, style: TextStyle(color: Colors.grey.shade300)),
+                _WordOptions(words: state.words)
+              ]
+            : [
+                Text(
+                  'player_choosing'.trParams({'playerName': player.name}),
+                ),
+                player.avatarModel.builder.initWithShadow().fit(height: 75)
+              ]);
+  }
+
+  late final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return DefaultTextStyle.merge(
+        style: TextStyle(
+            shadows: [ShadowInfo.shadow],
+            color: Colors.white,
+            fontSize: 32,
+            fontVariations: [FontVariation.weight(480)]),
+        child: child);
   }
 }

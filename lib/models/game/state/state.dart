@@ -1,9 +1,13 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:skribbl_client/models/game/game.dart';
 import 'package:skribbl_client/models/game/state/draw/draw.dart';
+import 'package:skribbl_client/models/game/state/draw/game_result.dart';
 import 'package:skribbl_client/models/game/state/match_making.dart';
 import 'package:skribbl_client/models/game/state/pick_word.dart';
 import 'package:skribbl_client/models/game/state/pre_game.dart';
+import 'package:skribbl_client/utils/datetime.dart';
 import 'package:skribbl_client/utils/socket_io.dart';
 
 import '../../../pages/pages.dart';
@@ -24,7 +28,9 @@ abstract class GameState {
         return PickWordState(data: data);
 
       case 'draw':
-        return DrawState.init(data: data);
+        if (data['player_id'] != MePlayer.inst.id) return SpectatorDrawState(data: data);
+        if (data['word_mode'] == HiddenHintStatus.value) return PerformerDrawState(data: data);
+        return EmittingPerformerDrawState(data: data);
 
       case 'match_making':
         return MatchMakingState(data: data);
@@ -33,15 +39,63 @@ abstract class GameState {
     }
   }
 
-  /// default value of `startedDate` is state.`startedDate`
-  Future<void> onStart(Duration sinceStartDate);
+  Future<DateTime> onStart(DateTime startDate);
 
-  /// `sinceEndDate` always smaller than or equal to `endDuration`
-  Future<Duration> onEnd(Duration sinceEndDate);
+  Duration get waitDuration => const Duration(seconds: 3);
+
+  TopWidgetController get topWidgetController => Get.find<TopWidgetController>();
+
+  /// if the onStart animation is running, cancel it
+  /// return the time-based logic onStart is running or not
+  //
+
+  /// show end game data
+  Future<DateTime> onEnd(DateTime endDate) async {
+    topWidgetController.background = 1;
+
+    var sinceEndDate = endDate.fromNow();
+
+    //#region FORWARD GAME RESULT
+    if (sinceEndDate < TopWidgetController.contentDuration) {
+      await GameResult.completer!.future.then((widget) => topWidgetController.child.value = widget);
+      await topWidgetController.forwardContent(
+          from: sinceEndDate / TopWidgetController.contentDuration);
+
+      sinceEndDate = Duration.zero;
+    } else {
+      topWidgetController.content = 1;
+      sinceEndDate -= TopWidgetController.contentDuration;
+    }
+    //#endregion
+
+    //#region WAIT
+    if (sinceEndDate < waitDuration) {
+      await topWidgetController.wait(waitDuration - sinceEndDate);
+      sinceEndDate = Duration.zero;
+    } else {
+      sinceEndDate -= waitDuration;
+    }
+    //#endregion
+
+    //#region REVERSE GAME RESULT
+    if (sinceEndDate < TopWidgetController.contentDuration) {
+      await topWidgetController.reverseContent(
+          from: 1 - sinceEndDate / TopWidgetController.contentDuration);
+
+      GameResult.completer = null;
+
+      //reset all player score to 0
+      Game.inst.playersByMap.forEach((key, value) => value.score = 0);
+      Get.find<PlayersListController>().list.refresh();
+    } else {
+      topWidgetController.content = 0;
+    }
+    //#endregion
+
+    return endDate.add(TopWidgetController.contentDuration * 2 + waitDuration);
+  }
 
   final Map<String, dynamic> data;
-
-  Widget get topWidget;
 
   Widget get status => Builder(builder: (_) => Text('WAITING'.tr));
 
@@ -51,4 +105,6 @@ abstract class GameState {
   /// only DrawState can override this
   void Function(String) get submitMessage =>
       (String text) => SocketIO.inst.socket.emit('player_chat', text);
+
+  void onClose();
 }

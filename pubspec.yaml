@@ -45,6 +45,7 @@ dependencies:
   flutter_udid: ^4.0.0
   web: ^1.1.1
   soundpool: ^2.4.1
+  async: ^2.13.0
 
 dev_dependencies:
   flutter_test:

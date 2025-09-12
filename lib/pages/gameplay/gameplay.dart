@@ -14,15 +14,18 @@ import 'package:skribbl_client/widgets/page_background.dart';
 
 import 'widgets/draw/manager.dart';
 
-class GameplayBinding implements Bindings {
+class GameplayPage extends StatefulWidget {
+  const GameplayPage({super.key});
+
   @override
-  void dependencies() {
-    Get.put(GameplayController());
-  }
+  State<GameplayPage> createState() => _GameplayPageState();
 }
 
-class GameplayController extends GetxController {
-  GameplayController() : super() {
+class _GameplayPageState extends State<GameplayPage> {
+  @override
+  void initState() {
+    super.initState();
+
     Get.put(PlayersListController());
     Get.put(GameClockController());
     Get.put(GameChatController());
@@ -32,21 +35,14 @@ class GameplayController extends GetxController {
 
     Get.put(TopWidgetController());
     Get.put(HintController());
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Game.inst.runState();
+
+      // scroll to bottom
+      Get.find<GameChatController>().scrollToBottom();
+    });
   }
-
-  @override
-  void onReady() {
-    super.onReady();
-
-    Game.inst.runState();
-
-    // scroll to bottom
-    Get.find<GameChatController>().scrollToBottom();
-  }
-}
-
-class GameplayPage extends StatelessWidget {
-  const GameplayPage({super.key});
 
   @override
   Widget build(BuildContext context) => Background(

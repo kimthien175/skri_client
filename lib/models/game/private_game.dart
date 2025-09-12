@@ -39,8 +39,7 @@ class PrivateGame extends Game {
       }
 //#endregion
 
-      Get.to(() => const GameplayPage(),
-          binding: GameplayBinding(), transition: Transition.noTransition);
+      Get.to(() => const GameplayPage(), transition: Transition.noTransition);
 
       // save metadata to local storage
       Storage.set(['system'], Game.inst.data['system']);

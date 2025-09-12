@@ -4,12 +4,15 @@ mixin _PerformerMixin on DrawStateMixin {
   String get word => data['word'];
 
   @override
-  Future<void> onStart(Duration sinceStartDate) async {
-    Get.find<GameClockController>().start(
-        Duration(seconds: Game.inst.settings['draw_time']) - sinceStartDate,
-        onEnd: () => SocketIO.inst.socket.emit('end_draw_state'));
+  Future<DateTime> onStart(DateTime startDate) async {
+    var drawDuration = Duration(seconds: Game.inst.settings['draw_time']) - startDate.fromNow();
+    if (drawDuration > Duration.zero) {
+      Get.find<GameClockController>()
+          .start(drawDuration, onEnd: () => SocketIO.inst.socket.emit('end_draw_state'));
+    }
 
     DrawManager.inst.reset();
+    return startDate;
   }
 
   @override
@@ -21,14 +24,19 @@ mixin _PerformerMixin on DrawStateMixin {
   /// performer can't send messages to server
   @override
   void Function(String) get submitMessage => (_) {};
+
+  @override
+  void onClose() {
+    Get.find<GameClockController>().cancel();
+  }
 }
 
-class _PerformerDrawState extends GameState with DrawStateMixin, _PerformerMixin {
-  _PerformerDrawState({required super.data});
+class PerformerDrawState extends GameState with DrawStateMixin, _PerformerMixin {
+  PerformerDrawState({required super.data});
 }
 
-class _EmittingPerformerDrawState extends GameState with DrawStateMixin, _PerformerMixin {
-  _EmittingPerformerDrawState({required super.data});
+class EmittingPerformerDrawState extends GameState with DrawStateMixin, _PerformerMixin {
+  EmittingPerformerDrawState({required super.data});
 
   int get revealedHintCount => RegExp(r'[^\s_]').allMatches(hint).length;
 
@@ -41,26 +49,26 @@ class _EmittingPerformerDrawState extends GameState with DrawStateMixin, _Perfor
   Timer? timer;
 
   @override
-  Future<void> onStart(Duration sinceStartDate) async {
-    super.onStart(sinceStartDate);
-
+  Future<DateTime> onStart(DateTime startDate) async {
     // state.hint, sinceStartDate
     // duration = drawTime / (settings.hint +1)
     // remaining hint = settings.hint - state.hint
 
-    if (hintCap == revealedHintCount) return;
+    if (hintCap == revealedHintCount) return super.onStart(startDate);
 
     timer = Timer(
         Duration(
             milliseconds: (hintDuration * (revealedHintCount + 1) * 1000).toInt() -
-                sinceStartDate.inMilliseconds),
+                (DateTime.now() - startDate).inMilliseconds),
         revealRandomCharacter);
+
+    return super.onStart(startDate);
   }
 
   @override
-  Future<Duration> onEnd(Duration sinceEndDate) {
+  void onClose() {
     timer?.cancel();
-    return super.onEnd(sinceEndDate);
+    super.onClose();
   }
 
   void revealRandomCharacter() {
