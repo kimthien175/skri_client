@@ -9,6 +9,8 @@ export 'widgets/avatar_editor/avatar_editor.dart';
 import 'package:skribbl_client/pages/pages.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:skribbl_client/utils/styles.dart';
+import 'package:skribbl_client/widgets/overlay/overlay.dart';
 import 'package:skribbl_client/widgets/page_background.dart';
 
 class HomeBindings implements Bindings {
@@ -40,9 +42,18 @@ class HomeController extends GetxController {
 class HomePage extends GetView<HomeController> {
   const HomePage({super.key});
 
+  bool isWebLayout(BuildContext context) {
+    if (context.width >= context.height) {
+      OverlayController.scale = (_) => 1.0;
+      return true;
+    }
+
+    OverlayController.scale = (ct) => PanelStyles.widthOnMobile(ct) / PanelStyles.width;
+    return false;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Background(
-        child: context.width >= context.height ? const HomeWeb() : const HomeMobile());
+    return Background(child: isWebLayout(context) ? const HomeWeb() : const HomeMobile());
   }
 }

@@ -40,7 +40,7 @@ class Section extends StatelessWidget {
       ]);
     }
     return SizedBox(
-        width: PanelStyles.widthOnMobile,
+        width: PanelStyles.widthOnMobile(context),
         child: FittedBox(
             child: Stack(children: [
           Container(

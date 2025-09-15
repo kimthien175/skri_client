@@ -176,7 +176,8 @@ class PanelStyles {
   static const BoxDecoration mobileDecoration =
       BoxDecoration(color: PanelStyles.color, borderRadius: BorderRadius.all(Radius.circular(10)));
   static const Color color = Color.fromRGBO(12, 44, 150, 0.75);
-  static double get widthOnMobile => min(0.9 * Get.width, 0.55 * Get.height);
+  static double widthOnMobile(BuildContext context) =>
+      min(0.9 * context.width, 0.55 * context.height);
   static const double width = 400;
   static const Color borderFocusColor = Color(0xff56b2fd);
 }

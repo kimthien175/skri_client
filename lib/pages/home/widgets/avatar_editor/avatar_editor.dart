@@ -283,9 +283,6 @@ class _SwitchButtonState extends State<_SwitchButton> with SingleTickerProviderS
 class _RandomButton extends GetView<AvatarEditorController> {
   const _RandomButton();
 
-  static double _scale() =>
-      Get.width >= Get.height ? 1.0 : PanelStyles.widthOnMobile / PanelStyles.width;
-
   @override
   Widget build(BuildContext context) => AnimatedButton(
       onTap: controller.randomize,
@@ -293,8 +290,7 @@ class _RandomButton extends GetView<AvatarEditorController> {
         const AnimatedButtonScaleDecorator(max: 1.2),
         AnimatedButtonTooltipDecorator(
             childBuilder: () => Text('randomize_your_avatar'.tr),
-            position: const GameTooltipPosition.centerBottom(),
-            scale: _scale),
+            position: const GameTooltipPosition.centerBottom()),
         const AnimatedButtonOpacityDecorator(minOpacity: 0.6)
       ],
       child: GifManager.inst.misc('randomize').builder.init(height: 32, width: 32));

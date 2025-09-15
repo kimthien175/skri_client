@@ -9,7 +9,6 @@ class GameTooltip extends PositionedOverlayController<GameTooltipPosition> {
   GameTooltip(
       {required super.childBuilder,
       super.position = const GameTooltipPosition.centerTop(),
-      super.scale,
       required this.controller,
       required super.anchorKey});
 
@@ -43,7 +42,7 @@ class _Tooltip extends StatelessWidget {
     return c.position.buildAnimation(
         scaleAnimation: c.scaleAnimation,
         originalBox: c.originalBox,
-        scale: c.scale(),
+        scale: OverlayController.scale(context),
         child: DefaultTextStyle(
           style: const TextStyle(
               color: Color.fromRGBO(240, 240, 240, 1),
@@ -59,22 +58,19 @@ class GameTooltipWidget extends StatefulWidget {
   const GameTooltipWidget(
       {super.key,
       required this.child,
-      this.scale = PositionedOverlayController.defaultScaler,
       this.position = const GameTooltipPosition.centerTop(),
       required this.tooltipContentBuilder});
 
   final Widget child;
 
-  final double Function() scale;
   final GameTooltipPosition position;
   final Widget Function() tooltipContentBuilder;
 
   @override
-  State<GameTooltipWidget> createState() => __TooltipWithWidgetState();
+  State<GameTooltipWidget> createState() => _GameTooltipWidgetState();
 }
 
-class __TooltipWithWidgetState extends State<GameTooltipWidget>
-    with SingleTickerProviderStateMixin {
+class _GameTooltipWidgetState extends State<GameTooltipWidget> with SingleTickerProviderStateMixin {
   late final GameTooltip controller;
   // no need to put in dispose(), when showing, OverlayController put itself in Getx smart management
 
@@ -91,7 +87,6 @@ class __TooltipWithWidgetState extends State<GameTooltipWidget>
         anchorKey: key,
         childBuilder: widget.tooltipContentBuilder,
         position: widget.position,
-        scale: widget.scale,
         controller: animController);
 
     focusNode = FocusNode();

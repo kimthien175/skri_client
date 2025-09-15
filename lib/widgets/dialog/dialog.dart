@@ -188,6 +188,12 @@ class _Dialog extends StatelessWidget {
           child: dialog);
     }
 
+    var scale = OverlayController.scale(context);
+
+    if (scale != 1) {
+      dialog = Transform.scale(scale: scale, child: dialog);
+    }
+
     return FocusScope(
         node: c.focusNode,
         child: FadeTransition(

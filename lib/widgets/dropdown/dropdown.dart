@@ -19,7 +19,6 @@ class Dropdown<T> extends StatefulWidget {
       this.height,
       this.unactiveColor = Colors.white,
       this.activeColor = GlobalStyles.colorPanelButton,
-      this.scale = Dropdown.defaultScale,
       super.key})
       : assert(items.length > 0, 'List of items must be not empty');
 
@@ -35,7 +34,6 @@ class Dropdown<T> extends StatefulWidget {
   final Color unactiveColor;
   final Color activeColor;
 
-  final double Function() scale;
   static double defaultScale() => 1.0;
 
   @override

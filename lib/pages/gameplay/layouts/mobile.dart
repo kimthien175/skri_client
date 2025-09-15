@@ -11,9 +11,6 @@ class GameplayMobile extends StatelessWidget {
 
   static const playerListAndChatMinHeight = 600;
 
-  static double getScale(BuildContext context) =>
-      GameBarMobile.getHeight(context) / GameBar.webHeight;
-
   @override
   Widget build(BuildContext context) {
     var restOfHeight = context.height -

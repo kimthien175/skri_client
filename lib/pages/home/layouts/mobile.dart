@@ -42,7 +42,7 @@ class _HomeMobileState extends State<HomeMobile> {
                   Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      SizedBox(height: PanelStyles.widthOnMobile * 0.06),
+                      SizedBox(height: PanelStyles.widthOnMobile(context) * 0.06),
                       SizedBox(
                           width: min(0.9 * context.width, 0.65 * context.height),
                           child: const FittedBox(
@@ -52,7 +52,7 @@ class _HomeMobileState extends State<HomeMobile> {
                           ))),
                       SizedBox(height: 0.04 * context.width),
                       SizedBox(
-                          width: PanelStyles.widthOnMobile,
+                          width: PanelStyles.widthOnMobile(context),
                           child: FittedBox(
                               child: Container(
                                   decoration: PanelStyles.mobileDecoration,

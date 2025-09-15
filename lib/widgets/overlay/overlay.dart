@@ -13,6 +13,8 @@ import 'position.dart';
 abstract class OverlayController extends GetxController {
   OverlayController({this.permanent = false});
 
+  static double Function(BuildContext context) scale = (_) => 1.0;
+
   // static Widget defaultChildBuilder() =>
   //     throw Exception('Provide value or override getter for subclass');
 
@@ -99,7 +101,6 @@ class PositionedOverlayController<P extends OverlayWidgetPosition> extends Overl
   PositionedOverlayController(
       {required this.childBuilder,
       required this.position,
-      this.scale = PositionedOverlayController.defaultScaler,
       required this.anchorKey,
       this.tapOutsideToClose = false});
 
@@ -108,7 +109,6 @@ class PositionedOverlayController<P extends OverlayWidgetPosition> extends Overl
 
   final Widget Function() childBuilder;
   final P position;
-  final double Function() scale;
 
   final GlobalKey anchorKey;
   RenderBox get originalBox => anchorKey.currentContext!.findRenderObject() as RenderBox;
@@ -161,7 +161,7 @@ class __PositionedOverlayChildWidgetState extends State<_PositionedOverlayChildW
 
     return c.position.build(
         originalBox: c.originalBox,
-        scale: c.scale(),
+        scale: OverlayController.scale(context),
         child: DefaultTextStyle(
             style: const TextStyle(
                 color: Color.fromRGBO(240, 240, 240, 1),

@@ -10,6 +10,7 @@ import 'package:skribbl_client/pages/pages.dart';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:skribbl_client/widgets/overlay/overlay.dart';
 import 'package:skribbl_client/widgets/page_background.dart';
 
 import 'widgets/draw/manager.dart';
@@ -17,7 +18,15 @@ import 'widgets/draw/manager.dart';
 class GameplayPage extends StatefulWidget {
   const GameplayPage({super.key});
 
-  static bool isWebLayout(BuildContext context) => context.width >= context.height;
+  static bool isWebLayout(BuildContext context) {
+    if (context.width >= context.height) {
+      // web
+      OverlayController.scale = (_) => 1.0;
+      return true;
+    }
+    OverlayController.scale = (ct) => GameBarMobile.getHeight(ct) / GameBar.webHeight;
+    return false;
+  }
 
   @override
   State<GameplayPage> createState() => _GameplayPageState();

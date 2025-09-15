@@ -59,7 +59,7 @@ class Footer extends StatelessWidget {
                         color: Color.fromRGBO(103, 122, 249, 1)))
               ]));
     } else {
-      var mobilePanelWidth = PanelStyles.widthOnMobile;
+      var mobilePanelWidth = PanelStyles.widthOnMobile(context);
       return Container(
           color: PanelStyles.color,
           child: Column(children: [
