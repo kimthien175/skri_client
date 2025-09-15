@@ -2,7 +2,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:skribbl_client/models/game/game.dart';
-import 'package:skribbl_client/pages/gameplay/widgets/players_list/player_card.dart';
 import 'package:skribbl_client/utils/utils.dart';
 import 'package:skribbl_client/widgets/widgets.dart';
 
@@ -10,7 +9,7 @@ import 'report/report.dart';
 
 class PlayerInfoDialog extends GameDialog {
   PlayerInfoDialog._internal(this.info)
-      : super(title: Text(info.nameForCard), content: const _InfoDialogContent());
+      : super(title: Text(info.fullNameForCard), content: const _InfoDialogContent());
 
   static PlayerInfoDialog factory(Player info) {
     return OverlayController.cache(
@@ -21,7 +20,6 @@ class PlayerInfoDialog extends GameDialog {
 
   @override
   void onClose() {
-    Get.delete<PlayerController>(tag: info.id);
     OverlayController.deleteCache('report ${info.id}');
     super.onClose();
   }

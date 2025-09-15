@@ -17,6 +17,8 @@ import 'widgets/draw/manager.dart';
 class GameplayPage extends StatefulWidget {
   const GameplayPage({super.key});
 
+  static bool isWebLayout(BuildContext context) => context.width >= context.height;
+
   @override
   State<GameplayPage> createState() => _GameplayPageState();
 }
@@ -52,6 +54,5 @@ class _GameplayPageState extends State<GameplayPage> {
             if (didPop) return;
             Game.inst.confirmLeave();
           },
-          child: const GameplayWeb()));
-  //return context.width >= context.height ? const Web() : const Mobile();
+          child: GameplayPage.isWebLayout(context) ? const GameplayWeb() : const GameplayMobile()));
 }

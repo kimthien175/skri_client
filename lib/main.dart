@@ -17,19 +17,22 @@ import 'pages/pages.dart';
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
 
-  String? parameter;
-  if (const bool.hasEnvironment('code')) {
-    var fromHost = const String.fromEnvironment('code');
-    parameter = fromHost.substring(fromHost.indexOf('?'));
-  }
+  //#region DEVELOPER
+  // String? parameter;
+  // if (const bool.hasEnvironment('code')) {
+  //   var fromHost = const String.fromEnvironment('code');
+  //   parameter = fromHost.substring(fromHost.indexOf('?'));
+  // }
+  //#endregion
 
-  var initialRoute = "/${parameter ?? ''}";
+  var initialRoute = "/GameplayPage";
+  // "/${parameter ?? ''}";
 
   Future.wait([
     GifManager.init().then((_) async {
       //FOR TESTING, TO SWITCH TO PRODUCTION, UNCOMMENT THE LINE BELOW AND IT IS THE ONLY LINE IN THIS CALLBACK BODY
-      MePlayer.random();
-      //await PrivateGame.setupTesting();
+      //MePlayer.random();
+      await PrivateGame.setupTesting();
     }),
     SocketIO.initSocket(),
     Sound.inst.load()

@@ -2,6 +2,7 @@ import 'package:skribbl_client/models/game/game.dart';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:skribbl_client/pages/gameplay/layouts/mobile.dart';
 import 'package:skribbl_client/utils/utils.dart';
 
 import 'players_list/player_card.dart';
@@ -108,19 +109,34 @@ class GameChat extends StatelessWidget {
 
   static const double width = 300;
 
+  static const double _height = 600;
+
   @override
   Widget build(BuildContext context) {
-    return ClipRRect(
-        borderRadius: GlobalStyles.borderRadius,
-        child: Container(
-            width: width,
-            height: 600,
-            color: Colors.white,
-            child: const Column(children: [
-              Expanded(child: Center(child: Messages())),
-              SizedBox(height: 10),
-              GuessInput()
-            ])));
+    return Container(
+        decoration: BoxDecoration(borderRadius: GlobalStyles.borderRadius, color: Colors.white),
+        width: width,
+        height: _height,
+        child: const Column(children: [
+          Expanded(child: Center(child: Messages())),
+          SizedBox(height: 10),
+          GuessInput()
+        ]));
+  }
+}
+
+class GameChatMobile extends StatelessWidget {
+  const GameChatMobile({super.key, this.height = GameChat._height});
+
+  final double height;
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        decoration: BoxDecoration(borderRadius: GlobalStyles.borderRadius, color: Colors.white),
+        width: GameChat.width,
+        height: height,
+        alignment: Alignment.center,
+        child: Messages());
   }
 }
 
@@ -143,12 +159,14 @@ class Messages extends StatelessWidget {
 class GuessInput extends StatelessWidget {
   const GuessInput({super.key});
 
+  static const double height = 38.6;
+
   @override
   Widget build(BuildContext context) {
     var controller = Get.find<GameChatController>();
     return Stack(alignment: Alignment.centerRight, children: [
       Container(
-          margin: const EdgeInsets.only(left: 2.8, right: 2.8, bottom: 2.8),
+          margin: const EdgeInsets.all(2.8),
           child: TextField(
               // cursorColor: Colors.blue.shade900,
               focusNode: controller.focusNode,
@@ -193,5 +211,24 @@ class GuessInput extends StatelessWidget {
                   style:
                       const TextStyle(fontSize: 12, fontVariations: [FontVariation.weight(700)])))))
     ]);
+  }
+}
+
+class GuessInputMobile extends StatelessWidget {
+  const GuessInputMobile({super.key});
+
+  static double getHeight(double width) => GameplayMobile.scaleRatio * width;
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+        builder: (ct, constraints) => SizedBox(
+            height: getHeight(context.width),
+            child: FittedBox(
+                child: Container(
+                    decoration:
+                        BoxDecoration(borderRadius: GlobalStyles.borderRadius, color: Colors.white),
+                    height: GuessInput.height,
+                    width: GuessInput.height / GameplayMobile.scaleRatio,
+                    child: const GuessInput()))));
   }
 }

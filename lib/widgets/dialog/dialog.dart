@@ -23,7 +23,8 @@ class GameDialog extends OverlayController with GetSingleTickerProviderStateMixi
 
   /// `hide` parameter for `onQuit` is default to true for returning
   GameDialog(
-      {required this.title,
+      {super.permanent,
+      required this.title,
       required Widget content,
       this.exitTap = true,
       RowRenderObjectWidget? buttons,
@@ -37,7 +38,8 @@ class GameDialog extends OverlayController with GetSingleTickerProviderStateMixi
   }
 
   GameDialog.error(
-      {required Widget content,
+      {super.permanent,
+      required Widget content,
       RowRenderObjectWidget buttons =
           const RowRenderObjectWidget(children: [GameDialogButton.okay()]),
       this.onQuit = GameDialog.onQuitDefault})
@@ -54,7 +56,8 @@ class GameDialog extends OverlayController with GetSingleTickerProviderStateMixi
       : title = Builder(builder: (_) => Text('dialog_title_disconnected'.tr)),
         exitTap = false,
         content = content.obs,
-        buttons = buttons.obs;
+        buttons = buttons.obs,
+        super(permanent: true);
 
   @override
   Widget widgetBuilder() => const _Dialog();
@@ -175,23 +178,6 @@ class _Dialog extends StatelessWidget {
               ))),
       const _CloseButton()
     ]);
-
-    // SlideTransition(
-    //     position: c.dialogAnimation,
-    //     child: DefaultTextStyle(
-    //         style: const TextStyle(
-    //             fontFamily: 'Nunito-var',
-    //             color: GlobalStyles.colorPanelText,
-    //             fontVariations: [FontVariation('wght', 500)]),
-    //         textAlign: TextAlign.center,
-    //         child: BackdropFilter(
-    //             filter: ImageFilter.blur(sigmaX: 4, sigmaY: 4),
-    //             child: Container(
-    //                 constraints: BoxConstraints(minHeight: 100, minWidth: 100),
-    //                 color: Colors.amber,
-    //                 child: Stack(children: [
-    //                   Container(height: 200, width: 200, color: Colors.pink),
-    //                 ])))));
 
     if (c.exitTap) {
       dialog = TapRegion(
@@ -314,39 +300,3 @@ class _Title extends StatelessWidget {
             child: c.title));
   }
 }
-
-/*Container(
-                      constraints: const BoxConstraints(minHeight: 120, minWidth: 410),
-                      decoration: const BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(10)),
-                          color: Color.fromRGBO(12, 44, 150, 0.75),
-                          boxShadow: [
-                            BoxShadow(color: Color.fromRGBO(0, 0, 0, 0.15), blurRadius: 50)
-                          ]),
-                      child: Column(
-                          //   crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            // title
-
-                            // content
-                            // Container(
-                            //     alignment: Alignment.center,
-                            //     //      constraints: const BoxConstraints(minWidth: 410, minHeight: 100),
-                            //     padding: const EdgeInsets.only(
-                            //         top: 7.5, left: 15, right: 15, bottom: 15),
-                            //     child: DefaultTextStyle.merge(
-                            //         style: const TextStyle(fontSize: 15), child: c.content)),
-                            //  if (c.buttons != null) c.buttons!
-
-              // child: Column(children: [
-              //   Container(
-              //       constraints: BoxConstraints(minHeight: 120),
-              //       //     const Size(410, 120)), //height: 120, width: 410),
-              //       //   height: 120,
-              //       alignment: Alignment.center,
-              //       child: DefaultTextStyle.merge(
-              //           style: const TextStyle(fontSize: 15),
-              //           child: c.content)),
-              //   //  c._buttons
-*/

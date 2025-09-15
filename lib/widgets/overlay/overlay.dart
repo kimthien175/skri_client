@@ -11,6 +11,8 @@ import 'package:get/get.dart';
 import 'position.dart';
 
 abstract class OverlayController extends GetxController {
+  OverlayController({this.permanent = false});
+
   // static Widget defaultChildBuilder() =>
   //     throw Exception('Provide value or override getter for subclass');
 
@@ -43,10 +45,12 @@ abstract class OverlayController extends GetxController {
 
   String get tag => cachedTag ?? hashCode.toString();
 
+  final bool permanent;
+
   Future<bool> show() async {
     if (_entry != null) return false;
 
-    Get.put(this, tag: tag, permanent: cachedTag != null);
+    Get.put(this, tag: tag, permanent: permanent);
 
     _entry = OverlayEntry(builder: (ct) => OverlayWidget(controller: this, child: widgetBuilder()));
 
@@ -64,10 +68,6 @@ abstract class OverlayController extends GetxController {
     _entry?.dispose();
     _entry = null;
 
-    // if (cachedTag == null) {
-    //   Get.delete<OverlayController>(tag: tag);
-    // }
-
     return true;
   }
 
@@ -78,14 +78,9 @@ abstract class OverlayController extends GetxController {
       _entry?.dispose();
     }
     super.onClose();
-  }
 
-  // Future<void> showOnce({void Function(bool value)? onDone}) async {
-  //   assert(cachedTag != null);
-  //   if (isShowing) return;
-  //   var result = await show();
-  //   if (onDone != null) onDone(result);
-  // }
+    _cache.remove(tag);
+  }
 }
 
 class OverlayWidget extends InheritedWidget {

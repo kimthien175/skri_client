@@ -10,9 +10,25 @@ part 'top_widget.dart';
 class MainContent extends StatelessWidget {
   const MainContent({super.key});
 
+  static const double width = 800;
+  static const double height = 600;
+
   @override
   Widget build(BuildContext context) {
     return Obx(() => Get.find<_MainContentController>().widget.value);
+  }
+}
+
+class MainContentMobile extends StatelessWidget {
+  const MainContentMobile({super.key});
+
+  static double getHeight(double width) => width / MainContent.width * MainContent.height;
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+        builder: (ct, constraints) =>
+            SizedBox(width: constraints.maxWidth, child: const FittedBox(child: MainContent())));
   }
 }
 

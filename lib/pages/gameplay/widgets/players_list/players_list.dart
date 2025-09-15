@@ -7,20 +7,27 @@ import 'package:skribbl_client/models/models.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:skribbl_client/pages/pages.dart';
-import 'package:skribbl_client/widgets/overlay/overlay.dart';
 
 class PlayersListController extends GetxController {
-  PlayersListController() {
-    List<Player> list = [];
-    Game.inst.playersByMap.forEach((id, player) {
-      Get.put(PlayerController(), tag: player.id);
-      _bubbleInsert(list, player);
-    });
+  PlayersListController();
 
-    this.list = list.obs;
+  void reload() {
+    for (var player in list) {
+      Get.delete<PlayerController>(tag: player.id);
+    }
+    list.value = _convertFromMap();
   }
 
-  late final RxList<Player> list;
+  List<Player> _convertFromMap() {
+    List<Player> list = [];
+    Game.inst.playersByMap.forEach((id, player) {
+      Get.put(PlayerController(id: player.id), tag: player.id);
+      _bubbleInsert(list, player);
+    });
+    return list;
+  }
+
+  late final RxList<Player> list = _convertFromMap().obs;
 
   void _bubbleInsert(List<Player> list, Player newItem) {
     for (var i = list.length - 1; i >= 0; i--) {
@@ -36,7 +43,7 @@ class PlayersListController extends GetxController {
   }
 
   void add(Player player) {
-    Get.put(PlayerController(), tag: player.id);
+    Get.put(PlayerController(id: player.id), tag: player.id);
     _bubbleInsert(list, player);
   }
 
@@ -44,12 +51,6 @@ class PlayersListController extends GetxController {
     list.removeWhere((player) => player.id == id);
     // remove PlayerController
     Get.delete<PlayerController>(tag: id);
-
-    // remove info dialog controller
-    OverlayController.deleteCache('card_info_$id');
-
-    // remove report dialog controller
-    OverlayController.deleteCache('report $id');
   }
 
   /// since player with `id` get plus score, then find new position to swap

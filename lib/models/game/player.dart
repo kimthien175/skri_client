@@ -9,7 +9,8 @@ class Player {
 
   final AvatarModel avatarModel;
   String name;
-  String get nameForCard => name;
+  String get nameForCard => name.length <= 15 ? name : '${name.substring(0, 12)}...';
+  String get fullNameForCard => name;
   bool? isReported;
   bool? isKickVoted;
 
@@ -21,7 +22,7 @@ class Player {
     return Player(
         name: rawPlayer['name'],
         id: rawPlayer['id'],
-        score: rawPlayer['score'],
+        score: rawPlayer['score'] ?? 0, //TODO: REMOVE ??0 ON PRODUCTION
         avatarModel: AvatarModel(rawAvatar['color'], rawAvatar['eyes'], rawAvatar['mouth'],
             winner: rawPlayer['winner'] ?? false));
   }
@@ -59,7 +60,16 @@ class MePlayer extends Player {
       avatarModel: AvatarModel.fromJSON(data['avatar']));
 
   @override
-  String get nameForCard => '$name (${'You'.tr})';
+  String get nameForCard {
+    var you = "(${'You'.tr})";
+    if (name.length + 1 + you.length <= 15) return '$name (${'You'.tr})';
+
+    var maxLength = 15 - you.length - 3;
+    return '${name.substring(0, maxLength)}...$you';
+  }
+
+  @override
+  String get fullNameForCard => "$name (${'You'.tr})";
 
   List<String> mutedPlayerIds = [];
 }

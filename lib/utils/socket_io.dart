@@ -99,7 +99,7 @@ class SocketIO {
       if (inst.playersByMap[msg.playerId] != null) {
         (inst as PrivateGame).hostPlayerId.value = msg.playerId;
       } else {
-        inst.reload();
+        Game.requestReload();
       }
     });
 

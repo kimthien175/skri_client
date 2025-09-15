@@ -52,6 +52,12 @@ class PrivateGame extends Game {
     LoadingOverlay.inst.hide();
   }
 
+  @override
+  void reload(Map<String, dynamic> room) {
+    hostPlayerId.value = room['host_player_id'];
+    super.reload(room);
+  }
+
   PrivateGame._internal({required super.data}) {
     hostPlayerId = (data['host_player_id'] as String).obs;
   }
@@ -267,7 +273,7 @@ class PrivateGame extends Game {
       "_id": "680b9959c4a0f77046faa934",
       //
       "status": {
-        "current_state_id": "draw_state_id",
+        "current_state_id": "pregame_state_id",
         "command": "start",
         "date": DateTime.now().toUtc().toIso8601String(),
         "next_state_id": "draw_state_id",
@@ -661,13 +667,4 @@ class PrivateGame extends Game {
       });
     }
   }
-
-  // Map<String, dynamic> getDifferentSettingsFromDefault() {
-  //   Map<String, dynamic> result = {};
-  //   var defaultSettings = succeededCreatedRoomData['settings']['default'];
-  //   for (String key in settings.keys) {
-  //     if (settings[key] != defaultSettings[key]) result[key] = settings[key];
-  //   }
-  //   return result;
-  // }
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:skribbl_client/models/sound.dart';
+import 'package:skribbl_client/pages/gameplay/layouts/mobile.dart';
 import 'package:skribbl_client/pages/gameplay/widgets/draw/draw_widget.dart';
 import 'package:skribbl_client/pages/gameplay/widgets/draw/widgets/color.dart';
 import 'package:skribbl_client/pages/gameplay/widgets/game_bar/settings/slider.dart';
@@ -55,6 +56,7 @@ class SettingsButton extends StatelessWidget {
           const AnimatedButtonOpacityDecorator(minOpacity: 0.9),
           const AnimatedButtonScaleDecorator(max: 1.1),
           AnimatedButtonTooltipDecorator(
+              scale: () => context.width >= context.height ? 1.0 : GameplayMobile.getScale(context),
               childBuilder: () => Text('Settings'.tr),
               position: const GameTooltipPosition.centerLeft())
         ],

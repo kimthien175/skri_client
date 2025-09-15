@@ -1,5 +1,6 @@
 // ignore_for_file: invalid_use_of_visible_for_testing_member, invalid_use_of_protected_member
 
+import 'package:skribbl_client/pages/gameplay/gameplay.dart';
 import 'package:skribbl_client/pages/gameplay/widgets/draw/widgets/stroke_value_item.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -125,8 +126,8 @@ class DrawManager {
     pushTail(ClearStep());
   }
 
-  static const double width = 800;
-  static const double height = 600;
+  static const double width = MainContent.width;
+  static const double height = MainContent.height;
 
   // printFromTailToHead() {
   //   print('[START PRINT]');
@@ -230,7 +231,7 @@ class DrawWidgetCanvas extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var drawInst = DrawManager.inst;
-    var size = const Size(DrawManager.width, DrawManager.height);
+    var size = const Size(MainContent.width, MainContent.height);
     return ClipRRect(
         borderRadius: const BorderRadius.all(Radius.circular(3)),
         child: Container(

@@ -59,7 +59,7 @@ class LoadingOverlay extends OverlayController {
   static final LoadingOverlay _inst = LoadingOverlay._internal();
   static LoadingOverlay get inst => _inst;
 
-  LoadingOverlay._internal();
+  LoadingOverlay._internal() : super(permanent: true);
 
   @override
   Widget widgetBuilder() => const _LoadingWidget();

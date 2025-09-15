@@ -9,6 +9,8 @@ import 'package:get/get.dart';
 import 'player_card/info.dart';
 
 class PlayerController extends GetxController with GetTickerProviderStateMixin {
+  PlayerController({required this.id});
+  final String id;
   late final AnimationController animController =
       AnimationController(duration: AnimatedButton.duration, vsync: this);
   late final Animation<double> animation =
@@ -38,6 +40,7 @@ class PlayerController extends GetxController with GetTickerProviderStateMixin {
     animController.dispose();
     tooltipController.dispose();
     Get.delete<OverlayController>(tag: tooltip.tag);
+    OverlayController.deleteCache('card_info_$id');
     super.onClose();
   }
 

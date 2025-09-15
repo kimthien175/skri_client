@@ -41,11 +41,39 @@ class Game extends GetxController {
 
     DrawReceiver.inst.load(data['latest_draw_data']);
   }
+
+  void reload(Map<String, dynamic> room) {
+    data = room;
+
+    if (state.value.id != currentStateId) {
+      state.value = GameState.fromJSON(henceforthStates[currentStateId]);
+    }
+
+    Map<String, Player> playersByMap = {};
+    (data['players'] as Map).forEach((id, rawPlayer) {
+      Player player = id == MePlayer.inst.id ? MePlayer.inst : Player.fromJSON(rawPlayer);
+
+      playersByMap[id] = player;
+    });
+    this.playersByMap.value = playersByMap;
+    Get.find<PlayersListController>().reload();
+
+    settings.value = data['settings'];
+
+    messages.value = Message.listFromJSON(data['messages']);
+
+    currentRound.value = data['current_round'];
+
+    DrawReceiver.inst.load(data['latest_draw_data']);
+
+    runState();
+  }
+
   static Game? _inst;
   static Game get inst => _inst!;
   static set inst(Game? game) => _inst = game;
 
-  final Map<String, dynamic> data;
+  Map<String, dynamic> data;
 
   String get roomCode => data['code'];
   set roomCode(String value) {
@@ -135,6 +163,7 @@ class Game extends GetxController {
     var dialog = OverlayController.cache(
         tag: 'confirm_leave',
         builder: () => GameDialog(
+            permanent: true,
             title: Text("dialog_title_confirm_leave".tr),
             content: Center(child: Text('dialog_content_confirm_leave'.tr)),
             buttons: const RowRenderObjectWidget(
@@ -153,14 +182,15 @@ class Game extends GetxController {
     MePlayer.inst.score = 0;
 
     var homeController = Get.find<HomeController>();
+
+    LoadingOverlay.inst.show();
+
     await Future.wait([
+      Game.inst.stopState(),
       Get.offAllNamed(
               "/${homeController.isPrivateRoomCodeValid ? '?${homeController.privateRoomCode}' : ''}")
-          as Future<void>,
-      Game.inst.stopState()
+          as Future<void>
     ]);
-
-    await LoadingOverlay.inst.show();
 
     Game.inst = null;
     await LoadingOverlay.inst.hide();
@@ -218,8 +248,14 @@ class Game extends GetxController {
   CancelableOperation? _onStartOperation;
   CancelableOperation<DateTime>? _onEndOperation;
 
-  // TODO: RELOAD GAME
-  void reload() {}
+  static Future<void> requestReload() async {
+    await LoadingOverlay.inst.show();
+    SocketIO.inst.socket.emitWithAck('reload', null, ack: (data) async {
+      if (!data['success']) return leave();
+      Game.inst.reload(data['data']);
+      LoadingOverlay.inst.hide();
+    });
+  }
 }
 
 typedef GameStateInitCallback = GameState Function();
