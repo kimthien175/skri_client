@@ -2,6 +2,7 @@ import 'package:skribbl_client/models/game/state/draw/draw.dart';
 import 'package:skribbl_client/models/models.dart';
 import 'package:skribbl_client/pages/gameplay/widgets/players_list/players_list.dart';
 import 'package:skribbl_client/utils/styles.dart';
+import 'package:skribbl_client/widgets/overlay/newgame_tooltip.dart';
 import 'package:skribbl_client/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -18,7 +19,7 @@ class PlayerController extends GetxController with GetTickerProviderStateMixin {
           .drive(Tween<double>(begin: 1.0, end: 1.1));
 
   late final GlobalKey anchorKey;
-  late final GameTooltip tooltip;
+  late final NewGameTooltipController tooltip;
   RxString tooltipContent = ''.obs;
 
   late final AnimationController tooltipController =
@@ -28,10 +29,10 @@ class PlayerController extends GetxController with GetTickerProviderStateMixin {
   void onInit() {
     super.onInit();
     anchorKey = GlobalKey();
-    tooltip = GameTooltip(
-        anchorKey: anchorKey,
-        position: GameTooltipPosition.centerRight(),
-        childBuilder: () => Obx(() => Text(tooltipContent.value)),
+    tooltip = NewGameTooltipController(
+        //anchorKey: anchorKey,
+        position: const NewGameTooltipPosition.centerRight(),
+        child: Obx(() => Text(tooltipContent.value)),
         controller: tooltipController);
   }
 
@@ -44,12 +45,13 @@ class PlayerController extends GetxController with GetTickerProviderStateMixin {
     super.onClose();
   }
 
-  void showMessage(String text) {
+  Future<bool> showMessage(String text) async {
     tooltipContent.value = text;
-    tooltip
-        .show()
-        .then((_) => Future.delayed(const Duration(seconds: 2)))
-        .then((_) => tooltip.hide());
+    if (tooltip.isShowing) await tooltip.hideInstancely();
+
+    await tooltip.show();
+    await Future.delayed(const Duration(seconds: 2));
+    return tooltip.hide();
   }
 }
 

@@ -1,0 +1,262 @@
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get_state_manager/get_state_manager.dart';
+import 'package:skribbl_client/widgets/animated_button/animated_button.dart';
+import 'package:skribbl_client/widgets/overlay/new.dart';
+
+enum GameTooltipBackgroundColor {
+  notify(),
+  warining(value: Color.fromRGBO(229, 115, 115, 1.0)),
+  input(value: Color(0xffffffff));
+
+  const GameTooltipBackgroundColor({this.value = const Color.fromRGBO(69, 113, 255, 1.0)});
+  final Color value;
+}
+
+class NewGameTooltipController extends NewTooltipController<NewGameTooltipPosition>
+    with GetTickerProviderStateMixin {
+  NewGameTooltipController(
+      {required super.position,
+      super.permanent,
+      required super.child,
+      AnimationController? controller}) {
+    this.controller =
+        controller ?? AnimationController(vsync: this, duration: AnimatedButton.duration);
+  }
+
+  late final AnimationController controller;
+  late final Animation<double> scaleAnimation = controller.drive(Tween<double>(begin: 0, end: 1));
+
+  @override
+  Future<bool> show() async {
+    if (await super.show()) {
+      await controller.forward();
+      return true;
+    }
+    return false;
+  }
+
+  @override
+  Future<bool> hide() async {
+    await controller.reverse();
+    return super.hide();
+  }
+
+  Future<bool> hideInstancely() => super.hide();
+
+  @nonVirtual
+  @override
+  Widget get child => position.wrap(super.child);
+  // ScaleTransition(
+  //     scale: scaleAnimation,
+  //     //alignment: position.followerAnchor,
+  //     child: position.wrap(super.child));
+}
+
+abstract class NewGameTooltipPosition extends NewOverlayPosition {
+  const factory NewGameTooltipPosition.centerLeft({GameTooltipBackgroundColor backgroundColor}) =
+      _CenterLeft;
+  const factory NewGameTooltipPosition.centerRight({GameTooltipBackgroundColor backgroundColor}) =
+      _CenterRight;
+  const factory NewGameTooltipPosition.centerTop({GameTooltipBackgroundColor backgroundColor}) =
+      _CenterTop;
+  const factory NewGameTooltipPosition.centerBottom({GameTooltipBackgroundColor backgroundColor}) =
+      _CenterBottom;
+
+  final GameTooltipBackgroundColor backgroundColor;
+
+  const NewGameTooltipPosition({this.backgroundColor = GameTooltipBackgroundColor.notify});
+
+  Widget wrap(Widget child);
+
+  Path Function(Size size) get arrowPath;
+
+  double get width;
+  double get height;
+
+  @nonVirtual
+  Container _wrapWithBackground(Widget child) => Container(
+      padding: const EdgeInsets.all(7),
+      decoration: BoxDecoration(
+          color: backgroundColor.value, borderRadius: const BorderRadius.all(Radius.circular(3))),
+      child: child);
+
+  @nonVirtual
+  Widget get arrow => ClipPath(
+      clipper: _ArrowClip(arrowPath),
+      child: Container(height: height, width: width, color: backgroundColor.value));
+}
+
+class _CenterLeft extends NewGameTooltipPosition with PositionedOverlayCenterLeftMixin {
+  const _CenterLeft({super.backgroundColor});
+
+  @override
+  Widget wrap(Widget child) => Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      mainAxisSize: MainAxisSize.min,
+      children: [_wrapWithBackground(child), arrow]);
+
+  @override
+  double get height => 20;
+
+  @override
+  double get width => 10;
+
+  @override
+  Path Function(Size size) get arrowPath => (size) => Path()
+    ..moveTo(0, 0)
+    ..lineTo(size.width, size.height / 2)
+    ..lineTo(0, size.height);
+}
+
+class _CenterRight extends NewGameTooltipPosition with PositionedOverlayCenterRightMixin {
+  const _CenterRight({super.backgroundColor});
+
+  @override
+  Widget wrap(Widget child) => SizedBox(
+      child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [arrow, _wrapWithBackground(child)]));
+
+  @override
+  Path Function(Size size) get arrowPath => (size) => Path()
+    ..moveTo(size.width, 0)
+    ..lineTo(size.width, size.height)
+    ..lineTo(0, size.height / 2);
+
+  @override
+  double get height => 20;
+
+  @override
+  double get width => 10;
+}
+
+class _CenterTop extends NewGameTooltipPosition with PositionedOverlayCenterTopMixin {
+  const _CenterTop({super.backgroundColor});
+
+  @override
+  Path Function(Size size) get arrowPath => (size) => Path()
+    ..moveTo(0, 0)
+    ..lineTo(size.width, 0)
+    ..lineTo(size.width / 2, size.height);
+
+  @override
+  double get height => 10;
+
+  @override
+  double get width => 20;
+
+  @override
+  Widget wrap(Widget rawChild) => Column(
+      mainAxisAlignment: MainAxisAlignment.end,
+      mainAxisSize: MainAxisSize.min,
+      children: [_wrapWithBackground(rawChild), arrow]);
+}
+
+class _CenterBottom extends NewGameTooltipPosition with PositionedOverlayCenterBottomMixin {
+  const _CenterBottom({super.backgroundColor});
+
+  @override
+  Path Function(Size size) get arrowPath => (size) => Path()
+    ..moveTo(0, size.height)
+    ..lineTo(size.width, size.height)
+    ..lineTo(size.width / 2, 0);
+
+  @override
+  double get height => 10;
+
+  @override
+  double get width => 20;
+
+  @override
+  Widget wrap(Widget rawChild) => Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [arrow, _wrapWithBackground(rawChild)]);
+}
+
+class _ArrowClip extends CustomClipper<Path> {
+  _ArrowClip(this._path);
+  final Path Function(Size) _path;
+  @override
+  Path getClip(Size size) => _path(size);
+
+  @override
+  bool shouldReclip(covariant CustomClipper<Path> oldClipper) => true;
+}
+
+class GameTooltipWrapper extends StatefulWidget {
+  const GameTooltipWrapper(
+      {super.key,
+      required this.child,
+      this.position = const NewGameTooltipPosition.centerTop(),
+      required this.tooltip});
+
+  final Widget child;
+
+  final NewGameTooltipPosition position;
+  final Widget tooltip;
+  @override
+  State<GameTooltipWrapper> createState() => _GameTooltipHoverWidgetState();
+}
+
+class _GameTooltipHoverWidgetState extends State<GameTooltipWrapper>
+    with SingleTickerProviderStateMixin {
+  late final NewGameTooltipController controller;
+  // no need to put in dispose(), when showing, OverlayController put itself in Getx smart management
+
+  late final GlobalKey key;
+  late final AnimationController animController;
+  late final FocusNode focusNode;
+  bool isHover = false;
+  @override
+  void initState() {
+    super.initState();
+    key = GlobalKey();
+    animController = AnimationController(vsync: this, duration: AnimatedButton.duration);
+    controller = NewGameTooltipController(
+        child: widget.tooltip, position: widget.position, controller: animController);
+
+    focusNode = FocusNode();
+    focusNode.addListener(() {
+      if (focusNode.hasFocus) {
+        if (focusNode.descendants.isNotEmpty) {
+          focusNode.descendants.first.requestFocus();
+        }
+        if (isHover) return;
+        controller.show();
+      } else {
+        if (isHover) return;
+        controller.hide();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    animController.dispose();
+    focusNode.dispose();
+
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Focus(
+        focusNode: focusNode,
+        child: MouseRegion(
+            onEnter: (event) {
+              isHover = true;
+              if (focusNode.hasFocus) return;
+              controller.show();
+            },
+            onExit: (event) {
+              isHover = false;
+              if (focusNode.hasFocus) return;
+              controller.hide();
+            },
+            key: key,
+            child: widget.child));
+  }
+}

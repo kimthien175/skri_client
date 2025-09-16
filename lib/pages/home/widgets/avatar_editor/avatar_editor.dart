@@ -10,6 +10,7 @@ import 'package:skribbl_client/models/models.dart';
 import 'package:skribbl_client/utils/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:skribbl_client/widgets/overlay/newgame_tooltip.dart';
 import 'package:skribbl_client/widgets/widgets.dart';
 
 class JiggleController extends GetxController with GetSingleTickerProviderStateMixin {
@@ -289,8 +290,8 @@ class _RandomButton extends GetView<AvatarEditorController> {
       decorators: [
         const AnimatedButtonScaleDecorator(max: 1.2),
         AnimatedButtonTooltipDecorator(
-            childBuilder: () => Text('randomize_your_avatar'.tr),
-            position: const GameTooltipPosition.centerBottom()),
+            child: Builder(builder: (_) => Text('randomize_your_avatar'.tr)),
+            position: const NewGameTooltipPosition.centerBottom()),
         const AnimatedButtonOpacityDecorator(minOpacity: 0.6)
       ],
       child: GifManager.inst.misc('randomize').builder.init(height: 32, width: 32));

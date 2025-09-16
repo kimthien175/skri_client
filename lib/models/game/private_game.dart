@@ -77,162 +77,162 @@ class PrivateGame extends Game {
           "name": "Flcpmizdv",
           "avatar": {"color": 15, "eyes": 12, "mouth": 12}
         },
-        "iBnJ6uBN": {
-          "id": "iBnJ6uBN",
-          "name": "D Myfqwslktfmrwhfhou",
-          "avatar": {"color": 15, "eyes": 12, "mouth": 12}
-        },
-        "04lxSxZa": {
-          "id": "04lxSxZa",
-          "name": "Sntxufnvx",
-          "avatar": {"color": 15, "eyes": 12, "mouth": 12}
-        },
-        "StzosDkc": {
-          "id": "StzosDkc",
-          "name": "Tkizn",
-          "avatar": {"color": 15, "eyes": 12, "mouth": 12}
-        },
-        "ENrBp2BG": {
-          "id": "ENrBp2BG",
-          "name": "Assyahsierlpe",
-          "avatar": {"color": 15, "eyes": 12, "mouth": 12}
-        },
-        "xHfT4tvh": {
-          "id": "xHfT4tvh",
-          "name": "Hxjcmjonpmem",
-          "avatar": {"color": 15, "eyes": 12, "mouth": 12}
-        },
-        "8X1u11Wq": {
-          "id": "8X1u11Wq",
-          "name": "Qntkfz Bflsgrf",
-          "avatar": {"color": 15, "eyes": 12, "mouth": 12}
-        },
-        "uZoEeKMu": {
-          "id": "uZoEeKMu",
-          "name": "Gdctykvlsibolu",
-          "avatar": {"color": 15, "eyes": 12, "mouth": 12}
-        },
-        "ViWToJfv": {
-          "id": "ViWToJfv",
-          "name": "Ovnjr",
-          "avatar": {"color": 15, "eyes": 12, "mouth": 12}
-        },
-        "5YX6ryba": {
-          "id": "5YX6ryba",
-          "name": "Tqeiuhrrgtroy O",
-          "avatar": {"color": 15, "eyes": 12, "mouth": 12}
-        },
-        "PSS6IMpo": {
-          "id": "PSS6IMpo",
-          "name": "Ameyytha",
-          "avatar": {"color": 15, "eyes": 12, "mouth": 12}
-        },
-        "1GdAjnIA": {
-          "id": "1GdAjnIA",
-          "name": "Zrhw",
-          "avatar": {"color": 15, "eyes": 12, "mouth": 12}
-        },
-        "i0ocogCF": {
-          "id": "i0ocogCF",
-          "name": "Jjlgarnbwf",
-          "avatar": {"color": 15, "eyes": 12, "mouth": 12}
-        },
-        "c9wOaQfP": {
-          "id": "c9wOaQfP",
-          "name": "Tyvd Ahceldjua",
-          "avatar": {"color": 15, "eyes": 12, "mouth": 12}
-        },
-        "cfQZxYk4": {
-          "id": "cfQZxYk4",
-          "name": "Szmwxdzds",
-          "avatar": {"color": 15, "eyes": 12, "mouth": 12}
-        },
-        "rneIFu8k": {
-          "id": "rneIFu8k",
-          "name": "Kegqhalv",
-          "avatar": {"color": 15, "eyes": 12, "mouth": 12}
-        },
-        "BChA55fj": {
-          "id": "BChA55fj",
-          "name": "Mbw",
-          "avatar": {"color": 15, "eyes": 12, "mouth": 12}
-        },
-        "e71C9iWw": {
-          "id": "e71C9iWw",
-          "name": "Ori  Zoftai",
-          "avatar": {"color": 15, "eyes": 12, "mouth": 12}
-        },
-        "lvEf8oRL": {
-          "id": "lvEf8oRL",
-          "name": "Ydldaueiefyxrjcmv",
-          "avatar": {"color": 15, "eyes": 12, "mouth": 12}
-        },
-        "HHl2q4QN": {
-          "id": "HHl2q4QN",
-          "name": "Fsslulvhqzdhapal",
-          "avatar": {"color": 15, "eyes": 12, "mouth": 12}
-        },
-        "QKyqXknH": {
-          "id": "QKyqXknH",
-          "name": "Faeavp",
-          "avatar": {"color": 15, "eyes": 12, "mouth": 12}
-        },
-        "vfnTmOpu": {
-          "id": "vfnTmOpu",
-          "name": "Qqn S",
-          "avatar": {"color": 15, "eyes": 12, "mouth": 12}
-        },
-        "QX6MHu2w": {
-          "id": "QX6MHu2w",
-          "name": "Gaizxfxwgscucydqp",
-          "avatar": {"color": 15, "eyes": 12, "mouth": 12}
-        },
-        "2uqWGm0r": {
-          "id": "2uqWGm0r",
-          "name": "Zake",
-          "avatar": {"color": 15, "eyes": 12, "mouth": 12}
-        },
-        "KHnGbLQd": {
-          "id": "KHnGbLQd",
-          "name": "Ks Shtpmm",
-          "avatar": {"color": 15, "eyes": 12, "mouth": 12}
-        },
-        "ER3emqQc": {
-          "id": "ER3emqQc",
-          "name": "Ymztrwlrwfsbl Exfroj",
-          "avatar": {"color": 15, "eyes": 12, "mouth": 12}
-        },
-        "29juyknw": {
-          "id": "29juyknw",
-          "name": "Vuaefwnclfyxagt",
-          "avatar": {"color": 15, "eyes": 12, "mouth": 12}
-        },
-        "VvFoDY11": {
-          "id": "VvFoDY11",
-          "name": "Jrq ",
-          "avatar": {"color": 15, "eyes": 12, "mouth": 12}
-        },
-        "WgRuBj1z": {
-          "id": "WgRuBj1z",
-          "name": "Qnrsiywg Fiuxthkt",
-          "avatar": {"color": 15, "eyes": 12, "mouth": 12}
-        },
-        "AwROhV4k": {
-          "id": "AwROhV4k",
-          "name": "Aasmcyykrjlgtigupncx",
-          "avatar": {"color": 15, "eyes": 12, "mouth": 12}
-        },
-        "EU2WT4NI": {
-          "id": "EU2WT4NI",
-          "name": "Fhmfpdpos",
-          "avatar": {"color": 15, "eyes": 12, "mouth": 12}
-        },
-        "oKxPJ1c8": {
-          "id": "oKxPJ1c8",
-          "name": "Qpwe",
-          "avatar": {"color": 15, "eyes": 12, "mouth": 12},
-          "score": 0
-        },
+        // "iBnJ6uBN": {
+        //   "id": "iBnJ6uBN",
+        //   "name": "D Myfqwslktfmrwhfhou",
+        //   "avatar": {"color": 15, "eyes": 12, "mouth": 12}
+        // },
+        // "04lxSxZa": {
+        //   "id": "04lxSxZa",
+        //   "name": "Sntxufnvx",
+        //   "avatar": {"color": 15, "eyes": 12, "mouth": 12}
+        // },
+        // "StzosDkc": {
+        //   "id": "StzosDkc",
+        //   "name": "Tkizn",
+        //   "avatar": {"color": 15, "eyes": 12, "mouth": 12}
+        // },
+        // "ENrBp2BG": {
+        //   "id": "ENrBp2BG",
+        //   "name": "Assyahsierlpe",
+        //   "avatar": {"color": 15, "eyes": 12, "mouth": 12}
+        // },
+        // "xHfT4tvh": {
+        //   "id": "xHfT4tvh",
+        //   "name": "Hxjcmjonpmem",
+        //   "avatar": {"color": 15, "eyes": 12, "mouth": 12}
+        // },
+        // "8X1u11Wq": {
+        //   "id": "8X1u11Wq",
+        //   "name": "Qntkfz Bflsgrf",
+        //   "avatar": {"color": 15, "eyes": 12, "mouth": 12}
+        // },
+        // "uZoEeKMu": {
+        //   "id": "uZoEeKMu",
+        //   "name": "Gdctykvlsibolu",
+        //   "avatar": {"color": 15, "eyes": 12, "mouth": 12}
+        // },
+        // "ViWToJfv": {
+        //   "id": "ViWToJfv",
+        //   "name": "Ovnjr",
+        //   "avatar": {"color": 15, "eyes": 12, "mouth": 12}
+        // },
+        // "5YX6ryba": {
+        //   "id": "5YX6ryba",
+        //   "name": "Tqeiuhrrgtroy O",
+        //   "avatar": {"color": 15, "eyes": 12, "mouth": 12}
+        // },
+        // "PSS6IMpo": {
+        //   "id": "PSS6IMpo",
+        //   "name": "Ameyytha",
+        //   "avatar": {"color": 15, "eyes": 12, "mouth": 12}
+        // },
+        // "1GdAjnIA": {
+        //   "id": "1GdAjnIA",
+        //   "name": "Zrhw",
+        //   "avatar": {"color": 15, "eyes": 12, "mouth": 12}
+        // },
+        // "i0ocogCF": {
+        //   "id": "i0ocogCF",
+        //   "name": "Jjlgarnbwf",
+        //   "avatar": {"color": 15, "eyes": 12, "mouth": 12}
+        // },
+        // "c9wOaQfP": {
+        //   "id": "c9wOaQfP",
+        //   "name": "Tyvd Ahceldjua",
+        //   "avatar": {"color": 15, "eyes": 12, "mouth": 12}
+        // },
+        // "cfQZxYk4": {
+        //   "id": "cfQZxYk4",
+        //   "name": "Szmwxdzds",
+        //   "avatar": {"color": 15, "eyes": 12, "mouth": 12}
+        // },
+        // "rneIFu8k": {
+        //   "id": "rneIFu8k",
+        //   "name": "Kegqhalv",
+        //   "avatar": {"color": 15, "eyes": 12, "mouth": 12}
+        // },
+        // "BChA55fj": {
+        //   "id": "BChA55fj",
+        //   "name": "Mbw",
+        //   "avatar": {"color": 15, "eyes": 12, "mouth": 12}
+        // },
+        // "e71C9iWw": {
+        //   "id": "e71C9iWw",
+        //   "name": "Ori  Zoftai",
+        //   "avatar": {"color": 15, "eyes": 12, "mouth": 12}
+        // },
+        // "lvEf8oRL": {
+        //   "id": "lvEf8oRL",
+        //   "name": "Ydldaueiefyxrjcmv",
+        //   "avatar": {"color": 15, "eyes": 12, "mouth": 12}
+        // },
+        // "HHl2q4QN": {
+        //   "id": "HHl2q4QN",
+        //   "name": "Fsslulvhqzdhapal",
+        //   "avatar": {"color": 15, "eyes": 12, "mouth": 12}
+        // },
+        // "QKyqXknH": {
+        //   "id": "QKyqXknH",
+        //   "name": "Faeavp",
+        //   "avatar": {"color": 15, "eyes": 12, "mouth": 12}
+        // },
+        // "vfnTmOpu": {
+        //   "id": "vfnTmOpu",
+        //   "name": "Qqn S",
+        //   "avatar": {"color": 15, "eyes": 12, "mouth": 12}
+        // },
+        // "QX6MHu2w": {
+        //   "id": "QX6MHu2w",
+        //   "name": "Gaizxfxwgscucydqp",
+        //   "avatar": {"color": 15, "eyes": 12, "mouth": 12}
+        // },
+        // "2uqWGm0r": {
+        //   "id": "2uqWGm0r",
+        //   "name": "Zake",
+        //   "avatar": {"color": 15, "eyes": 12, "mouth": 12}
+        // },
+        // "KHnGbLQd": {
+        //   "id": "KHnGbLQd",
+        //   "name": "Ks Shtpmm",
+        //   "avatar": {"color": 15, "eyes": 12, "mouth": 12}
+        // },
+        // "ER3emqQc": {
+        //   "id": "ER3emqQc",
+        //   "name": "Ymztrwlrwfsbl Exfroj",
+        //   "avatar": {"color": 15, "eyes": 12, "mouth": 12}
+        // },
+        // "29juyknw": {
+        //   "id": "29juyknw",
+        //   "name": "Vuaefwnclfyxagt",
+        //   "avatar": {"color": 15, "eyes": 12, "mouth": 12}
+        // },
+        // "VvFoDY11": {
+        //   "id": "VvFoDY11",
+        //   "name": "Jrq ",
+        //   "avatar": {"color": 15, "eyes": 12, "mouth": 12}
+        // },
+        // "WgRuBj1z": {
+        //   "id": "WgRuBj1z",
+        //   "name": "Qnrsiywg Fiuxthkt",
+        //   "avatar": {"color": 15, "eyes": 12, "mouth": 12}
+        // },
+        // "AwROhV4k": {
+        //   "id": "AwROhV4k",
+        //   "name": "Aasmcyykrjlgtigupncx",
+        //   "avatar": {"color": 15, "eyes": 12, "mouth": 12}
+        // },
+        // "EU2WT4NI": {
+        //   "id": "EU2WT4NI",
+        //   "name": "Fhmfpdpos",
+        //   "avatar": {"color": 15, "eyes": 12, "mouth": 12}
+        // },
+        // "oKxPJ1c8": {
+        //   "id": "oKxPJ1c8",
+        //   "name": "Qpwe",
+        //   "avatar": {"color": 15, "eyes": 12, "mouth": 12},
+        //   "score": 0
+        // },
       },
       "messages": [
         {

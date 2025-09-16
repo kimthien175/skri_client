@@ -1,133 +1,54 @@
 library;
 
 export 'position.dart';
-import 'package:flutter/material.dart';
 
-import '../../widgets.dart';
+// class GameTooltip extends PositionedOverlayController<GameTooltipPosition> {
+//   GameTooltip(
+//       {required super.childBuilder,
+//       super.position = const GameTooltipPosition.centerTop(),
+//       required this.controller,
+//       required super.anchorKey});
 
-class GameTooltip extends PositionedOverlayController<GameTooltipPosition> {
-  GameTooltip(
-      {required super.childBuilder,
-      super.position = const GameTooltipPosition.centerTop(),
-      required this.controller,
-      required super.anchorKey});
+//   @override
+//   Widget widgetBuilder() => const _Tooltip();
 
-  @override
-  Widget widgetBuilder() => const _Tooltip();
+//   final AnimationController controller;
+//   Animation<double> get scaleAnimation => controller.drive(Tween<double>(begin: 0, end: 1));
 
-  final AnimationController controller;
-  Animation<double> get scaleAnimation => controller.drive(Tween<double>(begin: 0, end: 1));
+//   @override
+//   Future<bool> show() async {
+//     if (await super.show()) {
+//       await controller.forward();
+//       return true;
+//     }
+//     return false;
+//   }
 
-  @override
-  Future<bool> show() async {
-    if (await super.show()) {
-      await controller.forward();
-      return true;
-    }
-    return false;
-  }
+//   @override
+//   Future<bool> hide() async {
+//     await controller.reverse();
+//     return super.hide();
+//   }
 
-  @override
-  Future<bool> hide() async {
-    await controller.reverse();
-    return super.hide();
-  }
-}
+//   Future<bool> hideInstancely() => super.hide();
+// }
 
-class _Tooltip extends StatelessWidget {
-  const _Tooltip();
-  @override
-  Widget build(BuildContext context) {
-    var c = OverlayWidget.of<GameTooltip>(context);
-    return c.position.buildAnimation(
-        scaleAnimation: c.scaleAnimation,
-        originalBox: c.originalBox,
-        scale: OverlayController.scale(context),
-        child: DefaultTextStyle(
-          style: const TextStyle(
-              color: Color.fromRGBO(240, 240, 240, 1),
-              fontVariations: [FontVariation.weight(700)],
-              fontSize: 13.0,
-              fontFamily: 'Nunito-var'),
-          child: c.childBuilder(),
-        ));
-  }
-}
-
-class GameTooltipWidget extends StatefulWidget {
-  const GameTooltipWidget(
-      {super.key,
-      required this.child,
-      this.position = const GameTooltipPosition.centerTop(),
-      required this.tooltipContentBuilder});
-
-  final Widget child;
-
-  final GameTooltipPosition position;
-  final Widget Function() tooltipContentBuilder;
-
-  @override
-  State<GameTooltipWidget> createState() => _GameTooltipWidgetState();
-}
-
-class _GameTooltipWidgetState extends State<GameTooltipWidget> with SingleTickerProviderStateMixin {
-  late final GameTooltip controller;
-  // no need to put in dispose(), when showing, OverlayController put itself in Getx smart management
-
-  late final GlobalKey key;
-  late final AnimationController animController;
-  late final FocusNode focusNode;
-  bool isHover = false;
-  @override
-  void initState() {
-    super.initState();
-    key = GlobalKey();
-    animController = AnimationController(vsync: this, duration: AnimatedButton.duration);
-    controller = GameTooltip(
-        anchorKey: key,
-        childBuilder: widget.tooltipContentBuilder,
-        position: widget.position,
-        controller: animController);
-
-    focusNode = FocusNode();
-    focusNode.addListener(() {
-      if (focusNode.hasFocus) {
-        if (focusNode.descendants.isNotEmpty) {
-          focusNode.descendants.first.requestFocus();
-        }
-        if (isHover) return;
-        controller.show();
-      } else {
-        if (isHover) return;
-        controller.hide();
-      }
-    });
-  }
-
-  @override
-  void dispose() {
-    animController.dispose();
-    focusNode.dispose();
-
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Focus(
-        focusNode: focusNode,
-        child: MouseRegion(
-            onEnter: (event) {
-              isHover = true;
-              if (focusNode.hasFocus) return;
-              controller.show();
-            },
-            onExit: (event) {
-              isHover = false;
-              if (focusNode.hasFocus) return;
-              controller.hide();
-            },
-            key: key,
-            child: widget.child));
-  }
-}
+// class _Tooltip extends StatelessWidget {
+//   const _Tooltip();
+//   @override
+//   Widget build(BuildContext context) {
+//     var c = OverlayWidget.of<GameTooltip>(context);
+//     return c.position.buildAnimation(
+//         scaleAnimation: c.scaleAnimation,
+//         originalBox: c.originalBox,
+//         scale: OverlayController.scale(context),
+//         child: DefaultTextStyle(
+//           style: const TextStyle(
+//               color: Color.fromRGBO(240, 240, 240, 1),
+//               fontVariations: [FontVariation.weight(700)],
+//               fontSize: 13.0,
+//               fontFamily: 'Nunito-var'),
+//           child: c.childBuilder(),
+//         ));
+//   }
+// }
