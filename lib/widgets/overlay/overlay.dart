@@ -1,14 +1,12 @@
 library;
 
 export 'loading.dart';
-export 'position.dart';
-
+export 'new.dart';
+export 'newgame_tooltip.dart';
 import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
-import 'position.dart';
 
 abstract class OverlayController extends GetxController {
   OverlayController({this.permanent = false});
@@ -95,79 +93,4 @@ class OverlayWidget extends InheritedWidget {
 
   @override
   bool updateShouldNotify(covariant OverlayWidget oldWidget) => oldWidget.controller != controller;
-}
-
-class PositionedOverlayController<P extends OverlayWidgetPosition> extends OverlayController {
-  PositionedOverlayController(
-      {required this.childBuilder,
-      required this.position,
-      required this.anchorKey,
-      this.tapOutsideToClose = false});
-
-  @override
-  Widget widgetBuilder() => const _PositionedOverlayChildWidget();
-
-  final Widget Function() childBuilder;
-  final P position;
-
-  final GlobalKey anchorKey;
-  RenderBox get originalBox => anchorKey.currentContext!.findRenderObject() as RenderBox;
-
-  static double defaultScaler() => 1.0;
-
-  bool tapOutsideToClose;
-}
-
-class _PositionedOverlayChildWidget extends StatefulWidget {
-  const _PositionedOverlayChildWidget();
-
-  @override
-  State<_PositionedOverlayChildWidget> createState() => __PositionedOverlayChildWidgetState();
-}
-
-class __PositionedOverlayChildWidgetState extends State<_PositionedOverlayChildWidget>
-    with WidgetsBindingObserver {
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addObserver(this);
-  }
-
-  @override
-  void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
-    super.dispose();
-  }
-
-  @override
-  void didChangeMetrics() {
-    setState(() {});
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    var c = OverlayWidget.of<PositionedOverlayController>(context);
-
-    var child = c.childBuilder();
-
-    if (c.tapOutsideToClose) {
-      child = TapRegion(
-        onTapOutside: (PointerDownEvent event) {
-          c.hide();
-        },
-        child: child,
-      );
-    }
-
-    return c.position.build(
-        originalBox: c.originalBox,
-        scale: OverlayController.scale(context),
-        child: DefaultTextStyle(
-            style: const TextStyle(
-                color: Color.fromRGBO(240, 240, 240, 1),
-                fontVariations: [FontVariation.weight(700)],
-                fontSize: 13.0,
-                fontFamily: 'Nunito-var'),
-            child: child));
-  }
 }

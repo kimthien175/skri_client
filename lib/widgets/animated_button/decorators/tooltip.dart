@@ -1,7 +1,5 @@
 library;
 
-export '../../overlay/tooltip/position.dart';
-
 import 'package:flutter/material.dart';
 import 'package:skribbl_client/widgets/animated_button/animated_button.dart';
 import 'package:skribbl_client/widgets/overlay/newgame_tooltip.dart';
@@ -9,16 +7,16 @@ import 'package:skribbl_client/widgets/overlay/newgame_tooltip.dart';
 // ignore: must_be_immutable
 class AnimatedButtonTooltipDecorator implements AnimatedButtonDecorator {
   AnimatedButtonTooltipDecorator(
-      {required this.child, this.position = const NewGameTooltipPosition.centerTop()});
+      {required this.tooltip, this.position = const NewGameTooltipPosition.centerTop()});
 
   _Tooltip? _tooltip;
 
-  final Widget child;
+  final Widget tooltip;
   final NewGameTooltipPosition position;
 
   @override
   void decorate(AnimatedButtonState state) {
-    _tooltip = _Tooltip(child: child, position: position, state: state);
+    _tooltip = _Tooltip(tooltip: tooltip, position: position, state: state);
 
     state.child = _tooltip!.attach(state.child);
 
@@ -34,7 +32,7 @@ class AnimatedButtonTooltipDecorator implements AnimatedButtonDecorator {
 }
 
 class _Tooltip extends NewGameTooltipController {
-  _Tooltip({required super.child, required this.state, required super.position})
+  _Tooltip({required super.tooltip, required this.state, required super.position})
       : super(controller: state.controller);
   final AnimatedButtonState state;
   @override

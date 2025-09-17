@@ -5,7 +5,6 @@ import 'package:skribbl_client/models/sound.dart';
 import 'package:skribbl_client/pages/gameplay/widgets/draw/draw_widget.dart';
 import 'package:skribbl_client/pages/gameplay/widgets/draw/widgets/color.dart';
 import 'package:skribbl_client/pages/gameplay/widgets/game_bar/settings/slider.dart';
-import 'package:skribbl_client/widgets/overlay/newgame_tooltip.dart';
 import 'package:skribbl_client/widgets/widgets.dart';
 
 import '../../../../../models/models.dart';
@@ -53,7 +52,7 @@ class SettingsButton extends StatelessWidget {
           const AnimatedButtonOpacityDecorator(minOpacity: 0.9),
           const AnimatedButtonScaleDecorator(max: 1.1),
           AnimatedButtonTooltipDecorator(
-              child: Builder(builder: (_) => Text('Settings'.tr)),
+              tooltip: Builder(builder: (_) => Text('Settings'.tr)),
               position: const NewGameTooltipPosition.centerLeft())
         ],
         child: GifManager.inst

@@ -19,12 +19,9 @@ class KeyBinding extends StatefulWidget {
 class _KeyBindingState extends State<KeyBinding> with SingleTickerProviderStateMixin {
   late AnimationController controller;
 
-  GlobalKey globalKey = GlobalKey();
-
   late NewGameTooltipController tooltip = NewGameTooltipController(
       controller: controller,
-      //anchorKey: globalKey,
-      child: Builder(
+      tooltip: Builder(
           builder: (_) => Text('key_binding_warning'.trParams({'duplicated': duplicatedKey.tr}))),
       position: const NewGameTooltipPosition.centerBottom(
           backgroundColor: GameTooltipBackgroundColor.warining));
@@ -113,7 +110,6 @@ class _KeyBindingState extends State<KeyBinding> with SingleTickerProviderStateM
           style: const TextStyle(fontSize: 15, fontVariations: [FontVariation.weight(440)])),
       const SizedBox(height: 5),
       GestureDetector(
-          key: globalKey,
           onTap: () {
             focusNode.requestFocus();
             modify();

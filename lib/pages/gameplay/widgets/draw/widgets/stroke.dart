@@ -14,8 +14,7 @@ class StrokeValueSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ClipRRect(
-        key: listController.anchorKey,
+    return listController.attach(ClipRRect(
         borderRadius: const BorderRadius.all(Radius.circular(3)),
         child: StrokeValueItem(
             isMain: true,
@@ -30,16 +29,13 @@ class StrokeValueSelector extends StatelessWidget {
                   .builder
                   .initWithShadow(color: DrawManager.inst.currentColor)
                   .fit(height: size, width: size);
-            })));
+            }))));
   }
 }
 
-class StrokeValueListController extends PositionedOverlayController {
+class StrokeValueListController extends NewTooltipController {
   StrokeValueListController()
-      : super(
-            anchorKey: GlobalKey(),
-            childBuilder: () => const StrokeValueList(),
-            position: OverlayWidgetPosition.centerTop());
+      : super(tooltip: const StrokeValueList(), position: const NewTooltipPosition.centerTop());
 }
 
 class StrokeValueList extends StatelessWidget {

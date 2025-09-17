@@ -1,11 +1,10 @@
 part of 'dropdown.dart';
 
-class _DropdownList<T> extends PositionedOverlayController<OverlayWidgetPosition> {
+class _DropdownList<T> extends NewTooltipController {
   _DropdownList({required this.parent})
       : super(
-            anchorKey: parent.key,
-            position: const OverlayWidgetPosition.leftBottom(),
-            childBuilder: () => const _DropdownListWidget(),
+            position: const NewTooltipPosition.centerBottom(),
+            tooltip: const _DropdownListWidget(),
             tapOutsideToClose: true);
 
   final _DropdownState<T> parent;
@@ -79,7 +78,9 @@ class _DropdownListWidget<T> extends StatelessWidget {
                 node: c.focusScopeNode,
                 child: Material(
                     child: SizedBox(
-                        width: c.originalBox.size.width,
+                        width: (c.parent.key.currentContext!.findRenderObject() as RenderBox)
+                            .size
+                            .width,
                         child: Column(
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             mainAxisSize: MainAxisSize.min,

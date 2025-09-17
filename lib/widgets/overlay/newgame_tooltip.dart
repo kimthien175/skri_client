@@ -18,7 +18,7 @@ class NewGameTooltipController extends NewTooltipController<NewGameTooltipPositi
   NewGameTooltipController(
       {required super.position,
       super.permanent,
-      required super.child,
+      required super.tooltip,
       AnimationController? controller}) {
     this.controller =
         controller ?? AnimationController(vsync: this, duration: AnimatedButton.duration);
@@ -46,14 +46,14 @@ class NewGameTooltipController extends NewTooltipController<NewGameTooltipPositi
 
   @nonVirtual
   @override
-  Widget get child => position.wrap(super.child);
+  Widget get tooltip => position.wrap(super.tooltip);
   // ScaleTransition(
   //     scale: scaleAnimation,
   //     //alignment: position.followerAnchor,
   //     child: position.wrap(super.child));
 }
 
-abstract class NewGameTooltipPosition extends NewOverlayPosition {
+abstract class NewGameTooltipPosition extends NewTooltipPosition {
   const factory NewGameTooltipPosition.centerLeft({GameTooltipBackgroundColor backgroundColor}) =
       _CenterLeft;
   const factory NewGameTooltipPosition.centerRight({GameTooltipBackgroundColor backgroundColor}) =
@@ -75,11 +75,13 @@ abstract class NewGameTooltipPosition extends NewOverlayPosition {
   double get height;
 
   @nonVirtual
-  Container _wrapWithBackground(Widget child) => Container(
-      padding: const EdgeInsets.all(7),
-      decoration: BoxDecoration(
-          color: backgroundColor.value, borderRadius: const BorderRadius.all(Radius.circular(3))),
-      child: child);
+  Widget _wrapWithBackground(Widget child) => UnconstrainedBox(
+      child: Container(
+          padding: const EdgeInsets.all(7),
+          decoration: BoxDecoration(
+              color: backgroundColor.value,
+              borderRadius: const BorderRadius.all(Radius.circular(3))),
+          child: child));
 
   @nonVirtual
   Widget get arrow => ClipPath(
@@ -216,7 +218,7 @@ class _GameTooltipHoverWidgetState extends State<GameTooltipWrapper>
     key = GlobalKey();
     animController = AnimationController(vsync: this, duration: AnimatedButton.duration);
     controller = NewGameTooltipController(
-        child: widget.tooltip, position: widget.position, controller: animController);
+        tooltip: widget.tooltip, position: widget.position, controller: animController);
 
     focusNode = FocusNode();
     focusNode.addListener(() {

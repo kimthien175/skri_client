@@ -104,7 +104,7 @@ class _DropdownState<T> extends State<Dropdown<T>> with SingleTickerProviderStat
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return menu.attach(GestureDetector(
         onTap: () {
           if (!focusNode.hasFocus) focusNode.requestFocus();
           toggleMenu();
@@ -125,6 +125,6 @@ class _DropdownState<T> extends State<Dropdown<T>> with SingleTickerProviderStat
                           builder: (color) => Icon(Icons.keyboard_arrow_down_rounded, color: color),
                           listenable: controller.drive(ColorTween(
                               begin: InputStyles.color, end: InputContainer.activeColor))))
-                ]))));
+                ])))));
   }
 }
