@@ -1,11 +1,8 @@
 part of 'dropdown.dart';
 
-class _DropdownList<T> extends NewTooltipController {
+class _DropdownList<T> extends TooltipController {
   _DropdownList({required this.parent})
-      : super(
-            position: const NewTooltipPosition.centerBottom(),
-            tooltip: const _DropdownListWidget(),
-            tapOutsideToClose: true);
+      : super(position: const TooltipPosition.centerBottom(), tooltip: const _DropdownListWidget());
 
   final _DropdownState<T> parent;
 

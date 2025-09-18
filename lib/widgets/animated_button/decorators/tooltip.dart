@@ -7,12 +7,12 @@ import 'package:skribbl_client/widgets/overlay/newgame_tooltip.dart';
 // ignore: must_be_immutable
 class AnimatedButtonTooltipDecorator implements AnimatedButtonDecorator {
   AnimatedButtonTooltipDecorator(
-      {required this.tooltip, this.position = const NewGameTooltipPosition.centerTop()});
+      {required this.tooltip, this.position = const GameTooltipPosition.centerTop()});
 
   _Tooltip? _tooltip;
 
   final Widget tooltip;
-  final NewGameTooltipPosition position;
+  final GameTooltipPosition position;
 
   @override
   void decorate(AnimatedButtonState state) {
@@ -31,7 +31,7 @@ class AnimatedButtonTooltipDecorator implements AnimatedButtonDecorator {
   }
 }
 
-class _Tooltip extends NewGameTooltipController {
+class _Tooltip extends GameTooltipController {
   _Tooltip({required super.tooltip, required this.state, required super.position})
       : super(controller: state.controller);
   final AnimatedButtonState state;

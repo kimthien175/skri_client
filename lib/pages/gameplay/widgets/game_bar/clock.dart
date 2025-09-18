@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:skribbl_client/models/sound.dart';
+import 'package:skribbl_client/utils/sound.dart';
 
 import '../../../../models/models.dart';
 

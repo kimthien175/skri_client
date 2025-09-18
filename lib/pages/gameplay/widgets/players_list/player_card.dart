@@ -17,8 +17,7 @@ class PlayerController extends GetxController with GetTickerProviderStateMixin {
       CurvedAnimation(parent: animController, curve: Curves.linear)
           .drive(Tween<double>(begin: 1.0, end: 1.1));
 
-  late final GlobalKey anchorKey;
-  late final NewGameTooltipController tooltip;
+  late final GameTooltipController tooltip;
   RxString tooltipContent = ''.obs;
 
   late final AnimationController tooltipController =
@@ -27,10 +26,8 @@ class PlayerController extends GetxController with GetTickerProviderStateMixin {
   @override
   void onInit() {
     super.onInit();
-    anchorKey = GlobalKey();
-    tooltip = NewGameTooltipController(
-        //anchorKey: anchorKey,
-        position: const NewGameTooltipPosition.centerRight(),
+    tooltip = GameTooltipController(
+        position: const GameTooltipPosition.centerRight(),
         tooltip: Obx(() => Text(tooltipContent.value)),
         controller: tooltipController);
   }
@@ -70,13 +67,11 @@ class PlayerCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var controller = Get.find<PlayerController>(tag: info.id);
+    var inst = Game.inst;
 
-    return controller.tooltip.attach(Obx(() {
-      var inst = Game.inst;
-
-      var state = inst.state.value;
-      return controller.tooltip.attach(GestureDetector(
-          key: controller.anchorKey,
+    var card = Obx(() {
+      var gameState = inst.state.value;
+      return GestureDetector(
           onTap: showInfo,
           child: MouseRegion(
               onEnter: (_) {
@@ -101,25 +96,22 @@ class PlayerCard extends StatelessWidget {
                             : GameplayStyles.colorPlayerBGBase_2),
                     height: 48,
                     width: width,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(info.nameForCard,
-                            style: TextStyle(
-                                fontSize: 14,
-                                fontVariations: [FontVariation.weight(800)],
-                                color: info.id == MePlayer.inst.id
-                                    ? GameplayStyles.colorPlayerMe
-                                    : Colors.black,
-                                height: 1.1)),
-                        Text('${info.score.toString()} ${'points'.tr}',
-                            style: TextStyle(
-                                fontSize: 12.6,
-                                height: 1,
-                                fontVariations: [FontVariation.weight(600)]))
-                      ],
-                    )),
-                if (state is DrawStateMixin && state.performerId == info.id)
+                    child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+                      Text(info.nameForCard,
+                          style: TextStyle(
+                              fontSize: 14,
+                              fontVariations: [FontVariation.weight(800)],
+                              color: info.id == MePlayer.inst.id
+                                  ? GameplayStyles.colorPlayerMe
+                                  : Colors.black,
+                              height: 1.1)),
+                      Text('${info.score.toString()} ${'points'.tr}',
+                          style: TextStyle(
+                              fontSize: 12.6,
+                              height: 1,
+                              fontVariations: [FontVariation.weight(600)]))
+                    ])),
+                if (gameState is DrawStateMixin && gameState.performerId == info.id)
                   Positioned(
                       bottom: 0,
                       right: 38,
@@ -144,7 +136,9 @@ class PlayerCard extends StatelessWidget {
                       left: 4,
                       child: Opacity(
                           opacity: 0.7, child: GifManager.inst.misc('owner').builder.init()))
-              ]))));
-    }));
+              ])));
+    });
+
+    return controller.tooltip.attach(card);
   }
 }

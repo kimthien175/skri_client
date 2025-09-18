@@ -33,9 +33,9 @@ class StrokeValueSelector extends StatelessWidget {
   }
 }
 
-class StrokeValueListController extends NewTooltipController {
+class StrokeValueListController extends TooltipController {
   StrokeValueListController()
-      : super(tooltip: const StrokeValueList(), position: const NewTooltipPosition.centerTop());
+      : super(tooltip: const StrokeValueList(), position: const TooltipPosition.centerTop());
 }
 
 class StrokeValueList extends StatelessWidget {

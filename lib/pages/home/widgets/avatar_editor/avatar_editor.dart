@@ -290,7 +290,7 @@ class _RandomButton extends GetView<AvatarEditorController> {
         const AnimatedButtonScaleDecorator(max: 1.2),
         AnimatedButtonTooltipDecorator(
             tooltip: Builder(builder: (_) => Text('randomize_your_avatar'.tr)),
-            position: const NewGameTooltipPosition.centerBottom()),
+            position: const GameTooltipPosition.centerBottom()),
         const AnimatedButtonOpacityDecorator(minOpacity: 0.6)
       ],
       child: GifManager.inst.misc('randomize').builder.init(height: 32, width: 32));

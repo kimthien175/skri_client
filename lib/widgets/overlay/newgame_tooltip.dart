@@ -13,9 +13,9 @@ enum GameTooltipBackgroundColor {
   final Color value;
 }
 
-class NewGameTooltipController extends NewTooltipController<NewGameTooltipPosition>
+class GameTooltipController extends TooltipController<GameTooltipPosition>
     with GetTickerProviderStateMixin {
-  NewGameTooltipController(
+  GameTooltipController(
       {required super.position,
       super.permanent,
       required super.tooltip,
@@ -38,6 +38,7 @@ class NewGameTooltipController extends NewTooltipController<NewGameTooltipPositi
 
   @override
   Future<bool> hide() async {
+    if (!isShowing || controller.velocity < 0) return false;
     await controller.reverse();
     return super.hide();
   }
@@ -46,26 +47,25 @@ class NewGameTooltipController extends NewTooltipController<NewGameTooltipPositi
 
   @nonVirtual
   @override
-  Widget get tooltip => position.wrap(super.tooltip);
-  // ScaleTransition(
-  //     scale: scaleAnimation,
-  //     //alignment: position.followerAnchor,
-  //     child: position.wrap(super.child));
+  Widget get tooltip => ScaleTransition(
+      scale: scaleAnimation,
+      alignment: position.followerAnchor,
+      child: position.wrap(super.tooltip));
 }
 
-abstract class NewGameTooltipPosition extends NewTooltipPosition {
-  const factory NewGameTooltipPosition.centerLeft({GameTooltipBackgroundColor backgroundColor}) =
+abstract class GameTooltipPosition extends TooltipPosition {
+  const factory GameTooltipPosition.centerLeft({GameTooltipBackgroundColor backgroundColor}) =
       _CenterLeft;
-  const factory NewGameTooltipPosition.centerRight({GameTooltipBackgroundColor backgroundColor}) =
+  const factory GameTooltipPosition.centerRight({GameTooltipBackgroundColor backgroundColor}) =
       _CenterRight;
-  const factory NewGameTooltipPosition.centerTop({GameTooltipBackgroundColor backgroundColor}) =
+  const factory GameTooltipPosition.centerTop({GameTooltipBackgroundColor backgroundColor}) =
       _CenterTop;
-  const factory NewGameTooltipPosition.centerBottom({GameTooltipBackgroundColor backgroundColor}) =
+  const factory GameTooltipPosition.centerBottom({GameTooltipBackgroundColor backgroundColor}) =
       _CenterBottom;
 
   final GameTooltipBackgroundColor backgroundColor;
 
-  const NewGameTooltipPosition({this.backgroundColor = GameTooltipBackgroundColor.notify});
+  const GameTooltipPosition({this.backgroundColor = GameTooltipBackgroundColor.notify});
 
   Widget wrap(Widget child);
 
@@ -89,7 +89,7 @@ abstract class NewGameTooltipPosition extends NewTooltipPosition {
       child: Container(height: height, width: width, color: backgroundColor.value));
 }
 
-class _CenterLeft extends NewGameTooltipPosition with PositionedOverlayCenterLeftMixin {
+class _CenterLeft extends GameTooltipPosition with PositionedOverlayCenterLeftMixin {
   const _CenterLeft({super.backgroundColor});
 
   @override
@@ -111,7 +111,7 @@ class _CenterLeft extends NewGameTooltipPosition with PositionedOverlayCenterLef
     ..lineTo(0, size.height);
 }
 
-class _CenterRight extends NewGameTooltipPosition with PositionedOverlayCenterRightMixin {
+class _CenterRight extends GameTooltipPosition with PositionedOverlayCenterRightMixin {
   const _CenterRight({super.backgroundColor});
 
   @override
@@ -134,7 +134,7 @@ class _CenterRight extends NewGameTooltipPosition with PositionedOverlayCenterRi
   double get width => 10;
 }
 
-class _CenterTop extends NewGameTooltipPosition with PositionedOverlayCenterTopMixin {
+class _CenterTop extends GameTooltipPosition with PositionedOverlayCenterTopMixin {
   const _CenterTop({super.backgroundColor});
 
   @override
@@ -156,7 +156,7 @@ class _CenterTop extends NewGameTooltipPosition with PositionedOverlayCenterTopM
       children: [_wrapWithBackground(rawChild), arrow]);
 }
 
-class _CenterBottom extends NewGameTooltipPosition with PositionedOverlayCenterBottomMixin {
+class _CenterBottom extends GameTooltipPosition with PositionedOverlayCenterBottomMixin {
   const _CenterBottom({super.backgroundColor});
 
   @override
@@ -192,12 +192,12 @@ class GameTooltipWrapper extends StatefulWidget {
   const GameTooltipWrapper(
       {super.key,
       required this.child,
-      this.position = const NewGameTooltipPosition.centerTop(),
+      this.position = const GameTooltipPosition.centerTop(),
       required this.tooltip});
 
   final Widget child;
 
-  final NewGameTooltipPosition position;
+  final GameTooltipPosition position;
   final Widget tooltip;
   @override
   State<GameTooltipWrapper> createState() => _GameTooltipHoverWidgetState();
@@ -205,7 +205,7 @@ class GameTooltipWrapper extends StatefulWidget {
 
 class _GameTooltipHoverWidgetState extends State<GameTooltipWrapper>
     with SingleTickerProviderStateMixin {
-  late final NewGameTooltipController controller;
+  late final GameTooltipController controller;
   // no need to put in dispose(), when showing, OverlayController put itself in Getx smart management
 
   late final GlobalKey key;
@@ -217,7 +217,7 @@ class _GameTooltipHoverWidgetState extends State<GameTooltipWrapper>
     super.initState();
     key = GlobalKey();
     animController = AnimationController(vsync: this, duration: AnimatedButton.duration);
-    controller = NewGameTooltipController(
+    controller = GameTooltipController(
         tooltip: widget.tooltip, position: widget.position, controller: animController);
 
     focusNode = FocusNode();

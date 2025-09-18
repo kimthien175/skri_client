@@ -6,6 +6,7 @@ export 'widgets/widgets.dart';
 
 import 'package:skribbl_client/models/game/state/draw/draw.dart';
 import 'package:skribbl_client/models/models.dart';
+import 'package:skribbl_client/utils/sound.dart';
 import 'package:skribbl_client/pages/pages.dart';
 
 import 'package:flutter/material.dart';
@@ -49,6 +50,8 @@ class _GameplayPageState extends State<GameplayPage> {
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Game.inst.runState();
+
+      Sound.inst.play(Sound.inst.join);
 
       // scroll to bottom
       Get.find<GameChatController>().scrollToBottom();

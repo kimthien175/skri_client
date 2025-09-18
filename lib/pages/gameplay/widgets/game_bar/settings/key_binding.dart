@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:skribbl_client/models/models.dart';
-import 'package:skribbl_client/widgets/overlay/newgame_tooltip.dart';
 import 'package:skribbl_client/widgets/widgets.dart';
 
 import 'settings.dart';
@@ -19,11 +18,11 @@ class KeyBinding extends StatefulWidget {
 class _KeyBindingState extends State<KeyBinding> with SingleTickerProviderStateMixin {
   late AnimationController controller;
 
-  late NewGameTooltipController tooltip = NewGameTooltipController(
+  late GameTooltipController tooltip = GameTooltipController(
       controller: controller,
       tooltip: Builder(
           builder: (_) => Text('key_binding_warning'.trParams({'duplicated': duplicatedKey.tr}))),
-      position: const NewGameTooltipPosition.centerBottom(
+      position: const GameTooltipPosition.centerBottom(
           backgroundColor: GameTooltipBackgroundColor.warining));
 
   String duplicatedKey = "none";

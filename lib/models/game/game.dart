@@ -15,6 +15,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:skribbl_client/pages/gameplay/widgets/utils.dart';
 import 'package:skribbl_client/pages/pages.dart';
+import 'package:skribbl_client/utils/sound.dart';
 import 'package:skribbl_client/utils/utils.dart';
 
 import 'package:web/web.dart' as html;
@@ -175,7 +176,7 @@ class Game extends GetxController {
   }
 
   static Future<void> leave() async {
-    //state.value.clear();
+    Sound.inst.play(Sound.inst.leave);
     SocketIO.inst.socket.disconnect();
 
     // reset meplayer as well
@@ -183,9 +184,8 @@ class Game extends GetxController {
 
     var homeController = Get.find<HomeController>();
 
-    LoadingOverlay.inst.show();
-
     await Future.wait([
+      LoadingOverlay.inst.show(),
       Game.inst.stopState(),
       Get.offAllNamed(
               "/${homeController.isPrivateRoomCodeValid ? '?${homeController.privateRoomCode}' : ''}")

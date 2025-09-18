@@ -10,6 +10,7 @@ import 'package:get/get.dart';
 import 'package:skribbl_client/pages/gameplay/widgets/draw/draw_widget.dart';
 import 'package:skribbl_client/pages/gameplay/widgets/draw/manager.dart';
 import 'package:skribbl_client/pages/pages.dart';
+import 'package:skribbl_client/utils/sound.dart';
 import 'package:skribbl_client/utils/utils.dart';
 
 part 'performer.dart';
@@ -138,6 +139,7 @@ class SpectatorDrawState extends GameState with DrawStateMixin {
       if (guessResult == 'right') {
         // disabled chat when player guess right
         _submitMessage = (_) {};
+        Sound.inst.play(Sound.inst.guessedRight);
         return;
       }
       if (guessResult == 'close') {
