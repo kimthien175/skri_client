@@ -1,8 +1,8 @@
 library;
 
 export 'loading.dart';
-export 'new.dart';
-export 'newgame_tooltip.dart';
+export 'tooltip.dart';
+export 'game_tooltip.dart';
 import 'dart:async';
 
 import 'package:flutter/material.dart';

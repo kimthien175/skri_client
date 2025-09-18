@@ -1,16 +1,15 @@
+library;
+
+export 'game_result.dart';
+export 'draw_state_result.dart';
+
 import 'dart:async';
-import 'dart:math' as math;
 import 'dart:math';
-
-import 'package:flutter/material.dart';
-import 'package:skribbl_client/models/game/state/draw/draw_state_result.dart';
-import 'package:skribbl_client/models/models.dart';
-
 import 'package:get/get.dart';
-import 'package:skribbl_client/pages/gameplay/widgets/draw/draw_widget.dart';
-import 'package:skribbl_client/pages/gameplay/widgets/draw/manager.dart';
+import 'package:flutter/material.dart';
+
+import 'package:skribbl_client/models/models.dart';
 import 'package:skribbl_client/pages/pages.dart';
-import 'package:skribbl_client/utils/sound.dart';
 import 'package:skribbl_client/utils/utils.dart';
 
 part 'performer.dart';

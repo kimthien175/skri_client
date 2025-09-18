@@ -1,16 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:skribbl_client/models/game/game.dart';
-import 'package:skribbl_client/models/game/state/draw/draw.dart';
-import 'package:skribbl_client/pages/gameplay/widgets/utils.dart';
+import 'package:skribbl_client/models/models.dart';
+import 'package:skribbl_client/pages/pages.dart';
 
 import 'package:skribbl_client/utils/utils.dart';
-import 'package:skribbl_client/widgets/dialog/dialog.dart';
+import 'package:skribbl_client/widgets/widgets.dart';
 
 // ignore: library_prefixes
 import 'package:socket_io_client/socket_io_client.dart' as IO;
-
-import '../pages/pages.dart';
 
 class SocketIO {
   SocketIO._internal(this._socket) {

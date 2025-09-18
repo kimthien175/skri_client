@@ -1,11 +1,9 @@
-import 'package:skribbl_client/models/game/game.dart';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:skribbl_client/pages/gameplay/layouts/mobile.dart';
-import 'package:skribbl_client/utils/utils.dart';
 
-import 'players_list/player_card.dart';
+import 'package:skribbl_client/pages/pages.dart';
+import 'package:skribbl_client/utils/utils.dart';
+import 'package:skribbl_client/models/models.dart';
 
 class GameChatController extends GetxController {
   late final ScrollController _scrollController;

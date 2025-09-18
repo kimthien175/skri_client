@@ -4,17 +4,13 @@ export 'layouts/web.dart';
 export 'layouts/mobile.dart';
 export 'widgets/widgets.dart';
 
-import 'package:skribbl_client/models/game/state/draw/draw.dart';
 import 'package:skribbl_client/models/models.dart';
 import 'package:skribbl_client/utils/sound.dart';
 import 'package:skribbl_client/pages/pages.dart';
+import 'package:skribbl_client/widgets/widgets.dart';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:skribbl_client/widgets/overlay/overlay.dart';
-import 'package:skribbl_client/widgets/page_background.dart';
-
-import 'widgets/draw/manager.dart';
 
 class GameplayPage extends StatefulWidget {
   const GameplayPage({super.key});

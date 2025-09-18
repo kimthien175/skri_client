@@ -6,3 +6,5 @@ export 'main_content/settings/settings.dart';
 export 'game_bar/game_bar.dart';
 export 'game_chat.dart';
 export 'draw_view/draw_view.dart';
+export 'draw/draw.dart';
+export 'utils.dart';

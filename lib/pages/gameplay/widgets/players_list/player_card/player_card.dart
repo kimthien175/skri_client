@@ -1,12 +1,14 @@
-import 'package:skribbl_client/models/game/state/draw/draw.dart';
+library;
+
+export 'info.dart';
+
 import 'package:skribbl_client/models/models.dart';
-import 'package:skribbl_client/pages/gameplay/widgets/players_list/players_list.dart';
+import 'package:skribbl_client/pages/pages.dart';
 import 'package:skribbl_client/utils/styles.dart';
 import 'package:skribbl_client/widgets/widgets.dart';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
-import 'player_card/info.dart';
 
 class PlayerController extends GetxController with GetTickerProviderStateMixin {
   PlayerController({required this.id});

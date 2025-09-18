@@ -1,8 +1,7 @@
 library;
 
 import 'package:flutter/material.dart';
-import 'package:skribbl_client/widgets/animated_button/animated_button.dart';
-import 'package:skribbl_client/widgets/overlay/newgame_tooltip.dart';
+import 'package:skribbl_client/widgets/widgets.dart';
 
 // ignore: must_be_immutable
 class AnimatedButtonTooltipDecorator implements AnimatedButtonDecorator {

@@ -1,16 +1,17 @@
+library;
+
+export './draw/draw.dart';
+export './match_making.dart';
+export './pick_word.dart';
+export './pre_game.dart';
+
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:skribbl_client/models/game/game.dart';
-import 'package:skribbl_client/models/game/state/draw/draw.dart';
-import 'package:skribbl_client/models/game/state/draw/game_result.dart';
-import 'package:skribbl_client/models/game/state/match_making.dart';
-import 'package:skribbl_client/models/game/state/pick_word.dart';
-import 'package:skribbl_client/models/game/state/pre_game.dart';
-import 'package:skribbl_client/utils/datetime.dart';
-import 'package:skribbl_client/utils/socket_io.dart';
 
-import '../../../pages/pages.dart';
+import 'package:skribbl_client/models/models.dart';
+import 'package:skribbl_client/pages/pages.dart';
+import 'package:skribbl_client/utils/utils.dart';
 
 abstract class GameState {
   GameState({required this.data});

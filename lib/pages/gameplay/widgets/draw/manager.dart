@@ -1,17 +1,13 @@
 // ignore_for_file: invalid_use_of_visible_for_testing_member, invalid_use_of_protected_member
 
-import 'package:skribbl_client/pages/gameplay/gameplay.dart';
-import 'package:skribbl_client/pages/gameplay/widgets/draw/widgets/stroke_value_item.dart';
+import 'package:skribbl_client/pages/pages.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../utils.dart';
 import 'mode.dart';
 import 'step/clear.dart';
 import 'step/plain.dart';
 import 'step/step.dart';
-import 'widgets/color.dart';
-import 'widgets/stroke.dart';
 
 class DrawManager {
   static DrawManager? _inst;

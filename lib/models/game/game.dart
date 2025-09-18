@@ -1,26 +1,20 @@
 library;
 
 export 'private_game.dart';
-
-export 'package:skribbl_client/models/game/message.dart';
-export 'package:skribbl_client/models/game/player.dart';
+export 'message.dart';
+export 'player.dart';
 export 'state/state.dart';
 
 import 'package:async/async.dart';
-import 'package:skribbl_client/models/game/state/draw/game_result.dart';
-
-import 'package:skribbl_client/models/models.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:skribbl_client/pages/gameplay/widgets/utils.dart';
-import 'package:skribbl_client/pages/pages.dart';
-import 'package:skribbl_client/utils/sound.dart';
-import 'package:skribbl_client/utils/utils.dart';
-
 import 'package:web/web.dart' as html;
 
-import '../../widgets/widgets.dart';
+import 'package:skribbl_client/models/models.dart';
+import 'package:skribbl_client/pages/pages.dart';
+import 'package:skribbl_client/utils/utils.dart';
+import 'package:skribbl_client/widgets/widgets.dart';
 
 class Game extends GetxController {
   Game({required this.data}) {

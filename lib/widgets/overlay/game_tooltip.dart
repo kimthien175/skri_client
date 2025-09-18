@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get_state_manager/get_state_manager.dart';
-import 'package:skribbl_client/widgets/animated_button/animated_button.dart';
-import 'package:skribbl_client/widgets/overlay/new.dart';
+import 'package:get/get.dart';
+
+import 'package:skribbl_client/widgets/widgets.dart';
 
 enum GameTooltipBackgroundColor {
   notify(),

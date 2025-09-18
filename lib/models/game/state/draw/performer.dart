@@ -72,7 +72,7 @@ class EmittingPerformerDrawState extends GameState with DrawStateMixin, _Perform
   }
 
   void revealRandomCharacter() {
-    var rand = math.Random();
+    var rand = Random();
     late int charIndex;
     do {
       charIndex = rand.nextInt(hint.length);

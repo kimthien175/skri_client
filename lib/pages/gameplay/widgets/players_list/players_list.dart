@@ -1,12 +1,12 @@
 library;
 
-export 'player_card.dart';
-
-import 'package:skribbl_client/models/models.dart';
+export 'player_card/player_card.dart';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
 import 'package:skribbl_client/pages/pages.dart';
+import 'package:skribbl_client/models/models.dart';
 
 class PlayersListController extends GetxController {
   PlayersListController();
