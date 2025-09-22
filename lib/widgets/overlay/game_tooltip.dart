@@ -16,10 +16,7 @@ enum GameTooltipBackgroundColor {
 class GameTooltipController extends TooltipController<GameTooltipPosition>
     with GetTickerProviderStateMixin {
   GameTooltipController(
-      {required super.position,
-      super.permanent,
-      required super.tooltip,
-      AnimationController? controller}) {
+      {required super.position, required super.tooltip, AnimationController? controller}) {
     this.controller =
         controller ?? AnimationController(vsync: this, duration: AnimatedButton.duration);
   }

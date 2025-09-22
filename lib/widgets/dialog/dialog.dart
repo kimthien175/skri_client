@@ -23,14 +23,15 @@ class GameDialog extends OverlayController with GetSingleTickerProviderStateMixi
 
   /// `hide` parameter for `onQuit` is default to true for returning
   GameDialog(
-      {super.permanent,
-      required this.title,
+      {required this.title,
       required Widget content,
       this.exitTap = true,
       RowRenderObjectWidget? buttons,
       this.onQuit = GameDialog.onQuitDefault})
       : content = content.obs,
-        buttons = buttons.obs;
+        buttons = buttons.obs {
+    _init();
+  }
 
   static Future<bool> onQuitDefault(Future<bool> Function() hide) async {
     await hide();
@@ -38,15 +39,16 @@ class GameDialog extends OverlayController with GetSingleTickerProviderStateMixi
   }
 
   GameDialog.error(
-      {super.permanent,
-      required Widget content,
+      {required Widget content,
       RowRenderObjectWidget buttons =
           const RowRenderObjectWidget(children: [GameDialogButton.okay()]),
       this.onQuit = GameDialog.onQuitDefault})
       : title = Builder(builder: (context) => Text('dialog_title_error'.tr)),
         exitTap = false,
         content = content.obs,
-        buttons = buttons.obs;
+        buttons = buttons.obs {
+    _init();
+  }
 
   GameDialog.discconected(
       {required Widget content,
@@ -56,8 +58,9 @@ class GameDialog extends OverlayController with GetSingleTickerProviderStateMixi
       : title = Builder(builder: (_) => Text('dialog_title_disconnected'.tr)),
         exitTap = false,
         content = content.obs,
-        buttons = buttons.obs,
-        super(permanent: true);
+        buttons = buttons.obs {
+    _init();
+  }
 
   @override
   Widget widgetBuilder() => const _Dialog();
@@ -75,9 +78,7 @@ class GameDialog extends OverlayController with GetSingleTickerProviderStateMixi
 
   late final FocusScopeNode focusNode;
 
-  @override
-  void onInit() {
-    super.onInit();
+  void _init() {
     animController = AnimationController(vsync: this, duration: const Duration(milliseconds: 210));
 
     bgAnimation = CurvedAnimation(parent: animController, curve: Curves.easeInOut);
@@ -86,7 +87,6 @@ class GameDialog extends OverlayController with GetSingleTickerProviderStateMixi
         Tween<Offset>(begin: const Offset(0, -1), end: Offset.zero).animate(bgAnimation);
 
     focusNode = FocusScopeNode(onKeyEvent: _keyHandler);
-    focusNode.requestScopeFocus();
   }
 
   // buttons null, layout null: ok button
@@ -116,10 +116,12 @@ class GameDialog extends OverlayController with GetSingleTickerProviderStateMixi
 
   @override
   Future<bool> show() async {
-    if (isShowing) return false;
-    completer = Completer<bool>();
     if (await super.show()) {
+      completer = Completer<bool>();
+
       await animController.forward();
+
+      focusNode.requestScopeFocus();
       focusNode.requestFocus();
 
       return completer.future;
@@ -129,20 +131,23 @@ class GameDialog extends OverlayController with GetSingleTickerProviderStateMixi
 
   @override
   Future<bool> hide() async {
+    if (!isShowing || animController.velocity < 0) return false;
+
     focusNode.unfocus();
     await animController.reverse();
     return super.hide();
   }
 
   Future<bool> showInstantly() async {
-    completer = Completer<bool>();
     if (await super.show()) {
+      completer = Completer<bool>();
       animController.value = 1;
+      focusNode.requestScopeFocus();
       focusNode.requestFocus();
 
       return completer.future;
     }
-    throw Exception('dialog failed');
+    return false;
   }
 
   Future<bool> hideInstantly() async {
@@ -158,7 +163,7 @@ class _Dialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    GameDialog c = OverlayWidget.of<GameDialog>(context);
+    GameDialog c = OverlayWidget.of<GameDialog>(context)!;
     Widget dialog = Stack(children: [
       Container(
           padding: const EdgeInsets.all(GameDialog.padding),
@@ -240,7 +245,7 @@ class _CloseButtonState extends State<_CloseButton> with SingleTickerProviderSta
     focusNode = FocusNode(onKeyEvent: (node, key) {
       if (key is KeyDownEvent) {
         if (key.logicalKey == LogicalKeyboardKey.enter) {
-          var c = OverlayWidget.of<GameDialog>(context);
+          var c = OverlayWidget.of<GameDialog>(context)!;
           if (c.completer.isCompleted || c.animController.velocity < 0) {
             return KeyEventResult.ignored;
           }
@@ -268,7 +273,7 @@ class _CloseButtonState extends State<_CloseButton> with SingleTickerProviderSta
 
   @override
   Widget build(BuildContext context) {
-    var c = OverlayWidget.of<GameDialog>(context);
+    var c = OverlayWidget.of<GameDialog>(context)!;
     return Positioned(
         right: 8,
         top: 0,
@@ -298,7 +303,7 @@ class _Title extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var c = OverlayWidget.of<GameDialog>(context);
+    var c = OverlayWidget.of<GameDialog>(context)!;
     return Padding(
         padding: const EdgeInsets.only(top: 3.5, left: 13.5, right: 40),
         child: DefaultTextStyle.merge(

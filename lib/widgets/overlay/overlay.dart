@@ -5,37 +5,48 @@ export 'tooltip.dart';
 export 'game_tooltip.dart';
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 abstract class OverlayController extends GetxController {
-  OverlayController({this.permanent = false});
+  OverlayController();
+
+  /// init resources in constructor, not onInit, in case controller is called when needed,
+  /// not put in page binding
+  @nonVirtual
+  @override
+  void onInit() {
+    super.onInit();
+  }
 
   static double Function(BuildContext context) scale = (_) => 1.0;
-
-  // static Widget defaultChildBuilder() =>
-  //     throw Exception('Provide value or override getter for subclass');
 
   static final Map<String, OverlayController> _cache = <String, OverlayController>{};
 
   static P cache<P extends OverlayController>(
-      {required String tag, required P Function() builder}) {
-    var inst = _cache.putIfAbsent(tag, builder) as P;
-    inst.cachedTag = tag;
-    return inst;
+      {required String tag, bool permanent = false, required P Function() builder}) {
+    P? found = _cache[tag] as P?;
+    if (found != null) return found;
+
+    var newController = builder();
+    newController
+      .._tag = tag
+      .._permanent = permanent;
+
+    _cache[tag] = newController;
+    return newController;
   }
 
   static P? get<P extends OverlayController>(String tag) => _cache[tag] as P?;
 
-  static Future<void> deleteCache(String tag) async {
-    var controller = _cache.remove(tag);
-    if (controller != null) {
-      if (controller.isShowing) await controller.hide();
-      Get.delete<OverlayController>(tag: tag, force: true);
-    }
-  }
-
-  String? cachedTag;
+  // static Future<void> deleteCache(String tag) async {
+  //   var controller = _cache.remove(tag);
+  //   if (controller != null) {
+  //     if (controller.isShowing) await controller.hide();
+  //     Get.delete<OverlayController>(tag: tag, force: true);
+  //   }
+  // }
 
   /// call once when showing, not function as re render in command
   Widget widgetBuilder();
@@ -43,14 +54,14 @@ abstract class OverlayController extends GetxController {
   OverlayEntry? _entry;
   bool get isShowing => _entry != null;
 
-  String get tag => cachedTag ?? hashCode.toString();
-
-  final bool permanent;
+  String? _tag;
+  String get tag => _tag ?? hashCode.toString();
+  bool? _permanent;
 
   Future<bool> show() async {
     if (_entry != null) return false;
 
-    Get.put(this, tag: tag, permanent: permanent);
+    Get.put(this, tag: tag, permanent: _permanent ?? false);
 
     _entry = OverlayEntry(builder: (ct) => OverlayWidget(controller: this, child: widgetBuilder()));
 
@@ -79,7 +90,7 @@ abstract class OverlayController extends GetxController {
     }
     super.onClose();
 
-    _cache.remove(tag);
+    _cache.remove(_tag);
   }
 }
 
@@ -88,8 +99,8 @@ class OverlayWidget extends InheritedWidget {
 
   final OverlayController controller;
 
-  static T of<T extends OverlayController>(BuildContext context) =>
-      context.dependOnInheritedWidgetOfExactType<OverlayWidget>()!.controller as T;
+  static T? of<T extends OverlayController>(BuildContext context) =>
+      context.dependOnInheritedWidgetOfExactType<OverlayWidget>()?.controller as T?;
 
   @override
   bool updateShouldNotify(covariant OverlayWidget oldWidget) => oldWidget.controller != controller;

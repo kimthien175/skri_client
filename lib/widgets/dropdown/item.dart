@@ -3,112 +3,105 @@
 part of 'dropdown.dart';
 
 class DropdownItem<T> {
-  DropdownItem({required this.value, required this.child}) {
-    Get.lazyPut(() => _DropdownItemController(item: this), tag: tag);
-  }
+  DropdownItem({required this.value, required this.child});
 
   final T value;
   final Widget child;
 
-  _DropdownItemWidget<T> get widget => _DropdownItemWidget(item: this);
-  _DropdownItemController<T> get controller => Get.find<_DropdownItemController<T>>(tag: tag);
-
-  String get tag => value.toString();
+  late __DropdownItemWidgetState<T> state;
 }
 
-/// ID by item.value
-class _DropdownItemController<T> extends GetxController {
-  _DropdownItemController({required this.item});
+class _DropdownItemWidget<T> extends StatefulWidget {
+  const _DropdownItemWidget({super.key, required this.item});
+
   final DropdownItem<T> item;
 
-  late FocusNode focusNode;
+  @override
+  State<_DropdownItemWidget<T>> createState() => __DropdownItemWidgetState<T>();
+}
 
-  late Rx<Color> backgroundColor;
+class __DropdownItemWidgetState<T> extends State<_DropdownItemWidget<T>> {
+  Color backgroundColor = defaultColor;
+  late final FocusNode focusNode;
 
   @override
-  void onInit() {
-    super.onInit();
+  void initState() {
+    super.initState();
+    widget.item.state = this;
 
-    focusNode = FocusNode(
-      onKeyEvent: (node, event) {
-        if (event is KeyDownEvent && event.logicalKey == LogicalKeyboardKey.enter) {
-          onTap();
-          return KeyEventResult.handled;
-        }
-        return KeyEventResult.ignored;
-      },
-    );
+    focusNode = FocusNode(onKeyEvent: (node, event) {
+      if (event is KeyDownEvent && event.logicalKey == LogicalKeyboardKey.enter) {
+        onTap();
+        return KeyEventResult.handled;
+      }
+      return KeyEventResult.ignored;
+    });
 
     focusNode.addListener(updateColor);
 
-    backgroundColor = defaultColor.obs;
+    backgroundColor = defaultColor;
   }
 
   @override
-  void onClose() {
+  void dispose() {
     focusNode.dispose();
-    super.onClose();
+    super.dispose();
   }
 
-  _DropdownList<T> get list {
-    String? tag = focusNode.enclosingScope?.debugLabel;
-    return Get.find<OverlayController>(tag: tag) as _DropdownList<T>;
+  void updateColor() {
+    var newColor = getNewColor();
+    if (newColor != backgroundColor) {
+      setState(() {
+        backgroundColor = newColor;
+      });
+    }
   }
 
   void onTap() {
     // close menu
-    list.hide();
+    listController.hide();
 
     // make changes
-    var parent = list.parent;
-    if (parent.value.value != item) {
-      // change color of current item
-      var oldItemController = parent.value.controller;
+    var anchorState = listController.anchorState;
+    var currentItem = anchorState.currentItem;
+    if (currentItem.value == widget.item) return;
 
-      // ignore: invalid_use_of_protected_member
-      parent.setState(() {
-        parent.value = item;
-      });
-      updateColor();
+    // change color of current item
+    var oldItemState = anchorState.currentItem.state;
 
-      oldItemController.updateColor();
+    anchorState.currentItem = widget.item;
 
-      var onChange = parent.widget.onChange;
-      if (onChange != null) {
-        onChange(item.value);
-      }
-    }
+    updateColor();
+    oldItemState.updateColor();
+
+    var onChange = anchorState.widget.onChange;
+    if (onChange != null) onChange(widget.item.value);
   }
 
-  Color get defaultColor => Colors.white;
+  Color getNewColor() => listController.anchorState.currentItem == widget.item
+      ? Colors.blue.shade100
+      : (focusNode.hasFocus ? Colors.amber.shade300 : defaultColor);
 
-  void updateColor() {
-    backgroundColor.value = list.parent.value == item
-        ? Colors.blue.shade100
-        : (focusNode.hasFocus ? Colors.amber.shade300 : defaultColor);
-  }
+  static Color get defaultColor => Colors.white;
 
-  void onEnter(PointerEnterEvent event) {
-    focusNode.requestFocus();
-  }
-}
-
-class _DropdownItemWidget<T> extends StatelessWidget {
-  const _DropdownItemWidget({required this.item});
-  final DropdownItem<T> item;
+  _DropdownListController<T> get listController =>
+      OverlayWidget.of<_DropdownListController<T>>(context)!;
 
   @override
   Widget build(BuildContext context) {
-    var c = item.controller;
     return MouseRegion(
-        onEnter: c.onEnter,
+        onEnter: (PointerEnterEvent event) {
+          if (!listController.focusScopeNode.hasFocus) return;
+
+          focusNode.requestFocus();
+        },
         child: GestureDetector(
-            onTap: c.onTap,
+            onTap: onTap,
             child: Focus(
-                focusNode: c.focusNode,
-                child: Obx(() => Container(
-                    color: c.backgroundColor.value,
+                focusNode: focusNode,
+                child: Container(
+                    color: backgroundColor,
                     padding: const EdgeInsets.only(left: 12),
-                    child: c.item.child)))));
+                    child: widget.item.child))));
   }
 }

@@ -56,10 +56,11 @@ class _LoadingState extends State<LoadingIndicator> with TickerProviderStateMixi
 }
 
 class LoadingOverlay extends OverlayController {
-  static final LoadingOverlay _inst = LoadingOverlay._internal();
+  static final LoadingOverlay _inst = OverlayController.cache(
+      tag: 'loading', permanent: true, builder: () => LoadingOverlay._internal());
   static LoadingOverlay get inst => _inst;
 
-  LoadingOverlay._internal() : super(permanent: true);
+  LoadingOverlay._internal();
 
   @override
   Widget widgetBuilder() => const _LoadingWidget();

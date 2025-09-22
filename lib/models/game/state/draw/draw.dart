@@ -53,6 +53,11 @@ mixin DrawStateMixin on GameState {
 
     //#region FORWARD BACKGROUND
     if (sinceEndDate < TopWidgetController.backgroundDuration) {
+      //play sound
+      Sound.inst.play(this is SpectatorDrawState && !(this as SpectatorDrawState).isGuessRight
+          ? Sound.inst.roundEndFailure
+          : Sound.inst.roundEndSuccess);
+
       await topWidget.forwardBackground(
           from: sinceEndDate / TopWidgetController.backgroundDuration);
       sinceEndDate = Duration.zero;
@@ -128,16 +133,18 @@ class SpectatorDrawState extends GameState with DrawStateMixin {
     Get.find<LikeAndDislikeController>().controller.value = 0;
   }
 
+  bool get isGuessRight => _submitMessage == null;
+
   @override
-  void Function(String) get submitMessage => _submitMessage;
-  late void Function(String) _submitMessage = (text) {
+  void Function(String) get submitMessage => _submitMessage ?? (_) {};
+  late void Function(String)? _submitMessage = (text) {
     if (isSending) return;
     isSending = true;
 
     SocketIO.inst.socket.emitWithAck('player_guess', text, ack: (guessResult) {
       if (guessResult == 'right') {
         // disabled chat when player guess right
-        _submitMessage = (_) {};
+        _submitMessage = null;
         Sound.inst.play(Sound.inst.guessedRight);
         return;
       }

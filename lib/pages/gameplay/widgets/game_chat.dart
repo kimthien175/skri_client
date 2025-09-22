@@ -37,10 +37,10 @@ class GameChatController extends GetxController {
     focusNode = FocusNode();
   }
 
-  // TODO: SMOOTH LOADING, SAVE OLD PIXELS, ADD BUNCH OF MSG THEN JUMPTO OLD POSITION
   void _loadMoreMessages() {
     // add dummy loading indicator
     Game.inst.messages.insert(0, const DummyLoadingIndicator());
+    // TODO: SMOOTH LOADING, SAVE OLD PIXELS, ADD BUNCH OF MSG THEN JUMPTO OLD POSITION
 
     SocketIO.inst.socket.emitWithAck('load_messages', Game.inst.messages[1].id, ack: (List list) {
       // remove dummy loading indicator
@@ -134,7 +134,7 @@ class GameChatMobile extends StatelessWidget {
         width: GameChat.width,
         height: height,
         alignment: Alignment.center,
-        child: Messages());
+        child: const Messages());
   }
 }
 

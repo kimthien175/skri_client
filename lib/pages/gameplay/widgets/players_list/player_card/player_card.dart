@@ -11,7 +11,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class PlayerController extends GetxController with GetTickerProviderStateMixin {
-  PlayerController({required this.id});
+  PlayerController({required this.id}) {
+    tooltip = GameTooltipController(
+        position: const GameTooltipPosition.centerRight(),
+        tooltip: Obx(() => Text(tooltipContent.value)),
+        controller: tooltipController);
+  }
   final String id;
   late final AnimationController animController =
       AnimationController(duration: AnimatedButton.duration, vsync: this);
@@ -26,20 +31,9 @@ class PlayerController extends GetxController with GetTickerProviderStateMixin {
       AnimationController(duration: AnimatedButton.duration, vsync: this);
 
   @override
-  void onInit() {
-    super.onInit();
-    tooltip = GameTooltipController(
-        position: const GameTooltipPosition.centerRight(),
-        tooltip: Obx(() => Text(tooltipContent.value)),
-        controller: tooltipController);
-  }
-
-  @override
   void onClose() {
     animController.dispose();
     tooltipController.dispose();
-    Get.delete<OverlayController>(tag: tooltip.tag);
-    OverlayController.deleteCache('card_info_$id');
     super.onClose();
   }
 

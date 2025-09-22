@@ -17,12 +17,6 @@ class PlayerInfoDialog extends GameDialog {
   }
 
   final Player info;
-
-  @override
-  void onClose() {
-    OverlayController.deleteCache('report ${info.id}');
-    super.onClose();
-  }
 }
 
 class _InfoDialogContent extends StatelessWidget {
@@ -34,7 +28,7 @@ class _InfoDialogContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var gameInst = Game.inst;
-    var infoDialog = OverlayWidget.of<PlayerInfoDialog>(context);
+    var infoDialog = OverlayWidget.of<PlayerInfoDialog>(context)!;
     var info = infoDialog.info;
     const space = SizedBox(width: 6, height: 6);
     return Row(mainAxisSize: MainAxisSize.min, children: [
@@ -111,7 +105,7 @@ class __VoteKickButtonState extends State<_VoteKickButton>
 
     return HoverButton(
         constraints: _InfoDialogContent.inputConstraints,
-        isDisabled: dialog.info.isKickVoted == true || isDisabled,
+        isDisabled: dialog!.info.isKickVoted == true || isDisabled,
         onTap: () {
           if (isDisabled) return;
           pauseFncBeforeSending();
@@ -133,15 +127,17 @@ class __VoteKickButtonState extends State<_VoteKickButton>
 
   @override
   void onSuccess(PlayerInfoDialog dialog) {
-    if (OverlayController.get<PlayerInfoDialog>(dialog.tag) != null) {
-      setState(() {
-        if (child == loadingChild) {
-          child = primaryChild;
-        }
+    // check if the dialog is still there, in case the player get kicked and its controller is gone
+    var controller = OverlayWidget.of<PlayerInfoDialog>(context);
+    if (controller == null) return;
 
-        dialog.info.isKickVoted = true;
-      });
-    }
+    setState(() {
+      if (child == loadingChild) {
+        child = primaryChild;
+      }
+
+      dialog.info.isKickVoted = true;
+    });
   }
 }
 
@@ -177,7 +173,7 @@ class _KickButton extends StatefulWidget {
 class __KickButtonState extends State<_KickButton> with APIButtonStateMixin<_KickButton> {
   @override
   Widget build(BuildContext context) {
-    var dialog = OverlayWidget.of<PlayerInfoDialog>(context);
+    var dialog = OverlayWidget.of<PlayerInfoDialog>(context)!;
     return HoverButton(
         isDisabled: isDisabled,
         constraints: const BoxConstraints(
@@ -222,7 +218,7 @@ class __BanButtonState extends State<_BanButton> with APIButtonStateMixin<_BanBu
           if (isDisabled) return;
           pauseFncBeforeSending();
 
-          SocketIO.inst.socket.emitWithAck('host_ban', dialog.info.id, ack: (data) {
+          SocketIO.inst.socket.emitWithAck('host_ban', dialog!.info.id, ack: (data) {
             if (data['success']) {
               onSuccess(dialog);
             } else {
@@ -260,24 +256,28 @@ mixin APIButtonStateMixin<T extends StatefulWidget> on State<T> {
   }
 
   void onSuccess(PlayerInfoDialog dialog) {
-    if (OverlayController.get<PlayerInfoDialog>(dialog.tag) != null) {
-      setState(() {
-        if (child == loadingChild) {
-          child = primaryChild;
-        }
-      });
-    }
+    // check the dialog is still there, in case player got kicked and the controller is gone
+    var controller = OverlayWidget.of<PlayerInfoDialog>(context);
+    if (controller == null || !controller.isShowing) return;
+
+    setState(() {
+      if (child == loadingChild) {
+        child = primaryChild;
+      }
+    });
   }
 
   void onFailed(PlayerInfoDialog dialog) {
-    if (OverlayController.get<PlayerInfoDialog>(dialog.tag) != null) {
-      setState(() {
-        if (child == loadingChild) {
-          child = primaryChild;
-        }
-        isDisabled = false;
-      });
-    }
+    // check the dialog is still there, in case player got kicked and the controller is gone
+    var controller = OverlayWidget.of<PlayerInfoDialog>(context);
+    if (controller == null || !controller.isShowing) return;
+
+    setState(() {
+      if (child == loadingChild) {
+        child = primaryChild;
+      }
+      isDisabled = false;
+    });
   }
 
   @override

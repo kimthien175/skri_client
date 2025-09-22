@@ -155,16 +155,13 @@ class Game extends GetxController {
   static bool get isEmpty => _inst == null;
 
   void confirmLeave() {
-    var dialog = OverlayController.cache(
+    OverlayController.cache(
         tag: 'confirm_leave',
         builder: () => GameDialog(
-            permanent: true,
             title: Text("dialog_title_confirm_leave".tr),
             content: Center(child: Text('dialog_content_confirm_leave'.tr)),
             buttons: const RowRenderObjectWidget(
-                children: [GameDialogButton.yes(), GameDialogButton.no()])));
-
-    dialog.show().then((value) {
+                children: [GameDialogButton.yes(), GameDialogButton.no()]))).show().then((value) {
       if (value) leave();
     });
   }
@@ -178,16 +175,14 @@ class Game extends GetxController {
 
     var homeController = Get.find<HomeController>();
 
-    await Future.wait([
-      LoadingOverlay.inst.show(),
-      Game.inst.stopState(),
-      Get.offAllNamed(
-              "/${homeController.isPrivateRoomCodeValid ? '?${homeController.privateRoomCode}' : ''}")
-          as Future<void>
-    ]);
+    await Future.wait([LoadingOverlay.inst.show(), Game.inst.stopState()]);
 
     Game.inst = null;
+
     await LoadingOverlay.inst.hide();
+
+    Get.offAllNamed(
+        "/${homeController.isPrivateRoomCodeValid ? '?${homeController.privateRoomCode}' : ''}");
   }
 
   void runState() {

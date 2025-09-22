@@ -40,74 +40,55 @@ class Dropdown<T> extends StatefulWidget {
   State<Dropdown<T>> createState() => _DropdownState<T>();
 }
 
-class _DropdownState<T> extends State<Dropdown<T>> with SingleTickerProviderStateMixin {
-  late AnimationController controller;
+class _DropdownState<T> extends State<Dropdown<T>> {
   late FocusNode focusNode;
   GlobalKey key = GlobalKey();
-  late DropdownItem<T> value;
+  late DropdownItem<T> currentItem;
+  void _setCurrentItem() {
+    currentItem = (widget.value == null)
+        ? widget.items.first
+        : widget.items.firstWhere((e) => e.value == widget.value);
+  }
 
-  late _DropdownList menu;
-
+  late final _DropdownListController listController = _DropdownListController<T>(anchorState: this);
   @override
   void didUpdateWidget(Dropdown<T> oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.value != widget.value) {
-      if (widget.value == null) {
-        value = widget.items.first;
-      } else {
-        value = widget.items.firstWhere((e) => e.value == widget.value);
-      }
-    }
+    if (oldWidget.value != widget.value) _setCurrentItem();
   }
 
   @override
   void initState() {
     super.initState();
-    controller = AnimationController(vsync: this, duration: AnimatedButton.duration);
+
     focusNode = FocusNode(
       onKeyEvent: (node, event) {
         if (event is KeyDownEvent) {
           var key = event.logicalKey;
           if (key == LogicalKeyboardKey.enter) {
-            toggleMenu();
+            listController.toggle();
+            return KeyEventResult.handled;
           }
         }
         return KeyEventResult.ignored;
       },
     );
 
-    if (widget.value == null) {
-      value = widget.items.first;
-    } else {
-      value = widget.items.firstWhere((e) => e.value == widget.value);
-    }
-
-    menu = _DropdownList<T>(parent: this);
-  }
-
-  void toggleMenu() {
-    if (controller.isDismissed || controller.velocity < 0) {
-      // forward
-      menu.show();
-      return;
-    }
-    // reverse
-    menu.hide();
+    _setCurrentItem();
   }
 
   @override
   void dispose() {
     focusNode.dispose();
-    controller.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return menu.attach(GestureDetector(
+    var dropdownButton = GestureDetector(
         onTap: () {
           if (!focusNode.hasFocus) focusNode.requestFocus();
-          toggleMenu();
+          listController.toggle();
         },
         child: Focus(
             focusNode: focusNode,
@@ -118,13 +99,15 @@ class _DropdownState<T> extends State<Dropdown<T>> with SingleTickerProviderStat
                 width: widget.width,
                 focusNode: focusNode,
                 child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                  value.child,
+                  currentItem.child,
                   RotationTransition(
-                      turns: controller.drive(Tween<double>(begin: 0.0, end: -0.5)),
+                      turns: listController.slideController
+                          .drive(Tween<double>(begin: 0.0, end: -0.5)),
                       child: ColorTransition(
                           builder: (color) => Icon(Icons.keyboard_arrow_down_rounded, color: color),
-                          listenable: controller.drive(ColorTween(
+                          listenable: listController.slideController.drive(ColorTween(
                               begin: InputStyles.color, end: InputContainer.activeColor))))
-                ])))));
+                ]))));
+    return listController.attach(dropdownButton);
   }
 }

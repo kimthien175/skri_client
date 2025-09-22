@@ -27,7 +27,7 @@ class OKayDialogButtonChild extends GameDialogButtonChild {
   Widget build(BuildContext context) {
     return HoverButton(
         onTap: () {
-          GameDialog controller = OverlayWidget.of<GameDialog>(context);
+          GameDialog controller = OverlayWidget.of<GameDialog>(context)!;
 
           if (controller.completer.isCompleted) return;
 

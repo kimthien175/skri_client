@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:skribbl_client/widgets/overlay/overlay.dart';
 
 class TooltipController<P extends TooltipPosition> extends OverlayController {
-  TooltipController(
-      {required this.position, super.permanent, required Widget tooltip, this.exitTap = true}) {
+  TooltipController({required this.position, required Widget tooltip, this.exitTap = true}) {
     this.tooltip = Align(alignment: position.followerAnchor, child: tooltip);
   }
 

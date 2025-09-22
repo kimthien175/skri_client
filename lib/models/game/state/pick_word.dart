@@ -36,8 +36,12 @@ class PickWordState extends GameState {
 
       //#region SHOW ROUND NOTI
       if (sinceStartDate < TopWidgetController.contentDuration) {
+        // play sound
+        Sound.inst.play(Sound.inst.roundStart);
+
         await topWidgetController.forwardContent(
             from: sinceStartDate / TopWidgetController.contentDuration);
+
         sinceStartDate = Duration.zero;
       } else {
         topWidgetController.content = 1;

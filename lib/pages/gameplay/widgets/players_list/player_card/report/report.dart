@@ -50,14 +50,14 @@ class ReportFormDialog extends GameDialog {
   bool reason3 = false;
   final Player info;
   @override
-  String get tag => 'report ${info.id}';
+  String get tag => 'report_form_${info.id}';
 }
 
 class _ReportContent extends StatelessWidget {
   const _ReportContent();
   @override
   Widget build(BuildContext context) {
-    var controller = OverlayWidget.of<ReportFormDialog>(context);
+    var controller = OverlayWidget.of<ReportFormDialog>(context)!;
     return ReportContentObjectWidget(children: [
       Text('report_form_title'.tr),
       Text('report_form_reason_inappropriate'.tr),

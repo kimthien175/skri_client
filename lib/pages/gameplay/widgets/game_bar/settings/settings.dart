@@ -13,36 +13,38 @@ import 'key_binding.dart';
 class SettingsButton extends StatelessWidget {
   const SettingsButton({super.key});
 
-  static final settingDialog = GameDialog(
-      title: Builder(builder: (_) => Text('Settings'.tr)),
-      content: SizedBox(
-          width: 500,
-          child: Column(children: [
-            Obx(() => _TittleItem(
-                icon: 'audio', title: "${'Volume'.tr} ${SystemSettings.inst.volumeToString}%")),
-            const SettingsSlider(),
-            //
-            const SizedBox(height: 15),
-            //
-            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-              _TittleItem(title: "Hotkeys".tr, icon: 'key'),
-              GameTooltipWrapper(
-                  tooltip: Builder(builder: (_) => Text('reset_hotkeys_tooltip'.tr)),
-                  child: HoverButton(
-                    onTap: SystemSettings.inst.resetKeyMaps,
-                    child: Text('Reset'.tr),
-                  ))
-            ]),
-            Obx(() => Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: (SystemSettings.inst.keyMaps.entries.toList()
-                      ..sort((a, b) => a.value.order.compareTo(b.value.order)))
-                    .map((e) => KeyBinding(title: e.value.title.tr, actKey: e.key))
-                    .toList())),
+  static final settingDialog = OverlayController.cache(
+      tag: 'settings_menu',
+      builder: () => GameDialog(
+          title: Builder(builder: (_) => Text('Settings'.tr)),
+          content: SizedBox(
+              width: 500,
+              child: Column(children: [
+                Obx(() => _TittleItem(
+                    icon: 'audio', title: "${'Volume'.tr} ${SystemSettings.inst.volumeToString}%")),
+                const SettingsSlider(),
+                //
+                const SizedBox(height: 15),
+                //
+                Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                  _TittleItem(title: "Hotkeys".tr, icon: 'key'),
+                  GameTooltipWrapper(
+                      tooltip: Builder(builder: (_) => Text('reset_hotkeys_tooltip'.tr)),
+                      child: HoverButton(
+                        onTap: SystemSettings.inst.resetKeyMaps,
+                        child: Text('Reset'.tr),
+                      ))
+                ]),
+                Obx(() => Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: (SystemSettings.inst.keyMaps.entries.toList()
+                          ..sort((a, b) => a.value.order.compareTo(b.value.order)))
+                        .map((e) => KeyBinding(title: e.value.title.tr, actKey: e.key))
+                        .toList())),
 
-            const SizedBox(height: 15),
-            _TittleItem(title: 'Miscellaneous'.tr, icon: 'questionmark')
-          ])));
+                const SizedBox(height: 15),
+                _TittleItem(title: 'Miscellaneous'.tr, icon: 'questionmark')
+              ]))));
 
   @override
   Widget build(BuildContext context) {
