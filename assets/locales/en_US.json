@@ -53,6 +53,7 @@
     "message_player_guess_close": "@word is close!",
     "message_player_vote_kick": "@voterName is voting to kick @victimName! (@votedCount/@notVictimPlayerCount)",
     "message_word_reveal": "The word was '@word'",
+    "message_finding_player": "finding players",
     "WORD_HIDDEN": "WORD HIDDEN",
     "GUESS_THIS": "GUESS THIS",
     "DRAW_THIS": "DRAW THIS",

@@ -116,6 +116,7 @@ class GameChat extends StatelessWidget {
         width: width,
         height: _height,
         child: const Column(children: [
+          SizedBox(height: 10),
           Expanded(child: Center(child: Messages())),
           SizedBox(height: 10),
           GuessInput()
@@ -131,9 +132,10 @@ class GameChatMobile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
         decoration: BoxDecoration(borderRadius: GlobalStyles.borderRadius, color: Colors.white),
+        padding: EdgeInsets.only(top: 5, bottom: 5),
         width: GameChat.width,
         height: height,
-        alignment: Alignment.center,
+        alignment: Alignment.topCenter,
         child: const Messages());
   }
 }

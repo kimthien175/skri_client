@@ -1,9 +1,12 @@
 library;
 
 export 'private_game.dart';
+export 'public_game.dart';
 export 'message.dart';
 export 'player.dart';
 export 'state/state.dart';
+
+import 'dart:convert';
 
 import 'package:async/async.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +19,7 @@ import 'package:skribbl_client/pages/pages.dart';
 import 'package:skribbl_client/utils/utils.dart';
 import 'package:skribbl_client/widgets/widgets.dart';
 
-class Game extends GetxController {
+abstract class Game extends GetxController {
   Game({required this.data}) {
     state = GameState.fromJSON(henceforthStates[currentStateId]).obs;
 
@@ -159,7 +162,7 @@ class Game extends GetxController {
         tag: 'confirm_leave',
         builder: () => GameDialog(
             title: Text("dialog_title_confirm_leave".tr),
-            content: Center(child: Text('dialog_content_confirm_leave'.tr)),
+            content: Text('dialog_content_confirm_leave'.tr),
             buttons: const RowRenderObjectWidget(
                 children: [GameDialogButton.yes(), GameDialogButton.no()]))).show().then((value) {
       if (value) leave();
@@ -244,6 +247,78 @@ class Game extends GetxController {
       Game.inst.reload(data['data']);
       LoadingOverlay.inst.hide();
     });
+  }
+
+  static Map<String, dynamic> get requestRoomPackage =>
+      {'player': MePlayer.inst.toJSON(), 'lang': Get.locale!.toString()};
+
+  /// use for join and host starting connecting to server
+  /// disconnect immediately and hide loading overlay, show dialog notifying error
+  static void connect(String event, Map<String, dynamic> requestPackage,
+      Game Function({required Map<String, dynamic> room}) loader) {
+    LoadingOverlay.inst.show();
+
+    var socket = SocketIO.inst.socket;
+
+    socket.once('connect_error', (data) {
+      SocketIO.inst.socket.disconnect();
+
+      OverlayController.cache(
+              tag: 'connect_error_dialog',
+              builder: () => GameDialog.error(
+                  onQuit: (hide) async {
+                    await hide();
+
+                    if (Get.currentRoute != '/') {
+                      Game.leave();
+                    }
+                    return true;
+                  },
+                  content: Builder(builder: (_) => Text('dialog_content_no_server_connection'.tr))))
+          .show();
+
+      LoadingOverlay.inst.hide();
+    });
+
+    socket.once(
+        'connect',
+        (_) => SocketIO.inst.socket
+            .emitWithAck(event, requestRoomPackage, ack: (data) => Game._load(data, loader)));
+
+    socket.connect();
+  }
+
+  static void _load(
+      Map<String, dynamic> data, Game Function({required Map<String, dynamic> room}) loader) {
+    if (data['success']) {
+      var me = MePlayer.inst;
+
+      //#region set up player
+      // set room owner name if empty
+      if (me.name.isEmpty) {
+        me.name = data['player']['name'];
+      }
+      me.id = data['player']['id'];
+      //#endregion
+
+      Game.inst = loader(room: data['room']);
+
+      Get.to(() => const GameplayPage(), transition: Transition.noTransition);
+
+      // save metadata to local storage
+      Storage.set(['system'], Game.inst.data['system']);
+    } else {
+      SocketIO.inst.socket.disconnect();
+
+      var reason = data['reason'];
+      if (reason is Map) {
+        var encoder = JsonEncoder.withIndent('  ');
+        reason = encoder.convert(reason);
+      }
+      GameDialog.error(content: Text(reason.toString())).show();
+    }
+
+    LoadingOverlay.inst.hide();
   }
 }
 

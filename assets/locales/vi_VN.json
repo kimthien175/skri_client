@@ -58,6 +58,7 @@
   "message_player_guess_close": "@word gần đúng!",
   "message_player_vote_kick": "@voterName bỏ phiếu kick @victimName! (@votedCount/@notVictimPlayerCount)",
   "message_word_reveal": "Đáp án là '@word'",
+  "message_finding_player": "đang tìm người chơi",
   "No": "Khum",
   "WAITING": "ĐANG CHỜ",
   "WORD_HIDDEN": "TỪ BỊ ẨN",

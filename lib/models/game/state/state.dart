@@ -1,7 +1,7 @@
 library;
 
 export './draw/draw.dart';
-export './match_making.dart';
+export './public_lobby.dart';
 export './pick_word.dart';
 export './pre_game.dart';
 
@@ -33,8 +33,8 @@ abstract class GameState {
         if (data['word_mode'] == HiddenHintStatus.value) return PerformerDrawState(data: data);
         return EmittingPerformerDrawState(data: data);
 
-      case 'match_making':
-        return MatchMakingState(data: data);
+      case 'public_lobby':
+        return PublicLobbyState(data: data);
       default:
         throw Exception('Unimplemented game state');
     }

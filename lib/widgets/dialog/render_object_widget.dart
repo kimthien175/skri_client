@@ -1,10 +1,7 @@
-import 'dart:math';
+part of 'dialog.dart';
 
-import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-
-class DialogRenderObjectWidget extends MultiChildRenderObjectWidget {
-  const DialogRenderObjectWidget({super.key, required super.children})
+class _DialogRenderObjectWidget extends MultiChildRenderObjectWidget {
+  const _DialogRenderObjectWidget({required super.children})
       : assert(children.length == 3 || children.length == 2);
 
   @override
@@ -28,19 +25,24 @@ class _DialogRenderObject extends RenderBox
   void performLayout() {
     //#region title
     RenderBox title = firstChild!;
-    title.layout(const BoxConstraints(), parentUsesSize: true);
+    //35 is Close button width
+    title.layout(
+        BoxConstraints(minWidth: constraints.minWidth - 35, maxWidth: constraints.maxWidth - 35),
+        parentUsesSize: true);
     (title.parentData as _ParentData).offset = const Offset(0, 0);
 
-    double maxWidth = max(title.size.width, constraints.minWidth);
+    double maxWidth = max(title.size.width + 35, constraints.minWidth);
     double height = title.size.height;
     //#endregion
 
     //#region content
     RenderBox content = childAfter(title)!;
-    content.layout(BoxConstraints(minWidth: constraints.minWidth), parentUsesSize: true);
+    content.layout(BoxConstraints(maxWidth: constraints.maxWidth), parentUsesSize: true);
+
+    var contentContainerHeight = max(100, content.size.height);
 
     maxWidth = max(maxWidth, content.size.width);
-    height += content.size.height;
+    height += contentContainerHeight;
     //#endregion
 
     // buttons
@@ -54,8 +56,8 @@ class _DialogRenderObject extends RenderBox
 
     //#region position
 
-    (content.parentData as _ParentData).offset =
-        Offset((maxWidth - content.size.width) / 2, title.size.height);
+    (content.parentData as _ParentData).offset = Offset((maxWidth - content.size.width) / 2,
+        title.size.height + (contentContainerHeight - content.size.height) / 2);
 
     var finalHeight = max(height, constraints.minHeight);
 

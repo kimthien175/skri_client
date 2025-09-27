@@ -34,8 +34,7 @@ class ReportFormDialog extends GameDialog {
                       return true;
                     } else {
                       await dialog.hideInstantly();
-                      GameDialog.error(content: Center(child: Text(res.body.toString())))
-                          .showInstantly();
+                      GameDialog.error(content: Text(res.body.toString())).showInstantly();
                       return false;
                     }
                   },

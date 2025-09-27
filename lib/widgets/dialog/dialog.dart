@@ -1,17 +1,19 @@
 library;
 
 export 'buttons/buttons.dart';
-export 'layout.dart';
 
 import 'dart:async';
+import 'dart:math';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:skribbl_client/utils/styles.dart';
-import 'package:skribbl_client/widgets/dialog/render_object_widget.dart';
 import 'package:skribbl_client/widgets/widgets.dart';
+
+part 'render_object_widget.dart';
 
 typedef StringCallback = String Function();
 
@@ -30,6 +32,7 @@ class GameDialog extends OverlayController with GetSingleTickerProviderStateMixi
       this.onQuit = GameDialog.onQuitDefault})
       : content = content.obs,
         buttons = buttons.obs {
+    assert(content is! Center);
     _init();
   }
 
@@ -47,6 +50,7 @@ class GameDialog extends OverlayController with GetSingleTickerProviderStateMixi
         exitTap = false,
         content = content.obs,
         buttons = buttons.obs {
+    assert(content is! Center);
     _init();
   }
 
@@ -59,6 +63,7 @@ class GameDialog extends OverlayController with GetSingleTickerProviderStateMixi
         exitTap = false,
         content = content.obs,
         buttons = buttons.obs {
+    assert(content is! Center);
     _init();
   }
 
@@ -171,16 +176,14 @@ class _Dialog extends StatelessWidget {
           decoration: const BoxDecoration(
               color: Color.fromRGBO(12, 44, 150, 0.75),
               borderRadius: BorderRadius.all(Radius.circular(10))),
-          child: Obx(() => DialogRenderObjectWidget(
-                children: [
-                  const _Title(),
-                  Container(
-                      //alignment: Alignment.center,
-                      constraints: const BoxConstraints(minHeight: 100),
-                      child: c.content.value),
-                  if (c.buttons.value != null) c.buttons.value!
-                ],
-              ))),
+          child: Obx(() {
+            var buttons = c.buttons.value;
+            return _DialogRenderObjectWidget(children: [
+              const _Title(),
+              Padding(padding: EdgeInsets.only(bottom: 10), child: c.content.value),
+              if (buttons != null) buttons
+            ]);
+          })),
       const _CloseButton()
     ]);
 

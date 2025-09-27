@@ -11,11 +11,6 @@ part 'row.dart';
 part 'button_parent.dart';
 
 abstract class GameDialogButtons {
-  // const factory GameDialogButtons.row({required List<GameDialogButton> children, double gap}) =
-  //     _RowRenderObjectWidget;
-
-  //const GameDialogButtons({super.key});
-
   static TextStyle get textStyle => const TextStyle(
       fontSize: 15,
       fontVariations: [FontVariation.weight(800)],
@@ -23,11 +18,3 @@ abstract class GameDialogButtons {
 }
 
 typedef OnTapCallback = Future<bool> Function(Future<bool> Function() onQuit);
-
-// class _Column extends _Row {
-//   const _Column({required super.children});
-//   @override
-//   Widget build(BuildContext context) => Column(mainAxisSize: MainAxisSize.min, children: children);
-// }
-
-

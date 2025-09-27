@@ -1,8 +1,9 @@
-import 'package:skribbl_client/models/game/private_game.dart';
 import 'package:skribbl_client/pages/home/home.dart';
 import 'package:skribbl_client/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
+import '../../../models/game/game.dart';
 
 class PlayButton extends StatelessWidget {
   const PlayButton({super.key});
@@ -28,8 +29,8 @@ class PlayButton extends StatelessWidget {
           return;
         }
 
-//         //otherwise join public game
-//         PublicGame.join();
+        //otherwise join public game
+        PublicGame.join();
       },
       color: const Color(0xff53e237),
       hoverColor: const Color(0xff38c41c),
@@ -38,8 +39,8 @@ class PlayButton extends StatelessWidget {
     );
   }
 
-  static GameDialog? __dialog;
-  static GameDialog get _dialog => __dialog ??= GameDialog.error(
-      content:
-          Center(child: Builder(builder: (ct) => Text('dialog_content_wrong_private_code'.tr))));
+  static final GameDialog _dialog = OverlayController.cache(
+      tag: 'wrong_private_room_code',
+      builder: () => GameDialog.error(
+          content: Builder(builder: (ct) => Text('dialog_content_wrong_private_code'.tr))));
 }

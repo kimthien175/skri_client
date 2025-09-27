@@ -34,8 +34,7 @@ class SocketIO {
         // find for 'used_by'
         _setTicket(ticket);
         Game.leave();
-        GameDialog.discconected(content: Center(child: Text("dialog_content_got_kicked".tr)))
-            .show();
+        GameDialog.discconected(content: Text("dialog_content_got_kicked".tr)).show();
       } else {
         Game.inst.roomCode = data['new_code'];
         Game.inst.removePlayer(ticket['victim_id']);
@@ -65,8 +64,7 @@ class SocketIO {
         //#endregion
 
         Game.leave();
-        GameDialog.discconected(content: Center(child: Text('dialog_content_got_banned'.tr)))
-            .show();
+        GameDialog.discconected(content: Text('dialog_content_got_banned'.tr)).show();
       } else {
         Game.inst.roomCode = data['new_code'];
         Game.inst.removePlayer(victimId);

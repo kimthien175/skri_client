@@ -73,6 +73,7 @@ class LocaleKeys {
   static const message_player_guess_close = 'message_player_guess_close';
   static const message_player_vote_kick = 'message_player_vote_kick';
   static const message_word_reveal = 'message_word_reveal';
+  static const message_finding_player = 'message_finding_player';
   static const WORD_HIDDEN = 'WORD_HIDDEN';
   static const GUESS_THIS = 'GUESS_THIS';
   static const DRAW_THIS = 'DRAW_THIS';
@@ -215,6 +216,7 @@ class Locales {
     'message_player_vote_kick':
         '@voterName is voting to kick @victimName! (@votedCount/@notVictimPlayerCount)',
     'message_word_reveal': 'The word was \'@word\'',
+    'message_finding_player': 'finding players',
     'WORD_HIDDEN': 'WORD HIDDEN',
     'GUESS_THIS': 'GUESS THIS',
     'DRAW_THIS': 'DRAW THIS',
@@ -335,6 +337,7 @@ class Locales {
     'message_player_vote_kick':
         '@voterName bỏ phiếu kick @victimName! (@votedCount/@notVictimPlayerCount)',
     'message_word_reveal': 'Đáp án là \'@word\'',
+    'message_finding_player': 'đang tìm người chơi',
     'No': 'Khum',
     'WAITING': 'ĐANG CHỜ',
     'WORD_HIDDEN': 'TỪ BỊ ẨN',

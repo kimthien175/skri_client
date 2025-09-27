@@ -115,7 +115,7 @@ class __VoteKickButtonState extends State<_VoteKickButton>
               onSuccess(dialog);
             } else {
               onFailed(dialog);
-              GameDialog.error(content: Center(child: Text(data['reason'].toString()))).show();
+              GameDialog.error(content: Text(data['reason'].toString())).show();
             }
           });
         },
@@ -187,7 +187,7 @@ class __KickButtonState extends State<_KickButton> with APIButtonStateMixin<_Kic
               onSuccess(dialog);
             } else {
               onFailed(dialog);
-              GameDialog.error(content: Center(child: Text(data['reason'].toString()))).show();
+              GameDialog.error(content: Text(data['reason'].toString())).show();
             }
           });
         },
@@ -223,7 +223,7 @@ class __BanButtonState extends State<_BanButton> with APIButtonStateMixin<_BanBu
               onSuccess(dialog);
             } else {
               onFailed(dialog);
-              GameDialog.error(content: Center(child: Text(data['reasson'].toString()))).show();
+              GameDialog.error(content: Text(data['reasson'].toString())).show();
             }
           });
         });
