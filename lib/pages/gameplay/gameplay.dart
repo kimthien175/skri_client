@@ -55,6 +55,12 @@ class _GameplayPageState extends State<GameplayPage> {
   }
 
   @override
+  void dispose() {
+    Game.inst = null;
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) => Background(
       child: PopScope(
           canPop: false,

@@ -71,4 +71,7 @@ class PreGameState extends GameState {
 
   @override
   void onClose() {}
+
+  String get hostPlayerId => data['player_id'];
+  set hostPlayerId(String value) => data['player_id'] = value;
 }

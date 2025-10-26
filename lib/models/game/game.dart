@@ -40,7 +40,13 @@ abstract class Game extends GetxController {
     DrawReceiver.inst.load(data['latest_draw_data']);
   }
 
-  void reload(Map<String, dynamic> room) {
+  void reload(Map<String, dynamic> result) async {
+    if (!result['success']) return leave();
+
+    await LoadingOverlay.inst.show();
+
+    final room = result['room'];
+
     data = room;
 
     if (state.value.id != currentStateId) {
@@ -65,6 +71,7 @@ abstract class Game extends GetxController {
     DrawReceiver.inst.load(data['latest_draw_data']);
 
     runState();
+    await LoadingOverlay.inst.hide();
   }
 
   static Game? _inst;
@@ -180,12 +187,10 @@ abstract class Game extends GetxController {
 
     await Future.wait([LoadingOverlay.inst.show(), Game.inst.stopState()]);
 
-    Game.inst = null;
-
-    await LoadingOverlay.inst.hide();
-
     Get.offAllNamed(
         "/${homeController.isPrivateRoomCodeValid ? '?${homeController.privateRoomCode}' : ''}");
+
+    await LoadingOverlay.inst.hide();
   }
 
   void runState() {
@@ -200,6 +205,7 @@ abstract class Game extends GetxController {
         state.value = GameState.fromJSON(henceforthStates[nextStateId]);
         _start(date);
       }, onError: (e, _) {
+        print(e);
         assert(e is TickerCanceled);
       });
   }
@@ -207,11 +213,14 @@ abstract class Game extends GetxController {
   void _start(DateTime date) {
     // ignore: body_might_complete_normally_catch_error
     _onStartOperation = CancelableOperation.fromFuture(state.value.onStart(date).catchError((e) {
-      assert(e is TickerCanceled);
+      print(e);
+      //assert(e is TickerCanceled);
+      return DateTime.now();
     }));
   }
 
   Future<void> receiveStatusAndStates(dynamic pkg) async {
+    print(pkg);
     await stopState();
 
     henceforthStates.addAll(pkg['henceforth_states']);
@@ -242,11 +251,7 @@ abstract class Game extends GetxController {
 
   static Future<void> requestReload() async {
     await LoadingOverlay.inst.show();
-    SocketIO.inst.socket.emitWithAck('reload', null, ack: (data) async {
-      if (!data['success']) return leave();
-      Game.inst.reload(data['data']);
-      LoadingOverlay.inst.hide();
-    });
+    SocketIO.inst.socket.emitWithAck('reload', null, ack: Game.inst.reload);
   }
 
   static Map<String, dynamic> get requestRoomPackage =>
@@ -283,7 +288,7 @@ abstract class Game extends GetxController {
     socket.once(
         'connect',
         (_) => SocketIO.inst.socket
-            .emitWithAck(event, requestRoomPackage, ack: (data) => Game._load(data, loader)));
+            .emitWithAck(event, requestPackage, ack: (data) => Game._load(data, loader)));
 
     socket.connect();
   }

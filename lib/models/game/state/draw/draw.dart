@@ -107,15 +107,14 @@ mixin DrawStateMixin on GameState {
 }
 
 class SpectatorDrawState extends GameState with DrawStateMixin {
-  SpectatorDrawState({required super.data}) {
-    if (!isHintHidden) Get.find<HintController>().newHint(hint);
-  }
+  SpectatorDrawState({required super.data});
 
   @override
   Widget get status => isHintHidden ? const HiddenHintStatus() : const _VisibleHintStatus();
 
   @override
   Future<DateTime> onStart(DateTime startDate) async {
+    if (!isHintHidden) Get.find<HintController>().newHint(hint);
     var likeController = Get.find<LikeAndDislikeController>();
 
     var sinceDate = DateTime.now() - startDate;
@@ -131,6 +130,7 @@ class SpectatorDrawState extends GameState with DrawStateMixin {
   @override
   void onClose() {
     Get.find<LikeAndDislikeController>().controller.value = 0;
+    Get.find<GameClockController>().cancel();
   }
 
   bool get isGuessRight => _submitMessage == null;

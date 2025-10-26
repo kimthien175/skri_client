@@ -26,7 +26,7 @@ void main() {
   //#endregion
 
   var initialRoute = "/";
-  // "/${parameter ?? ''}";
+  //"/${parameter ?? ''}";
 
   Future.wait([
     GifManager.init().then((_) async {

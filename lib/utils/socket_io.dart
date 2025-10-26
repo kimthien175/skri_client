@@ -153,6 +153,8 @@ class SocketIO {
         }
       }
     });
+
+    socket.on('reload', (dataList) => Game.inst.reload(dataList[0]));
   }
 
   static Future<void> initSocket() async {
