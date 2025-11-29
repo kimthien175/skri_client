@@ -27,8 +27,11 @@ class MainContentMobile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
-        builder: (ct, constraints) =>
-            SizedBox(width: constraints.maxWidth, child: const FittedBox(child: MainContent())));
+      builder: (ct, constraints) => SizedBox(
+        width: constraints.maxWidth,
+        child: const FittedBox(child: MainContent()),
+      ),
+    );
   }
 }
 
@@ -41,9 +44,7 @@ class _MainContentController extends GetxController {
   void show() {
     if (hasTopWidget) return;
 
-    widget.value = Stack(
-      children: [canvas, const TopWidget()],
-    );
+    widget.value = Stack(children: [canvas, const TopWidget()]);
   }
 
   void hide() {

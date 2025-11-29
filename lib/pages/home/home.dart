@@ -29,15 +29,21 @@ class HomeController extends GetxController {
 
     // init roomCode
     var keys = Get.parameters.keys.toList();
-    _roomCode = keys.isEmpty ? '' : keys[0].toLowerCase();
+    if (keys.isEmpty) {
+      roomCode = '';
+      validity = .empty;
+      return;
+    }
+
+    roomCode = keys[0].toLowerCase();
+    validity = RegExp(r'^[a-z0-9]{4,}$').hasMatch(roomCode) ? .valid : .unvalid;
   }
 
-  late final String _roomCode;
-
-  bool get hasCode => _roomCode != '';
-  bool get isPrivateRoomCodeValid => RegExp(r'^[a-z0-9]{4,}$').hasMatch(_roomCode);
-  String get privateRoomCode => _roomCode;
+  late final String roomCode;
+  late final RoomCodeValidity validity;
 }
+
+enum RoomCodeValidity { empty, valid, unvalid }
 
 class HomePage extends GetView<HomeController> {
   const HomePage({super.key});

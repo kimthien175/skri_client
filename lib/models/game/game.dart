@@ -93,8 +93,9 @@ abstract class Game extends GetxController {
   String get inviteLink => '${html.window.location.host}/?$roomCode';
 
   void copyLink() {
-    Clipboard.setData(ClipboardData(text: inviteLink))
-        .then((value) => addMessage((color) => LinkCopiedMessage(backgroundColor: color)));
+    Clipboard.setData(
+      ClipboardData(text: inviteLink),
+    ).then((value) => addMessage((color) => LinkCopiedMessage(backgroundColor: color)));
   }
 
   //late final RxList<Player> playersByList;
@@ -131,13 +132,16 @@ abstract class Game extends GetxController {
   T addMessage<T extends Message>(T Function(Color color) callback, {bool head = false}) {
     late T msg;
     if (head) {
-      msg =
-          callback(messages.first.backgroundColor == Colors.white ? secondaryColor : Colors.white);
+      msg = callback(
+        messages.first.backgroundColor == Colors.white ? secondaryColor : Colors.white,
+      );
       messages.insert(0, msg);
     } else {
-      msg = callback(messages.isEmpty
-          ? Colors.white
-          : (messages.last.backgroundColor == Colors.white ? secondaryColor : Colors.white));
+      msg = callback(
+        messages.isEmpty
+            ? Colors.white
+            : (messages.last.backgroundColor == Colors.white ? secondaryColor : Colors.white),
+      );
       messages.add(msg);
 
       Get.find<GameChatController>().scrollToBottom();
@@ -166,12 +170,15 @@ abstract class Game extends GetxController {
 
   void confirmLeave() {
     OverlayController.cache(
-        tag: 'confirm_leave',
-        builder: () => GameDialog(
-            title: Text("dialog_title_confirm_leave".tr),
-            content: Text('dialog_content_confirm_leave'.tr),
-            buttons: const RowRenderObjectWidget(
-                children: [GameDialogButton.yes(), GameDialogButton.no()]))).show().then((value) {
+      tag: 'confirm_leave',
+      builder: () => GameDialog(
+        title: Text("dialog_title_confirm_leave".tr),
+        content: Text('dialog_content_confirm_leave'.tr),
+        buttons: const RowRenderObjectWidget(
+          children: [GameDialogButton.yes(), GameDialogButton.no()],
+        ),
+      ),
+    ).show().then((value) {
       if (value) leave();
     });
   }
@@ -187,8 +194,7 @@ abstract class Game extends GetxController {
 
     await Future.wait([LoadingOverlay.inst.show(), Game.inst.stopState()]);
 
-    Get.offAllNamed(
-        "/${homeController.isPrivateRoomCodeValid ? '?${homeController.privateRoomCode}' : ''}");
+    Get.offAllNamed("/${homeController.validity == .valid ? '?${homeController.roomCode}' : ''}");
 
     await LoadingOverlay.inst.hide();
   }
@@ -200,27 +206,31 @@ abstract class Game extends GetxController {
 
     // ignore: body_might_complete_normally_catch_error
     _onEndOperation = CancelableOperation.fromFuture(state.value.onEnd(date))
-      ..then((date) {
-        henceforthStates.remove(state.value.id);
-        state.value = GameState.fromJSON(henceforthStates[nextStateId]);
-        _start(date);
-      }, onError: (e, _) {
-        print(e);
-        assert(e is TickerCanceled);
-      });
+      ..then(
+        (date) {
+          henceforthStates.remove(state.value.id);
+          state.value = GameState.fromJSON(henceforthStates[nextStateId]);
+          _start(date);
+        },
+        onError: (e, _) {
+          print(e);
+          assert(e is TickerCanceled);
+        },
+      );
   }
 
   void _start(DateTime date) {
     // ignore: body_might_complete_normally_catch_error
-    _onStartOperation = CancelableOperation.fromFuture(state.value.onStart(date).catchError((e) {
-      print(e);
-      //assert(e is TickerCanceled);
-      return DateTime.now();
-    }));
+    _onStartOperation = CancelableOperation.fromFuture(
+      state.value.onStart(date).catchError((e) {
+        print(e);
+        //assert(e is TickerCanceled);
+        return DateTime.now();
+      }),
+    );
   }
 
   Future<void> receiveStatusAndStates(dynamic pkg) async {
-    print(pkg);
     await stopState();
 
     henceforthStates.addAll(pkg['henceforth_states']);
@@ -254,13 +264,18 @@ abstract class Game extends GetxController {
     SocketIO.inst.socket.emitWithAck('reload', null, ack: Game.inst.reload);
   }
 
-  static Map<String, dynamic> get requestRoomPackage =>
-      {'player': MePlayer.inst.toJSON(), 'lang': Get.locale!.toString()};
+  static Map<String, dynamic> get requestRoomPackage => {
+    'player': MePlayer.inst.toJSON(),
+    'lang': Get.locale!.toString(),
+  };
 
   /// use for join and host starting connecting to server
   /// disconnect immediately and hide loading overlay, show dialog notifying error
-  static void connect(String event, Map<String, dynamic> requestPackage,
-      Game Function({required Map<String, dynamic> room}) loader) {
+  static void connect(
+    String event,
+    Map<String, dynamic> requestPackage,
+    Game Function({required Map<String, dynamic> room}) loader,
+  ) {
     LoadingOverlay.inst.show();
 
     var socket = SocketIO.inst.socket;
@@ -269,32 +284,39 @@ abstract class Game extends GetxController {
       SocketIO.inst.socket.disconnect();
 
       OverlayController.cache(
-              tag: 'connect_error_dialog',
-              builder: () => GameDialog.error(
-                  onQuit: (hide) async {
-                    await hide();
+        tag: 'connect_error_dialog',
+        builder: () => GameDialog.error(
+          onQuit: (hide) async {
+            await hide();
 
-                    if (Get.currentRoute != '/') {
-                      Game.leave();
-                    }
-                    return true;
-                  },
-                  content: Builder(builder: (_) => Text('dialog_content_no_server_connection'.tr))))
-          .show();
+            if (Get.currentRoute != '/') {
+              Game.leave();
+            }
+            return true;
+          },
+          content: Builder(builder: (_) => Text('dialog_content_no_server_connection'.tr)),
+        ),
+      ).show();
 
       LoadingOverlay.inst.hide();
     });
 
     socket.once(
-        'connect',
-        (_) => SocketIO.inst.socket
-            .emitWithAck(event, requestPackage, ack: (data) => Game._load(data, loader)));
+      'connect',
+      (_) => SocketIO.inst.socket.emitWithAck(
+        event,
+        requestPackage,
+        ack: (data) => Game._load(data, loader),
+      ),
+    );
 
     socket.connect();
   }
 
   static void _load(
-      Map<String, dynamic> data, Game Function({required Map<String, dynamic> room}) loader) {
+    Map<String, dynamic> data,
+    Game Function({required Map<String, dynamic> room}) loader,
+  ) {
     if (data['success']) {
       var me = MePlayer.inst;
 

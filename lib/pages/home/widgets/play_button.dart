@@ -14,18 +14,13 @@ class PlayButton extends StatelessWidget {
       onTap: () {
         var homeController = Get.find<HomeController>();
 
-        if (homeController.hasCode) {
-//#region Private room
-          if (homeController.isPrivateRoomCodeValid) {
-            // join private room
-            PrivateGame.join(homeController.privateRoomCode);
-            return;
-          }
-          // show dialog for invalid code room
+        if (homeController.validity == .valid) {
+          PrivateGame.join(homeController.roomCode);
+          return;
+        }
 
+        if (homeController.validity == .unvalid) {
           _dialog.show();
-//#endregion
-
           return;
         }
 
@@ -40,7 +35,9 @@ class PlayButton extends StatelessWidget {
   }
 
   static final GameDialog _dialog = OverlayController.cache(
-      tag: 'wrong_private_room_code',
-      builder: () => GameDialog.error(
-          content: Builder(builder: (ct) => Text('dialog_content_wrong_private_code'.tr))));
+    tag: 'wrong_private_room_code',
+    builder: () => GameDialog.error(
+      content: Builder(builder: (ct) => Text('dialog_content_wrong_private_code'.tr)),
+    ),
+  );
 }

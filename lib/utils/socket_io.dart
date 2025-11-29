@@ -34,12 +34,17 @@ class SocketIO {
         // find for 'used_by'
         _setTicket(ticket);
         Game.leave();
-        GameDialog.discconected(content: Text("dialog_content_got_kicked".tr)).show();
+        OverlayController.cache(
+          tag: 'kick_dialog',
+          builder: () => GameDialog.discconected(content: Text("dialog_content_got_kicked".tr)),
+          permanent: true,
+        ).show();
       } else {
         Game.inst.roomCode = data['new_code'];
         Game.inst.removePlayer(ticket['victim_id']);
-        Game.inst
-            .addMessage((color) => PlayerGotKicked(backgroundColor: color, data: data['message']));
+        Game.inst.addMessage(
+          (color) => PlayerGotKicked(backgroundColor: color, data: data['message']),
+        );
       }
     });
 
@@ -50,10 +55,8 @@ class SocketIO {
         //#region save to cache
         List<dynamic> codes = [Game.inst.roomCode];
         var homeController = Get.find<HomeController>();
-        if (homeController.hasCode &&
-            homeController.isPrivateRoomCodeValid &&
-            homeController.privateRoomCode != Game.inst.roomCode) {
-          codes.add(homeController.privateRoomCode);
+        if (homeController.validity == .valid && homeController.roomCode != Game.inst.roomCode) {
+          codes.add(homeController.roomCode);
         }
 
         var existingBanList = Storage.data['ban'];
@@ -64,12 +67,17 @@ class SocketIO {
         //#endregion
 
         Game.leave();
-        GameDialog.discconected(content: Text('dialog_content_got_banned'.tr)).show();
+        OverlayController.cache(
+          tag: 'ban_dialog',
+          builder: () => GameDialog.discconected(content: Text('dialog_content_got_banned'.tr)),
+          permanent: true,
+        ).show();
       } else {
         Game.inst.roomCode = data['new_code'];
         Game.inst.removePlayer(victimId);
-        Game.inst
-            .addMessage((color) => PlayerGotBanned(backgroundColor: color, data: data['message']));
+        Game.inst.addMessage(
+          (color) => PlayerGotBanned(backgroundColor: color, data: data['message']),
+        );
       }
     });
 
@@ -88,8 +96,9 @@ class SocketIO {
     _socket.on('new_host', (dataList) {
       var inst = Game.inst;
 
-      var msg =
-          inst.addMessage((color) => NewHostMessage(data: dataList[0], backgroundColor: color));
+      var msg = inst.addMessage(
+        (color) => NewHostMessage(data: dataList[0], backgroundColor: color),
+      );
 
       if (inst.playersByMap[msg.playerId] != null) {
         (inst as PrivateGame).hostPlayerId.value = msg.playerId;
@@ -108,9 +117,11 @@ class SocketIO {
     });
 
     socket.on(
-        'system_message',
-        (dataList) => Game.inst
-            .addMessage((color) => Message.fromJSON(backgroundColor: color, data: dataList[0])));
+      'system_message',
+      (dataList) => Game.inst.addMessage(
+        (color) => Message.fromJSON(backgroundColor: color, data: dataList[0]),
+      ),
+    );
 
     socket.on('new_states', (dataList) => Game.inst.receiveStatusAndStates(dataList[0]));
 
@@ -124,8 +135,9 @@ class SocketIO {
     socket.on('hint', (dataList) => Get.find<HintController>().setHint(dataList[0], dataList[1]));
 
     socket.on('like_dislike', (dataList) {
-      var msg = Game.inst
-          .addMessage((color) => Message.fromJSON(backgroundColor: color, data: dataList[0]));
+      var msg = Game.inst.addMessage(
+        (color) => Message.fromJSON(backgroundColor: color, data: dataList[0]),
+      );
 
       if (msg is PlayerLikeMessage) {
         var inst = Game.inst;
@@ -142,8 +154,9 @@ class SocketIO {
     });
 
     socket.on('guess_right', (dataList) {
-      var msg = Game.inst
-          .addMessage((color) => Message.fromJSON(backgroundColor: color, data: dataList[0]));
+      var msg = Game.inst.addMessage(
+        (color) => Message.fromJSON(backgroundColor: color, data: dataList[0]),
+      );
       if (msg is PlayerGuessedRight) {
         var state = Game.inst.state.value;
         if (state is DrawStateMixin && state.points[msg.playerId] == null) {
@@ -160,17 +173,18 @@ class SocketIO {
   static Future<void> initSocket() async {
     //  await FlutterUdid.consistentUdid.then((value) => print(value)).catchError((e) => print(e));
     var socket = IO.io(
-        API.inst.uri,
-        IO.OptionBuilder()
-            .setTransports(['websocket'])
-            // .setExtraHeaders({
-            //   'device_id': await FlutterUdid.consistentUdid.catchError((e) {
-            //     print('UUID ERROR');
-            //     return print(e);
-            //   })
-            // })
-            .disableAutoConnect()
-            .build());
+      API.inst.uri,
+      IO.OptionBuilder()
+          .setTransports(['websocket'])
+          // .setExtraHeaders({
+          //   'device_id': await FlutterUdid.consistentUdid.catchError((e) {
+          //     print('UUID ERROR');
+          //     return print(e);
+          //   })
+          // })
+          .disableAutoConnect()
+          .build(),
+    );
 
     SocketIO._inst = SocketIO._internal(socket);
   }

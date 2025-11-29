@@ -14,13 +14,13 @@ class PrivateGame extends Game {
     //#region edit local storage for rejoin ticket
     var homeController = Get.find<HomeController>();
 
-    if (homeController.hasCode && homeController.isPrivateRoomCodeValid) {
+    if (homeController.validity == .valid) {
       var kickMap = Storage.data['kick'];
       if (kickMap != null) {
-        var ticket = kickMap[homeController.privateRoomCode];
+        var ticket = kickMap[homeController.roomCode];
         if (ticket != null) {
           ticket['used_by'] = game.hashCode;
-          Storage.set(['kick', homeController.privateRoomCode], ticket);
+          Storage.set(['kick', homeController.roomCode], ticket);
         }
       }
     }
@@ -30,12 +30,12 @@ class PrivateGame extends Game {
   }
 
   PrivateGame._internal({required super.data})
-      : hostPlayerId = (data['host_player_id'] as String).obs;
+    : hostPlayerId = (data['host_player_id'] as String).obs;
 
   @override
-  void reload(Map<String, dynamic> room) {
-    hostPlayerId.value = room['host_player_id'];
-    super.reload(room);
+  void reload(Map<String, dynamic> result) {
+    hostPlayerId.value = result['host_player_id'];
+    super.reload(result);
   }
 
   static Future<void> setupTesting() async {
@@ -46,12 +46,12 @@ class PrivateGame extends Game {
         "fDmSIumozqWBdX87AAAE": {
           "name": "worry",
           "avatar": {"color": 15, "eyes": 12, "mouth": 12},
-          "id": "fDmSIumozqWBdX87AAAE"
+          "id": "fDmSIumozqWBdX87AAAE",
         },
         "WWEAmL4U": {
           "id": "WWEAmL4U",
           "name": "Flcpmizdv",
-          "avatar": {"color": 15, "eyes": 12, "mouth": 12}
+          "avatar": {"color": 15, "eyes": 12, "mouth": 12},
         },
         // "iBnJ6uBN": {
         //   "id": "iBnJ6uBN",
@@ -215,8 +215,8 @@ class PrivateGame extends Game {
           "type": "new_host",
           "timestamp": "2025-04-25T14:16:57.658Z",
           "player_id": "fDmSIumozqWBdX87AAAE",
-          "player_name": "worry"
-        }
+          "player_name": "worry",
+        },
       ],
       "options": {
         "players": {"min": 2, "max": 20},
@@ -229,9 +229,9 @@ class PrivateGame extends Game {
           "min_words": 10,
           "min_char_per_word": 1,
           "max_char_per_word": 32,
-          "max_char": 20000
+          "max_char": 20000,
         },
-        "draw_time": [15, 20, 30, 40, 50, 60, 70, 80, 90, 100, 120, 150, 180, 210, 240]
+        "draw_time": [15, 20, 30, 40, 50, 60, 70, 80, 90, 100, 120, 150, 180, 210, 240],
       },
       "system": {"pick_word_time": 15, "kick_interval": 30},
       "settings": {
@@ -241,7 +241,7 @@ class PrivateGame extends Game {
         "word_mode": "Normal",
         "word_count": 3,
         "hints": 2,
-        "draw_time": 80
+        "draw_time": 80,
       },
       "round_white_list": ["fDmSIumozqWBdX87AAAE"],
       "current_round": 1,
@@ -278,36 +278,38 @@ class PrivateGame extends Game {
               "id": "oKxPJ1c8",
               "name": "Qpwe",
               "avatar": {"color": 15, "eyes": 12, "mouth": 12},
-              "score": 0
+              "score": 0,
             },
-          }
-        }
+          },
+        },
       },
       "henceforth_states": {
         "pregame_state_id": {"id": "pregame_state_id", "type": "pre_game"} as dynamic,
-        "680b9959c4a0f77046faa933": {
-          "type": "pick_word",
-          "id": "680b9959c4a0f77046faa933",
-          "round_notify": null,
-          'player_id': "fDmSIumozqWBdX87AAAE",
-          "words": [
-            "ourselves",
-            "choose",
-            "for",
-            "ourselves",
-            "choose",
-            "for",
-            "ourselves",
-            "choose",
-            "for",
-            "ourselves",
-            "choose",
-            "for",
-            "ourselves",
-            "choose",
-            "for"
-          ]
-        } as dynamic,
+        "680b9959c4a0f77046faa933":
+            {
+                  "type": "pick_word",
+                  "id": "680b9959c4a0f77046faa933",
+                  "round_notify": null,
+                  'player_id': "fDmSIumozqWBdX87AAAE",
+                  "words": [
+                    "ourselves",
+                    "choose",
+                    "for",
+                    "ourselves",
+                    "choose",
+                    "for",
+                    "ourselves",
+                    "choose",
+                    "for",
+                    "ourselves",
+                    "choose",
+                    "for",
+                    "ourselves",
+                    "choose",
+                    "for",
+                  ],
+                }
+                as dynamic,
         // "680cd9b9b34194c2298d16a4": {
         //   "type": "draw",
         //   "id": "680cd9b9b34194c2298d16a4",
@@ -315,101 +317,105 @@ class PrivateGame extends Game {
         //   "word": "the fish",
         //   "hint": "__ ___"
         // } as dynamic,
-        "draw_state_id": {
-          "type": 'draw',
-          "id": "draw_state_id",
-          "word": "abc",
-          'hint': '___',
-          "player_id": "fDmSIumozqWBdX87AAAE",
-          "word_mode": "Normal",
-          "end_state": "end_game",
-          "points": {
-            "WWEAmL4U": 76,
-            "iBnJ6uBN": 63,
-            "04lxSxZa": 1,
-            "StzosDkc": 55,
-            "ENrBp2BG": 10,
-            "xHfT4tvh": 91,
-            "8X1u11Wq": 44,
-            "uZoEeKMu": 42,
-            "ViWToJfv": 69,
-            "5YX6ryba": 26,
-            "PSS6IMpo": 81,
-            "1GdAjnIA": 47,
-            "i0ocogCF": 41,
-            "c9wOaQfP": 56,
-            "cfQZxYk4": 3,
-            "rneIFu8k": 84,
-            "BChA55fj": 19,
-            "e71C9iWw": 39,
-            "lvEf8oRL": 7,
-            "HHl2q4QN": 51,
-            "QKyqXknH": 35,
-            "vfnTmOpu": 65,
-            "QX6MHu2w": 58,
-            "2uqWGm0r": 93,
-            "KHnGbLQd": 52,
-            "ER3emqQc": 19,
-            "29juyknw": 22,
-            "VvFoDY11": 34,
-            "WgRuBj1z": 23,
-            "AwROhV4k": 99,
-            "EU2WT4NI": 11,
-            "oKxPJ1c8": 17,
-            "ahpR2f5C": 63,
-            "MKxOJJPe": 6,
-            "EevsJxoa": 24,
-            "idYsCkH2": 11,
-            "4BGszt2g": 75,
-            "QzhpPWWl": 37,
-            "GicOaeYT": 0,
-            "zf7o7o1X": 9,
-            "fDmSIumozqWBdX87AAAE": 100,
-          } as dynamic
-        } as dynamic
+        "draw_state_id":
+            {
+                  "type": 'draw',
+                  "id": "draw_state_id",
+                  "word": "abc",
+                  'hint': '___',
+                  "player_id": "fDmSIumozqWBdX87AAAE",
+                  "word_mode": "Normal",
+                  "end_state": "end_game",
+                  "points":
+                      {
+                            "WWEAmL4U": 76,
+                            "iBnJ6uBN": 63,
+                            "04lxSxZa": 1,
+                            "StzosDkc": 55,
+                            "ENrBp2BG": 10,
+                            "xHfT4tvh": 91,
+                            "8X1u11Wq": 44,
+                            "uZoEeKMu": 42,
+                            "ViWToJfv": 69,
+                            "5YX6ryba": 26,
+                            "PSS6IMpo": 81,
+                            "1GdAjnIA": 47,
+                            "i0ocogCF": 41,
+                            "c9wOaQfP": 56,
+                            "cfQZxYk4": 3,
+                            "rneIFu8k": 84,
+                            "BChA55fj": 19,
+                            "e71C9iWw": 39,
+                            "lvEf8oRL": 7,
+                            "HHl2q4QN": 51,
+                            "QKyqXknH": 35,
+                            "vfnTmOpu": 65,
+                            "QX6MHu2w": 58,
+                            "2uqWGm0r": 93,
+                            "KHnGbLQd": 52,
+                            "ER3emqQc": 19,
+                            "29juyknw": 22,
+                            "VvFoDY11": 34,
+                            "WgRuBj1z": 23,
+                            "AwROhV4k": 99,
+                            "EU2WT4NI": 11,
+                            "oKxPJ1c8": 17,
+                            "ahpR2f5C": 63,
+                            "MKxOJJPe": 6,
+                            "EevsJxoa": 24,
+                            "idYsCkH2": 11,
+                            "4BGszt2g": 75,
+                            "QzhpPWWl": 37,
+                            "GicOaeYT": 0,
+                            "zf7o7o1X": 9,
+                            "fDmSIumozqWBdX87AAAE": 100,
+                          }
+                          as dynamic,
+                }
+                as dynamic,
       },
       "quit_players": {
         "ahpR2f5C": {
           "id": "ahpR2f5C",
           "name": "quit player 1",
-          "avatar": {"color": 15, "eyes": 12, "mouth": 12}
+          "avatar": {"color": 15, "eyes": 12, "mouth": 12},
         },
         "MKxOJJPe": {
           "id": "MKxOJJPe",
           "name": "quit player 2",
-          "avatar": {"color": 15, "eyes": 12, "mouth": 12}
+          "avatar": {"color": 15, "eyes": 12, "mouth": 12},
         },
         "EevsJxoa": {
           "id": "EevsJxoa",
           "name": "quit player 3",
-          "avatar": {"color": 15, "eyes": 12, "mouth": 12}
+          "avatar": {"color": 15, "eyes": 12, "mouth": 12},
         },
         "idYsCkH2": {
           "id": "idYsCkH2",
           "name": "quit player 4",
-          "avatar": {"color": 15, "eyes": 12, "mouth": 12}
+          "avatar": {"color": 15, "eyes": 12, "mouth": 12},
         },
         "4BGszt2g": {
           "id": "4BGszt2g",
           "name": "quit player 5",
-          "avatar": {"color": 15, "eyes": 12, "mouth": 12}
+          "avatar": {"color": 15, "eyes": 12, "mouth": 12},
         },
         "QzhpPWWl": {
           "id": "QzhpPWWl",
           "name": "quit playuer 6",
-          "avatar": {"color": 15, "eyes": 12, "mouth": 12}
+          "avatar": {"color": 15, "eyes": 12, "mouth": 12},
         },
         "GicOaeYT": {
           "id": "GicOaeYT",
           "name": "quit player 7",
-          "avatar": {"color": 15, "eyes": 12, "mouth": 12}
+          "avatar": {"color": 15, "eyes": 12, "mouth": 12},
         },
         "zf7o7o1X": {
           "id": "zf7o7o1X",
           "name": "quit player 8",
-          "avatar": {"color": 15, "eyes": 12, "mouth": 12}
-        }
-      }
+          "avatar": {"color": 15, "eyes": 12, "mouth": 12},
+        },
+      },
     };
 
     MePlayer.inst = MePlayer.fromJSON(data['players']["fDmSIumozqWBdX87AAAE"]);
@@ -422,7 +428,7 @@ class PrivateGame extends Game {
         "current_state_id": "680b9959c4a0f77046faa933",
         "command": "end",
         "date": DateTime.now().toUtc().toIso8601String(),
-        "next_state_id": "680cd9b9b34194c2298d16a4"
+        "next_state_id": "680cd9b9b34194c2298d16a4",
       },
       "henceforth_states": {
         "680cd9b9b34194c2298d16a4": {
@@ -430,15 +436,15 @@ class PrivateGame extends Game {
           "id": "680cd9b9b34194c2298d16a4",
           "player_id": "lQiMMk8s6BMWIktYAAAK",
           "words": ["remain", "club", "map"],
-          "round_notify": 1
+          "round_notify": 1,
         },
         "680cd9b9b34194c2298d16a5": {
           "type": "pick_word",
           "id": "680cd9b9b34194c2298d16a5",
           "player_id": "QyN_hx0JNrQRLyIHAAAH",
-          "words": ["ourselves", "choose", "for"]
-        }
-      }
+          "words": ["ourselves", "choose", "for"],
+        },
+      },
     };
 
     Game.inst.receiveStatusAndStates(mockData);
@@ -463,9 +469,9 @@ class PrivateGame extends Game {
     var banList = Storage.data['ban'];
     if (banList is List && banList.contains(code)) {
       OverlayController.cache(
-          tag: 'join_but_get_banned',
-          builder: () =>
-              GameDialog.error(content: Text('dialog_content_join_but_get_banned'.tr))).show();
+        tag: 'join_but_get_banned',
+        builder: () => GameDialog.error(content: Text('dialog_content_join_but_get_banned'.tr)),
+      ).show();
       return;
     }
     //#endregion
@@ -485,11 +491,11 @@ class PrivateGame extends Game {
               if ((DateTime.now() - kickDate).inSeconds < kickInterval) {
                 // still in kick interval
                 OverlayController.cache(
-                        tag: 'kick interval',
-                        builder: () => GameDialog.error(
-                            content:
-                                Builder(builder: (_) => Text('dialog_content_kick_countdown'.tr))))
-                    .show();
+                  tag: 'kick interval',
+                  builder: () => GameDialog.error(
+                    content: Builder(builder: (_) => Text('dialog_content_kick_countdown'.tr)),
+                  ),
+                ).show();
                 return;
               } else {
                 // modify request package for ticket
@@ -522,12 +528,16 @@ class PrivateGame extends Game {
       // do once
       if (_isSendingStartGameRequest) return;
       _isSendingStartGameRequest = true;
-      SocketIO.inst.socket.emitWithAck('start_private_game', Game.inst.settings, ack: (res) {
-        _isSendingStartGameRequest = false;
-        if (!res['success']) {
-          GameDialog.error(content: Text(res['reason'].toString())).show();
-        }
-      });
+      SocketIO.inst.socket.emitWithAck(
+        'start_private_game',
+        Game.inst.settings,
+        ack: (res) {
+          _isSendingStartGameRequest = false;
+          if (!res['success']) {
+            GameDialog.error(content: Text(res['reason'].toString())).show();
+          }
+        },
+      );
     }
   }
 }

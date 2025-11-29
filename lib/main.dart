@@ -25,7 +25,7 @@ void main() {
   // }
   //#endregion
 
-  var initialRoute = "/";
+  //var initialRoute = "/";
   //"/${parameter ?? ''}";
 
   Future.wait([
@@ -35,7 +35,7 @@ void main() {
       //await PrivateGame.setupTesting();
     }),
     SocketIO.initSocket(),
-    Sound.inst.load()
+    Sound.inst.load(),
   ]).then((_) {
     var next = Get.arguments['next'];
     if (Get.currentRoute == '/loading' && next != null) {
@@ -44,7 +44,8 @@ void main() {
   });
 
   usePathUrlStrategy();
-  runApp(GetMaterialApp(
+  runApp(
+    GetMaterialApp(
       theme: ThemeData(fontFamily: 'Nunito-var'),
       // Locales
       translationsKeys: AppTranslation.translations,
@@ -52,36 +53,36 @@ void main() {
       fallbackLocale: const Locale('en', 'US'),
       debugShowCheckedModeBanner: false,
       title: 'Material App',
-      initialRoute: initialRoute,
-      defaultTransition: Transition.noTransition,
+      //initialRoute: initialRoute,
+      defaultTransition: .noTransition,
       getPages: [
         GetPage(
-            name: '/',
-            page: () => const HomePage(),
-            binding: HomeBindings(),
-            middlewares: [HomeMiddleware()]),
-        GetPage(
-          name: '/terms',
-          page: () => const TermsPage(),
+          name: '/',
+          page: () => const HomePage(),
+          binding: HomeBindings(),
+          middlewares: [HomeMiddleware()],
         ),
+        GetPage(name: '/terms', page: () => const TermsPage()),
+        GetPage(name: '/credits', page: () => const CreditsPage()),
         GetPage(
-          name: '/credits',
-          page: () => const CreditsPage(),
+          name: '/GameplayPage',
+          page: () => const GameplayPage(),
+          middlewares: [GameplayMiddleware()],
         ),
-        GetPage(
-            name: '/GameplayPage',
-            page: () => const GameplayPage(),
-            middlewares: [GameplayMiddleware()]),
         GetPage(name: '/test', page: () => TestPage()),
         GetPage(
-            name: '/loading', page: () => Background(child: LoadingOverlay.inst.widgetBuilder()))
-      ]));
+          name: '/loading',
+          page: () => Background(child: LoadingOverlay.inst.widgetBuilder()),
+        ),
+      ],
+    ),
+  );
 }
 
 class HomeMiddleware extends GetMiddleware {
   @override
   RouteSettings? redirect(String? route) {
-    if (GifManager.isEmpty || MePlayer.isEmpty) {
+    if (MePlayer.isEmpty) {
       return RouteSettings(name: '/loading', arguments: {'next': route});
     }
     return null;
@@ -91,7 +92,7 @@ class HomeMiddleware extends GetMiddleware {
 class GameplayMiddleware extends GetMiddleware {
   @override
   RouteSettings? redirect(String? route) {
-    if (GifManager.isEmpty || MePlayer.isEmpty || Game.isEmpty) {
+    if (MePlayer.isEmpty || Game.isEmpty) {
       return RouteSettings(name: '/loading', arguments: {'next': route});
     }
     return null;
