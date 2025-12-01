@@ -14,54 +14,74 @@ class SettingsButton extends StatelessWidget {
   const SettingsButton({super.key});
 
   static final settingDialog = OverlayController.cache(
-      tag: 'settings_menu',
-      builder: () => GameDialog(
-          title: Builder(builder: (_) => Text('Settings'.tr)),
-          content: SizedBox(
-              width: 500,
-              child: Column(children: [
-                Obx(() => _TittleItem(
-                    icon: 'audio', title: "${'Volume'.tr} ${SystemSettings.inst.volumeToString}%")),
-                const SettingsSlider(),
-                //
-                const SizedBox(height: 15),
-                //
-                Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                  _TittleItem(title: "Hotkeys".tr, icon: 'key'),
-                  GameTooltipWrapper(
-                      tooltip: Builder(builder: (_) => Text('reset_hotkeys_tooltip'.tr)),
-                      child: HoverButton(
-                        onTap: SystemSettings.inst.resetKeyMaps,
-                        child: Text('Reset'.tr),
-                      ))
-                ]),
-                Obx(() => Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: (SystemSettings.inst.keyMaps.entries.toList()
+    tag: 'settings_menu',
+    permanent: true,
+    builder: () => GameDialog(
+      title: Builder(builder: (_) => Text('Settings'.tr)),
+      content: SizedBox(
+        width: 500,
+        child: Column(
+          children: [
+            Obx(
+              () => _TittleItem(
+                icon: 'audio',
+                title: "${'Volume'.tr} ${SystemSettings.inst.volumeToString}%",
+              ),
+            ),
+            const SettingsSlider(),
+            //
+            const SizedBox(height: 15),
+            //
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                _TittleItem(title: "Hotkeys".tr, icon: 'key'),
+                GameTooltipWrapper(
+                  tooltip: Builder(builder: (_) => Text('reset_hotkeys_tooltip'.tr)),
+                  child: HoverButton(
+                    onTap: SystemSettings.inst.resetKeyMaps,
+                    child: Text('Reset'.tr),
+                  ),
+                ),
+              ],
+            ),
+            Obx(
+              () => Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children:
+                    (SystemSettings.inst.keyMaps.entries.toList()
                           ..sort((a, b) => a.value.order.compareTo(b.value.order)))
                         .map((e) => KeyBinding(title: e.value.title.tr, actKey: e.key))
-                        .toList())),
+                        .toList(),
+              ),
+            ),
 
-                const SizedBox(height: 15),
-                _TittleItem(title: 'Miscellaneous'.tr, icon: 'questionmark')
-              ]))));
+            const SizedBox(height: 15),
+            _TittleItem(title: 'Miscellaneous'.tr, icon: 'questionmark'),
+          ],
+        ),
+      ),
+    ),
+  );
 
   @override
   Widget build(BuildContext context) {
     return AnimatedButton(
-        onTap: settingDialog.show,
-        decorators: [
-          const AnimatedButtonOpacityDecorator(minOpacity: 0.9),
-          const AnimatedButtonScaleDecorator(max: 1.1),
-          AnimatedButtonTooltipDecorator(
-              tooltip: Builder(builder: (_) => Text('Settings'.tr)),
-              position: const GameTooltipPosition.centerLeft())
-        ],
-        child: GifManager.inst
-            .misc('settings')
-            .builder
-            .initWithShadow(filterQuality: FilterQuality.none)
-            .fit(height: 42));
+      onTap: settingDialog.show,
+      decorators: [
+        const AnimatedButtonOpacityDecorator(minOpacity: 0.9),
+        const AnimatedButtonScaleDecorator(max: 1.1),
+        AnimatedButtonTooltipDecorator(
+          tooltip: Builder(builder: (_) => Text('Settings'.tr)),
+          position: const GameTooltipPosition.centerLeft(),
+        ),
+      ],
+      child: GifManager.inst
+          .misc('settings')
+          .builder
+          .initWithShadow(filterQuality: FilterQuality.none)
+          .fit(height: 42),
+    );
   }
 }
 
@@ -74,15 +94,18 @@ class _TittleItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-        padding: const EdgeInsets.only(bottom: 1.95),
-        child: Row(children: [
+      padding: const EdgeInsets.only(bottom: 1.95),
+      child: Row(
+        children: [
           GifManager.inst.misc(icon).builder.initWithShadow().fit(height: 27.297, width: 27.297),
           const SizedBox(width: 5.850),
           Text(
             title,
             style: const TextStyle(fontSize: 19.5, fontVariations: [FontVariation.weight(700)]),
           ),
-        ]));
+        ],
+      ),
+    );
   }
 }
 
