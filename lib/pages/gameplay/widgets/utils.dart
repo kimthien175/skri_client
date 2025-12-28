@@ -59,16 +59,17 @@ class DrawReceiver {
   }
 
   void load(dynamic drawData) async {
-    if (drawData == null) {
-      reset();
-      return;
-    }
+    //     if (drawData == null) {
+    //       reset();
+    //       return;
+    //     }
 
-    pastSteps = {};
-    _stepsBlackList = {};
+    //     pastSteps = {};
+    //     _stepsBlackList = {};
 
-    currentStep = {};
-    _brushBlackList = {};
+    //     currentStep = {};
+    //     _brushBlackList = {};
+    reset();
 
     startCurrent(drawData['current_step']);
     _initPastSteps(drawData['past_steps'], drawData['tail_id']);

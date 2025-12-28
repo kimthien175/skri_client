@@ -14,7 +14,7 @@ class PickWordState extends GameState {
   PickWordState({required super.data});
 
   String get playerId => data['player_id'];
-  List<dynamic> get words => data['words'];
+  List<dynamic>? get words => data['words'];
   bool get isPicker => MePlayer.inst.id == playerId;
 
   late int? roundNotify = data['round_notify'];
@@ -40,7 +40,8 @@ class PickWordState extends GameState {
         Sound.inst.play(Sound.inst.roundStart);
 
         await topWidgetController.forwardContent(
-            from: sinceStartDate / TopWidgetController.contentDuration);
+          from: sinceStartDate / TopWidgetController.contentDuration,
+        );
 
         sinceStartDate = Duration.zero;
       } else {
@@ -61,7 +62,8 @@ class PickWordState extends GameState {
       //#region REVERSE ROUND NOTI
       if (sinceStartDate < TopWidgetController.contentDuration) {
         await topWidgetController.reverseContent(
-            from: 1 - sinceStartDate / TopWidgetController.contentDuration);
+          from: 1 - sinceStartDate / TopWidgetController.contentDuration,
+        );
         sinceStartDate = Duration.zero;
       } else {
         topWidgetController.content = 0;
@@ -78,7 +80,8 @@ class PickWordState extends GameState {
     //#region FORWARD CONTENT
     if (sinceStartDate < TopWidgetController.contentDuration) {
       await topWidgetController.forwardContent(
-          from: sinceStartDate / TopWidgetController.contentDuration);
+        from: sinceStartDate / TopWidgetController.contentDuration,
+      );
       sinceStartDate = Duration.zero;
     } else {
       sinceStartDate -= TopWidgetController.contentDuration;
@@ -89,12 +92,17 @@ class PickWordState extends GameState {
     //#region START CLOCK
     var clockDuration = _fullPickingDuration - sinceStartDate;
     if (clockDuration > Duration.zero) {
-      Get.find<GameClockController>().start(clockDuration, onEnd: () {
-        // send random word
-        if (isPicker && _wordStatus == _WordSendingStatus.notSent) {
-          sendWord(words[Random().nextInt(words.length)]);
-        }
-      });
+      print('debugging pick word');
+      Get.find<GameClockController>().countdown(
+        clockDuration,
+        onEnd: () {
+          // send random word
+          if (isPicker && _wordStatus == _WordSendingStatus.notSent) {
+            var randomWordIndex = words != null ? Random().nextInt(words!.length) : null;
+            sendWord(randomWordIndex);
+          }
+        },
+      );
     }
     //#endregion
 
@@ -104,9 +112,9 @@ class PickWordState extends GameState {
   @override
   Duration get waitDuration => const Duration(seconds: 2);
 
-  void sendWord(String word) {
+  void sendWord(int? wordIndex) {
     _wordStatus = _WordSendingStatus.sending;
-    SocketIO.inst.socket.emitWithAck('pick_word', word, ack: (data) {});
+    SocketIO.inst.socket.emitWithAck('pick_word', wordIndex, ack: (data) {});
   }
 
   _WordSendingStatus _wordStatus = _WordSendingStatus.notSent;
@@ -123,7 +131,8 @@ class PickWordState extends GameState {
     //#region REVERSE CONTENT
     if (sinceEndDate < TopWidgetController.contentDuration) {
       await topWidgetController.reverseContent(
-          from: 1 - sinceEndDate / TopWidgetController.contentDuration);
+        from: 1 - sinceEndDate / TopWidgetController.contentDuration,
+      );
       sinceEndDate = Duration.zero;
     } else {
       topWidgetController.content = 0;
@@ -134,7 +143,8 @@ class PickWordState extends GameState {
     //#region REVERSE BACKGROUND
     if (sinceEndDate < TopWidgetController.backgroundDuration) {
       await topWidgetController.reverseBackground(
-          from: 1 - sinceEndDate / TopWidgetController.backgroundDuration);
+        from: 1 - sinceEndDate / TopWidgetController.backgroundDuration,
+      );
 
       // for spectators watching the transtion from PickWordState to DrawState, the draw data would reset
       // for spectator join mid game, of course this would be skipped
@@ -144,8 +154,9 @@ class PickWordState extends GameState {
     }
     //#endregion
 
-    return endDate
-        .add(TopWidgetController.contentDuration + TopWidgetController.backgroundDuration);
+    return endDate.add(
+      TopWidgetController.contentDuration + TopWidgetController.backgroundDuration,
+    );
   }
 
   @override
@@ -157,9 +168,9 @@ class PickWordState extends GameState {
 enum _WordSendingStatus { notSent, sending }
 
 class _WordButton extends StatefulWidget {
-  const _WordButton({required this.word});
+  const _WordButton({required this.wordIndex});
 
-  final String word;
+  final int wordIndex;
 
   @override
   State<_WordButton> createState() => __WordButtonState();
@@ -179,24 +190,29 @@ class __WordButtonState extends State<_WordButton> with SingleTickerProviderStat
   Widget build(BuildContext context) {
     var state = Game.inst.state.value as PickWordState;
     return HoverButton(
-        onTap: () {
-          if (state._wordStatus == _WordSendingStatus.notSent) {
-            Get.find<GameClockController>().cancel();
-            state.sendWord(widget.word);
-          }
-        },
-        border: Border.all(color: Colors.white, width: 2.5),
-        controller: controller,
-        color: Colors.transparent,
-        hoverColor: Colors.white,
-        child: ColorTransition(
-            listenable: textAnimation,
-            builder: (color) => Text(widget.word,
-                style: TextStyle(
-                    color: color,
-                    fontSize: 20,
-                    fontVariations: [FontVariation.weight(700)],
-                    shadows: []))));
+      onTap: () {
+        if (state._wordStatus == _WordSendingStatus.notSent) {
+          Get.find<GameClockController>().cancel();
+          state.sendWord(widget.wordIndex);
+        }
+      },
+      border: Border.all(color: Colors.white, width: 2.5),
+      controller: controller,
+      color: Colors.transparent,
+      hoverColor: Colors.white,
+      child: ColorTransition(
+        listenable: textAnimation,
+        builder: (color) => Text(
+          (Game.inst.state.value as PickWordState).words![widget.wordIndex],
+          style: TextStyle(
+            color: color,
+            fontSize: 20,
+            fontVariations: [FontVariation.weight(700)],
+            shadows: [],
+          ),
+        ),
+      ),
+    );
   }
 }
 
@@ -237,24 +253,30 @@ class __WordOptionsState extends State<_WordOptions> {
 
   @override
   Widget build(BuildContext context) {
+    List<Widget> wordButtons = [];
+    for (var i = 0; i < widget.words.length; i++) {
+      wordButtons.add(
+        Padding(
+          padding: EdgeInsets.all(8),
+          child: UnconstrainedBox(child: _WordButton(wordIndex: i)),
+        ),
+      );
+    }
+
     return FocusScope(
-        node: focusNode,
-        child: Wrap(
-            alignment: WrapAlignment.center,
-            crossAxisAlignment: WrapCrossAlignment.center,
-            children: widget.words
-                .map((e) => Padding(
-                    padding: EdgeInsets.all(8),
-                    child: UnconstrainedBox(child: _WordButton(word: e as String))))
-                .toList()));
+      node: focusNode,
+      child: Wrap(
+        alignment: WrapAlignment.center,
+        crossAxisAlignment: WrapCrossAlignment.center,
+        children: wordButtons,
+      ),
+    );
   }
 }
 
 class _TopWidget extends StatelessWidget {
   _TopWidget.roundNoti() {
-    child = Text(
-      'round_noti'.trParams({'round': Game.inst.currentRound.value.toString()}),
-    );
+    child = Text('round_noti'.trParams({'round': Game.inst.currentRound.value.toString()}));
   }
 
   _TopWidget.wordOptions() {
@@ -262,18 +284,17 @@ class _TopWidget extends StatelessWidget {
     var state = inst.state.value as PickWordState;
     var player = inst.playersByMap[state.playerId] ?? inst.quitPlayers[state.playerId]!;
     child = Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: state.playerId == MePlayer.inst.id
-            ? [
-                Text('choose_a_word'.tr, style: TextStyle(color: Colors.grey.shade300)),
-                _WordOptions(words: state.words)
-              ]
-            : [
-                Text(
-                  'player_choosing'.trParams({'playerName': player.name}),
-                ),
-                player.avatarModel.builder.initWithShadow().fit(height: 75)
-              ]);
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: state.playerId == MePlayer.inst.id
+          ? [
+              Text('choose_a_word'.tr, style: TextStyle(color: Colors.grey.shade300)),
+              _WordOptions(words: state.words ?? []),
+            ]
+          : [
+              Text('player_choosing'.trParams({'playerName': player.name})),
+              player.avatarModel.builder.initWithShadow().fit(height: 75),
+            ],
+    );
   }
 
   late final Widget child;
@@ -281,11 +302,13 @@ class _TopWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DefaultTextStyle.merge(
-        style: TextStyle(
-            shadows: [ShadowInfo.shadow],
-            color: Colors.white,
-            fontSize: 32,
-            fontVariations: [FontVariation.weight(480)]),
-        child: child);
+      style: TextStyle(
+        shadows: [ShadowInfo.shadow],
+        color: Colors.white,
+        fontSize: 32,
+        fontVariations: [FontVariation.weight(480)],
+      ),
+      child: child,
+    );
   }
 }

@@ -135,35 +135,50 @@ class SocketIO {
     socket.on('hint', (dataList) => Get.find<HintController>().setHint(dataList[0], dataList[1]));
 
     socket.on('like_dislike', (dataList) {
-      var msg = Game.inst.addMessage(
-        (color) => Message.fromJSON(backgroundColor: color, data: dataList[0]),
-      );
-
-      if (msg is PlayerLikeMessage) {
-        var inst = Game.inst;
-        var state = inst.state.value;
-
-        if (state is DrawStateMixin) {
-          if (state.likedBy.contains(msg.playerId)) return;
-          state.likedBy.add(msg.playerId);
-
-          state.points[state.performerId] = msg.performerPoint;
-          inst.playerPlusPoint(state.performerId, msg.performerPoint);
+      try {
+        final msg = Game.inst.addMessage(
+          (color) => Message.fromJSON(backgroundColor: color, data: dataList[0]),
+        );
+        if (msg is! PlayerLikeMessage && msg is! PlayerDislikeMessage) {
+          throw Exception('wrong msg type');
         }
+
+        String playerId = msg.data['player_id'];
+
+        final inst = Game.inst;
+        final drawState = inst.state.value;
+        if (drawState is! DrawStateMixin) throw Exception('wrong state type');
+        if (drawState.likedBy[playerId] != null) {
+          throw Exception('player already liked or disliked');
+        }
+        if (playerId == drawState.performerId) {
+          throw Exception('performer cannot like himself');
+        }
+
+        final bool isLiked = msg is PlayerLikeMessage;
+
+        drawState.likedBy[playerId] = isLiked;
+
+        if (isLiked) {
+          inst.playerPlusPoint(drawState.performerId, msg.performerPoint);
+        }
+      } catch (e) {
+        print(e);
+        rethrow;
+        //Game.requestReload();
       }
     });
 
     socket.on('guess_right', (dataList) {
-      var msg = Game.inst.addMessage(
-        (color) => Message.fromJSON(backgroundColor: color, data: dataList[0]),
-      );
-      if (msg is PlayerGuessedRight) {
-        var state = Game.inst.state.value;
-        if (state is DrawStateMixin && state.points[msg.playerId] == null) {
-          state.points[msg.playerId] = msg.point;
+      try {
+        final msg = Game.inst.addMessage(
+          (color) => Message.fromJSON(backgroundColor: color, data: dataList[0]),
+        );
+        if (msg is! PlayerGuessedRight) throw Exception('wrong msg type');
 
-          Game.inst.playerPlusPoint(msg.playerId, msg.point);
-        }
+        Game.inst.playerPlusPoint(msg.playerId, msg.point);
+      } catch (e) {
+        Game.requestReload();
       }
     });
 

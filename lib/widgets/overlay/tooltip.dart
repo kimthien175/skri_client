@@ -6,8 +6,6 @@ class TooltipController<P extends TooltipPosition> extends OverlayController {
     this.tooltip = Align(alignment: position.followerAnchor, child: tooltip);
   }
 
-  //final bool exitTap;
-
   final P position;
 
   final LayerLink link = LayerLink();
@@ -31,23 +29,7 @@ class TooltipController<P extends TooltipPosition> extends OverlayController {
     ),
   );
 
-  //     return (exitTap)
-  //         ? Stack(
-  //             children: [
-  //               Positioned.fill(
-  //                 child: GestureDetector(onTap: hide, behavior: HitTestBehavior.translucent),
-  //               ),
-  //               child,
-  //             ],
-  //           )
-  //         : child;
-
-  //  bool _isAttached = false;
-  Widget attach(Widget anchor) {
-    // if (_isAttached) throw Exception('already attached');
-    // _isAttached = true;
-    return CompositedTransformTarget(link: link, child: anchor);
-  }
+  Widget attach(Widget anchor) => CompositedTransformTarget(link: link, child: anchor);
 }
 
 abstract class TooltipPosition {

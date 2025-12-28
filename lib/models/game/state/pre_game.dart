@@ -12,6 +12,9 @@ class PreGameState extends GameState {
   Future<DateTime> onStart(DateTime startDate) async {
     var sinceStartDate = DateTime.now() - startDate;
 
+    // reset current round to 1
+    Game.inst.currentRound.value = 1;
+
     topWidgetController.child.value = const GameSettingsWidget();
 
     var consumedDuration = TopWidgetController.contentDuration;
@@ -20,7 +23,8 @@ class PreGameState extends GameState {
       //#region FORWARD BACKGROUND
       if (sinceStartDate < TopWidgetController.backgroundDuration) {
         await topWidgetController.forwardBackground(
-            from: sinceStartDate / TopWidgetController.backgroundDuration);
+          from: sinceStartDate / TopWidgetController.backgroundDuration,
+        );
 
         sinceStartDate = Duration.zero;
       } else {
@@ -38,7 +42,8 @@ class PreGameState extends GameState {
     //#region FORWARD CONTENT
     if (sinceStartDate < TopWidgetController.contentDuration) {
       await topWidgetController.forwardContent(
-          from: sinceStartDate / TopWidgetController.contentDuration);
+        from: sinceStartDate / TopWidgetController.contentDuration,
+      );
     } else {
       topWidgetController.content = 1;
     }
@@ -58,7 +63,8 @@ class PreGameState extends GameState {
     //#region REVERSE CONTENT
     if (sinceEndDate < TopWidgetController.contentDuration) {
       await topWidgetController.reverseContent(
-          from: 1 - sinceEndDate / TopWidgetController.contentDuration);
+        from: 1 - sinceEndDate / TopWidgetController.contentDuration,
+      );
       sinceEndDate = Duration.zero;
     } else {
       topWidgetController.content = 0;

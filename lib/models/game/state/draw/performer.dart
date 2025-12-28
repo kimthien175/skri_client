@@ -1,14 +1,16 @@
 part of 'draw.dart';
 
-mixin _PerformerMixin on DrawStateMixin {
+mixin PerformerDrawStateMixin on DrawStateMixin {
   String get word => data['word'];
 
   @override
   Future<DateTime> onStart(DateTime startDate) async {
     var drawDuration = Duration(seconds: Game.inst.settings['draw_time']) - startDate.fromNow();
     if (drawDuration > Duration.zero) {
-      Get.find<GameClockController>()
-          .start(drawDuration, onEnd: () => SocketIO.inst.socket.emit('end_draw_state'));
+      Get.find<GameClockController>().countdown(
+        drawDuration,
+        onEnd: () => SocketIO.inst.socket.emit('end_draw_state'),
+      );
     }
 
     DrawManager.inst.reset();
@@ -31,11 +33,11 @@ mixin _PerformerMixin on DrawStateMixin {
   }
 }
 
-class PerformerDrawState extends GameState with DrawStateMixin, _PerformerMixin {
+class PerformerDrawState extends GameState with DrawStateMixin, PerformerDrawStateMixin {
   PerformerDrawState({required super.data});
 }
 
-class EmittingPerformerDrawState extends GameState with DrawStateMixin, _PerformerMixin {
+class EmittingPerformerDrawState extends GameState with DrawStateMixin, PerformerDrawStateMixin {
   EmittingPerformerDrawState({required super.data});
 
   int get revealedHintCount => RegExp(r'[^\s_]').allMatches(hint).length;
@@ -57,10 +59,13 @@ class EmittingPerformerDrawState extends GameState with DrawStateMixin, _Perform
     if (hintCap == revealedHintCount) return super.onStart(startDate);
 
     timer = Timer(
-        Duration(
-            milliseconds: (hintDuration * (revealedHintCount + 1) * 1000).toInt() -
-                (DateTime.now() - startDate).inMilliseconds),
-        revealRandomCharacter);
+      Duration(
+        milliseconds:
+            (hintDuration * (revealedHintCount + 1) * 1000).toInt() -
+            (DateTime.now() - startDate).inMilliseconds,
+      ),
+      revealRandomCharacter,
+    );
 
     return super.onStart(startDate);
   }

@@ -11,7 +11,11 @@ class DrawStateResult extends StatelessWidget {
   const DrawStateResult({super.key, required this.scoreBoard, required this.word});
 
   static void _addWidgets(
-      List<Widget> playersName, List<Widget> playersPoint, Player player, int point) {
+    List<Widget> playersName,
+    List<Widget> playersPoint,
+    Player player,
+    int point,
+  ) {
     playersName.add(_ScoredPlayerName(player: player));
     var pointText = point == 0
         ? Text('0', style: TextStyle(color: Colors.red))
@@ -22,7 +26,7 @@ class DrawStateResult extends StatelessWidget {
   static Future<DrawStateResult> init() async {
     var endStateData = Game.inst.status['bonus']['end_state'];
     final players = Game.inst.playersByMap;
-    var pointsMap = endStateData['points'] as Map<String, dynamic>;
+    var pointsMap = endStateData['score'] as Map<String, dynamic>;
     late Widget scoreBoard;
 
     if (pointsMap.length <= 15) {
@@ -43,11 +47,14 @@ class DrawStateResult extends StatelessWidget {
         }
       }
 
-      scoreBoard = Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-        Column(crossAxisAlignment: CrossAxisAlignment.start, children: playersName),
-        const SizedBox(width: 20),
-        Column(crossAxisAlignment: CrossAxisAlignment.end, children: playersPoint)
-      ]);
+      scoreBoard = Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Column(crossAxisAlignment: CrossAxisAlignment.start, children: playersName),
+          const SizedBox(width: 20),
+          Column(crossAxisAlignment: CrossAxisAlignment.end, children: playersPoint),
+        ],
+      );
     } else {
       List<String> iDs = [];
       pointsMap.forEach((id, point) {
@@ -98,15 +105,18 @@ class DrawStateResult extends StatelessWidget {
       // if from != 0 => show fading overlay on top
       // if i != iDs.length => show fading overlay on bottom
 
-      scoreBoard = Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-        Column(crossAxisAlignment: CrossAxisAlignment.start, children: playersName),
-        const SizedBox(width: 20),
-        Column(crossAxisAlignment: CrossAxisAlignment.end, children: playersPoint),
-        const SizedBox(width: 50),
-        Column(crossAxisAlignment: CrossAxisAlignment.start, children: playersName2),
-        const SizedBox(width: 20),
-        Column(crossAxisAlignment: CrossAxisAlignment.end, children: playersPoint2),
-      ]);
+      scoreBoard = Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Column(crossAxisAlignment: CrossAxisAlignment.start, children: playersName),
+          const SizedBox(width: 20),
+          Column(crossAxisAlignment: CrossAxisAlignment.end, children: playersPoint),
+          const SizedBox(width: 50),
+          Column(crossAxisAlignment: CrossAxisAlignment.start, children: playersName2),
+          const SizedBox(width: 20),
+          Column(crossAxisAlignment: CrossAxisAlignment.end, children: playersPoint2),
+        ],
+      );
 
       List<Color> colors = [];
       List<double> stops = [];
@@ -124,16 +134,17 @@ class DrawStateResult extends StatelessWidget {
 
       if (colors.isNotEmpty) {
         scoreBoard = ShaderMask(
-            shaderCallback: (bounds) {
-              return LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: colors,
-                stops: stops,
-              ).createShader(bounds);
-            },
-            blendMode: BlendMode.dstIn, // keep destination (child) with alpha mask
-            child: scoreBoard);
+          shaderCallback: (bounds) {
+            return LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: colors,
+              stops: stops,
+            ).createShader(bounds);
+          },
+          blendMode: BlendMode.dstIn, // keep destination (child) with alpha mask
+          child: scoreBoard,
+        );
       }
 
       //#endregion
@@ -148,28 +159,37 @@ class DrawStateResult extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DefaultTextStyle.merge(
-        style: const TextStyle(
-            color: Colors.white, fontSize: 20, fontVariations: [FontVariation.weight(700)]),
-        child: Column(
+      style: const TextStyle(
+        color: Colors.white,
+        fontSize: 20,
+        fontVariations: [FontVariation.weight(700)],
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Row(
+            textBaseline: TextBaseline.alphabetic,
             mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.baseline,
             children: [
-              Row(
-                  textBaseline: TextBaseline.alphabetic,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.baseline,
-                  children: [
-                    Text('the_word_is'.tr, style: const TextStyle(fontSize: 25)),
-                    const SizedBox(width: 20),
-                    Text(word,
-                        style: const TextStyle(
-                            fontSize: 40,
-                            color: Colors.green,
-                            fontVariations: [FontVariation.weight(750)]))
-                  ]),
-              const SizedBox(height: 18),
-              scoreBoard
-            ]));
+              Text('the_word_is'.tr, style: const TextStyle(fontSize: 25)),
+              const SizedBox(width: 20),
+              Text(
+                word,
+                style: const TextStyle(
+                  fontSize: 40,
+                  color: Colors.green,
+                  fontVariations: [FontVariation.weight(750)],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 18),
+          scoreBoard,
+        ],
+      ),
+    );
   }
 }
 
@@ -181,17 +201,26 @@ class _ScoredPlayerName extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        constraints: BoxConstraints(minWidth: 100),
-        child: RichText(
-            text: TextSpan(children: [
-          TextSpan(style: DefaultTextStyle.of(context).style, children: [
+      constraints: BoxConstraints(minWidth: 100),
+      child: RichText(
+        text: TextSpan(
+          children: [
             TextSpan(
-                text: player.name,
-                style: (player.id == MePlayer.inst.id) ? TextStyle(color: Colors.blue) : null),
-            const TextSpan(
-                text: ' :',
-                style: TextStyle(color: Color.from(alpha: 0.6, red: 1, green: 1, blue: 1)))
-          ])
-        ])));
+              style: DefaultTextStyle.of(context).style,
+              children: [
+                TextSpan(
+                  text: player.name,
+                  style: (player.id == MePlayer.inst.id) ? TextStyle(color: Colors.blue) : null,
+                ),
+                const TextSpan(
+                  text: ' :',
+                  style: TextStyle(color: Color.from(alpha: 0.6, red: 1, green: 1, blue: 1)),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

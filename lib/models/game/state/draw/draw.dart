@@ -16,11 +16,12 @@ part 'performer.dart';
 part 'widgets.dart';
 
 mixin DrawStateMixin on GameState {
-  Map get points => data['points'];
+  int? getScore(String id) => data['score'][id];
+  void addScore(String id, int score) => data['score'][id] = score + (getScore(id) ?? 0);
 
   String get hint => data['hint'];
 
-  List get likedBy => data['liked_by'] as List;
+  Map<String, dynamic> get likedBy => data['liked_by'] as Map<String, dynamic>;
 
   bool get isHintHidden => data['word_mode'] == HiddenHintStatus.value;
 
@@ -29,7 +30,8 @@ mixin DrawStateMixin on GameState {
   Future<DateTime> onStart(DateTime startDate) async {
     var drawDuration = Duration(seconds: Game.inst.settings['draw_time']) - startDate.fromNow();
     if (drawDuration > Duration.zero) {
-      Get.find<GameClockController>().start(drawDuration);
+      print('debugging draw state');
+      //Get.find<GameClockController>().start(drawDuration);
     }
 
     return startDate;
@@ -54,12 +56,15 @@ mixin DrawStateMixin on GameState {
     //#region FORWARD BACKGROUND
     if (sinceEndDate < TopWidgetController.backgroundDuration) {
       //play sound
-      Sound.inst.play(this is SpectatorDrawState && !(this as SpectatorDrawState).isGuessRight
-          ? Sound.inst.roundEndFailure
-          : Sound.inst.roundEndSuccess);
+      Sound.inst.play(
+        this is SpectatorDrawState && !(this as SpectatorDrawState).isGuessRight
+            ? Sound.inst.roundEndFailure
+            : Sound.inst.roundEndSuccess,
+      );
 
       await topWidget.forwardBackground(
-          from: sinceEndDate / TopWidgetController.backgroundDuration);
+        from: sinceEndDate / TopWidgetController.backgroundDuration,
+      );
       sinceEndDate = Duration.zero;
     } else {
       topWidget.background = 1;
@@ -96,9 +101,11 @@ mixin DrawStateMixin on GameState {
     }
     //#endregion
 
-    var afterWordRevealDate = endDate.add(TopWidgetController.contentDuration * 2 +
-        waitDuration +
-        TopWidgetController.backgroundDuration);
+    var afterWordRevealDate = endDate.add(
+      TopWidgetController.contentDuration * 2 +
+          waitDuration +
+          TopWidgetController.backgroundDuration,
+    );
     if (Game.inst.endGameData != null) return super.onEnd(afterWordRevealDate);
     return afterWordRevealDate;
   }
@@ -141,21 +148,25 @@ class SpectatorDrawState extends GameState with DrawStateMixin {
     if (isSending) return;
     isSending = true;
 
-    SocketIO.inst.socket.emitWithAck('player_guess', text, ack: (guessResult) {
-      if (guessResult == 'right') {
-        // disabled chat when player guess right
-        _submitMessage = null;
-        Sound.inst.play(Sound.inst.guessedRight);
-        return;
-      }
-      if (guessResult == 'close') {
-        if (isCloseHintNotified) return;
-        Game.inst.addMessage((color) => MePlayerGuessClose(word: text, backgroundColor: color));
-        isCloseHintNotified = true;
-      }
+    SocketIO.inst.socket.emitWithAck(
+      'player_guess',
+      text,
+      ack: (guessResult) {
+        if (guessResult == 'right') {
+          // disabled chat when player guess right
+          _submitMessage = null;
+          Sound.inst.play(Sound.inst.guessedRight);
+          return;
+        }
+        if (guessResult == 'close') {
+          if (isCloseHintNotified) return;
+          Game.inst.addMessage((color) => MePlayerGuessClose(word: text, backgroundColor: color));
+          isCloseHintNotified = true;
+        }
 
-      isSending = false;
-    });
+        isSending = false;
+      },
+    );
   };
 
   /// to reduce server overload

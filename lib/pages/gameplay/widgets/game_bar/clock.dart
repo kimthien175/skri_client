@@ -13,18 +13,26 @@ class GameClock extends GetView<GameClockController> {
   @override
   Widget build(BuildContext context) {
     return RotationTransition(
-        turns: controller.rotateAnimation,
-        child: ScaleTransition(
-            scale: controller.scaleAnimation,
-            child: Stack(alignment: Alignment.center, children: [
-              GifManager.inst.misc('clock').builder.initWithShadow().fit(width: 64, height: 64),
-              Positioned(
-                  top: 20,
-                  child: GetBuilder<GameClockController>(
-                      builder: (c) => Text(c.displayedSeconds.toString(),
-                          style: const TextStyle(
-                              fontSize: 22, fontVariations: [FontVariation.weight(800)]))))
-            ])));
+      turns: controller._rotateAnimation,
+      child: ScaleTransition(
+        scale: controller._scaleAnimation,
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            GifManager.inst.misc('clock').builder.initWithShadow().fit(width: 64, height: 64),
+            Positioned(
+              top: 20,
+              child: GetBuilder<GameClockController>(
+                builder: (c) => Text(
+                  c.displayedSeconds.toString(),
+                  style: const TextStyle(fontSize: 22, fontVariations: [FontVariation.weight(800)]),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
 
@@ -33,54 +41,62 @@ class GameClockController extends GetxController with GetSingleTickerProviderSta
   onInit() {
     super.onInit();
 
-    controller = AnimationController(
+    _controller = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 50),
       reverseDuration: const Duration(milliseconds: 250),
     );
 
-    curvedAnimation = CurvedAnimation(parent: controller, curve: Curves.easeInOut);
+    _curvedAnimation = CurvedAnimation(parent: _controller, curve: Curves.easeInOut);
 
-    scaleAnimation = curvedAnimation.drive(Tween<double>(begin: 1.0, end: 1.4));
+    _scaleAnimation = _curvedAnimation.drive(Tween<double>(begin: 1.0, end: 1.4));
 
-    rotateTween = Tween<double>(begin: 0, end: turnsEnd);
-    rotateAnimation = curvedAnimation.drive(rotateTween);
+    _rotateTween = Tween<double>(begin: 0, end: turnsEnd);
+    _rotateAnimation = _curvedAnimation.drive(_rotateTween);
   }
 
-  void start(Duration remainingTime, {void Function()? onEnd}) {
-    remainingTimeSinceStart = remainingTime;
-    preciseTimer = Timer(
-        remainingTime,
-        onEnd != null
-            ? () {
-                cancel();
-                onEnd();
-              }
-            : cancel);
+  void countdown(Duration duration, {void Function()? onEnd}) {
+    _remainingTimeSinceStart = duration;
+    _preciseTimer = Timer(
+      duration,
+      onEnd != null
+          ? () {
+              cancel();
+              onEnd();
+            }
+          : cancel,
+    );
 
-    stopWatch
+    _stopWatch
       ..reset()
       ..start();
-    clockTimer = Timer.periodic(const Duration(seconds: 1), refreshClock);
+    _clockTimer = Timer.periodic(const Duration(seconds: 1), refreshClock);
 
     // re render
-    refreshClock(clockTimer!);
+    refreshClock(_clockTimer!);
   }
 
   void cancel() {
-    preciseTimer?.cancel();
-    stopWatch.reset();
-    clockTimer?.cancel();
-    remainingTimeSinceStart = Duration.zero;
+    _preciseTimer?.cancel();
+    _stopWatch
+      ..stop()
+      ..reset();
+    _clockTimer?.cancel();
+    _remainingTimeSinceStart = Duration.zero;
     update();
   }
 
-  Duration remainingTimeSinceStart = Duration.zero;
-  Timer? preciseTimer;
-  Timer? clockTimer;
-  Stopwatch stopWatch = Stopwatch();
+  Duration _remainingTimeSinceStart = Duration.zero;
 
-  int get displayedSeconds => (remainingTimeSinceStart - stopWatch.elapsed).inSeconds;
+  /// execute onEnd
+  Timer? _preciseTimer;
+
+  /// update seconds
+  Timer? _clockTimer;
+
+  /// to get the exact elapsed time while `Timer` can't help with that
+  final Stopwatch _stopWatch = Stopwatch();
+  int get displayedSeconds => (_remainingTimeSinceStart - _stopWatch.elapsed).inSeconds;
 
   Future<void> refreshClock(Timer timer) async {
     update();
@@ -89,27 +105,27 @@ class GameClockController extends GetxController with GetSingleTickerProviderSta
 
     Sound.inst.play(Sound.inst.tick);
 
-    await controller.forward();
-    await controller.reverse();
+    await _controller.forward();
+    await _controller.reverse();
 
     // reverse rotate direction
-    rotateTween.end = turnsEnd;
+    _rotateTween.end = turnsEnd;
   }
 
-  late final AnimationController controller;
-  late final CurvedAnimation curvedAnimation;
+  late final AnimationController _controller;
+  late final CurvedAnimation _curvedAnimation;
 
-  late final Animation<double> scaleAnimation;
+  late final Animation<double> _scaleAnimation;
 
-  late final Animation<double> rotateAnimation;
-  late final Tween<double> rotateTween;
+  late final Animation<double> _rotateAnimation;
+  late final Tween<double> _rotateTween;
   double get turnsEnd => (displayedSeconds % 2 == 0) ? 0.125 : -0.125;
 
   @override
   void onClose() {
     cancel();
-    curvedAnimation.dispose();
-    controller.dispose();
+    _curvedAnimation.dispose();
+    _controller.dispose();
 
     super.onClose();
   }

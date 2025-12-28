@@ -3,12 +3,13 @@ library;
 import 'package:flutter/material.dart';
 import 'package:skribbl_client/widgets/widgets.dart';
 
-// ignore: must_be_immutable
 class AnimatedButtonTooltipDecorator implements AnimatedButtonDecorator {
-  AnimatedButtonTooltipDecorator(
-      {required this.tooltip, this.position = const GameTooltipPosition.centerTop()});
+  AnimatedButtonTooltipDecorator({
+    required this.tooltip,
+    this.position = const GameTooltipPosition.centerTop(),
+  });
 
-  _Tooltip? _tooltip;
+  late final _Tooltip _tooltip;
 
   final Widget tooltip;
   final GameTooltipPosition position;
@@ -17,22 +18,22 @@ class AnimatedButtonTooltipDecorator implements AnimatedButtonDecorator {
   void decorate(AnimatedButtonState state) {
     _tooltip = _Tooltip(tooltip: tooltip, position: position, state: state);
 
-    state.child = _tooltip!.attach(state.child);
+    state.child = _tooltip.attach(state.child);
 
-    state.onEnterCallbacks.add(_tooltip!.show);
+    state.onEnterCallbacks.add(_tooltip.show);
 
-    state.onReverseEnd.add(_tooltip!.hideInstancely);
+    state.onReverseEnd.add(_tooltip.hideInstancely);
   }
 
   @override
   void clean() {
-    _tooltip?.dispose();
+    _tooltip.dispose();
   }
 }
 
 class _Tooltip extends GameTooltipController {
   _Tooltip({required super.tooltip, required this.state, required super.position})
-      : super(controller: state.controller);
+    : super(controller: state.controller);
   final AnimatedButtonState state;
   @override
   Animation<double> get scaleAnimation => state.curvedAnimation;

@@ -20,11 +20,16 @@ class Player {
   factory Player.fromJSON(dynamic rawPlayer) {
     var rawAvatar = rawPlayer['avatar'];
     return Player(
-        name: rawPlayer['name'],
-        id: rawPlayer['id'],
-        score: rawPlayer['score'] ?? 0, //TODO: REMOVE ??0 ON PRODUCTION
-        avatarModel: AvatarModel(rawAvatar['color'], rawAvatar['eyes'], rawAvatar['mouth'],
-            winner: rawPlayer['winner'] ?? false));
+      name: rawPlayer['name'],
+      id: rawPlayer['id'],
+      score: rawPlayer['score'] ?? 0,
+      avatarModel: AvatarModel(
+        rawAvatar['color'],
+        rawAvatar['eyes'],
+        rawAvatar['mouth'],
+        winner: rawPlayer['winner'] ?? false,
+      ),
+    );
   }
 
   Map<String, dynamic> toJSON() {
@@ -50,14 +55,19 @@ class MePlayer extends Player {
     _inst = MePlayer(name: '', id: '', score: 0, avatarModel: AvatarModel(color, eyes, mouth));
   }
 
-  MePlayer(
-      {required super.name, required super.id, required super.score, required super.avatarModel});
+  MePlayer({
+    required super.name,
+    required super.id,
+    required super.score,
+    required super.avatarModel,
+  });
 
   factory MePlayer.fromJSON(Map<String, dynamic> data) => MePlayer(
-      name: data['name'],
-      id: data['id'],
-      score: data['score'] ?? 0,
-      avatarModel: AvatarModel.fromJSON(data['avatar']));
+    name: data['name'],
+    id: data['id'],
+    score: data['score'] ?? 0,
+    avatarModel: AvatarModel.fromJSON(data['avatar']),
+  );
 
   @override
   String get nameForCard {

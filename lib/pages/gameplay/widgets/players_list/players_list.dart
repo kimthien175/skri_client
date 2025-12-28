@@ -69,7 +69,6 @@ class PlayersListController extends GetxController {
     // swap to top
     if (index == 0) return;
     list.insert(0, list.removeAt(index));
-    list.refresh();
   }
 }
 

@@ -8,8 +8,10 @@ const Map<String, dynamic> _emptyData = {};
 abstract class Message extends StatelessWidget {
   const Message({super.key, required this.data, required this.backgroundColor});
 
-  factory Message.fromJSON(
-      {Map<String, dynamic> data = _emptyData, required Color backgroundColor}) {
+  factory Message.fromJSON({
+    Map<String, dynamic> data = _emptyData,
+    required Color backgroundColor,
+  }) {
     switch (data['type']) {
       case Message.newHost:
         return NewHostMessage(data: data, backgroundColor: backgroundColor);
@@ -80,8 +82,12 @@ abstract class Message extends StatelessWidget {
   static List<Message> listFromJSON(List<dynamic> messages) {
     List<Message> result = [];
     for (int i = 0; i < messages.length; i++) {
-      result.add(Message.fromJSON(
-          backgroundColor: i % 2 == 0 ? Colors.white : const Color(0xffececec), data: messages[i]));
+      result.add(
+        Message.fromJSON(
+          backgroundColor: i % 2 == 0 ? Colors.white : const Color(0xffececec),
+          data: messages[i],
+        ),
+      );
     }
     return result;
   }
@@ -97,13 +103,15 @@ class DummyLoadingIndicator extends Message {
 
   @override
   String get id => throw Exception(
-      'this is just dummy for showing msg loading indicator, not a real msg, so id is not valid here');
+    'this is just dummy for showing msg loading indicator, not a real msg, so id is not valid here',
+  );
 
   @override
   Widget build(BuildContext context) {
     return const Padding(
-        padding: EdgeInsetsGeometry.only(top: 5, bottom: 5),
-        child: Center(child: LoadingIndicator(height: 30, width: 30)));
+      padding: EdgeInsetsGeometry.only(top: 5, bottom: 5),
+      child: Center(child: LoadingIndicator(height: 30, width: 30)),
+    );
   }
 }
 
@@ -118,12 +126,18 @@ class NewHostMessage extends Message {
   @override
   Widget build(BuildContext context) {
     return Container(
-        color: backgroundColor,
-        alignment: Alignment.centerLeft,
-        padding: EdgeInsets.only(left: paddingLeft),
-        child: Text('message_room_owner_statement'.trParams({'room_owner': playerName}),
-            style: const TextStyle(
-                fontSize: 14, fontVariations: [FontVariation.weight(700)], color: Message.orange)));
+      color: backgroundColor,
+      alignment: Alignment.centerLeft,
+      padding: EdgeInsets.only(left: paddingLeft),
+      child: Text(
+        'message_room_owner_statement'.trParams({'room_owner': playerName}),
+        style: const TextStyle(
+          fontSize: 14,
+          fontVariations: [FontVariation.weight(700)],
+          color: Message.orange,
+        ),
+      ),
+    );
   }
 }
 
@@ -136,27 +150,32 @@ class PlayerChatMessage extends Message {
   @override
   Widget build(BuildContext context) {
     return Container(
-        color: backgroundColor,
-        alignment: Alignment.centerLeft,
-        padding: EdgeInsets.only(left: paddingLeft),
-        child: RichText(
-          text: TextSpan(
-            children: <TextSpan>[
-              TextSpan(
-                  text: '$playerName: ',
-                  style: const TextStyle(
-                      fontSize: 14,
-                      fontVariations: [FontVariation.weight(700)],
-                      fontFamily: 'Nunito-var')),
-              TextSpan(
-                  text: text,
-                  style: const TextStyle(
-                      fontSize: 14,
-                      fontVariations: [FontVariation.weight(500)],
-                      fontFamily: 'Nunito-var')),
-            ],
-          ),
-        ));
+      color: backgroundColor,
+      alignment: Alignment.centerLeft,
+      padding: EdgeInsets.only(left: paddingLeft),
+      child: RichText(
+        text: TextSpan(
+          children: <TextSpan>[
+            TextSpan(
+              text: '$playerName: ',
+              style: const TextStyle(
+                fontSize: 14,
+                fontVariations: [FontVariation.weight(700)],
+                fontFamily: 'Nunito-var',
+              ),
+            ),
+            TextSpan(
+              text: text,
+              style: const TextStyle(
+                fontSize: 14,
+                fontVariations: [FontVariation.weight(500)],
+                fontFamily: 'Nunito-var',
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
 
@@ -166,12 +185,18 @@ class PlayerJoinMessage extends Message {
   @override
   Widget build(BuildContext context) {
     return Container(
-        color: backgroundColor,
-        alignment: Alignment.centerLeft,
-        padding: EdgeInsets.only(left: paddingLeft),
-        child: Text("message_new_player_joined".trParams({'player_name': playerName}),
-            style: const TextStyle(
-                fontSize: 14, fontVariations: [FontVariation.weight(700)], color: Message.green)));
+      color: backgroundColor,
+      alignment: Alignment.centerLeft,
+      padding: EdgeInsets.only(left: paddingLeft),
+      child: Text(
+        "message_new_player_joined".trParams({'player_name': playerName}),
+        style: const TextStyle(
+          fontSize: 14,
+          fontVariations: [FontVariation.weight(700)],
+          color: Message.green,
+        ),
+      ),
+    );
   }
 }
 
@@ -181,33 +206,41 @@ class PlayerLeaveMessage extends Message {
   @override
   Widget build(BuildContext context) {
     return Container(
-        color: backgroundColor,
-        alignment: Alignment.centerLeft,
-        padding: EdgeInsets.only(left: paddingLeft),
-        child: Text("message_player_leave".trParams({'player_name': playerName}),
-            style: const TextStyle(
-                color: Message.darkOrange,
-                fontSize: 14,
-                fontVariations: [FontVariation.weight(700)])));
+      color: backgroundColor,
+      alignment: Alignment.centerLeft,
+      padding: EdgeInsets.only(left: paddingLeft),
+      child: Text(
+        "message_player_leave".trParams({'player_name': playerName}),
+        style: const TextStyle(
+          color: Message.darkOrange,
+          fontSize: 14,
+          fontVariations: [FontVariation.weight(700)],
+        ),
+      ),
+    );
   }
 }
 
 class RequiredMinimumPlayersToStartMessage extends Message {
   const RequiredMinimumPlayersToStartMessage({super.key, required super.backgroundColor})
-      : super(data: _emptyData);
+    : super(data: _emptyData);
   @override
   Widget build(BuildContext context) {
     return Container(
-        color: backgroundColor,
-        alignment: Alignment.centerLeft,
-        padding: EdgeInsets.only(left: paddingLeft),
-        child: Text(
-            "message_you_need_at_least_2_players"
-                .trParams({'min': (Game.inst as PrivateGame).options['players']['min'].toString()}),
-            style: const TextStyle(
-                color: Message.darkOrange,
-                fontSize: 14,
-                fontVariations: [FontVariation.weight(700)])));
+      color: backgroundColor,
+      alignment: Alignment.centerLeft,
+      padding: EdgeInsets.only(left: paddingLeft),
+      child: Text(
+        "message_you_need_at_least_2_players".trParams({
+          'min': (Game.inst as PrivateGame).options['players']['min'].toString(),
+        }),
+        style: const TextStyle(
+          color: Message.darkOrange,
+          fontSize: 14,
+          fontVariations: [FontVariation.weight(700)],
+        ),
+      ),
+    );
   }
 }
 
@@ -216,12 +249,18 @@ class LinkCopiedMessage extends Message {
   @override
   Widget build(BuildContext context) {
     return Container(
-        color: backgroundColor,
-        alignment: Alignment.centerLeft,
-        padding: EdgeInsets.only(left: paddingLeft),
-        child: Text("message_link_copied".tr,
-            style: const TextStyle(
-                color: Message.yellow, fontSize: 14, fontVariations: [FontVariation.weight(700)])));
+      color: backgroundColor,
+      alignment: Alignment.centerLeft,
+      padding: EdgeInsets.only(left: paddingLeft),
+      child: Text(
+        "message_link_copied".tr,
+        style: const TextStyle(
+          color: Message.yellow,
+          fontSize: 14,
+          fontVariations: [FontVariation.weight(700)],
+        ),
+      ),
+    );
   }
 }
 
@@ -232,13 +271,18 @@ class PlayerWinMessage extends Message {
   @override
   Widget build(BuildContext context) {
     return Container(
-        color: backgroundColor,
-        alignment: Alignment.centerLeft,
-        padding: EdgeInsets.only(left: paddingLeft),
-        child: Text(
-            "message_player_won".trParams({'playerName': playerName, 'score': score.toString()}),
-            style: const TextStyle(
-                color: Message.orange, fontSize: 14, fontVariations: [FontVariation.weight(700)])));
+      color: backgroundColor,
+      alignment: Alignment.centerLeft,
+      padding: EdgeInsets.only(left: paddingLeft),
+      child: Text(
+        "message_player_won".trParams({'playerName': playerName, 'score': score.toString()}),
+        style: const TextStyle(
+          color: Message.orange,
+          fontSize: 14,
+          fontVariations: [FontVariation.weight(700)],
+        ),
+      ),
+    );
   }
 }
 
@@ -248,12 +292,18 @@ class PlayerDrawMessage extends Message {
   @override
   Widget build(BuildContext context) {
     return Container(
-        color: backgroundColor,
-        alignment: Alignment.centerLeft,
-        padding: EdgeInsets.only(left: paddingLeft),
-        child: Text("message_player_draw".trParams({"playerName": playerName}),
-            style: const TextStyle(
-                color: Message.blue, fontSize: 14, fontVariations: [FontVariation.weight(700)])));
+      color: backgroundColor,
+      alignment: Alignment.centerLeft,
+      padding: EdgeInsets.only(left: paddingLeft),
+      child: Text(
+        "message_player_draw".trParams({"playerName": playerName}),
+        style: const TextStyle(
+          color: Message.blue,
+          fontSize: 14,
+          fontVariations: [FontVariation.weight(700)],
+        ),
+      ),
+    );
   }
 }
 
@@ -262,14 +312,18 @@ class PlayerSpamMessage extends Message {
   @override
   Widget build(BuildContext context) {
     return Container(
-        color: backgroundColor,
-        alignment: Alignment.centerLeft,
-        padding: EdgeInsets.only(left: paddingLeft),
-        child: Text('message_player_spam'.tr,
-            style: const TextStyle(
-                color: Message.darkOrange,
-                fontSize: 14,
-                fontVariations: [FontVariation.weight(700)])));
+      color: backgroundColor,
+      alignment: Alignment.centerLeft,
+      padding: EdgeInsets.only(left: paddingLeft),
+      child: Text(
+        'message_player_spam'.tr,
+        style: const TextStyle(
+          color: Message.darkOrange,
+          fontSize: 14,
+          fontVariations: [FontVariation.weight(700)],
+        ),
+      ),
+    );
   }
 }
 
@@ -279,14 +333,18 @@ class PlayerDislikeMessage extends Message {
   @override
   Widget build(BuildContext context) {
     return Container(
-        color: backgroundColor,
-        alignment: Alignment.centerLeft,
-        padding: EdgeInsets.only(left: paddingLeft),
-        child: Text('message_player_dislike'.trParams({"playerName": playerName}),
-            style: const TextStyle(
-                color: Message.darkOrange,
-                fontSize: 14,
-                fontVariations: [FontVariation.weight(700)])));
+      color: backgroundColor,
+      alignment: Alignment.centerLeft,
+      padding: EdgeInsets.only(left: paddingLeft),
+      child: Text(
+        'message_player_dislike'.trParams({"playerName": playerName}),
+        style: const TextStyle(
+          color: Message.darkOrange,
+          fontSize: 14,
+          fontVariations: [FontVariation.weight(700)],
+        ),
+      ),
+    );
   }
 }
 
@@ -295,23 +353,29 @@ class PlayerLikeMessage extends Message {
 
   String get playerId => data['player_id'];
   String get playerName => data['player_name'];
-  int get performerPoint => data['performer_point'] as int;
+  int get performerPoint => data['performer_score'] as int;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-        color: backgroundColor,
-        alignment: Alignment.centerLeft,
-        padding: EdgeInsets.only(left: paddingLeft),
-        child: Text('message_player_like'.trParams({"playerName": playerName}),
-            style: const TextStyle(
-                color: Message.green, fontSize: 14, fontVariations: [FontVariation.weight(700)])));
+      color: backgroundColor,
+      alignment: Alignment.centerLeft,
+      padding: EdgeInsets.only(left: paddingLeft),
+      child: Text(
+        'message_player_like'.trParams({"playerName": playerName}),
+        style: const TextStyle(
+          color: Message.green,
+          fontSize: 14,
+          fontVariations: [FontVariation.weight(700)],
+        ),
+      ),
+    );
   }
 }
 
 class PlayerGuessedRight extends Message {
   const PlayerGuessedRight({super.key, required super.data})
-      : super(backgroundColor: Message.guessedRightBackgroundColor);
+    : super(backgroundColor: Message.guessedRightBackgroundColor);
 
   String get playerName => data['player_name'];
   String get playerId => data['player_id'];
@@ -320,12 +384,18 @@ class PlayerGuessedRight extends Message {
   @override
   Widget build(BuildContext context) {
     return Container(
-        color: backgroundColor,
-        alignment: Alignment.centerLeft,
-        padding: EdgeInsets.only(left: paddingLeft),
-        child: Text('message_player_guessed_right'.trParams({"playerName": playerName}),
-            style: const TextStyle(
-                color: Message.green, fontSize: 14, fontVariations: [FontVariation.weight(700)])));
+      color: backgroundColor,
+      alignment: Alignment.centerLeft,
+      padding: EdgeInsets.only(left: paddingLeft),
+      child: Text(
+        'message_player_guessed_right'.trParams({"playerName": playerName}),
+        style: const TextStyle(
+          color: Message.green,
+          fontSize: 14,
+          fontVariations: [FontVariation.weight(700)],
+        ),
+      ),
+    );
   }
 }
 
@@ -335,14 +405,18 @@ class PlayerGotKicked extends Message {
   @override
   Widget build(BuildContext context) {
     return Container(
-        color: backgroundColor,
-        alignment: Alignment.centerLeft,
-        padding: EdgeInsets.only(left: paddingLeft),
-        child: Text('message_player_got_kicked'.trParams({"playerName": playerName}),
-            style: const TextStyle(
-                color: Message.darkOrange,
-                fontSize: 14,
-                fontVariations: [FontVariation.weight(700)])));
+      color: backgroundColor,
+      alignment: Alignment.centerLeft,
+      padding: EdgeInsets.only(left: paddingLeft),
+      child: Text(
+        'message_player_got_kicked'.trParams({"playerName": playerName}),
+        style: const TextStyle(
+          color: Message.darkOrange,
+          fontSize: 14,
+          fontVariations: [FontVariation.weight(700)],
+        ),
+      ),
+    );
   }
 }
 
@@ -352,30 +426,40 @@ class PlayerGotBanned extends Message {
   @override
   Widget build(BuildContext context) {
     return Container(
-        color: backgroundColor,
-        alignment: Alignment.centerLeft,
-        padding: EdgeInsets.only(left: paddingLeft),
-        child: Text('message_player_got_banned'.trParams({"playerName": playerName}),
-            style: const TextStyle(
-                color: Message.darkOrange,
-                fontSize: 14,
-                fontVariations: [FontVariation.weight(700)])));
+      color: backgroundColor,
+      alignment: Alignment.centerLeft,
+      padding: EdgeInsets.only(left: paddingLeft),
+      child: Text(
+        'message_player_got_banned'.trParams({"playerName": playerName}),
+        style: const TextStyle(
+          color: Message.darkOrange,
+          fontSize: 14,
+          fontVariations: [FontVariation.weight(700)],
+        ),
+      ),
+    );
   }
 }
 
 class MePlayerGuessClose extends Message {
   const MePlayerGuessClose({super.key, required this.word, required super.backgroundColor})
-      : super(data: const {});
+    : super(data: const {});
   final String word;
   @override
   Widget build(BuildContext context) {
     return Container(
-        color: backgroundColor,
-        alignment: Alignment.centerLeft,
-        padding: EdgeInsets.only(left: paddingLeft),
-        child: Text('message_player_guess_close'.trParams({"word": word}),
-            style: const TextStyle(
-                color: Message.yellow, fontSize: 14, fontVariations: [FontVariation.weight(700)])));
+      color: backgroundColor,
+      alignment: Alignment.centerLeft,
+      padding: EdgeInsets.only(left: paddingLeft),
+      child: Text(
+        'message_player_guess_close'.trParams({"word": word}),
+        style: const TextStyle(
+          color: Message.yellow,
+          fontSize: 14,
+          fontVariations: [FontVariation.weight(700)],
+        ),
+      ),
+    );
   }
 }
 
@@ -388,18 +472,23 @@ class PlayerVoteKick extends Message {
   @override
   Widget build(BuildContext context) {
     return Container(
-        color: backgroundColor,
-        alignment: Alignment.centerLeft,
-        padding: EdgeInsets.only(left: paddingLeft),
-        child: Text(
-            'message_player_vote_kick'.trParams({
-              "voterName": voterName,
-              "victimName": victimName,
-              "votedCount": votedCount.toString(),
-              "notVictimPlayerCount": minCount.toString()
-            }),
-            style: const TextStyle(
-                color: Message.yellow, fontSize: 14, fontVariations: [FontVariation.weight(700)])));
+      color: backgroundColor,
+      alignment: Alignment.centerLeft,
+      padding: EdgeInsets.only(left: paddingLeft),
+      child: Text(
+        'message_player_vote_kick'.trParams({
+          "voterName": voterName,
+          "victimName": victimName,
+          "votedCount": votedCount.toString(),
+          "notVictimPlayerCount": minCount.toString(),
+        }),
+        style: const TextStyle(
+          color: Message.yellow,
+          fontSize: 14,
+          fontVariations: [FontVariation.weight(700)],
+        ),
+      ),
+    );
   }
 }
 
@@ -410,11 +499,17 @@ class WordRevealMessage extends Message {
   @override
   Widget build(BuildContext context) {
     return Container(
-        color: backgroundColor,
-        alignment: Alignment.centerLeft,
-        padding: EdgeInsets.only(left: paddingLeft),
-        child: Text('message_word_reveal'.trParams({"word": word}),
-            style: const TextStyle(
-                color: Message.green, fontSize: 14, fontVariations: [FontVariation.weight(700)])));
+      color: backgroundColor,
+      alignment: Alignment.centerLeft,
+      padding: EdgeInsets.only(left: paddingLeft),
+      child: Text(
+        'message_word_reveal'.trParams({"word": word}),
+        style: const TextStyle(
+          color: Message.green,
+          fontSize: 14,
+          fontVariations: [FontVariation.weight(700)],
+        ),
+      ),
+    );
   }
 }

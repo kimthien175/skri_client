@@ -117,9 +117,16 @@ abstract class Game extends GetxController {
   }
 
   void playerPlusPoint(String id, int point) {
-    playersByMap[id]!.score += point;
+    // plus point only on draw state
+    final drawState = Game.inst.state.value;
+    if (drawState is! DrawStateMixin) throw Exception('wrong state');
 
-    Get.find<PlayersListController>().sortFrom(id);
+    playersByMap[id]!.score += point;
+    drawState.addScore(id, point);
+
+    final listController = Get.find<PlayersListController>();
+    listController.sortFrom(id);
+    listController.list.refresh();
   }
 
   late final RxMap<String, dynamic> settings;
@@ -260,6 +267,7 @@ abstract class Game extends GetxController {
   CancelableOperation<DateTime>? _onEndOperation;
 
   static Future<void> requestReload() async {
+    print('something is wrong, reload');
     await LoadingOverlay.inst.show();
     SocketIO.inst.socket.emitWithAck('reload', null, ack: Game.inst.reload);
   }

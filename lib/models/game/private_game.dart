@@ -34,6 +34,7 @@ class PrivateGame extends Game {
 
   @override
   void reload(Map<String, dynamic> result) {
+    print(result);
     hostPlayerId.value = result['host_player_id'];
     super.reload(result);
   }

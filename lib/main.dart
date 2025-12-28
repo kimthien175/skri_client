@@ -18,15 +18,14 @@ void main() {
   WidgetsFlutterBinding.ensureInitialized();
 
   //#region DEVELOPER
-  // String? parameter;
-  // if (const bool.hasEnvironment('code')) {
-  //   var fromHost = const String.fromEnvironment('code');
-  //   parameter = fromHost.substring(fromHost.indexOf('?'));
-  // }
+  String? parameter;
+  if (const bool.hasEnvironment('code')) {
+    var fromHost = const String.fromEnvironment('code');
+    parameter = fromHost.substring(fromHost.indexOf('?'));
+  }
   //#endregion
 
-  //var initialRoute = "/";
-  //"/${parameter ?? ''}";
+  final initialRoute = "/${parameter ?? ''}";
 
   Future.wait([
     GifManager.init().then((_) async {
@@ -52,8 +51,8 @@ void main() {
       locale: Get.deviceLocale,
       fallbackLocale: const Locale('en', 'US'),
       debugShowCheckedModeBanner: false,
-      title: 'Material App',
-      //initialRoute: initialRoute,
+      title: 'Skribbl',
+      initialRoute: initialRoute,
       defaultTransition: .noTransition,
       getPages: [
         GetPage(
