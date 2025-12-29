@@ -7,101 +7,92 @@ class DropdownItem<T> {
 
   final T value;
   final Widget child;
-
-  late __DropdownItemWidgetState<T> state;
 }
 
-class _DropdownItemWidget<T> extends StatefulWidget {
+class _DropdownItemController<T> extends GetxController {
+  _DropdownItemController({required this.item, required this.listController}) {
+    focusNode = FocusNode(
+      onKeyEvent: (node, event) {
+        if (event is KeyDownEvent && event.logicalKey == LogicalKeyboardKey.enter) {
+          onTap();
+          return KeyEventResult.handled;
+        }
+        return KeyEventResult.ignored;
+      },
+    );
+
+    focusNode.addListener(updateColor);
+  }
+
+  final DropdownItem<T> item;
+  final _DropdownListController<T> listController;
+  Rx<Color> backgroundColor = defaultColor.obs;
+  static Color get defaultColor => Colors.white;
+
+  late final FocusNode focusNode;
+
+  Color getNewColor() => listController.currentItem.value == item
+      ? Colors.blue.shade100
+      : (focusNode.hasFocus ? Colors.amber.shade300 : defaultColor);
+
+  @override
+  onClose() {
+    focusNode.dispose();
+    super.onClose();
+  }
+
+  void updateColor() {
+    backgroundColor.value = getNewColor();
+  }
+
+  void onTap() {
+    // make changes
+    if (listController.currentItem.value == item) return;
+
+    var oldItemController = listController.itemControllers[listController.currentItem.value.value];
+    if (oldItemController == null) return;
+
+    listController.currentItem.value = item;
+    updateColor();
+
+    oldItemController.updateColor();
+
+    var onChange = listController.onChange;
+    if (onChange != null) onChange(item.value);
+
+    // close menu
+    listController.hide();
+  }
+}
+
+class _DropdownItemWidget<T> extends StatelessWidget {
   const _DropdownItemWidget({super.key, required this.item});
 
   final DropdownItem<T> item;
 
   @override
-  State<_DropdownItemWidget<T>> createState() => __DropdownItemWidgetState<T>();
-}
-
-class __DropdownItemWidgetState<T> extends State<_DropdownItemWidget<T>> {
-  Color backgroundColor = defaultColor;
-  late final FocusNode focusNode;
-
-  @override
-  void initState() {
-    super.initState();
-    widget.item.state = this;
-
-    focusNode = FocusNode(onKeyEvent: (node, event) {
-      if (event is KeyDownEvent && event.logicalKey == LogicalKeyboardKey.enter) {
-        onTap();
-        return KeyEventResult.handled;
-      }
-      return KeyEventResult.ignored;
-    });
-
-    focusNode.addListener(updateColor);
-
-    backgroundColor = defaultColor;
-  }
-
-  @override
-  void dispose() {
-    focusNode.dispose();
-    super.dispose();
-  }
-
-  void updateColor() {
-    var newColor = getNewColor();
-    if (newColor != backgroundColor) {
-      setState(() {
-        backgroundColor = newColor;
-      });
-    }
-  }
-
-  void onTap() {
-    // close menu
-    listController.hide();
-
-    // make changes
-    var anchorState = listController.anchorState;
-    var currentItem = anchorState.currentItem;
-    if (currentItem.value == widget.item) return;
-
-    // change color of current item
-    var oldItemState = anchorState.currentItem.state;
-
-    anchorState.currentItem = widget.item;
-
-    updateColor();
-    oldItemState.updateColor();
-
-    var onChange = anchorState.widget.onChange;
-    if (onChange != null) onChange(widget.item.value);
-  }
-
-  Color getNewColor() => listController.anchorState.currentItem == widget.item
-      ? Colors.blue.shade100
-      : (focusNode.hasFocus ? Colors.amber.shade300 : defaultColor);
-
-  static Color get defaultColor => Colors.white;
-
-  _DropdownListController<T> get listController =>
-      OverlayWidget.of<_DropdownListController<T>>(context)!;
-
-  @override
   Widget build(BuildContext context) {
+    final listController = OverlayWidget.of<_DropdownListController<T>>(context)!;
+    final itemController = listController.itemControllers[item.value]!;
     return MouseRegion(
-        onEnter: (PointerEnterEvent event) {
-          if (!listController.focusScopeNode.hasFocus) return;
+      onEnter: (PointerEnterEvent event) {
+        if (!listController.focusScopeNode.hasFocus) return;
 
-          focusNode.requestFocus();
-        },
-        child: GestureDetector(
-            onTap: onTap,
-            child: Focus(
-                focusNode: focusNode,
-                child: Container(
-                    color: backgroundColor,
-                    padding: const EdgeInsets.only(left: 12),
-                    child: widget.item.child))));
+        itemController.focusNode.requestFocus();
+      },
+      child: GestureDetector(
+        onTap: itemController.onTap,
+        child: Focus(
+          focusNode: itemController.focusNode,
+          child: Obx(
+            () => Container(
+              color: itemController.backgroundColor.value,
+              padding: const EdgeInsets.only(left: 12),
+              child: item.child,
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }

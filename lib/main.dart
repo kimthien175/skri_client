@@ -17,15 +17,15 @@ import 'pages/pages.dart';
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
 
-  //#region DEVELOPER
-  String? parameter;
-  if (const bool.hasEnvironment('code')) {
-    var fromHost = const String.fromEnvironment('code');
-    parameter = fromHost.substring(fromHost.indexOf('?'));
-  }
-  //#endregion
+  //   //#region DEVELOPER
+  //   String? parameter;
+  //   if (const bool.hasEnvironment('code')) {
+  //     var fromHost = const String.fromEnvironment('code');
+  //     parameter = fromHost.substring(fromHost.indexOf('?'));
+  //   }
+  //   //#endregion
 
-  final initialRoute = "/${parameter ?? ''}";
+  //   final initialRoute = "/${parameter ?? ''}";
 
   Future.wait([
     GifManager.init().then((_) async {
@@ -52,7 +52,7 @@ void main() {
       fallbackLocale: const Locale('en', 'US'),
       debugShowCheckedModeBanner: false,
       title: 'Skribbl',
-      initialRoute: initialRoute,
+      //initialRoute: initialRoute,
       defaultTransition: .noTransition,
       getPages: [
         GetPage(
