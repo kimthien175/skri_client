@@ -22,11 +22,9 @@ class SettingsButton extends StatelessWidget {
         width: 500,
         child: Column(
           children: [
-            Obx(
-              () => _TittleItem(
-                icon: 'audio',
-                title: "${'Volume'.tr} ${SystemSettings.inst.volumeToString}%",
-              ),
+            _TittleItem(
+              icon: 'audio',
+              title: Obx(() => Text("${'Volume'.tr} ${SystemSettings.inst.volumeToString}%")),
             ),
             const SettingsSlider(),
             //
@@ -35,7 +33,7 @@ class SettingsButton extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                _TittleItem(title: "Hotkeys".tr, icon: 'key'),
+                _TittleItem(title: Text("Hotkeys".tr), icon: 'key'),
                 GameTooltipWrapper(
                   tooltip: Builder(builder: (_) => Text('reset_hotkeys_tooltip'.tr)),
                   child: HoverButton(
@@ -57,7 +55,7 @@ class SettingsButton extends StatelessWidget {
             ),
 
             const SizedBox(height: 15),
-            _TittleItem(title: 'Miscellaneous'.tr, icon: 'questionmark'),
+            _TittleItem(title: Text('Miscellaneous'.tr), icon: 'questionmark'),
           ],
         ),
       ),
@@ -68,12 +66,12 @@ class SettingsButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return AnimatedButton(
       onTap: settingDialog.show,
-      decorators: [
-        const AnimatedButtonOpacityDecorator(minOpacity: 0.9),
-        const AnimatedButtonScaleDecorator(max: 1.1),
+      decorators: const [
+        AnimatedButtonOpacityDecorator(minOpacity: 0.9),
+        AnimatedButtonScaleDecorator(max: 1.1),
         AnimatedButtonTooltipDecorator(
-          tooltip: Builder(builder: (_) => Text('Settings'.tr)),
-          position: const GameTooltipPosition.centerLeft(),
+          tooltip: _SettingsButtonTooltipContent(),
+          position: GameTooltipPosition.centerLeft(),
         ),
       ],
       child: GifManager.inst
@@ -85,10 +83,18 @@ class SettingsButton extends StatelessWidget {
   }
 }
 
+class _SettingsButtonTooltipContent extends StatelessWidget {
+  const _SettingsButtonTooltipContent();
+  @override
+  Widget build(BuildContext context) {
+    return Text('Settings'.tr);
+  }
+}
+
 class _TittleItem extends StatelessWidget {
   const _TittleItem({required this.title, required this.icon});
 
-  final String title;
+  final Widget title;
   final String icon;
 
   @override
@@ -99,9 +105,9 @@ class _TittleItem extends StatelessWidget {
         children: [
           GifManager.inst.misc(icon).builder.initWithShadow().fit(height: 27.297, width: 27.297),
           const SizedBox(width: 5.850),
-          Text(
-            title,
+          DefaultTextStyle.merge(
             style: const TextStyle(fontSize: 19.5, fontVariations: [FontVariation.weight(700)]),
+            child: title,
           ),
         ],
       ),

@@ -70,21 +70,20 @@ class _DropdownListController<T> extends TooltipController with GetSingleTickerP
 
   @override
   Future<bool> show() async {
-    print('show');
     if (slideController.value == 1 || slideController.velocity > 0) return false;
 
     if (!isShowing) await super.show();
 
-    await slideController.forward();
     // current value get focused
     itemControllers[currentItem.value.value]?.focusNode.requestFocus();
+
+    await slideController.forward();
 
     return true;
   }
 
   @override
   Future<bool> hide() async {
-    print('hide');
     if (!isShowing || slideController.velocity < 0) return false;
 
     focusScopeNode.unfocus();
@@ -99,11 +98,16 @@ class _DropdownListWidget<T> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var c = OverlayWidget.of<_DropdownListController<T>>(context)!;
-    var width = (c.key.currentContext!.findRenderObject() as RenderBox).size.width;
+    final buttonBox = c.key.currentContext!.findRenderObject() as RenderBox;
     var children = c.items.map((e) => _DropdownItemWidget(item: e)).toList();
 
     return TapRegion(
-      onTapOutside: (_) => c.hide(),
+      onTapOutside: (event) {
+        // except the dropdown button
+        final localPressedPoint = buttonBox.globalToLocal(event.position);
+        if (buttonBox.paintBounds.contains(localPressedPoint)) return;
+        c.hide();
+      },
       child: ClipRect(
         clipper: _BottomAndSidesClipper(),
         child: SlideTransition(
@@ -120,7 +124,7 @@ class _DropdownListWidget<T> extends StatelessWidget {
                   color: _DropdownItemController.defaultColor,
                   boxShadow: [BoxShadow(color: Colors.black, blurRadius: 8)],
                 ),
-                width: width,
+                width: buttonBox.size.width,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   mainAxisSize: MainAxisSize.min,

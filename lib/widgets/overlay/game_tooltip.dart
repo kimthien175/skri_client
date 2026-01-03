@@ -15,8 +15,11 @@ enum GameTooltipBackgroundColor {
 
 class GameTooltipController extends TooltipController<GameTooltipPosition>
     with GetTickerProviderStateMixin {
-  GameTooltipController(
-      {required super.position, required super.tooltip, AnimationController? controller}) {
+  GameTooltipController({
+    required super.position,
+    required super.tooltip,
+    AnimationController? controller,
+  }) {
     this.controller =
         controller ?? AnimationController(vsync: this, duration: AnimatedButton.duration);
   }
@@ -26,11 +29,11 @@ class GameTooltipController extends TooltipController<GameTooltipPosition>
 
   @override
   Future<bool> show() async {
-    if (await super.show()) {
-      await controller.forward();
-      return true;
-    }
-    return false;
+    if (controller.value == 1 || controller.velocity > 0) return false;
+    if (!isShowing) await super.show();
+
+    await controller.forward();
+    return true;
   }
 
   @override
@@ -45,9 +48,10 @@ class GameTooltipController extends TooltipController<GameTooltipPosition>
   @nonVirtual
   @override
   Widget get tooltip => ScaleTransition(
-      scale: scaleAnimation,
-      alignment: position.followerAnchor,
-      child: position.wrap(super.tooltip));
+    scale: scaleAnimation,
+    alignment: position.followerAnchor,
+    child: position.wrap(super.tooltip),
+  );
 }
 
 abstract class GameTooltipPosition extends TooltipPosition {
@@ -73,17 +77,21 @@ abstract class GameTooltipPosition extends TooltipPosition {
 
   @nonVirtual
   Widget _wrapWithBackground(Widget child) => UnconstrainedBox(
-      child: Container(
-          padding: const EdgeInsets.all(7),
-          decoration: BoxDecoration(
-              color: backgroundColor.value,
-              borderRadius: const BorderRadius.all(Radius.circular(3))),
-          child: child));
+    child: Container(
+      padding: const EdgeInsets.all(7),
+      decoration: BoxDecoration(
+        color: backgroundColor.value,
+        borderRadius: const BorderRadius.all(Radius.circular(3)),
+      ),
+      child: child,
+    ),
+  );
 
   @nonVirtual
   Widget get arrow => ClipPath(
-      clipper: _ArrowClip(arrowPath),
-      child: Container(height: height, width: width, color: backgroundColor.value));
+    clipper: _ArrowClip(arrowPath),
+    child: Container(height: height, width: width, color: backgroundColor.value),
+  );
 }
 
 class _CenterLeft extends GameTooltipPosition with PositionedOverlayCenterLeftMixin {
@@ -91,9 +99,10 @@ class _CenterLeft extends GameTooltipPosition with PositionedOverlayCenterLeftMi
 
   @override
   Widget wrap(Widget child) => Row(
-      mainAxisAlignment: MainAxisAlignment.end,
-      mainAxisSize: MainAxisSize.min,
-      children: [_wrapWithBackground(child), arrow]);
+    mainAxisAlignment: MainAxisAlignment.end,
+    mainAxisSize: MainAxisSize.min,
+    children: [_wrapWithBackground(child), arrow],
+  );
 
   @override
   double get height => 20;
@@ -102,10 +111,11 @@ class _CenterLeft extends GameTooltipPosition with PositionedOverlayCenterLeftMi
   double get width => 10;
 
   @override
-  Path Function(Size size) get arrowPath => (size) => Path()
-    ..moveTo(0, 0)
-    ..lineTo(size.width, size.height / 2)
-    ..lineTo(0, size.height);
+  Path Function(Size size) get arrowPath =>
+      (size) => Path()
+        ..moveTo(0, 0)
+        ..lineTo(size.width, size.height / 2)
+        ..lineTo(0, size.height);
 }
 
 class _CenterRight extends GameTooltipPosition with PositionedOverlayCenterRightMixin {
@@ -113,16 +123,19 @@ class _CenterRight extends GameTooltipPosition with PositionedOverlayCenterRight
 
   @override
   Widget wrap(Widget child) => SizedBox(
-      child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [arrow, _wrapWithBackground(child)]));
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [arrow, _wrapWithBackground(child)],
+    ),
+  );
 
   @override
-  Path Function(Size size) get arrowPath => (size) => Path()
-    ..moveTo(size.width, 0)
-    ..lineTo(size.width, size.height)
-    ..lineTo(0, size.height / 2);
+  Path Function(Size size) get arrowPath =>
+      (size) => Path()
+        ..moveTo(size.width, 0)
+        ..lineTo(size.width, size.height)
+        ..lineTo(0, size.height / 2);
 
   @override
   double get height => 20;
@@ -135,10 +148,11 @@ class _CenterTop extends GameTooltipPosition with PositionedOverlayCenterTopMixi
   const _CenterTop({super.backgroundColor});
 
   @override
-  Path Function(Size size) get arrowPath => (size) => Path()
-    ..moveTo(0, 0)
-    ..lineTo(size.width, 0)
-    ..lineTo(size.width / 2, size.height);
+  Path Function(Size size) get arrowPath =>
+      (size) => Path()
+        ..moveTo(0, 0)
+        ..lineTo(size.width, 0)
+        ..lineTo(size.width / 2, size.height);
 
   @override
   double get height => 10;
@@ -148,19 +162,21 @@ class _CenterTop extends GameTooltipPosition with PositionedOverlayCenterTopMixi
 
   @override
   Widget wrap(Widget rawChild) => Column(
-      mainAxisAlignment: MainAxisAlignment.end,
-      mainAxisSize: MainAxisSize.min,
-      children: [_wrapWithBackground(rawChild), arrow]);
+    mainAxisAlignment: MainAxisAlignment.end,
+    mainAxisSize: MainAxisSize.min,
+    children: [_wrapWithBackground(rawChild), arrow],
+  );
 }
 
 class _CenterBottom extends GameTooltipPosition with PositionedOverlayCenterBottomMixin {
   const _CenterBottom({super.backgroundColor});
 
   @override
-  Path Function(Size size) get arrowPath => (size) => Path()
-    ..moveTo(0, size.height)
-    ..lineTo(size.width, size.height)
-    ..lineTo(size.width / 2, 0);
+  Path Function(Size size) get arrowPath =>
+      (size) => Path()
+        ..moveTo(0, size.height)
+        ..lineTo(size.width, size.height)
+        ..lineTo(size.width / 2, 0);
 
   @override
   double get height => 10;
@@ -170,9 +186,10 @@ class _CenterBottom extends GameTooltipPosition with PositionedOverlayCenterBott
 
   @override
   Widget wrap(Widget rawChild) => Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      mainAxisSize: MainAxisSize.min,
-      children: [arrow, _wrapWithBackground(rawChild)]);
+    mainAxisAlignment: MainAxisAlignment.start,
+    mainAxisSize: MainAxisSize.min,
+    children: [arrow, _wrapWithBackground(rawChild)],
+  );
 }
 
 class _ArrowClip extends CustomClipper<Path> {
@@ -186,11 +203,12 @@ class _ArrowClip extends CustomClipper<Path> {
 }
 
 class GameTooltipWrapper extends StatefulWidget {
-  const GameTooltipWrapper(
-      {super.key,
-      required this.child,
-      this.position = const GameTooltipPosition.centerTop(),
-      required this.tooltip});
+  const GameTooltipWrapper({
+    super.key,
+    required this.child,
+    this.position = const GameTooltipPosition.centerTop(),
+    required this.tooltip,
+  });
 
   final Widget child;
 
@@ -215,7 +233,10 @@ class _GameTooltipHoverWidgetState extends State<GameTooltipWrapper>
     key = GlobalKey();
     animController = AnimationController(vsync: this, duration: AnimatedButton.duration);
     controller = GameTooltipController(
-        tooltip: widget.tooltip, position: widget.position, controller: animController);
+      tooltip: widget.tooltip,
+      position: widget.position,
+      controller: animController,
+    );
 
     focusNode = FocusNode();
     focusNode.addListener(() {
@@ -243,19 +264,21 @@ class _GameTooltipHoverWidgetState extends State<GameTooltipWrapper>
   @override
   Widget build(BuildContext context) {
     return Focus(
-        focusNode: focusNode,
-        child: MouseRegion(
-            onEnter: (event) {
-              isHover = true;
-              if (focusNode.hasFocus) return;
-              controller.show();
-            },
-            onExit: (event) {
-              isHover = false;
-              if (focusNode.hasFocus) return;
-              controller.hide();
-            },
-            key: key,
-            child: widget.child));
+      focusNode: focusNode,
+      child: MouseRegion(
+        onEnter: (event) {
+          isHover = true;
+          if (focusNode.hasFocus) return;
+          controller.show();
+        },
+        onExit: (event) {
+          isHover = false;
+          if (focusNode.hasFocus) return;
+          controller.hide();
+        },
+        key: key,
+        child: widget.child,
+      ),
+    );
   }
 }

@@ -4,30 +4,28 @@ import 'package:flutter/material.dart';
 import 'package:skribbl_client/widgets/widgets.dart';
 
 class AnimatedButtonTooltipDecorator implements AnimatedButtonDecorator {
-  AnimatedButtonTooltipDecorator({
+  const AnimatedButtonTooltipDecorator({
     required this.tooltip,
     this.position = const GameTooltipPosition.centerTop(),
   });
-
-  late final _Tooltip _tooltip;
 
   final Widget tooltip;
   final GameTooltipPosition position;
 
   @override
   void decorate(AnimatedButtonState state) {
-    _tooltip = _Tooltip(tooltip: tooltip, position: position, state: state);
+    final tooltipController = _Tooltip(tooltip: tooltip, position: position, state: state);
 
-    state.child = _tooltip.attach(state.child);
+    state.child = tooltipController.attach(state.child);
 
-    state.onEnterCallbacks.add(_tooltip.show);
+    state.onEnterCallbacks.add(tooltipController.show);
 
-    state.onReverseEnd.add(_tooltip.hideInstancely);
+    state.onReverseEnd.add(tooltipController.hideInstancely);
   }
 
   @override
   void clean() {
-    _tooltip.dispose();
+    // _tooltip is disposed auto
   }
 }
 

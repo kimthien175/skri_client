@@ -15,8 +15,10 @@ import 'package:skribbl_client/widgets/widgets.dart';
 class JiggleController extends GetxController with GetSingleTickerProviderStateMixin {
   JiggleController() {
     animController = AnimationController(duration: const Duration(milliseconds: 150), vsync: this);
-    animation = Tween<Offset>(begin: Offset.zero, end: const Offset(0, 0.06))
-        .animate(CurvedAnimation(parent: animController, curve: Curves.decelerate));
+    animation = Tween<Offset>(
+      begin: Offset.zero,
+      end: const Offset(0, 0.06),
+    ).animate(CurvedAnimation(parent: animController, curve: Curves.decelerate));
   }
   late final AnimationController animController;
   late final Animation<Offset> animation;
@@ -66,8 +68,9 @@ class AvatarEditorController extends GetxController {
     var eyesModel = MePlayer.inst.avatarModel.eyes;
     var gifs = GifManager.inst.eyes;
 
-    MePlayer.inst.avatarModel.eyes =
-        (gifs.first == eyesModel) ? gifs.last : gifs[eyesModel.index! - 1];
+    MePlayer.inst.avatarModel.eyes = (gifs.first == eyesModel)
+        ? gifs.last
+        : gifs[eyesModel.index! - 1];
 
     eyes.value = MePlayer.inst.avatarModel.eyes.index!;
     jiggleEyes.jiggle();
@@ -77,8 +80,9 @@ class AvatarEditorController extends GetxController {
     var eyesModel = MePlayer.inst.avatarModel.eyes;
     var gifs = GifManager.inst.eyes;
 
-    MePlayer.inst.avatarModel.eyes =
-        gifs.last == eyesModel ? gifs.first : gifs[eyesModel.index! + 1];
+    MePlayer.inst.avatarModel.eyes = gifs.last == eyesModel
+        ? gifs.first
+        : gifs[eyesModel.index! + 1];
 
     eyes.value = MePlayer.inst.avatarModel.eyes.index!;
     jiggleEyes.jiggle();
@@ -88,8 +92,9 @@ class AvatarEditorController extends GetxController {
     var mouthModel = MePlayer.inst.avatarModel.mouth;
     var gifs = GifManager.inst.mouth;
 
-    MePlayer.inst.avatarModel.mouth =
-        gifs.first == mouthModel ? gifs.last : gifs[mouthModel.index! - 1];
+    MePlayer.inst.avatarModel.mouth = gifs.first == mouthModel
+        ? gifs.last
+        : gifs[mouthModel.index! - 1];
 
     mouth.value = MePlayer.inst.avatarModel.mouth.index!;
     jiggleMouth.jiggle();
@@ -99,8 +104,9 @@ class AvatarEditorController extends GetxController {
     var mouthModel = MePlayer.inst.avatarModel.mouth;
     var gifs = GifManager.inst.mouth;
 
-    MePlayer.inst.avatarModel.mouth =
-        gifs.last == mouthModel ? gifs.first : gifs[mouthModel.index! + 1];
+    MePlayer.inst.avatarModel.mouth = gifs.last == mouthModel
+        ? gifs.first
+        : gifs[mouthModel.index! + 1];
 
     mouth.value = MePlayer.inst.avatarModel.mouth.index!;
     jiggleMouth.jiggle();
@@ -110,8 +116,9 @@ class AvatarEditorController extends GetxController {
     var colorModel = MePlayer.inst.avatarModel.color;
     var gifs = GifManager.inst.color;
 
-    MePlayer.inst.avatarModel.color =
-        gifs.first == colorModel ? gifs.last : gifs[colorModel.index! - 1];
+    MePlayer.inst.avatarModel.color = gifs.first == colorModel
+        ? gifs.last
+        : gifs[colorModel.index! - 1];
 
     color.value = MePlayer.inst.avatarModel.color.index!;
   }
@@ -120,8 +127,9 @@ class AvatarEditorController extends GetxController {
     var colorModel = MePlayer.inst.avatarModel.color;
     var gifs = GifManager.inst.color;
 
-    MePlayer.inst.avatarModel.color =
-        gifs.last == colorModel ? gifs.first : gifs[colorModel.index! + 1];
+    MePlayer.inst.avatarModel.color = gifs.last == colorModel
+        ? gifs.first
+        : gifs[colorModel.index! + 1];
 
     color.value = MePlayer.inst.avatarModel.color.index!;
   }
@@ -148,11 +156,14 @@ class AvatarEditor extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var controller = Get.find<AvatarEditorController>();
-    return Stack(children: [
-      Container(
+    return Stack(
+      children: [
+        Container(
           margin: const EdgeInsets.only(top: 10, bottom: 10),
           decoration: BoxDecoration(
-              color: Colors.black.withValues(alpha: 0.1), borderRadius: GlobalStyles.borderRadius),
+            color: Colors.black.withValues(alpha: 0.1),
+            borderRadius: GlobalStyles.borderRadius,
+          ),
           padding: const EdgeInsets.all(8),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -174,9 +185,11 @@ class AvatarEditor extends StatelessWidget {
                 ],
               ),
             ],
-          )),
-      const Positioned(right: 4, top: 14, child: _RandomButton())
-    ]);
+          ),
+        ),
+        const Positioned(right: 4, top: 14, child: _RandomButton()),
+      ],
+    );
   }
 }
 
@@ -196,8 +209,10 @@ class _SwitchButtonState extends State<_SwitchButton> with SingleTickerProviderS
   late final GifBuilder onHoverChild = GifManager.inst.misc(widget.onHoverPath).builder.init();
 
   late AnimationController animController;
-  late final Animation<double> animation =
-      CurvedAnimation(parent: animController, curve: Curves.linear);
+  late final Animation<double> animation = CurvedAnimation(
+    parent: animController,
+    curve: Curves.linear,
+  );
 
   late Widget visual;
 
@@ -211,15 +226,17 @@ class _SwitchButtonState extends State<_SwitchButton> with SingleTickerProviderS
     animController = AnimationController(vsync: this, duration: const Duration(milliseconds: 100));
     visual = child;
 
-    focusNode = FocusNode(onKeyEvent: (node, event) {
-      if (event is KeyDownEvent) {
-        if (event.logicalKey == LogicalKeyboardKey.enter) {
-          widget.callback();
-          return KeyEventResult.handled;
+    focusNode = FocusNode(
+      onKeyEvent: (node, event) {
+        if (event is KeyDownEvent) {
+          if (event.logicalKey == LogicalKeyboardKey.enter) {
+            widget.callback();
+            return KeyEventResult.handled;
+          }
         }
-      }
-      return KeyEventResult.ignored;
-    });
+        return KeyEventResult.ignored;
+      },
+    );
 
     focusNode.addListener(() {
       if (isHovered) return;
@@ -257,26 +274,31 @@ class _SwitchButtonState extends State<_SwitchButton> with SingleTickerProviderS
   @override
   Widget build(BuildContext context) {
     return Focus(
-        focusNode: focusNode,
-        child: SizedBox(
-            height: 34,
-            width: 34,
-            child: FittedBox(
-                child: GestureDetector(
-                    onTap: widget.callback,
-                    child: MouseRegion(
-                        cursor: SystemMouseCursors.click,
-                        onEnter: (_) {
-                          isHovered = true;
-                          if (focusNode.hasFocus) return;
-                          change(onHoverChild);
-                        },
-                        onExit: (_) {
-                          isHovered = false;
-                          if (focusNode.hasFocus) return;
-                          change(child);
-                        },
-                        child: visual)))));
+      focusNode: focusNode,
+      child: SizedBox(
+        height: 34,
+        width: 34,
+        child: FittedBox(
+          child: GestureDetector(
+            onTap: widget.callback,
+            child: MouseRegion(
+              cursor: SystemMouseCursors.click,
+              onEnter: (_) {
+                isHovered = true;
+                if (focusNode.hasFocus) return;
+                change(onHoverChild);
+              },
+              onExit: (_) {
+                isHovered = false;
+                if (focusNode.hasFocus) return;
+                change(child);
+              },
+              child: visual,
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }
 
@@ -285,13 +307,23 @@ class _RandomButton extends GetView<AvatarEditorController> {
 
   @override
   Widget build(BuildContext context) => AnimatedButton(
-      onTap: controller.randomize,
-      decorators: [
-        const AnimatedButtonScaleDecorator(max: 1.2),
-        AnimatedButtonTooltipDecorator(
-            tooltip: Builder(builder: (_) => Text('randomize_your_avatar'.tr)),
-            position: const GameTooltipPosition.centerBottom()),
-        const AnimatedButtonOpacityDecorator(minOpacity: 0.6)
-      ],
-      child: GifManager.inst.misc('randomize').builder.init(height: 32, width: 32));
+    onTap: controller.randomize,
+    decorators: const [
+      AnimatedButtonScaleDecorator(max: 1.2),
+      AnimatedButtonTooltipDecorator(
+        tooltip: _RandomButtonToolTipContent(),
+        position: GameTooltipPosition.centerBottom(),
+      ),
+      AnimatedButtonOpacityDecorator(minOpacity: 0.6),
+    ],
+    child: GifManager.inst.misc('randomize').builder.init(height: 32, width: 32),
+  );
+}
+
+class _RandomButtonToolTipContent extends StatelessWidget {
+  const _RandomButtonToolTipContent();
+  @override
+  Widget build(BuildContext context) {
+    return Text('randomize_your_avatar'.tr);
+  }
 }

@@ -8,6 +8,8 @@ export 'decorator.dart';
 
 class AnimatedButton extends StatefulWidget {
   /// if you only use `AnimatedButtonBackgroundColorDecorator`, use `HoverButton` instead for lightweight
+  ///
+  /// for short live solution, `decorators` must be const
   const AnimatedButton({super.key, required this.child, required this.decorators, this.onTap});
   final Widget child;
   final List<AnimatedButtonDecorator> decorators;
@@ -55,10 +57,14 @@ class AnimatedButtonState extends State<AnimatedButton> with SingleTickerProvide
     });
   }
 
-  late final AnimationController controller =
-      AnimationController(vsync: this, duration: AnimatedButton.duration);
-  late final CurvedAnimation curvedAnimation =
-      CurvedAnimation(curve: Curves.linear, parent: controller);
+  late final AnimationController controller = AnimationController(
+    vsync: this,
+    duration: AnimatedButton.duration,
+  );
+  late final CurvedAnimation curvedAnimation = CurvedAnimation(
+    curve: Curves.linear,
+    parent: controller,
+  );
 
   final GlobalKey _buttonKey = GlobalKey();
   GlobalKey get buttonKey => _buttonKey;
@@ -101,22 +107,25 @@ class AnimatedButtonState extends State<AnimatedButton> with SingleTickerProvide
   @override
   Widget build(BuildContext context) {
     return Focus(
-        focusNode: focusNode,
-        child: GestureDetector(
-            key: _buttonKey,
-            onTap: widget.onTap,
-            child: MouseRegion(
-                cursor: SystemMouseCursors.click,
-                onEnter: (e) {
-                  isHovered = true;
-                  if (focusNode.hasFocus) return;
-                  active();
-                },
-                onExit: (e) {
-                  isHovered = false;
-                  if (focusNode.hasFocus) return;
-                  unactive();
-                },
-                child: child)));
+      focusNode: focusNode,
+      child: GestureDetector(
+        key: _buttonKey,
+        onTap: widget.onTap,
+        child: MouseRegion(
+          cursor: SystemMouseCursors.click,
+          onEnter: (e) {
+            isHovered = true;
+            if (focusNode.hasFocus) return;
+            active();
+          },
+          onExit: (e) {
+            isHovered = false;
+            if (focusNode.hasFocus) return;
+            unactive();
+          },
+          child: child,
+        ),
+      ),
+    );
   }
 }

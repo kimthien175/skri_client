@@ -10,7 +10,13 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 abstract class OverlayController extends GetxController {
-  OverlayController();
+  OverlayController() {
+    Get.put(this, tag: tag, permanent: _permanent ?? false);
+
+    _entry = OverlayEntry(
+      builder: (ct) => OverlayWidget(controller: this, child: widgetBuilder()),
+    );
+  }
 
   /// init resources in constructor, not onInit, in case controller is called when needed,
   /// not put in page binding
@@ -54,48 +60,43 @@ abstract class OverlayController extends GetxController {
   /// call once when showing, not function as re render in command
   Widget widgetBuilder();
 
-  OverlayEntry? _entry;
-  bool get isShowing => _entry != null;
+  late final OverlayEntry _entry;
+  bool get isShowing => _isShowing;
+  bool _isShowing = false;
 
   String? _tag;
   String get tag => _tag ?? hashCode.toString();
   bool? _permanent;
 
   Future<bool> show() async {
-    if (_entry != null) return false;
+    if (isShowing) return false;
 
-    Get.put(this, tag: tag, permanent: _permanent ?? false);
-
-    _entry = OverlayEntry(
-      builder: (ct) => OverlayWidget(controller: this, child: widgetBuilder()),
-    );
+    _isShowing = true;
 
     final overlayState = Navigator.of(Get.overlayContext!, rootNavigator: false).overlay!;
 
-    overlayState.insert(_entry!);
+    overlayState.insert(_entry);
 
     return true;
   }
 
   Future<bool> hide() async {
-    if (_entry == null) return false;
+    if (!isShowing) return false;
 
-    _entry?.remove();
-    _entry?.dispose();
-    _entry = null;
+    _entry.remove();
 
+    _isShowing = false;
     return true;
   }
 
   @override
   void onClose() {
-    if (_entry != null) {
-      _entry?.remove();
-      _entry?.dispose();
-    }
-    super.onClose();
+    hide();
+    _entry.dispose();
 
     _cache.remove(_tag);
+
+    super.onClose();
   }
 }
 
