@@ -23,6 +23,8 @@ class GameDialog extends OverlayController with GetSingleTickerProviderStateMixi
   static const double minWidth = 390;
   static const double padding = 10;
 
+  void Function()? anchorFocusCallback;
+
   /// `hide` parameter for `onQuit` is default to true for returning
   GameDialog({
     required this.title,
@@ -144,6 +146,9 @@ class GameDialog extends OverlayController with GetSingleTickerProviderStateMixi
 
     focusNode.unfocus();
     await animController.reverse();
+
+    anchorFocusCallback?.call();
+
     return super.hide();
   }
 
@@ -262,6 +267,9 @@ class _CloseButtonState extends State<_CloseButton> with SingleTickerProviderSta
   ).animate(controller);
 
   late final FocusNode focusNode;
+
+  /// for highlight button by border
+  bool isHovered = false;
   @override
   void initState() {
     super.initState();
@@ -284,8 +292,13 @@ class _CloseButtonState extends State<_CloseButton> with SingleTickerProviderSta
     focusNode.addListener(() {
       if (focusNode.hasFocus) {
         controller.forward();
+
+        if (isHovered) return;
+        setState(() {});
       } else {
         controller.reverse();
+        if (isHovered) return;
+        setState(() {});
       }
     });
   }
@@ -300,6 +313,33 @@ class _CloseButtonState extends State<_CloseButton> with SingleTickerProviderSta
   @override
   Widget build(BuildContext context) {
     var c = OverlayWidget.of<GameDialog>(context)!;
+
+    Widget child = AnimatedBuilder(
+      animation: colorAnim,
+      builder: (ct, child) => Text(
+        '×',
+        style: TextStyle(
+          fontSize: 40.5,
+          color: colorAnim.value,
+          height: 1,
+          fontVariations: const [FontVariation('wght', 850)],
+        ),
+      ),
+    );
+    if (focusNode.hasFocus && !isHovered) {
+      child = Container(
+        height: 41,
+        width: 41,
+        alignment: .center,
+        padding: EdgeInsets.all(0),
+        decoration: BoxDecoration(
+          borderRadius: GlobalStyles.borderRadius,
+          border: BoxBorder.all(style: .solid, width: 2, color: Color.fromRGBO(255, 255, 255, 0.5)),
+        ),
+        child: child,
+      );
+    }
+
     return Positioned(
       right: 8,
       top: 0,
@@ -311,20 +351,15 @@ class _CloseButtonState extends State<_CloseButton> with SingleTickerProviderSta
             c.completer.complete(c.onQuit(c.hide));
           },
           child: MouseRegion(
-            onEnter: (_) => controller.forward(),
-            onExit: (_) => controller.reverse(),
-            child: AnimatedBuilder(
-              animation: colorAnim,
-              builder: (ct, child) => Text(
-                '×',
-                style: TextStyle(
-                  fontSize: 40.5,
-                  color: colorAnim.value,
-                  height: 1,
-                  fontVariations: const [FontVariation('wght', 850)],
-                ),
-              ),
-            ),
+            onEnter: (_) {
+              isHovered = true;
+              controller.forward();
+            },
+            onExit: (_) {
+              isHovered = false;
+              controller.reverse();
+            },
+            child: child,
           ),
         ),
       ),

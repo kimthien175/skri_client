@@ -26,6 +26,7 @@ class HomeController extends GetxController {
     Get.put(RandomAvatarsController());
     Get.put(HowToPlayContentController());
     Get.put(AvatarEditorController());
+    Get.put(NewsContentController());
 
     // init roomCode
     var keys = Get.parameters.keys.toList();

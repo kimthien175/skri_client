@@ -60,7 +60,8 @@ abstract class GameState {
     if (sinceEndDate < TopWidgetController.contentDuration) {
       await GameResult.completer!.future.then((widget) => topWidgetController.child.value = widget);
       await topWidgetController.forwardContent(
-          from: sinceEndDate / TopWidgetController.contentDuration);
+        from: sinceEndDate / TopWidgetController.contentDuration,
+      );
 
       sinceEndDate = Duration.zero;
     } else {
@@ -81,7 +82,8 @@ abstract class GameState {
     //#region REVERSE GAME RESULT
     if (sinceEndDate < TopWidgetController.contentDuration) {
       await topWidgetController.reverseContent(
-          from: 1 - sinceEndDate / TopWidgetController.contentDuration);
+        from: 1 - sinceEndDate / TopWidgetController.contentDuration,
+      );
 
       GameResult.completer = null;
 
@@ -101,7 +103,7 @@ abstract class GameState {
   Widget get status => Builder(builder: (_) => Text('WAITING'.tr));
 
   ///only DrawState for performer can override this
-  final Widget canvas = const DrawViewWidget();
+  Widget get canvas => const DrawViewWidget();
 
   /// only DrawState can override this
   void Function(String) get submitMessage =>

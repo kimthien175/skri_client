@@ -3,7 +3,6 @@ import 'package:skribbl_client/utils/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:skribbl_client/widgets/animated_button/animated_button.dart';
 import 'package:skribbl_client/widgets/color_transition.dart';
-import 'package:skribbl_client/widgets/input_container.dart';
 
 class HoverButton extends StatefulWidget {
   const HoverButton({
@@ -19,6 +18,7 @@ class HoverButton extends StatefulWidget {
     this.isDisabled = false,
     this.controller,
     this.border,
+    this.autoFocus = false,
   });
 
   final Widget? child;
@@ -37,6 +37,8 @@ class HoverButton extends StatefulWidget {
 
   final Border? border;
 
+  final bool autoFocus;
+
   @override
   State<HoverButton> createState() => _HoverButtonState();
 }
@@ -54,6 +56,16 @@ class _HoverButtonState extends State<HoverButton> with SingleTickerProviderStat
 
   bool isHovered = false;
 
+  late bool autoFocus;
+
+  @override
+  void didUpdateWidget(HoverButton oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.autoFocus != autoFocus) {
+      setState(() => autoFocus = widget.autoFocus);
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -69,7 +81,7 @@ class _HoverButtonState extends State<HoverButton> with SingleTickerProviderStat
     if (widget.border == null) {
       borderListenable = ColorTween(
         begin: widget.color,
-        end: InputContainer.activeColor,
+        end: Color.alphaBlend(Colors.white.withValues(alpha: 0.6), widget.color),
       ).animate(controller);
     }
 
@@ -96,6 +108,11 @@ class _HoverButtonState extends State<HoverButton> with SingleTickerProviderStat
         controller.reverse();
       }
     });
+
+    autoFocus = widget.autoFocus;
+    if (autoFocus) {
+      focusNode.requestFocus();
+    }
   }
 
   @override
@@ -177,6 +194,7 @@ class _HoverButtonState extends State<HoverButton> with SingleTickerProviderStat
           );
 
     return Focus(
+      autofocus: autoFocus,
       focusNode: focusNode,
       child: MouseRegion(
         cursor: SystemMouseCursors.click,

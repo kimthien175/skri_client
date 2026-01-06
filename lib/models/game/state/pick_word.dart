@@ -92,7 +92,7 @@ class PickWordState extends GameState {
     //#region START CLOCK
     var clockDuration = _fullPickingDuration - sinceStartDate;
     if (clockDuration > Duration.zero) {
-      print('debugging pick word');
+      //print('debugging pick word');
       Get.find<GameClockController>().countdown(
         clockDuration,
         onEnd: () {

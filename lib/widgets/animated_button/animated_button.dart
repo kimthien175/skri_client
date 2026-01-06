@@ -3,6 +3,7 @@ library;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:skribbl_client/widgets/animated_button/decorator.dart';
+import 'package:skribbl_client/widgets/dialog/dialog.dart';
 
 export 'decorator.dart';
 
@@ -10,10 +11,20 @@ class AnimatedButton extends StatefulWidget {
   /// if you only use `AnimatedButtonBackgroundColorDecorator`, use `HoverButton` instead for lightweight
   ///
   /// for short live solution, `decorators` must be const
-  const AnimatedButton({super.key, required this.child, required this.decorators, this.onTap});
+  /// `dialogToShow` is expected persistent
+  const AnimatedButton({
+    super.key,
+    required this.child,
+    required this.decorators,
+    this.onTap,
+    this.dialogToShow,
+    this.skipTravelFocus = false,
+  }) : assert(onTap == null || dialogToShow == null, "AnimatedButton can't handle both");
   final Widget child;
   final List<AnimatedButtonDecorator> decorators;
   final void Function()? onTap;
+  final GameDialog? dialogToShow;
+  final bool skipTravelFocus;
 
   static const Duration duration = Duration(milliseconds: 130);
 
@@ -22,11 +33,24 @@ class AnimatedButton extends StatefulWidget {
 }
 
 class AnimatedButtonState extends State<AnimatedButton> with SingleTickerProviderStateMixin {
-  late FocusNode focusNode;
+  late final FocusNode focusNode;
   bool isHovered = false;
+
+  late final void Function()? onTap;
+
+  @override
+  void didUpdateWidget(AnimatedButton oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    focusNode.skipTraversal = widget.skipTravelFocus;
+  }
+
   @override
   void initState() {
     super.initState();
+
+    onTap = widget.onTap ?? widget.dialogToShow?.show;
+
     child = widget.child;
 
     for (var decorator in widget.decorators) {
@@ -34,11 +58,12 @@ class AnimatedButtonState extends State<AnimatedButton> with SingleTickerProvide
     }
 
     focusNode = FocusNode(
+      skipTraversal: widget.skipTravelFocus,
       onKeyEvent: (node, event) {
         if (event is KeyDownEvent) {
           if (event.logicalKey == LogicalKeyboardKey.enter) {
-            if (widget.onTap != null) {
-              widget.onTap!();
+            if (onTap != null) {
+              onTap!.call();
               return KeyEventResult.handled;
             }
           }
@@ -55,6 +80,16 @@ class AnimatedButtonState extends State<AnimatedButton> with SingleTickerProvide
         unactive();
       }
     });
+
+    if (widget.dialogToShow != null) {
+      widget.dialogToShow!.anchorFocusCallback = anchorFocusCallback;
+    }
+  }
+
+  void anchorFocusCallback() {
+    if (mounted && focusNode.canRequestFocus) {
+      focusNode.requestFocus();
+    }
   }
 
   late final AnimationController controller = AnimationController(
@@ -82,7 +117,15 @@ class AnimatedButtonState extends State<AnimatedButton> with SingleTickerProvide
     }
     curvedAnimation.dispose();
     controller.dispose();
+
     focusNode.dispose();
+    // check dialog still keep this callback instance then set it to null,
+    // otherwise new instance of AnimatedButtonState already called initState and set new callback instance
+    if (widget.dialogToShow != null &&
+        widget.dialogToShow!.anchorFocusCallback == anchorFocusCallback) {
+      widget.dialogToShow!.anchorFocusCallback = null;
+    }
+
     super.dispose();
   }
 
@@ -110,7 +153,7 @@ class AnimatedButtonState extends State<AnimatedButton> with SingleTickerProvide
       focusNode: focusNode,
       child: GestureDetector(
         key: _buttonKey,
-        onTap: widget.onTap,
+        onTap: onTap,
         child: MouseRegion(
           cursor: SystemMouseCursors.click,
           onEnter: (e) {

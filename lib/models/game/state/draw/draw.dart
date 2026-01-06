@@ -30,8 +30,8 @@ mixin DrawStateMixin on GameState {
   Future<DateTime> onStart(DateTime startDate) async {
     var drawDuration = Duration(seconds: Game.inst.settings['draw_time']) - startDate.fromNow();
     if (drawDuration > Duration.zero) {
-      print('debugging draw state');
-      //Get.find<GameClockController>().start(drawDuration);
+      //print('debugging draw state');
+      Get.find<GameClockController>().countdown(drawDuration);
     }
 
     return startDate;
@@ -126,9 +126,9 @@ class SpectatorDrawState extends GameState with DrawStateMixin {
 
     var sinceDate = DateTime.now() - startDate;
     if (sinceDate < likeController.duration) {
-      likeController.controller.forward(from: sinceDate / likeController.duration);
+      likeController.enable(from: sinceDate / likeController.duration);
     } else {
-      likeController.controller.value = 1;
+      likeController.enable(from: 1);
     }
 
     return super.onStart(startDate);
@@ -136,7 +136,7 @@ class SpectatorDrawState extends GameState with DrawStateMixin {
 
   @override
   void onClose() {
-    Get.find<LikeAndDislikeController>().controller.value = 0;
+    Get.find<LikeAndDislikeController>().disable();
     Get.find<GameClockController>().cancel();
   }
 

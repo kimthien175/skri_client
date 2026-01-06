@@ -1,7 +1,7 @@
 part of 'buttons.dart';
 
-abstract class GameDialogButtonChild extends StatelessWidget {
-  const GameDialogButtonChild({super.key}); //, this.onTap = GameDialogButtonChild.defaultOnTap});
+abstract class _GameDialogButtonChild extends StatelessWidget {
+  const _GameDialogButtonChild({super.key}); //, this.onTap = GameDialogButtonChild.defaultOnTap});
 
   // static Future<bool> defaultOnTap(BuildContext context) =>
   //     OverlayWidget.of<GameDialog>(context).onQuit();
@@ -14,7 +14,7 @@ abstract class GameDialogButtonChild extends StatelessWidget {
   // final OnTapCallback onTap;
 }
 
-class OKayDialogButtonChild extends GameDialogButtonChild {
+class OKayDialogButtonChild extends _GameDialogButtonChild {
   const OKayDialogButtonChild({super.key});
   String get content => 'dialog_button_ok'.tr;
 
@@ -25,22 +25,22 @@ class OKayDialogButtonChild extends GameDialogButtonChild {
 
   @override
   Widget build(BuildContext context) {
+    GameDialogButton buttonParent = context.findAncestorWidgetOfExactType<GameDialogButton>()!;
     return HoverButton(
-        onTap: () {
-          GameDialog controller = OverlayWidget.of<GameDialog>(context)!;
+      autoFocus: buttonParent.autoFocus,
+      onTap: () {
+        GameDialog controller = OverlayWidget.of<GameDialog>(context)!;
 
-          if (controller.completer.isCompleted) return;
+        if (controller.completer.isCompleted) return;
 
-          GameDialogButton buttonParent =
-              context.findAncestorWidgetOfExactType<GameDialogButton>()!;
-
-          controller.completer
-              .complete(buttonParent.onTap(() => controller.onQuit(controller.hide)));
-        },
-        constraints: const BoxConstraints(minHeight: 37.5),
-        child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 4.5),
-            child: Text(content, style: GameDialogButtons.textStyle)));
+        controller.completer.complete(buttonParent.onTap(() => controller.onQuit(controller.hide)));
+      },
+      constraints: const BoxConstraints(minHeight: 37.5),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 4.5),
+        child: Text(content, style: GameDialogButtons.textStyle),
+      ),
+    );
   }
 }
 

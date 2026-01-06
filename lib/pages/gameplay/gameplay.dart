@@ -62,11 +62,16 @@ class _GameplayPageState extends State<GameplayPage> {
 
   @override
   Widget build(BuildContext context) => Background(
-      child: PopScope(
-          canPop: false,
-          onPopInvokedWithResult: (didPop, result) async {
-            if (didPop) return;
-            Game.inst.confirmLeave();
-          },
-          child: GameplayPage.isWebLayout(context) ? const GameplayWeb() : const GameplayMobile()));
+    child: PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) async {
+        if (didPop) return;
+        Game.inst.confirmLeave();
+      },
+      child: FocusScope(
+        autofocus: true,
+        child: GameplayPage.isWebLayout(context) ? const GameplayWeb() : const GameplayMobile(),
+      ),
+    ),
+  );
 }

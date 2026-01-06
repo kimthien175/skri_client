@@ -65,7 +65,7 @@ class SettingsButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AnimatedButton(
-      onTap: settingDialog.show,
+      dialogToShow: settingDialog,
       decorators: const [
         AnimatedButtonOpacityDecorator(minOpacity: 0.9),
         AnimatedButtonScaleDecorator(max: 1.1),

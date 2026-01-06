@@ -182,9 +182,7 @@ abstract class Game extends GetxController {
       builder: () => GameDialog(
         title: Text("dialog_title_confirm_leave".tr),
         content: Text('dialog_content_confirm_leave'.tr),
-        buttons: const RowRenderObjectWidget(
-          children: [GameDialogButton.yes(), GameDialogButton.no()],
-        ),
+        buttons: const RowRenderObjectWidget(children: [.yes(), .no(autoFocus: true)]),
       ),
     ).show().then((value) {
       if (value) leave();
@@ -222,7 +220,7 @@ abstract class Game extends GetxController {
         },
         onError: (e, _) {
           print(e);
-          assert(e is TickerCanceled);
+          //assert(e is TickerCanceled);
         },
       );
   }
