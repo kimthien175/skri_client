@@ -11,8 +11,6 @@ import 'package:get/get.dart';
 
 abstract class OverlayController extends GetxController {
   OverlayController() {
-    Get.put(this, tag: tag, permanent: _permanent ?? false);
-
     _entry = OverlayEntry(
       builder: (ct) => OverlayWidget(controller: this, child: widgetBuilder()),
     );
@@ -30,7 +28,7 @@ abstract class OverlayController extends GetxController {
 
   static final Map<String, OverlayController> _cache = <String, OverlayController>{};
 
-  static P cache<P extends OverlayController>({
+  static P put<P extends OverlayController>({
     required String tag,
     bool permanent = false,
     required P Function() builder,
@@ -39,13 +37,14 @@ abstract class OverlayController extends GetxController {
     if (found != null) return found;
 
     var newController = builder();
-    newController
-      .._tag = tag
-      .._permanent = permanent;
+    Get.put(newController, tag: tag, permanent: permanent);
+    newController._tag = tag;
 
     _cache[tag] = newController;
     return newController;
   }
+
+  String? _tag;
 
   static P? get<P extends OverlayController>(String tag) => _cache[tag] as P?;
 
@@ -63,10 +62,6 @@ abstract class OverlayController extends GetxController {
   late final OverlayEntry _entry;
   bool get isShowing => _isShowing;
   bool _isShowing = false;
-
-  String? _tag;
-  String get tag => _tag ?? hashCode.toString();
-  bool? _permanent;
 
   Future<bool> show() async {
     if (isShowing) return false;

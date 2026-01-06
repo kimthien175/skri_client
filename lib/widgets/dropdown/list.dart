@@ -87,6 +87,9 @@ class _DropdownListController<T> extends TooltipController with GetSingleTickerP
     if (!isShowing || slideController.velocity < 0) return false;
 
     focusScopeNode.unfocus();
+    if (anchorFocusNode.canRequestFocus) {
+      anchorFocusNode.requestFocus();
+    }
     await slideController.reverse();
     return super.hide();
   }

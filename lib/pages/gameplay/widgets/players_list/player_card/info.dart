@@ -12,7 +12,7 @@ class PlayerInfoDialog extends GameDialog {
     : super(title: Text(info.fullNameForCard), content: const _InfoDialogContent());
 
   static PlayerInfoDialog factory(Player info) {
-    return OverlayController.cache(
+    return OverlayController.put(
       tag: 'card_info_${info.id}',
       builder: () => PlayerInfoDialog._internal(info),
     );

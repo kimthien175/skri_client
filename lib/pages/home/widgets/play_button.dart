@@ -34,7 +34,7 @@ class PlayButton extends StatelessWidget {
     );
   }
 
-  static final GameDialog _dialog = OverlayController.cache(
+  static final GameDialog _dialog = OverlayController.put(
     tag: 'wrong_private_room_code',
     builder: () => GameDialog.error(
       content: Builder(builder: (ct) => Text('dialog_content_wrong_private_code'.tr)),

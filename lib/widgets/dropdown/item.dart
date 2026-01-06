@@ -31,7 +31,7 @@ class _DropdownItemController<T> extends GetxController {
 
   late final FocusNode focusNode;
 
-  Color getNewColor() => listController.currentItem.value == item
+  Color getNewColor() => listController.currentItem.value.value == item.value
       ? Colors.blue.shade100
       : (focusNode.hasFocus ? Colors.amber.shade300 : defaultColor);
 

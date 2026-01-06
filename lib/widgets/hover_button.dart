@@ -3,21 +3,23 @@ import 'package:skribbl_client/utils/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:skribbl_client/widgets/animated_button/animated_button.dart';
 import 'package:skribbl_client/widgets/color_transition.dart';
+import 'package:skribbl_client/widgets/input_container.dart';
 
 class HoverButton extends StatefulWidget {
-  const HoverButton(
-      {super.key,
-      this.child,
-      this.color = GlobalStyles.colorPanelButton,
-      this.hoverColor = GlobalStyles.colorPanelButtonHover,
-      this.onTap,
-      this.borderRadius = GlobalStyles.borderRadius,
-      this.height,
-      this.width,
-      this.constraints,
-      this.isDisabled = false,
-      this.controller,
-      this.border});
+  const HoverButton({
+    super.key,
+    this.child,
+    this.color = GlobalStyles.colorPanelButton,
+    this.hoverColor = GlobalStyles.colorPanelButtonHover,
+    this.onTap,
+    this.borderRadius = GlobalStyles.borderRadius,
+    this.height,
+    this.width,
+    this.constraints,
+    this.isDisabled = false,
+    this.controller,
+    this.border,
+  });
 
   final Widget? child;
   final Color color;
@@ -43,6 +45,13 @@ class _HoverButtonState extends State<HoverButton> with SingleTickerProviderStat
   late final AnimationController controller;
   late final FocusNode focusNode;
 
+  late final Animation<Color?> backgroundListenable;
+  late final Animation<Color?>? borderListenable;
+
+  late final EdgeInsetsGeometry? padding = widget.height == null && widget.width == null
+      ? const EdgeInsets.symmetric(horizontal: 5.85)
+      : null;
+
   bool isHovered = false;
 
   @override
@@ -52,18 +61,32 @@ class _HoverButtonState extends State<HoverButton> with SingleTickerProviderStat
     controller =
         widget.controller ?? AnimationController(vsync: this, duration: AnimatedButton.duration);
 
-    focusNode = FocusNode(onKeyEvent: (node, event) {
-      if (event is KeyDownEvent) {
-        if (event.logicalKey == LogicalKeyboardKey.enter) {
-          if (widget.onTap != null) {
-            widget.onTap!();
-            return KeyEventResult.handled;
+    backgroundListenable = ColorTween(
+      begin: widget.color,
+      end: widget.hoverColor,
+    ).animate(controller);
+
+    if (widget.border == null) {
+      borderListenable = ColorTween(
+        begin: widget.color,
+        end: InputContainer.activeColor,
+      ).animate(controller);
+    }
+
+    focusNode = FocusNode(
+      onKeyEvent: (node, event) {
+        if (event is KeyDownEvent) {
+          if (event.logicalKey == LogicalKeyboardKey.enter) {
+            if (widget.onTap != null) {
+              widget.onTap!();
+              return KeyEventResult.handled;
+            }
           }
         }
-      }
 
-      return KeyEventResult.ignored;
-    });
+        return KeyEventResult.ignored;
+      },
+    );
 
     focusNode.addListener(() {
       if (isHovered) return;
@@ -86,61 +109,89 @@ class _HoverButtonState extends State<HoverButton> with SingleTickerProviderStat
   Widget build(BuildContext context) {
     if (widget.isDisabled) {
       return Container(
-          constraints: widget.constraints,
-          height: widget.height,
-          width: widget.width,
-          padding: widget.height == null && widget.width == null
-              ? const EdgeInsets.symmetric(horizontal: 5.85)
-              : null,
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-              color: Color.alphaBlend(Colors.black.withValues(alpha: 0.2), widget.color),
-              borderRadius: widget.borderRadius,
-              border: widget.border),
-          child: DefaultTextStyle.merge(
-              style: TextStyle(
-                  color:
-                      Color.alphaBlend(Colors.black.withValues(alpha: 0.2), PanelStyles.textColor),
-                  fontVariations: [FontVariation.weight(800)],
-                  shadows: [Shadow(color: Color(0x35000000), offset: Offset(2.5, 2.5))]),
-              child: widget.child ?? Container()));
+        constraints: widget.constraints,
+        height: widget.height,
+        width: widget.width,
+        padding: padding,
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          color: Color.alphaBlend(Colors.black.withValues(alpha: 0.2), widget.color),
+          borderRadius: widget.borderRadius,
+          border: widget.border,
+        ),
+        child: DefaultTextStyle.merge(
+          style: TextStyle(
+            color: Color.alphaBlend(Colors.black.withValues(alpha: 0.2), PanelStyles.textColor),
+            fontVariations: [FontVariation.weight(800)],
+            shadows: [Shadow(color: Color(0x35000000), offset: Offset(2.5, 2.5))],
+          ),
+          child: widget.child ?? Container(),
+        ),
+      );
     }
 
+    final lowLevelChild = DefaultTextStyle.merge(
+      style: const TextStyle(
+        color: PanelStyles.textColor,
+        fontVariations: [FontVariation.weight(800)],
+        shadows: [Shadow(color: Color(0x35000000), offset: Offset(2.5, 2.5))],
+      ),
+      child: widget.child ?? Container(),
+    );
+
+    final child = (borderListenable != null)
+        ? ColorTransition(
+            listenable: borderListenable!,
+            builder: (borderColor) => ColorTransition(
+              listenable: backgroundListenable,
+              builder: (color) => Container(
+                constraints: widget.constraints,
+                height: widget.height,
+                width: widget.width,
+                padding: padding,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: color,
+                  borderRadius: widget.borderRadius,
+                  border: BoxBorder.all(width: 2.0, color: borderColor),
+                ),
+                child: lowLevelChild,
+              ),
+            ),
+          )
+        : ColorTransition(
+            listenable: backgroundListenable,
+            builder: (color) => Container(
+              constraints: widget.constraints,
+              height: widget.height,
+              width: widget.width,
+              padding: padding,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: color,
+                borderRadius: widget.borderRadius,
+                border: widget.border,
+              ),
+              child: lowLevelChild,
+            ),
+          );
+
     return Focus(
-        focusNode: focusNode,
-        child: MouseRegion(
-            cursor: SystemMouseCursors.click,
-            onEnter: (_) {
-              isHovered = true;
-              if (focusNode.hasFocus) return;
-              controller.forward();
-            },
-            onExit: (_) {
-              isHovered = false;
-              if (focusNode.hasFocus) return;
-              controller.reverse();
-            },
-            child: GestureDetector(
-                onTap: widget.onTap,
-                child: ColorTransition(
-                    listenable:
-                        ColorTween(begin: widget.color, end: widget.hoverColor).animate(controller),
-                    builder: (color) => Container(
-                        constraints: widget.constraints,
-                        height: widget.height,
-                        width: widget.width,
-                        padding: widget.height == null && widget.width == null
-                            ? const EdgeInsets.symmetric(horizontal: 5.85)
-                            : null,
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                            color: color, borderRadius: widget.borderRadius, border: widget.border),
-                        child: DefaultTextStyle.merge(
-                            style: const TextStyle(color: PanelStyles.textColor, fontVariations: [
-                              FontVariation.weight(800)
-                            ], shadows: [
-                              Shadow(color: Color(0x35000000), offset: Offset(2.5, 2.5))
-                            ]),
-                            child: widget.child ?? Container()))))));
+      focusNode: focusNode,
+      child: MouseRegion(
+        cursor: SystemMouseCursors.click,
+        onEnter: (_) {
+          isHovered = true;
+          if (focusNode.hasFocus) return;
+          controller.forward();
+        },
+        onExit: (_) {
+          isHovered = false;
+          if (focusNode.hasFocus) return;
+          controller.reverse();
+        },
+        child: GestureDetector(onTap: widget.onTap, child: child),
+      ),
+    );
   }
 }

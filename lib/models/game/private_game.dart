@@ -469,7 +469,7 @@ class PrivateGame extends Game {
     //#region CHECK ROOM TO JOIN WHETHER BANNED MEPLAYER OR NOT
     var banList = Storage.data['ban'];
     if (banList is List && banList.contains(code)) {
-      OverlayController.cache(
+      OverlayController.put(
         tag: 'join_but_get_banned',
         builder: () => GameDialog.error(content: Text('dialog_content_join_but_get_banned'.tr)),
       ).show();
@@ -491,7 +491,7 @@ class PrivateGame extends Game {
             if (kickDate != null) {
               if ((DateTime.now() - kickDate).inSeconds < kickInterval) {
                 // still in kick interval
-                OverlayController.cache(
+                OverlayController.put(
                   tag: 'kick interval',
                   builder: () => GameDialog.error(
                     content: Builder(builder: (_) => Text('dialog_content_kick_countdown'.tr)),

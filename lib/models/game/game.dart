@@ -176,8 +176,9 @@ abstract class Game extends GetxController {
   static bool get isEmpty => _inst == null;
 
   void confirmLeave() {
-    OverlayController.cache(
+    OverlayController.put(
       tag: 'confirm_leave',
+      permanent: true,
       builder: () => GameDialog(
         title: Text("dialog_title_confirm_leave".tr),
         content: Text('dialog_content_confirm_leave'.tr),
@@ -291,7 +292,7 @@ abstract class Game extends GetxController {
     socket.once('connect_error', (data) {
       SocketIO.inst.socket.disconnect();
 
-      OverlayController.cache(
+      OverlayController.put(
         tag: 'connect_error_dialog',
         builder: () => GameDialog.error(
           onQuit: (hide) async {

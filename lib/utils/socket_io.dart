@@ -34,7 +34,7 @@ class SocketIO {
         // find for 'used_by'
         _setTicket(ticket);
         Game.leave();
-        OverlayController.cache(
+        OverlayController.put(
           tag: 'kick_dialog',
           builder: () => GameDialog.discconected(content: Text("dialog_content_got_kicked".tr)),
           permanent: true,
@@ -67,7 +67,7 @@ class SocketIO {
         //#endregion
 
         Game.leave();
-        OverlayController.cache(
+        OverlayController.put(
           tag: 'ban_dialog',
           builder: () => GameDialog.discconected(content: Text('dialog_content_got_banned'.tr)),
           permanent: true,

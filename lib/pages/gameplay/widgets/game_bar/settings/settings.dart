@@ -13,7 +13,7 @@ import 'key_binding.dart';
 class SettingsButton extends StatelessWidget {
   const SettingsButton({super.key});
 
-  static final settingDialog = OverlayController.cache(
+  static final settingDialog = OverlayController.put(
     tag: 'settings_menu',
     permanent: true,
     builder: () => GameDialog(
