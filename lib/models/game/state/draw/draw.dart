@@ -154,8 +154,8 @@ class SpectatorDrawState extends GameState with DrawStateMixin {
       ack: (guessResult) {
         if (guessResult == 'right') {
           // disabled chat when player guess right
-          _submitMessage = null;
           Sound.inst.play(Sound.inst.guessedRight);
+          _submitMessage = null;
           return;
         }
         if (guessResult == 'close') {

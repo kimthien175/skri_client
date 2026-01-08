@@ -14,7 +14,10 @@ class AnimatedButtonTooltipDecorator implements AnimatedButtonDecorator {
 
   @override
   void decorate(AnimatedButtonState state) {
-    final tooltipController = _Tooltip(tooltip: tooltip, position: position, state: state);
+    final tooltipController = OverlayController.put(
+      tag: hashCode.toString(),
+      builder: () => _Tooltip(tooltip: tooltip, position: position, state: state),
+    );
 
     state.child = tooltipController.attach(state.child);
 
@@ -25,7 +28,7 @@ class AnimatedButtonTooltipDecorator implements AnimatedButtonDecorator {
 
   @override
   void clean() {
-    // _tooltip is disposed auto
+    OverlayController.deleteCache(hashCode.toString());
   }
 }
 

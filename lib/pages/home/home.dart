@@ -61,6 +61,11 @@ class HomePage extends GetView<HomeController> {
 
   @override
   Widget build(BuildContext context) {
-    return Background(child: isWebLayout(context) ? const HomeWeb() : const HomeMobile());
+    return Background(
+      child: FocusScope(
+        autofocus: true,
+        child: isWebLayout(context) ? const HomeWeb() : const HomeMobile(),
+      ),
+    );
   }
 }

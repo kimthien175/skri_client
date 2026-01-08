@@ -221,7 +221,6 @@ class GameTooltipWrapper extends StatefulWidget {
 class _GameTooltipHoverWidgetState extends State<GameTooltipWrapper>
     with SingleTickerProviderStateMixin {
   late final GameTooltipController controller;
-  // no need to put in dispose(), when showing, OverlayController put itself in Getx smart management
 
   late final GlobalKey key;
   late final AnimationController animController;
@@ -232,31 +231,39 @@ class _GameTooltipHoverWidgetState extends State<GameTooltipWrapper>
     super.initState();
     key = GlobalKey();
     animController = AnimationController(vsync: this, duration: AnimatedButton.duration);
-    controller = GameTooltipController(
-      tooltip: widget.tooltip,
-      position: widget.position,
-      controller: animController,
+    controller = OverlayController.put(
+      tag: hashCode.toString(),
+      builder: () => GameTooltipController(
+        tooltip: widget.tooltip,
+        position: widget.position,
+        controller: animController,
+      ),
     );
 
     focusNode = FocusNode();
     focusNode.addListener(() {
-      if (focusNode.hasFocus) {
-        if (focusNode.descendants.isNotEmpty) {
-          focusNode.descendants.first.requestFocus();
-        }
-        if (isHover) return;
+      if (isHover) return;
+      if (hasFocus) {
         controller.show();
       } else {
-        if (isHover) return;
         controller.hide();
       }
     });
+  }
+
+  bool get hasFocus {
+    for (var childFocusNode in focusNode.descendants) {
+      if (childFocusNode.hasFocus) return true;
+    }
+    return false;
   }
 
   @override
   void dispose() {
     animController.dispose();
     focusNode.dispose();
+
+    OverlayController.deleteCache(hashCode.toString());
 
     super.dispose();
   }
@@ -265,19 +272,21 @@ class _GameTooltipHoverWidgetState extends State<GameTooltipWrapper>
   Widget build(BuildContext context) {
     return Focus(
       focusNode: focusNode,
+      skipTraversal: true,
+      canRequestFocus: false,
       child: MouseRegion(
         onEnter: (event) {
           isHover = true;
-          if (focusNode.hasFocus) return;
+          if (hasFocus) return;
           controller.show();
         },
         onExit: (event) {
           isHover = false;
-          if (focusNode.hasFocus) return;
+          if (hasFocus) return;
           controller.hide();
         },
         key: key,
-        child: widget.child,
+        child: controller.attach(widget.child),
       ),
     );
   }

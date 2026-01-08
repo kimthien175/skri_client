@@ -196,11 +196,16 @@ abstract class Game extends GetxController {
     // reset meplayer as well
     MePlayer.inst.score = 0;
 
-    var homeController = Get.find<HomeController>();
-
     await Future.wait([LoadingOverlay.inst.show(), Game.inst.stopState()]);
 
-    Get.offAllNamed("/${homeController.validity == .valid ? '?${homeController.roomCode}' : ''}");
+    if (inst is PrivateGame && inst.playersByMap.length == 1) {
+      // in private game, player as the lonly one in the room,
+      // the room will be deleted, so the room code is useless
+      Get.offAllNamed("/");
+    } else {
+      // get back to home page normally
+      Get.until((route) => Get.currentRoute == '/');
+    }
 
     await LoadingOverlay.inst.hide();
   }

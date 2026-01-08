@@ -78,12 +78,12 @@ class _HoverButtonState extends State<HoverButton> with SingleTickerProviderStat
       end: widget.hoverColor,
     ).animate(controller);
 
-    if (widget.border == null) {
-      borderListenable = ColorTween(
-        begin: widget.color,
-        end: Color.alphaBlend(Colors.white.withValues(alpha: 0.6), widget.color),
-      ).animate(controller);
-    }
+    borderListenable = widget.border == null
+        ? ColorTween(
+            begin: widget.color,
+            end: Color.alphaBlend(Colors.white.withValues(alpha: 0.6), widget.color),
+          ).animate(controller)
+        : null;
 
     focusNode = FocusNode(
       onKeyEvent: (node, event) {
@@ -117,7 +117,9 @@ class _HoverButtonState extends State<HoverButton> with SingleTickerProviderStat
 
   @override
   void dispose() {
-    controller.dispose();
+    if (widget.controller == null) {
+      controller.dispose();
+    }
     focusNode.dispose();
     super.dispose();
   }
