@@ -52,7 +52,7 @@ void main() {
       fallbackLocale: const Locale('en', 'US'),
       debugShowCheckedModeBanner: false,
       title: 'Skribbl',
-      //initialRoute: initialRoute,
+      initialRoute: '/',
       defaultTransition: .noTransition,
       getPages: [
         GetPage(

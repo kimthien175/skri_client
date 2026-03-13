@@ -23,3 +23,6 @@ TRANSLATIONS:
  en_US: which is Locale('en','US') in code, is the default locale in this project
  To generate translation from assets/locales, please active get_cli and run in terminal:
                get generate locales assets/locales
+
+#HOW TO RUN THE PROJECT ON WEB
+flutter run -d chrome --release --dart-define-from-file=.env

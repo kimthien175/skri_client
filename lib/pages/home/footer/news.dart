@@ -82,8 +82,9 @@ class NewsContentController extends GetxController {
             content.value = jsonDecode(res.body);
           }
         })
-        // ignore: invalid_return_type_for_catch_error
-        .catchError((e) => error.value = true);
+        .catchError((e) {
+          error.value = true;
+        });
   }
   late final ScrollController scrollController = ScrollController();
 
